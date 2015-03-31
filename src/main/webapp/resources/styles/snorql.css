@@ -1,0 +1,64 @@
+#snorql{
+	margin:0;
+	padding:0;
+}
+
+#snorql-header{
+	margin:0 0 20px 0;
+	padding:0;
+	clear:both;
+}
+
+#snorql-title{
+	float: left;
+	margin: 0px;
+	text-align: center;
+	padding:0;
+}
+
+#snorql-title h1 {
+	margin: 0px;
+	padding: 0;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+#top-menu #snorql-menu{
+	padding: 0;
+	margin: 0;
+	height: 20px;
+	list-style: none;
+}
+
+#snorql-menu li {
+	padding: 0;
+	margin: 0;
+	display: block;
+}
+
+#snorql-menu li a {
+	position: relative;
+	float: right;
+	display: block;
+	height: 18px;
+	padding: 2px 20px 0 20px;
+	margin: 0 0 0 5px;
+	font-size: 14px;
+	text-align: center;
+	font-weight: bold;
+	text-decoration: none;
+	color: #8e8e8e;	
+	outline: none;
+	background-color: #dfdfdf;
+}
+
+#querytext{
+	width:924px;
+	height:140px;
+}
+.snorql-label{
+	font-weight:bold;
+}
+.snorql-section{
+	margin: 0 0 15px 0;
+}
