@@ -19,12 +19,11 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.hp.hpl.jena.tdb.base.file.Location;
-
 import de.rwth.i9.palm.model.Algorithm;
 import de.rwth.i9.palm.model.Author;
 import de.rwth.i9.palm.model.Institution;
 import de.rwth.i9.palm.model.Keyword;
+import de.rwth.i9.palm.model.Location;
 import de.rwth.i9.palm.model.Publication;
 import de.rwth.i9.palm.model.Role;
 import de.rwth.i9.palm.model.RunTime;
@@ -120,7 +119,8 @@ public class DatabaseConfig
 				Location.class,
 				Publication.class,
 				Role.class,
- RunTime.class, Source.class,
+				RunTime.class, 
+ 				Source.class,
 				Topic.class,
 				User.class,
 				Venue.class
