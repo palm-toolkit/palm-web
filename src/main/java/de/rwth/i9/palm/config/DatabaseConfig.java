@@ -21,11 +21,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.hp.hpl.jena.tdb.base.file.Location;
 
+import de.rwth.i9.palm.model.Algorithm;
 import de.rwth.i9.palm.model.Author;
 import de.rwth.i9.palm.model.Institution;
 import de.rwth.i9.palm.model.Keyword;
 import de.rwth.i9.palm.model.Publication;
 import de.rwth.i9.palm.model.Role;
+import de.rwth.i9.palm.model.RunTime;
+import de.rwth.i9.palm.model.Source;
 import de.rwth.i9.palm.model.Topic;
 import de.rwth.i9.palm.model.User;
 import de.rwth.i9.palm.model.Venue;
@@ -109,13 +112,15 @@ public class DatabaseConfig
 		sessionFactoryBean.setPackagesToScan( env.getRequiredProperty( PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN ) );
 		sessionFactoryBean.setHibernateProperties( hibProperties() );
 		sessionFactoryBean.setAnnotatedClasses( new Class<?>[] { 
-				/*model class here*/ 
+		/* model class here */
+		Algorithm.class,
 				Author.class,
 				Institution.class,
 				Keyword.class,
 				Location.class,
 				Publication.class,
 				Role.class,
+ RunTime.class, Source.class,
 				Topic.class,
 				User.class,
 				Venue.class
