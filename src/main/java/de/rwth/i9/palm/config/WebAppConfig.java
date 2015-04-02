@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -18,6 +19,8 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
+
+import de.rwth.i9.palm.analytics.api.AnalyticsImpl;
 
 @Configuration
 @EnableWebMvc
@@ -95,5 +98,14 @@ public class WebAppConfig extends WebMvcConfigurerAdapter
 		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
 		commonsMultipartResolver.setMaxUploadSize( 10000000 );
 		return commonsMultipartResolver;
+	}
+
+	/* analytics */
+	@Bean
+	@Scope( "singleton" )
+	public AnalyticsImpl configAnalyticsImpl()
+	{
+		AnalyticsImpl analyticsImpl = new AnalyticsImpl();
+		return analyticsImpl;
 	}
 }
