@@ -21,10 +21,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import de.rwth.i9.palm.model.Algorithm;
 import de.rwth.i9.palm.model.Author;
+import de.rwth.i9.palm.model.AuthorAlias;
 import de.rwth.i9.palm.model.Institution;
 import de.rwth.i9.palm.model.Keyword;
 import de.rwth.i9.palm.model.Location;
 import de.rwth.i9.palm.model.Publication;
+import de.rwth.i9.palm.model.PublicationOld;
 import de.rwth.i9.palm.model.Role;
 import de.rwth.i9.palm.model.RunTime;
 import de.rwth.i9.palm.model.Source;
@@ -112,12 +114,14 @@ public class DatabaseConfig
 		sessionFactoryBean.setHibernateProperties( hibProperties() );
 		sessionFactoryBean.setAnnotatedClasses( new Class<?>[] { 
 		/* model class here */
-		Algorithm.class,
+				Algorithm.class,
+				AuthorAlias.class,
 				Author.class,
 				Institution.class,
 				Keyword.class,
 				Location.class,
 				Publication.class,
+				PublicationOld.class,
 				Role.class,
 				RunTime.class, 
  				Source.class,
