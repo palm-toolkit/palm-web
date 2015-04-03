@@ -22,6 +22,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import de.rwth.i9.palm.model.Algorithm;
 import de.rwth.i9.palm.model.Author;
 import de.rwth.i9.palm.model.AuthorAlias;
+import de.rwth.i9.palm.model.Concept;
+import de.rwth.i9.palm.model.Dataset;
+import de.rwth.i9.palm.model.Function;
 import de.rwth.i9.palm.model.Institution;
 import de.rwth.i9.palm.model.Keyword;
 import de.rwth.i9.palm.model.Location;
@@ -30,6 +33,7 @@ import de.rwth.i9.palm.model.PublicationOld;
 import de.rwth.i9.palm.model.Role;
 import de.rwth.i9.palm.model.RunTime;
 import de.rwth.i9.palm.model.Source;
+import de.rwth.i9.palm.model.Tag;
 import de.rwth.i9.palm.model.Topic;
 import de.rwth.i9.palm.model.User;
 import de.rwth.i9.palm.model.Venue;
@@ -56,6 +60,7 @@ public class DatabaseConfig
 	private static final String PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN = "entitymanager.packages.to.scan";
 	private static final String PROPERTY_NAME_HIBERNATE_SEARCH_DEFAULT_DIRECTORY_PROVIDER = "hibernate.search.default.directory_provider";
 	private static final String PROPERTY_NAME_HIBERNATE_SEARCH_DEFAULT_INDEXBASE = "hibernate.search.default.indexBase";
+	private static final String PROPERTY_NAME_HIBERNATE_SEARCH_LUCENE_VERSION = "hibernate.search.lucene_version";
 
 	@Autowired
 	private Environment env;
@@ -94,6 +99,7 @@ public class DatabaseConfig
 
 		properties.put( PROPERTY_NAME_HIBERNATE_SEARCH_DEFAULT_DIRECTORY_PROVIDER, env.getRequiredProperty( PROPERTY_NAME_HIBERNATE_SEARCH_DEFAULT_DIRECTORY_PROVIDER ) );
 		properties.put( PROPERTY_NAME_HIBERNATE_SEARCH_DEFAULT_INDEXBASE, env.getRequiredProperty( PROPERTY_NAME_HIBERNATE_SEARCH_DEFAULT_INDEXBASE ) );
+		properties.put( PROPERTY_NAME_HIBERNATE_SEARCH_LUCENE_VERSION, env.getRequiredProperty( PROPERTY_NAME_HIBERNATE_SEARCH_LUCENE_VERSION ) );
 		return properties;
 	}
 
@@ -115,8 +121,11 @@ public class DatabaseConfig
 		sessionFactoryBean.setAnnotatedClasses( new Class<?>[] { 
 		/* model class here */
 				Algorithm.class,
-				AuthorAlias.class,
 				Author.class,
+				AuthorAlias.class,
+				Concept.class,
+				Dataset.class,
+				Function.class,
 				Institution.class,
 				Keyword.class,
 				Location.class,
@@ -125,6 +134,7 @@ public class DatabaseConfig
 				Role.class,
 				RunTime.class, 
  				Source.class,
+ 				Tag.class,
 				Topic.class,
 				User.class,
 				Venue.class
