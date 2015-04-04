@@ -20,7 +20,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
-import de.rwth.i9.palm.analytics.api.AnalyticsImpl;
+import de.rwth.i9.palm.analytics.api.PalmAnalyticsImpl;
 
 @Configuration
 @EnableWebMvc
@@ -100,12 +100,11 @@ public class WebAppConfig extends WebMvcConfigurerAdapter
 		return commonsMultipartResolver;
 	}
 
-	/* analytics */
+	/* palm analytics */
 	@Bean
 	@Scope( "singleton" )
-	public AnalyticsImpl configAnalyticsImpl()
+	public PalmAnalyticsImpl configAnalyticsImpl()
 	{
-		AnalyticsImpl analyticsImpl = new AnalyticsImpl();
-		return analyticsImpl;
+		return new PalmAnalyticsImpl();
 	}
 }
