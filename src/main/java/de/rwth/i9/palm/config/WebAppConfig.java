@@ -22,6 +22,8 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
 import de.rwth.i9.palm.analytics.api.PalmAnalyticsImpl;
 
+//import de.rwth.i9.palm.analytics.api.PalmAnalyticsImpl;
+
 @Configuration
 @EnableWebMvc
 @ComponentScan( { "de.rwth.i9.palm" } )

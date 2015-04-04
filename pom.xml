@@ -5,6 +5,7 @@
     <groupId>de.rwth.i9</groupId>
     <artifactId>palm-project</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../palm-project/pom.xml</relativePath>
   </parent>
   
   <groupId>de.rwth.i9.palm</groupId>
