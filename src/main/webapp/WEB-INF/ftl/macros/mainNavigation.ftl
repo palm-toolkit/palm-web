@@ -37,7 +37,7 @@
 	</li>
 
     <li>
-    	<a href="<@spring.url '/analyze' />"<#if link?? & link == 'analyze'> class="current"</#if> title="analyze a publication">
+    	<a id="analytics-button" href="#" title="analyze a publication">
     		Analyze
 		</a>
 	</li>

@@ -22,3 +22,7 @@
 	<!-- End of col3 --> 
 	</div>
 </#macro>
+
+<#macro dialogmain style="">
+	<#nested />
+</#macro>
