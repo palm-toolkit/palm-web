@@ -6,9 +6,9 @@
 		<div id="col3_content" class="clearfix">
 			<div class="floatbox"> 
 			
-				<h1>Visual Analytic of Conference Network</h1>
+				<h1>Personal Academic Learner Model</h1>
 				<p>
-					Example Project
+					
 				</p>
 			</div>
  		</div>

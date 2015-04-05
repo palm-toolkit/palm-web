@@ -3,9 +3,9 @@
 
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>Visual Analytics of Conference Network</title>
-		<meta name="keywords" content="Visual Analytics of Conference Network" />
-		<meta name="description" content="Visual Analytics of Conference Network" />
+		<title>Personal Academic Learner Model</title>
+		<meta name="keywords" content="Personal Academic Learner Model" />
+		<meta name="description" content="Personal Academic Learner Model" />
 		<#include "libsNstyles.ftl" />
 	</head>
 	
