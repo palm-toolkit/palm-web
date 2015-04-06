@@ -174,10 +174,7 @@ function convertToAjaxMultipleFileUpload( $inputFile, $progressBar , $resultCont
 	if ($resultContainer instanceof jQuery)
 		$container = $resultContainer;
 	else
-		$container = $jQ( $resultContainer );
-	
-	// get remove files url from input element attribute "data-remove-url"
-	var fileRemoveUrl = $inputFile.attr( "data-remove-url" );
+		$container = $( $resultContainer );
 	
 	$inputFile.fileupload({
         dataType: 'json',
@@ -201,18 +198,18 @@ function printUploadedArticles( $containerSelector, data , addedOptions){
 	if ($containerSelector instanceof jQuery)
 		$container = $containerSelector;
 	else
-		$container = $jQ( $containerSelector );
+		$container = $( $containerSelector );
 	
 	/* check if textarea available*/
 	if( $container.find( "textarea" ).length == 0){
 		$container
-			.append( $jQ('<textarea/>')
+			.append( $('<textarea/>')
 					.css({'width': '99%', 'height' : "410px", 'resize' : ' none'})
 					)
 			.css({'width': '100%', 'height' : "450px"})
 			.resizable({
 			  resize: function( event, ui ) {
-				  $jQ( this ).find( "textarea" )
+				  $( this ).find( "textarea" )
 				  .css({ 'width' : (ui.element.width() - 10 ) + 'px' , 'height' : (ui.element.height() - 40 ) + 'px' });
 			  }
 			});

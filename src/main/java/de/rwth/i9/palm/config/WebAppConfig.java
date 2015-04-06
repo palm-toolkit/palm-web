@@ -94,13 +94,23 @@ public class WebAppConfig extends WebMvcConfigurerAdapter
 
 	/* fileupload */
 
-	@Bean
-	public CommonsMultipartResolver commonsMultipartResolver()
+	// @Bean
+	// public CommonsMultipartResolver commonsMultipartResolver()
+	// {
+	// CommonsMultipartResolver commonsMultipartResolver = new
+	// CommonsMultipartResolver();
+	// commonsMultipartResolver.setMaxUploadSize( 10000000 );
+	// return commonsMultipartResolver;
+	// }
+
+	@Bean( name = "multipartResolver" )
+	public CommonsMultipartResolver createMultipartResolver()
 	{
-		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-		commonsMultipartResolver.setMaxUploadSize( 10000000 );
-		return commonsMultipartResolver;
+		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+		resolver.setDefaultEncoding( "utf-8" );
+		return resolver;
 	}
+
 
 	/* palm analytics */
 	@Bean
