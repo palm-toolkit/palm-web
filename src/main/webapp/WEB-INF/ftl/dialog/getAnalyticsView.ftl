@@ -18,12 +18,32 @@
 	
 		<#-- text result -->
 	  	<div id="text_area"></div>
+	  	
+	  	
+	  	<#-- testing -->
+	  	<textarea id="input_text" name="input_text" style="height:180px;width:95%"></textarea>
+	  	<br/>
+	  	<input type="button" id="procceed_btn" value="analyze" />
+	  	
+	  	<#-- text result -->
+	  	<div id="results"></div>
 	</form>
 <script>
 	$(function() {
     	<#-- multiple file-upload -->
     	convertToAjaxMultipleFileUpload( $( '#fileupload' ), $( '#progress' ) , "#text_area" );
+    	
+    	$( "#procceed_btn" ).click( function(){
+    		analyzeContent();
+    	});
 	});	
+	
+	function analyzeContent(){
+		$.post( "<@spring.url '/analytics/run' />", { "content" : $( "#input_text" ).val() })
+		.done( function( html){
+			$( "#results" ).html( html );
+		});
+	}
 	
 </script>  	
 	</@content.dialogmain>
