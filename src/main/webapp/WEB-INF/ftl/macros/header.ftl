@@ -2,7 +2,7 @@
 	<div id="site_title_bar"> 
 	
 		<div id="site_title">
-            <h1><a href="#">VisACoN</a></h1>
+            <h1><a href="#">PALM</a></h1>
         </div>
         
         <#include "mainNavigation.ftl" />
@@ -13,7 +13,7 @@
        </div>
         
         <div id="site_sub_title">
-        	<h3>Visual Analysis of Conference Network</h3>
+        	<h3>Personal Academic Learner Model</h3>
         </div>
        
 	</div> <!-- end of site_title_bar -->        

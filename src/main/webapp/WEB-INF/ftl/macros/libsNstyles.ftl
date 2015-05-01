@@ -1,5 +1,5 @@
 	<!-- internal missy css definition -->
-	<link rel="stylesheet" href="<@spring.url '/resources/styles/vaocn.css' />" />
+	<link rel="stylesheet" href="<@spring.url '/resources/styles/palm.css' />" />
 	<link rel="stylesheet" href="<@spring.url '/resources/styles/jquery-ui.css' />" />
 	
 	<script>
@@ -23,6 +23,7 @@
 		<script src="<@spring.url '/resources/scripts/snorql.js' />"></script>
 	</#if>
 	<#-- used for uploading file via ajax, etc-->
-	<#--<script src="<@spring.url '/resources/scripts/jquery.fileupload.js' />"></script>-->
-
-	<script type="text/javascript" src="<@spring.url '/resources/scripts/vaocn.js' />"></script>
+	<script src="<@spring.url '/resources/scripts/jquery.fileupload.js' />"></script>
+	
+	<#-- internal javascript library -->
+	<script type="text/javascript" src="<@spring.url '/resources/scripts/palm.js' />"></script>

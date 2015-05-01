@@ -11,15 +11,11 @@
 	
 	<body>
 	
-		<#include "header.ftl" />
-	
 		<!-- Main Content -->
-		<div id="main">
+		<div id="dialogmain">
 			<#nested />
 		</div>
-		
-		<#include "dialogList.ftl" />
-	
+			
 	</body>
 
 </html>
