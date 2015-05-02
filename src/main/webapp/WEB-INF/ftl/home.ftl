@@ -1,13 +1,9 @@
- <@layout.global>
+ <@layout.global additionalStyle="layout-top-nav">
  	
- 	<@content.leftSidebar>
+ 	<@content.header>
 
-		<#include "leftSidebar.ftl" />
+		<#include "headerHome.ftl" />
 		
- 	</@content.leftSidebar>
- 	
- 	<@content.contentWrapper>
-		
- 	</@content.contentWrapper>
+ 	</@content.header>
  	
 </@layout.global>

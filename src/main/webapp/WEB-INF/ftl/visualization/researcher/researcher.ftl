@@ -1,5 +1,11 @@
  <@layout.global>
  	
+ 	<@content.header>
+
+		<#include "headerPage.ftl" />
+		
+ 	</@content.header>
+ 	
  	<@content.leftSidebar>
 
 		<#include "researcherLeftContent.ftl" />

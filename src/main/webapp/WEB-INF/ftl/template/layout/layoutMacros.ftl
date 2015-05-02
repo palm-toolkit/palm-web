@@ -1,4 +1,4 @@
-<#macro global>
+<#macro global additionalStyle="">
 <!DOCTYPE html>
 <html>
 
@@ -11,10 +11,8 @@
 		<#include "cssStyle.ftl" />
 	</head>
 	
-	<body class="skin-blue">
+	<body class="skin-blue<#if additionalStyle != ""> ${additionalStyle}</#if>">
 		<div class="wrapper">
-		
-			<#include "header.ftl" />
 			
 			<#-- content -->
 			<#nested />
