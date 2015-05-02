@@ -67,7 +67,6 @@
 	    <includes>
 			<include>**/*.xml</include>
 			<include>**/*.properties</include>
-			<include>**/*.sparql</include>
 		</includes>
 	  </resource>
 	</resources>
