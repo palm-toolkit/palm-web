@@ -7,8 +7,6 @@
  	</@content.leftSidebar>
  	
  	<@content.contentWrapper>
-
-		left sidebar here
 		
  	</@content.contentWrapper>
  	

@@ -8,7 +8,7 @@
 <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />
 
 <!-- Theme style -->
-<link href="<@spring.url '/resources/adminLTE/css/AdminLTE.min.css' />" rel="stylesheet" type="text/css" />
+<link href="<@spring.url '/resources/adminLTE/css/AdminLTE.css' />" rel="stylesheet" type="text/css" />
     
 <!-- AdminLTE Skins. Choose a skin from the css/skins 
      folder instead of downloading all of them to reduce the load. -->
