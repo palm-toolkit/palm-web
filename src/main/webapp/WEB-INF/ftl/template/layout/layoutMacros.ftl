@@ -1,4 +1,5 @@
 <#macro global>
+<!DOCTYPE html>
 <html>
 
 	<head>
@@ -6,22 +7,23 @@
 		<title>Personal Academic Learner Model</title>
 		<meta name="keywords" content="Personal Academic Learner Model" />
 		<meta name="description" content="Personal Academic Learner Model" />
+		<#-- all styles -->
 		<#include "cssStyle.ftl" />
 	</head>
 	
-	<body>
-	
-		<#include "header.ftl" />
-	
-		<!-- Main Content -->
-		<div id="main">
-			<#nested />
-		</div>
+	<body class="skin-blue">
+		<div class="wrapper">
 		
-		<#include "dialogList.ftl" />
-		<#include "jsLib.ftl" />
+			<#include "header.ftl" />
+			
+			<#-- content -->
+			<#nested />
+			
+			<#-- javascript call at the end, avoiding resource blocking-->
+			<#include "jsLib.ftl" />
+			
+		</div>
 	</body>
 
 </html>
-
 </#macro>

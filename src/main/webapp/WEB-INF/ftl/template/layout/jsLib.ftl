@@ -34,7 +34,7 @@
 <script src="<@spring.url '/resources/scripts/d3.min.js' />"></script>
 
 <#-- used for uploading file via ajax, etc-->
-<script src="<@spring.url '/resources/scripts/jquery.fileupload.js' />"></script>
+<#--<script src="<@spring.url '/resources/scripts/jquery.fileupload.js' />"></script>-->
 
 <#-- internal javascript library -->
 <script type="text/javascript" src="<@spring.url '/resources/scripts/palm.js' />"></script>

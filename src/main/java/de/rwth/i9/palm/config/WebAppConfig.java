@@ -66,14 +66,17 @@ public class WebAppConfig extends WebMvcConfigurerAdapter
 				"/WEB-INF/ftl/sparqlview", 
 				"/WEB-INF/ftl/dialog", 
 				"/WEB-INF/ftl/analytics",
-				"/WEB-INF/ftl/administrator"
+				"/WEB-INF/ftl/administrator",
+				"/WEB-INF/ftl/template",
+				"/WEB-INF/ftl/template/layout",
+				"/WEB-INF/ftl/template/widget"
 			);
 
 		Properties prop = new Properties();
 		prop.put( "default_encoding", "UTF-8" );
 		prop.put( "auto_import", 
-				"macros/layoutMacros.ftl as layout, " +
-				"macros/contentMacros.ftl as content, " +
+				"template/layout/layoutMacros.ftl as layout, " +
+				"template/layout/contentMacros.ftl as content, " +
 				"spring.ftl as spring, " +
 				"macros/dialogLayoutMacros.ftl as dialoglayout" );
 
