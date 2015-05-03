@@ -10,7 +10,7 @@
 <script src="<@spring.url '/resources/scripts/jquery.dialogextend.js' />"></script>-->
 
 <!-- jQuery 2.1.3 -->
-<script src="<@spring.url '/resources/plugins/jQuery/jQuery-2.1.3.min.js' />"></script>
+<script src="<@spring.url '/resources/plugins/jQuery/jQuery-2.1.3.min.js' />" type="text/javascript"></script>
 
 <!-- Bootstrap 3.3.2 JS -->
 <script src="<@spring.url '/resources/bootstrap/js/bootstrap.min.js' />" type="text/javascript"></script>
