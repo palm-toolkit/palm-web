@@ -36,7 +36,9 @@ import de.rwth.i9.palm.model.Source;
 import de.rwth.i9.palm.model.Tag;
 import de.rwth.i9.palm.model.Topic;
 import de.rwth.i9.palm.model.User;
+import de.rwth.i9.palm.model.UserWidget;
 import de.rwth.i9.palm.model.Venue;
+import de.rwth.i9.palm.model.Widget;
 import de.rwth.i9.palm.persistence.relational.PersistenceStrategyImpl;
 
 @Configuration
@@ -137,7 +139,9 @@ public class DatabaseConfig
  				Tag.class,
 				Topic.class,
 				User.class,
-				Venue.class
+				UserWidget.class,
+				Venue.class,
+				Widget.class
 				} );
 		return sessionFactoryBean;
 	}
