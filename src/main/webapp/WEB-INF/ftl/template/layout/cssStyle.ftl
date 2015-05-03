@@ -22,5 +22,5 @@
 <![endif]-->
 
 <!-- internal palm css definition -->
-<link href="<@spring.url '/resources/styles/palm.css' />" rel="stylesheet" type="text/css" />
-<link href="<@spring.url '/resources/styles/jquery-ui.css' />" rel="stylesheet" type="text/css" />
+<!--<link href="<@spring.url '/resources/styles/palm.css' />" rel="stylesheet" type="text/css" />
+<link href="<@spring.url '/resources/styles/jquery-ui.css' />" rel="stylesheet" type="text/css" />-->

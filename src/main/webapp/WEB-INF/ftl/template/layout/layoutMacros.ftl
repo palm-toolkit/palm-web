@@ -1,17 +1,18 @@
-<#macro global additionalStyle="">
+<#macro global classStyle="">
 <!DOCTYPE html>
 <html>
 
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta charset=utf-8">
 		<title>Personal Academic Learner Model</title>
+		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 		<meta name="keywords" content="Personal Academic Learner Model" />
 		<meta name="description" content="Personal Academic Learner Model" />
 		<#-- all styles -->
 		<#include "cssStyle.ftl" />
 	</head>
 	
-	<body class="skin-blue<#if additionalStyle != ""> ${additionalStyle}</#if>">
+	<body class="<#if classStyle != "">${classStyle}<#else>skin-blue-light</#if>">
 		<div class="wrapper">
 			
 			<#-- content -->

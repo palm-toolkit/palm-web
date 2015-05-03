@@ -3,7 +3,7 @@
 	  <div class="navbar-header">
 	    <!-- Logo -->
 		<a href="#" class="navbar-brand"><strong>PALM</strong></a>
-		<span class="navbar-brand">Personal Academic Learner Model</span>
+		<span class="navbar-brand" style="font-size:16px"><strong>Personal Academic Learner Model</strong></span>
 	    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
 	      <i class="fa fa-bars"></i>
 	    </button>
