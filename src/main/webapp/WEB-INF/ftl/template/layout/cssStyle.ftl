@@ -14,6 +14,9 @@
      folder instead of downloading all of them to reduce the load. -->
 <link href="<@spring.url '/resources/adminLTE/css//skins/_all-skins.min.css' />" rel="stylesheet" type="text/css" />
 
+<!-- icheck style -->
+<link href="<@spring.url '/resources/plugins/icheck/square/blue.css' />" rel="stylesheet" type="text/css" />
+
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
@@ -22,5 +25,10 @@
 <![endif]-->
 
 <!-- internal palm css definition -->
-<!--<link href="<@spring.url '/resources/styles/palm.css' />" rel="stylesheet" type="text/css" />
-<link href="<@spring.url '/resources/styles/jquery-ui.css' />" rel="stylesheet" type="text/css" />-->
+<link href="<@spring.url '/resources/styles/palm.css' />" rel="stylesheet" type="text/css" />
+<!--<link href="<@spring.url '/resources/styles/jquery-ui.css' />" rel="stylesheet" type="text/css" />-->
+
+<script>
+	<#-- get the basepath of the project, that will be used in javascript file -->
+	var baseUrl = "<@spring.url '' />";
+</script>

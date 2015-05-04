@@ -1,60 +1,110 @@
-/* global variables */
+var snorqlDialog, analyticsDialog;
 
-/* document ready */
 $(function(){
-	$( "#signin_button" ).click( function( event ){
-		event.preventDefault();
-		// get login form
-		getFormViaAjax( "login" );
+	/* search button pressed */
+	$( "#fulltext-search,#tfidf-search,#topic-search" ).click( function( event){
+		/* toggle button */
+		if( $( this ).hasClass( "current" ) )
+			$( this ).removeClass( "current" ).removeClass( "search-current" );
+		else
+			$( this) .addClass( "current" ).addClass( "search-current" );
+		/* toggle input search */
+		if( $( ".search-button.current" ).length > 0 )
+			$( "#search_box" ).removeClass( "invisible" );
+		else
+			$( "#search_box" ).addClass( "invisible" );
 	});
 	
+	/* Snorql button pressed */
+	$("#snorql-button").click( function( event ){
+		if( typeof snorqlDialog == "undefined" ){
+			/* add pressed style */
+			$( this ).addClass( "current" );
+			/* get the content via ajax */
+			//getContentViaAjax( baseUrl + "/sparqlview", "#dialog-snorql" );
+			$("#dialog-snorql").append(
+				$("<iframe />")
+					.attr({
+						"id": "snorqliframe",
+						"src":  baseUrl + "/sparqlview",
+						"width": 1024,
+						"height":465,
+						"frameborder":0
+						})
+					.addClass("dialog-iframe")
+			);
+			/* open dialog box */
+			var dialogOptions = getDialogOptions("Linked Data Explore", 1024, 500, false, true, true, "#snorql-button");
+			var dialogExtendOptions = getDialogExtendOptions(true, false);
+			snorqlDialog = 
+				$( "#dialog-snorql" )
+					.dialog( dialogOptions )
+					.dialogExtend( dialogExtendOptions );
+			
+			snorqlDialog.dialogExtend( "restore" );
+			/* adjust iframe size*/
+			$( "#dialog-snorql" ).on( "dialogresizestop", function( event, ui ) {
+				$("iframe").width( ui.size.width ).height( ui.size.height - 30 );
+			} );
+			
+			/* prevent default behaviour of a link */
+			event.preventDefault();
+		} else{
+			if( snorqlDialog.dialogExtend( "state" )  == "minimized" )
+				snorqlDialog.dialogExtend( "restore" );
+			else{
+				/* add pressed style */
+				$( this ).addClass( "current" );
+				snorqlDialog.dialog('open');
+			}
+		}
+	});
+	
+	/* Analytics button pressed */
+	$("#analytics-button").click( function( event ){
+		if( typeof analyticsDialog == "undefined" ){
+			/* add pressed style */
+			$( this ).addClass( "current" );
+			/* get the content via ajax */
+			//getContentViaAjax( baseUrl + "/sparqlview", "#dialog-snorql" );
+			$("#dialog-analytics").append(
+				$("<iframe />")
+					.attr({
+						"id": "analyticsiframe",
+						"src":  baseUrl + "/analytics/dialog",
+						"width": 1024,
+						"height":465,
+						"frameborder":0
+						})
+					.addClass("dialog-iframe")
+			);
+			/* open dialog box */
+			var dialogOptions = getDialogOptions("Analytics", 1024, 500, false, true, true, "#analytics-button");
+			var dialogExtendOptions = getDialogExtendOptions(true, false);
+			analyticsDialog = 
+				$( "#dialog-analytics" )
+					.dialog( dialogOptions )
+					.dialogExtend( dialogExtendOptions );
+			
+			analyticsDialog.dialogExtend( "restore" );
+			/* adjust iframe size*/
+			$( "#dialog-analytics" ).on( "dialogresizestop", function( event, ui ) {
+				$("iframe").width( ui.size.width ).height( ui.size.height - 30 );
+			} );
+			
+			/* prevent default behaviour of a link */
+			event.preventDefault();
+		} else{
+			if( analyticsDialog.dialogExtend( "state" )  == "minimized" )
+				analyticsDialog.dialogExtend( "restore" );
+			else{
+				/* add pressed style */
+				$( this ).addClass( "current" );
+				analyticsDialog.dialog('open');
+			}
+		}
+	});
 });
-
-/**
- * get form via ajax
- */
-function getFormViaAjax( formType , alwaysCallback){
-	var jqxhr = $.get( baseUrl + "/" +  formType, function( html ) {
-		getPopUpForm(  formType, html );
-	})
-    .done(function() {
-    	// nothing to do
-	})
-	.fail(function() {
-		// nothing to do
-	})
-	.always(function() {
-		if( typeof alwaysCallback !== "undefined" )
-			alwaysCallback
-	});
-}
-/**
- * Get popup form and display it
- */
-function getPopUpForm( popUpType, html ){
-	// remove existing popup if exist
-	$( ".popup-form-container" ).remove();
-	/* add blur */
-	$( ".wrapper" ).addClass( "blur2px" );
-	
-	// create new one
-	$popUpElem = 
-		$( "<div/>" )
-		.addClass( "popup-form-container" )
-		.append(
-				$( "<div/>" )
-				.addClass( "dialog-overlay" )
-				)
-		.append(
-				$( "<div/>" )
-				.addClass( popUpType + "-container" )
-				.html( html )
-				)
-		.appendTo( "body" );
-}
-
-
-
 
 /* jQuery ajax get */
 function getContentViaAjax( url, containerSelector ){

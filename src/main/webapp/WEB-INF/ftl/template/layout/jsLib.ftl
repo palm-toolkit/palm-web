@@ -1,8 +1,3 @@
-<script>
-	<#-- get the basepath of the project, that will be used in javascript file -->
-	var baseUrl = "<@spring.url '' />";
-</script>
-
 <!-- external -->
 <!-- simplifies javascript programming -->
 <!--<script src="<@spring.url '/resources/scripts/jquery-1.8.2.js' />"></script>

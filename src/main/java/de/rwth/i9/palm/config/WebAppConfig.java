@@ -68,6 +68,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter
 				"/WEB-INF/ftl/analytics",
 				"/WEB-INF/ftl/administrator",
 				"/WEB-INF/ftl/template",
+				"/WEB-INF/ftl/template/form",
 				"/WEB-INF/ftl/template/layout",
 				"/WEB-INF/ftl/template/widget"
 			);
