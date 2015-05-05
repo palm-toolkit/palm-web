@@ -43,10 +43,12 @@
 		  	<artifactId>maven-war-plugin</artifactId>
 		  	<version>${maven.war.plugin.version}</version>
 		  	<configuration>
-		    	<webXml>src\main\webapp\WEB-INF\web.xml</webXml>        
+		    	<!-- <webXml>src\main\webapp\WEB-INF\web.xml</webXml>-->
+		    	<warsourcedirectory>src/main/webapp</warsourcedirectory>  
+        		<warname>${project.name}</warname>  
+        		<failonmissingwebxml>false</failonmissingwebxml> 
 		  	</configuration>
 		</plugin>
-
 		<plugin>
 	       <groupId>org.apache.tomcat.maven</groupId>
 	        <artifactId>tomcat7-maven-plugin</artifactId>
