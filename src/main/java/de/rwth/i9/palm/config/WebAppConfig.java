@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -100,6 +101,13 @@ public class WebAppConfig extends WebMvcConfigurerAdapter
 	public void addResourceHandlers( ResourceHandlerRegistry registry )
 	{
 		registry.addResourceHandler( "/resources/**" ).addResourceLocations( "/resources/" );
+	}
+
+	// <mvc:default-servlet-handler/>
+	@Override
+	public void configureDefaultServletHandling( DefaultServletHandlerConfigurer configurer )
+	{
+		configurer.enable();
 	}
 
 	// Provides internationalization of messages
