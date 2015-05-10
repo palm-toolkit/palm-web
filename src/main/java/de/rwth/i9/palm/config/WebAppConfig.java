@@ -79,6 +79,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter
 		prop.put( "auto_import", 
 				"template/layout/layoutMacros.ftl as layout, " +
 				"template/layout/contentMacros.ftl as content, " +
+				"template/widget/widgetMacros.ftl as widget, " +
 				"spring.ftl as spring, " +
 				"macros/dialogLayoutMacros.ftl as dialoglayout" );
 
