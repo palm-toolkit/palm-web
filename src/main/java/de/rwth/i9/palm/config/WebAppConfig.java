@@ -59,6 +59,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter
 		FreeMarkerConfigurer freeMarkerConfigurer = new FreeMarkerConfigurer();
 		freeMarkerConfigurer.setTemplateLoaderPaths( 
 				"/WEB-INF/ftl/",
+				"/WEB-INF/ftl/administration",
 				"/WEB-INF/ftl/administration/conference",
 				"/WEB-INF/ftl/administration/dataset",
 				"/WEB-INF/ftl/administration/publication",

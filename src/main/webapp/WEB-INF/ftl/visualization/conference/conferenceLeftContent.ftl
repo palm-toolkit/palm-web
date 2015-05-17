@@ -4,5 +4,5 @@
 	wId="conference" 
 	wClassContainer="padding0" 
 	wClassBox="border0"
-	wContentBody="widgetHelp.ftl"
+	wContentBody="../../administration/widget/widgetHelp.ftl"
 	/>
