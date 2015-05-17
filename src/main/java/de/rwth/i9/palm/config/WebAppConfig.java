@@ -58,7 +58,15 @@ public class WebAppConfig extends WebMvcConfigurerAdapter
 	{
 		FreeMarkerConfigurer freeMarkerConfigurer = new FreeMarkerConfigurer();
 		freeMarkerConfigurer.setTemplateLoaderPaths( 
-				"/WEB-INF/ftl/", 
+				"/WEB-INF/ftl/",
+				"/WEB-INF/ftl/administrator/conference",
+				"/WEB-INF/ftl/administrator/dataset",
+				"/WEB-INF/ftl/administrator/publication",
+				"/WEB-INF/ftl/administrator/researcher",
+				"/WEB-INF/ftl/administrator/statistic",
+				"/WEB-INF/ftl/administrator/system",
+				"/WEB-INF/ftl/administrator/user",
+				"/WEB-INF/ftl/administrator/widget",
 				"/WEB-INF/ftl/dataset", 
 				"/WEB-INF/ftl/visualization", 
 				"/WEB-INF/ftl/visualization/conference", 
@@ -67,7 +75,6 @@ public class WebAppConfig extends WebMvcConfigurerAdapter
 				"/WEB-INF/ftl/sparqlview", 
 				"/WEB-INF/ftl/dialog", 
 				"/WEB-INF/ftl/analytics",
-				"/WEB-INF/ftl/administrator",
 				"/WEB-INF/ftl/template",
 				"/WEB-INF/ftl/template/form",
 				"/WEB-INF/ftl/template/layout",
@@ -81,7 +88,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter
 				"template/layout/contentMacros.ftl as content, " +
 				"template/widget/widgetMacros.ftl as widget, " +
 				"spring.ftl as spring, " +
-				"macros/dialogLayoutMacros.ftl as dialoglayout" );
+				"template/layout/dialogLayoutMacros.ftl as dialoglayout" );
 
 		freeMarkerConfigurer.setFreemarkerSettings( prop );
 
