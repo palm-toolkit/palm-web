@@ -9,6 +9,9 @@
   <#-- Navbar Right Menu -->
   <div class="navbar-custom-menu">
     <ul class="nav navbar-nav">
+    
+      <#--Navigation menu -->
+      <#include "headerNavigationMenu.ftl" />
 
       <#-- Notifications: style can be found in dropdown.less -->
       <#include "headerNotification.ftl" />
