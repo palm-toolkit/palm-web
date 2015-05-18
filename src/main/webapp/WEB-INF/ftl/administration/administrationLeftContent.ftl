@@ -11,7 +11,8 @@
 		<i class="fa fa-angle-left pull-right"></i>
       </a>
       <ul class="treeview-menu">
-        <li><a href="index.html"><i class="fa fa-caret-right"></i>Add New Widget </a></li>
+        <li class="active"><a href="index.html"><i class="fa fa-caret-right"></i>Overview</a></li>
+        <li><a href="<@spring.url '/admin/widget/add' />"><i class="fa fa-caret-right"></i>Add New Widget</a></li>
         <li><a href="index2.html"><i class="fa fa-caret-right"></i>Edit Widget</a></li>
         <li><a href="index2.html"><i class="fa fa-caret-right"></i>Conference Widget</a></li>
         <li><a href="index2.html"><i class="fa fa-caret-right"></i>Publication Widget</a></li>
