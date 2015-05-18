@@ -1,29 +1,44 @@
- <@layout.global>
- 	
- 	<@content.main>
+ <@layout.global classStyle="layout-top-nav skin-blue-light">
+ 	 	
+ 	<@content.header>
 
-		<div id="MISSY_breadcrumb"></div>
-		<div id="col3_content" class="clearfix">
-			<div class="floatbox"> 
-			
-				<h1>Personal Academic Learner Model</h1>
-				<p>
-					
-				</p>
-			</div>
- 		</div>
- 		
-		<!-- IE clearing - important! -->
-		<div id="ie_clearing">&nbsp;</div>
+		<#include "headerHome.ftl" />
 		
- 	</@content.main>
+ 	</@content.header>
+ 	
+ 	<@content.contentWrapper>
+ 	
+ 		<div class="row center-content padding-home-content">
+ 		
+            <a href="<@spring.url '/conference' />" class="col-md-3 col-sm-6 col-xs-12 box-home">
+              <div class="info-box">
+                <span class="info-box-icon info-box-home-icon bg-aqua"><i class="fa fa-home fa-graduation-cap"></i></span>
+                <div class="info-box-content info-box-home-text">
+                  <span class="info-box-number fontsize24">CONFERENCES</span>
+                </div>
+              </div>
+            </a>
+
+			<a href="<@spring.url '/researcher' />" class="col-md-3 col-sm-6 col-xs-12 box-home">
+              <div class="info-box">
+                <span class="info-box-icon info-box-home-icon bg-yellow"><i class="fa fa-home fa-users"></i></span>
+                <div class="info-box-content info-box-home-text">
+                  <span class="info-box-number fontsize24">RESEARCHERS</span>
+                </div>
+              </div>
+            </a>         
+            
+            <a href="<@spring.url '/publication' />" class="col-md-3 col-sm-6 col-xs-12 box-home">
+              <div class="info-box">
+                <span class="info-box-icon info-box-home-icon bg-green"><i class="fa fa-home fa-file-text-o"></i></span>
+                <div class="info-box-content info-box-home-text">
+                  <span class="info-box-number fontsize24">PUBLICATIONS</span>
+                </div>
+              </div>
+            </a>
+            
+          </div>
+          		
+ 	</@content.contentWrapper>
  	
 </@layout.global>
-
-<script>
-	$( function() // begin document ready
-	{
-		<#-- change the size of main content -->
-		$( "#col3" ).css( "margin", "0 0 0 150px");
-	}); // end of document ready
-</script>

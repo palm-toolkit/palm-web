@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -56,11 +57,41 @@ public class WebAppConfig extends WebMvcConfigurerAdapter
 	public FreeMarkerConfigurer setupFreeMarkerConfigurer()
 	{
 		FreeMarkerConfigurer freeMarkerConfigurer = new FreeMarkerConfigurer();
-		freeMarkerConfigurer.setTemplateLoaderPaths( "/WEB-INF/ftl/", "/WEB-INF/ftl/dataset", "/WEB-INF/ftl/visualization", "/WEB-INF/ftl/sparqlview", "/WEB-INF/ftl/dialog", "/WEB-INF/ftl/analytics" );
+		freeMarkerConfigurer.setTemplateLoaderPaths( 
+				"/WEB-INF/ftl/",
+				"/WEB-INF/ftl/administration",
+				"/WEB-INF/ftl/administration/conference",
+				"/WEB-INF/ftl/administration/dataset",
+				"/WEB-INF/ftl/administration/publication",
+				"/WEB-INF/ftl/administration/researcher",
+				"/WEB-INF/ftl/administration/statistic",
+				"/WEB-INF/ftl/administration/system",
+				"/WEB-INF/ftl/administration/user",
+				"/WEB-INF/ftl/administration/widget",
+				"/WEB-INF/ftl/conference",
+				"/WEB-INF/ftl/conference/visualization",
+				"/WEB-INF/ftl/publication",
+				"/WEB-INF/ftl/publication/visualization",
+				"/WEB-INF/ftl/researcher",
+				"/WEB-INF/ftl/researcher/visualization",
+				"/WEB-INF/ftl/dataset", 
+				"/WEB-INF/ftl/sparqlview", 
+				"/WEB-INF/ftl/dialog", 
+				"/WEB-INF/ftl/analytics",
+				"/WEB-INF/ftl/template",
+				"/WEB-INF/ftl/template/form",
+				"/WEB-INF/ftl/template/layout",
+				"/WEB-INF/ftl/template/widget"
+			);
 
 		Properties prop = new Properties();
 		prop.put( "default_encoding", "UTF-8" );
-		prop.put( "auto_import", "macros/layoutMacros.ftl as layout, macros/contentMacros.ftl as content, spring.ftl as spring, macros/dialogLayoutMacros.ftl as dialoglayout" );
+		prop.put( "auto_import", 
+				"template/layout/layoutMacros.ftl as layout, " +
+				"template/layout/contentMacros.ftl as content, " +
+				"template/widget/widgetMacros.ftl as widget, " +
+				"spring.ftl as spring, " +
+				"template/layout/dialogLayoutMacros.ftl as dialoglayout" );
 
 		freeMarkerConfigurer.setFreemarkerSettings( prop );
 
@@ -81,6 +112,13 @@ public class WebAppConfig extends WebMvcConfigurerAdapter
 	public void addResourceHandlers( ResourceHandlerRegistry registry )
 	{
 		registry.addResourceHandler( "/resources/**" ).addResourceLocations( "/resources/" );
+	}
+
+	// <mvc:default-servlet-handler/>
+	@Override
+	public void configureDefaultServletHandling( DefaultServletHandlerConfigurer configurer )
+	{
+		configurer.enable();
 	}
 
 	// Provides internationalization of messages
