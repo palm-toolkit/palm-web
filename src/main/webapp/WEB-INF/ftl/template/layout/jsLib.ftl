@@ -1,6 +1,6 @@
 <#-- external -->
 <#-- simplifies javascript programming -->
-<!--<script src="<@spring.url '/resources/scripts/jquery-1.8.2.js' />"></script>
+<#--<script src="<@spring.url '/resources/scripts/jquery-1.8.2.js' />"></script>
 <script src="<@spring.url '/resources/scripts/jquery-ui-1.9.2.custom.js' />"></script>
 <script src="<@spring.url '/resources/scripts/jquery.dialogextend.js' />"></script>-->
 
@@ -12,9 +12,6 @@
 
 <#-- FastClick -->
 <script src="<@spring.url '/resources/plugins/fastclick/fastclick.min.js' />" type="text/javascript"></script>
-
-<#-- AdminLTE App -->
-<script src="<@spring.url '/resources/adminLTE/js/app.min.js' />" type="text/javascript"></script>
 
 <#-- Sparkline -->
 <script src="<@spring.url '/resources/plugins/sparkline/jquery.sparkline.min.js' />" type="text/javascript"></script>
@@ -37,3 +34,6 @@
 	var baseUrl = "<@spring.url '' />";
 </script>
 <script type="text/javascript" src="<@spring.url '/resources/scripts/palm.js' />"></script>
+<#if link == "administration">
+	<script type="text/javascript" src="<@spring.url '/resources/scripts/palm.administration.js' />"></script>
+</#if>
