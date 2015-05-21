@@ -32,6 +32,7 @@ import de.rwth.i9.palm.model.Publication;
 import de.rwth.i9.palm.model.PublicationOld;
 import de.rwth.i9.palm.model.Role;
 import de.rwth.i9.palm.model.RunTime;
+import de.rwth.i9.palm.model.SessionDataSet;
 import de.rwth.i9.palm.model.Source;
 import de.rwth.i9.palm.model.Tag;
 import de.rwth.i9.palm.model.Topic;
@@ -134,7 +135,8 @@ public class DatabaseConfig
 				Publication.class,
 				PublicationOld.class,
 				Role.class,
-				RunTime.class, 
+				RunTime.class,
+				SessionDataSet.class,
  				Source.class,
  				Tag.class,
 				Topic.class,
