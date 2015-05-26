@@ -17,13 +17,10 @@
 		wColorEnabled="${w.colorEnabled?c}"
 		wColor="${w.color}"
 		/>
-		
+			
+		<script>
+			<#-- Activate current box widget -->
+	    	$.PALM.boxWidget.activateSpecific( $( "#widget-${w.id}" ));
+		</script>
 	</#list>
 </#if>
-
-<script>
-	<#-- Activate all box widget at the end -->
-  	if ($.PALM.options.enableBoxWidget) {
-    	$.PALM.boxWidget.activate();
-  	}
-</script>
