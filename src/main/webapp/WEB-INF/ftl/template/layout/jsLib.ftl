@@ -29,11 +29,29 @@
 <#--<script src="<@spring.url '/resources/scripts/jquery.fileupload.js' />"></script>-->
 
 <#-- internal javascript library -->
-<script>
 	<#-- get the basepath of the project, that will be used in javascript file -->
 	var baseUrl = "<@spring.url '' />";
 </script>
+
 <script type="text/javascript" src="<@spring.url '/resources/scripts/palm.js' />"></script>
-<#if link == "administration">
+
+<#if link?? & link == "administration">
 	<script type="text/javascript" src="<@spring.url '/resources/scripts/palm.administration.js' />"></script>
 </#if>
+
+<#if activeMenu??>
+	<script>
+		<#list activeMenu?split("-") as x>
+			<#if x_index == 0>
+				var $menu = $( "section.sidebar li[data-link='${x}']" );
+				$menu.addClass( "active" );
+			<#else>
+				var $subMenu =$menu.find( "li[data-link='${x}']" );
+				$subMenu.addClass( "active" );
+				<#-- load content -->
+				getContentViaAjax( $subMenu.find( "a" ).attr( "href" ), "section.content .row");
+			</#if>
+		</#list>  
+	</script>
+</#if>
+<script>

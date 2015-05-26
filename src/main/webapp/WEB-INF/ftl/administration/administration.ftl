@@ -14,7 +14,11 @@
  	
  	<@content.contentWrapper>
  	
- 		<#-- ajax content goes here -->
+ 		<section class="content">
+ 			<div class="row">
+ 			<#-- ajax content goes here -->
+ 			</div>
+		</section>
 		
  	</@content.contentWrapper>
  	

@@ -1,52 +1,70 @@
-<#macro widget wSize="SMALL" wTitle="" wId="" wParams...>
+<#macro widget wId="" wTitle="" wType="" wGroup="" wSource="BLANK" wWidth="SMALL" wParams...>
+	<#-- local variables --A
+	<#-- widget container class -->
+	<#local wClassContainer = "">
 	
-	<#-- container -->
-	<#if wSize == "LARGE">
-		<div id="${wId}" class="col-md-12<#if wParams["wClassContainer"]??> ${wParams["wClassContainer"]}</#if>">
-	<#elseif  wSize == "MEDIUM">
-		<div id="${wId}" class="col-md-8<#if wParams["wClassContainer"]??> ${wParams["wClassContainer"]}</#if>">
+	<#-- widget box class -->
+	<#local wClassBox = "box">
+	
+	<#-- widget width -->
+	<#if wWidth == "LARGE">
+		<#local wClassContainer = "col-md-12">
+	<#elseif wWidth == "MEDIUM">
+		<#local wClassContainer = "col-md-8">
 	<#else>
-		<div id="${wId}" class="col-md-6<#if wParams["wClassContainer"]??> ${wParams["wClassContainer"]}</#if>">
+		<#local wClassContainer = "col-md-4">
 	</#if>
-	      <div class="box<#if wParams["wClassBox"]??> ${wParams["wClassBox"]}</#if>">
-	        <div id="${wId}_header" class="box-header with-border">
-	          <h3 class="box-title">${wTitle}</h3>
-	          <div class="box-tools pull-right">
-	          	<#-- widget help button -->
-	          	
-	          	<#-- widget minimize button -->
-	            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-	            <#-- widget miximize button -->
-	            
-	            <#-- widget -->
-	            <#--
-	            <div class="btn-group">
-	              <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-wrench"></i></button>
-	              <ul class="dropdown-menu" role="menu">
-	                <li><a href="#">Action</a></li>
-	                <li><a href="#">Another action</a></li>
-	                <li><a href="#">Something else here</a></li>
-	                <li class="divider"></li>
-	                <li><a href="#">Separated link</a></li>
-	              </ul>
-	            </div>
-	            -->
-	            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-	          </div>
-	        </div><#-- /.box-header -->
-	        <div id="${wId}_body" class="box-body">
-	        	<#-- if there is included content body -->
-	        	<#if wParams["wContentBody"]??>
-	        		<#include wParams["wContentBody"] />
-	        	</#if>
+	
+	<#if wGroup="sidebar">
+		<#local wClassContainer = wClassContainer + " padding0">
+		<#local wClassBox = wClassBox + " border0" >
+	</#if>
+	
+	<#-- The widget -->
+	<div id="widget-${wId}" class="${wClassContainer}">
+      <div class="${wClassBox}">
+        <div class="box-header with-border">
+          <h3 class="box-title">${wTitle}</h3>
+          <div class="box-tools pull-right">
+          	<#-- widget help button -->
+          	
+          	<#-- widget minimize button -->
+            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+            <#-- widget miximize button -->
+            
+            <#-- widget -->
+            <#--
+            <div class="btn-group">
+              <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-wrench"></i></button>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Separated link</a></li>
+              </ul>
+            </div>
+            -->
+            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+          </div>
+        </div><#-- /.box-header -->
+        
+        <#if wSource == "INCLUDE">
+    		<#include wParams["wSourcePath"] />
+		<#else>
+			<div class="box-body">
 	            <#-- ajax content goes here -->
+	            <#-- if external source, load from iframe -->
+	            <#if wSource == "EXTERTNAL">
+	            	<iframe  alt="external source" width="1" height="1" scrolling="no" frameborder="no" marginheight="0" marginwidth="0" border="0" src="${wParams["wSourcePath"]}"></iframe>
+	            </#if>
 	        </div><#-- ./box-body -->
-	        <div id="${wId}_footer" class="box-footer">
-	          <div class="row">
-	            
-	          </div><#-- /.row -->
-	        </div><#-- /.box-footer -->
-	      </div><#-- /.box -->
-	    </div><#-- /.container -->
+	        <div class="box-footer">
+	          	<#-- ajax footer goes here -->
+            </div><#-- /.box-footer -->
+			
+    	</#if>
+      </div><#-- /.box -->
+    </div><#-- /.container -->
 	
 </#macro>

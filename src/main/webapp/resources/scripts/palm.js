@@ -338,13 +338,15 @@ $.PALM.tree = function (menu) {
     //if this isn't a link, prevent the page from being redirected
     if (checkElement.is('.treeview-menu')) {
       e.preventDefault();
+      checkElement.parent("li").addClass("active");
     }
     else{
     	e.preventDefault();
+    	$this.parent("li").addClass("active");
     	// get content via ajax
     	var url = $this.attr( "href" );
     	if( url !== "#" )
-    		getContentViaAjax( $this.attr( "href" ), ".content-wrapper");
+    		getContentViaAjax( $this.attr( "href" ), "section.content .row");
     }
   });
 };
@@ -370,6 +372,21 @@ $.PALM.boxWidget = {
 
     //Listen for remove event triggers
     $(o.boxWidgetOptions.boxWidgetSelectors.remove).click(function (e) {
+      e.preventDefault();
+      _this.remove($(this));
+    });
+  },
+  activateSpecific: function ( $widgetElement ) {
+    var o = $.PALM.options;
+    var _this = this;
+    //Listen for collapse event triggers
+    $widgetElement.find(o.boxWidgetOptions.boxWidgetSelectors.collapse).click(function (e) {
+      e.preventDefault();
+      _this.collapse($(this));
+    });
+
+    //Listen for remove event triggers
+    $widgetElement.find(o.boxWidgetOptions.boxWidgetSelectors.remove).click(function (e) {
       e.preventDefault();
       _this.remove($(this));
     });
@@ -545,6 +562,24 @@ function getContentViaAjax( url, containerSelector, alwaysCallback){
 	.always(function() {
 		if( typeof alwaysCallback !== "undefined" )
 			alwaysCallback
+	});
+}
+
+
+
+function postFormViaAjax( $form, resultContainerSelector ){
+	// TODO input check
+	
+	// sent form content via ajax POST
+	$.post( $form.attr( "action" ), $form.serialize(), function ( jsonData ){
+		if( jsonData.format == "json" ){
+			console.log( jsonData.result );
+		} else if( jsonData.format == "javascript" ){
+			
+		}
+		else{// html
+			
+		}
 	});
 }
 
