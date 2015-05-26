@@ -8,13 +8,13 @@
  	
  	<@content.leftSidebar>
 
-		<#include "conferenceLeftContent.ftl" />
+		<#include "widgetLayoutSidebar.ftl" />
 		
  	</@content.leftSidebar>
  	
  	<@content.contentWrapper>
  	
- 		<#include "conferenceMainContent.ftl" />
+ 		<#include "widgetLayout.ftl" />
 		
  	</@content.contentWrapper>
  	
