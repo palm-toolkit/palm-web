@@ -7,15 +7,15 @@
  	</@content.header>
  	
  	<@content.leftSidebar>
-
-		<#include "researcherLeftContent.ftl" />
-		
+		<#include "widgetLayoutSidebar.ftl" />
  	</@content.leftSidebar>
  	
  	<@content.contentWrapper>
- 	
- 		<#include "researcherMainContent.ftl" />
-		
+ 		<section class="content">
+			<div class ="row">
+ 			<#include "widgetLayoutMainContent.ftl" />
+			</div>
+		</section>
  	</@content.contentWrapper>
  	
 </@layout.global>
