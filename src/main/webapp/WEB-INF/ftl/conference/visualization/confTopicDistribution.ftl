@@ -1,1 +1,3 @@
-conference topic distribution
+<div class="box-body">
+	conference topic distribution
+</div>

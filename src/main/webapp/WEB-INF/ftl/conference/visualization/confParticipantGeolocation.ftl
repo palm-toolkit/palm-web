@@ -1,1 +1,3 @@
-conference participant geolocation
+<div class="box-body">
+	conference participant geolocation
+</div>
