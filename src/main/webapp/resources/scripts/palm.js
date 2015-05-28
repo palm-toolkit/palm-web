@@ -72,7 +72,9 @@ $.PALM.options = {
       //Remove button selector
       remove: '[data-widget="remove"]',
       //Collapse button selector
-      collapse: '[data-widget="collapse"]'
+      collapse: '[data-widget="collapse"]',
+      // Move button handler
+      move: '[data-widget="move"]'
     }
   },
   //Direct Chat plugin options
@@ -364,6 +366,8 @@ $.PALM.boxWidget = {
   activate: function () {
     var o = $.PALM.options;
     var _this = this;
+    // make sortable
+    _this.moveable( o.boxWidgetOptions.boxWidgetSelectors.move);
     //Listen for collapse event triggers
     $(o.boxWidgetOptions.boxWidgetSelectors.collapse).click(function (e) {
       e.preventDefault();
@@ -390,6 +394,18 @@ $.PALM.boxWidget = {
       e.preventDefault();
       _this.remove($(this));
     });
+  },
+  moveable: function ( handleSelector ) {
+	 $( "section.content .row" ).sortable({
+	   connectWith: "section.content .row",
+	   handle: handleSelector,
+	   cursor: "move",
+	   placeholder: "widget-placeholder",
+	   start: function(e, ui ){
+           ui.placeholder.height(ui.helper.outerHeight() - 20);
+           ui.placeholder.width(ui.helper.outerWidth() - 30);
+       }
+	  });
   },
   collapse: function (element) {
     //Find the box parent

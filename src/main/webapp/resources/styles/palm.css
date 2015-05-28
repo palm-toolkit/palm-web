@@ -18,6 +18,35 @@
 a.box-home span {
     color: #333;
 }
+.box-title-container{
+	width:60%;
+	overflow: hidden;
+	white-space: nowrap;
+	cursor:default;
+	margin-left: 10px;
+}
+/* overwritten style */
+.box-header {
+  padding: 5px 10px;
+}
+/* end overwritten style */
+.box-header>.box-tools {
+  top: 0;
+}
+.box-move-handle{
+	cursor:move;
+	font-size:14px;
+	position: absolute;
+    left:0;
+    top:0;
+}
+.widget-placeholder{
+	display:block;
+	float:left;
+	border: 1px dotted black;
+    min-height: 50px;
+    margin:0 0 20px 15px;
+}
 @media (min-width:1200px){
 	.fa-home{
 		font-size: 120px;

@@ -19,6 +19,9 @@
 <#--icheck style -->
 <link href="<@spring.url '/resources/plugins/icheck/square/blue.css' />" rel="stylesheet" type="text/css" />
 
+<#-- jQUeryUi -->
+<link href="<@spring.url '/resources/plugins/jQueryUI/jquery-ui.min.css' />" rel="stylesheet" type="text/css" />
+
 <#--HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <#--WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
@@ -28,4 +31,3 @@
 
 <#--internal palm css definition -->
 <link href="<@spring.url '/resources/styles/palm.css' />" rel="stylesheet" type="text/css" />
-<#--<link href="<@spring.url '/resources/styles/jquery-ui.css' />" rel="stylesheet" type="text/css" />-->

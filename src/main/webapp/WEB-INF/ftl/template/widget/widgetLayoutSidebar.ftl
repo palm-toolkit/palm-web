@@ -15,6 +15,8 @@
 			wMinimizeEnabled="${w.minimizeEnabled?c}"
 			wResizeEnabled="${w.resizeEnabled?c}"
 			wMoveableEnabled="${w.moveableEnabled?c}"
+			wColorEnabled="${w.colorEnabled?c}"
+			wColor="${w.color}"
 			/>
 		</#if>
 	</#list>

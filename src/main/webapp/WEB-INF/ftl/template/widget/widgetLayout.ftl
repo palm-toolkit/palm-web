@@ -20,10 +20,3 @@
 		
 	</#list>
 </#if>
-
-<script>
-	<#-- Activate all box widget at the end -->
-  	if ($.PALM.options.enableBoxWidget) {
-    	$.PALM.boxWidget.activate();
-  	}
-</script>

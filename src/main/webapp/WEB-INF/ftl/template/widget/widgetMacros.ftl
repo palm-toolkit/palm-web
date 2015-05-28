@@ -24,28 +24,48 @@
 	<div id="widget-${wId}" class="${wClassContainer}">
       <div class="${wClassBox}">
         <div class="box-header with-border">
-          <h3 class="box-title">${wTitle}</h3>
+        
+          <#-- widget handle moveable button -->
+          <#if wParams["wMoveableEnabled"] == "true">
+      		<div class="btn btn-box-tool box-move-handle" data-widget="move">
+          		<i class="fa fa-ellipsis-v"></i>
+          		<i class="fa fa-ellipsis-v"></i>
+      		</div>
+      	  </#if>
+      	  
+          <div class="box-title-container">
+          	<h3 class="box-title">${wTitle}</h3>
+          </div>
           <div class="box-tools pull-right">
+          	
+          	<#-- widget other option dropdown -->
+          	<#if wParams["wResizeEnabled"]== "true" || wParams["wColorEnabled"] == "true">
+	          	<div class="btn-group">
+	              <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-wrench"></i></button>
+	              <ul class="dropdown-menu" role="menu">
+	                <li><a href="#">Action</a></li>
+	                <li><a href="#">Another action</a></li>
+	                <li><a href="#">Something else here</a></li>
+	                <li class="divider"></li>
+	                <li><a href="#">Separated link</a></li>
+	              </ul>
+	            </div>
+	        </#if>
+	         
           	<#-- widget help button -->
+          	<#if wParams["wInformation"]?? && wParams["wInformation"] != "">
+            	<button class="btn btn-box-tool" data-toggle="tooltip" data-placement="bottom" data-html="true" data-original-title="${wParams["wInformation"]}"><i class="fa fa-question"></i></button>
+            </#if>
           	
           	<#-- widget minimize button -->
-            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-            <#-- widget miximize button -->
+          	<#if wParams["wMinimizeEnabled"] == "true">
+            	<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+            </#if>
             
-            <#-- widget -->
-            <#--
-            <div class="btn-group">
-              <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-wrench"></i></button>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li class="divider"></li>
-                <li><a href="#">Separated link</a></li>
-              </ul>
-            </div>
-            -->
-            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+            <#-- widget close button -->
+            <#if wParams["wCloseEnabled"] == "true">
+            	<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+        	</#if>
           </div>
         </div><#-- /.box-header -->
         

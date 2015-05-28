@@ -10,6 +10,8 @@
 		<meta name="description" content="Personal Academic Learner Model" />
 		<#-- all styles -->
 		<#include "cssStyle.ftl" />
+		<#-- javascript call at the end, avoiding resource blocking-->
+		<#include "jsLib.ftl" />
 	</head>
 	
 	<body class="<#if classStyle != "">${classStyle}<#else>skin-blue-light</#if>">
@@ -17,9 +19,6 @@
 			
 			<#-- content -->
 			<#nested />
-			
-			<#-- javascript call at the end, avoiding resource blocking-->
-			<#include "jsLib.ftl" />
 			
 		</div>
 	</body>
