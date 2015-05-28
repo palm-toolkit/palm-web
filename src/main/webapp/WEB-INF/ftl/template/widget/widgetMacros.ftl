@@ -75,8 +75,8 @@
 			<div class="box-body">
 	            <#-- ajax content goes here -->
 	            <#-- if external source, load from iframe -->
-	            <#if wSource == "EXTERTNAL">
-	            	<iframe  alt="external source" width="1" height="1" scrolling="no" frameborder="no" marginheight="0" marginwidth="0" border="0" src="${wParams["wSourcePath"]}"></iframe>
+	            <#if wSource == "EXTERNAL">
+	            	<iframe class="externalContent" alt="external source" width="1" height="1" scrolling="yes" frameborder="no" marginheight="0" marginwidth="0" border="0" src="${wParams["wSourcePath"]}"></iframe>
 	            </#if>
 	        </div><#-- ./box-body -->
 	        <div class="box-footer">

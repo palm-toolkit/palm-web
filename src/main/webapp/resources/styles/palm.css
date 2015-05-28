@@ -29,9 +29,15 @@ a.box-home span {
 .box-header {
   padding: 5px 10px;
 }
-/* end overwritten style */
+
 .box-header>.box-tools {
   top: 0;
+}
+/* end overwritten style */
+
+iframe.externalContent{
+	width:100%;
+	min-height:500px;
 }
 .box-move-handle{
 	cursor:move;
