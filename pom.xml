@@ -22,6 +22,12 @@
 	    	<version>${project.version}</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>de.rwth.i9.palm</groupId>
+	    	<artifactId>palm-ontology</artifactId>
+	    	<version>${project.version}</version>
+		</dependency>
+		
 		<!-- servlet api -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
