@@ -81,6 +81,7 @@
 			        </span></span>
 			        <input type="button" value="Go!" onclick="snorql.submitQuery()" />
 			        <input type="button" value="Reset" onclick="snorql.resetQuery()" />
+			        <input type="button" value="Insert" onclick="insertData()" />
 			      </div>
 			    </div>
 			
@@ -93,6 +94,14 @@
  		</div>
 		<!-- IE clearing - important! -->
 		<div id="ie_clearing">&nbsp;</div>
+		
+		<script>
+			function insertData(){
+				$( "#queryresults > td" ).find( "a.first" ).each( function(){
+					console.log( $( this ).attr( "href" ));
+				});
+			}
+		</script>
  	</@content.main>
  	
 </@layout.global>
