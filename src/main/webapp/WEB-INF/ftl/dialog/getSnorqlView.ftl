@@ -117,7 +117,7 @@
 					window.open("http://localhost:8081/" + urlarray[urlarrayIndex], '_blank');
 					urlarrayIndex++;
 					
-					setTimeout(function(){ loadIframe() },700);
+					setTimeout(function(){ loadIframe() },300);
 				}
 			}
 			

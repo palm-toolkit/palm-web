@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import de.rwth.i9.palm.model.Algorithm;
 import de.rwth.i9.palm.model.Author;
 import de.rwth.i9.palm.model.AuthorAlias;
-import de.rwth.i9.palm.model.Concept;
 import de.rwth.i9.palm.model.Conference;
 import de.rwth.i9.palm.model.ConferenceGroup;
 import de.rwth.i9.palm.model.Dataset;
@@ -30,10 +29,11 @@ import de.rwth.i9.palm.model.Function;
 import de.rwth.i9.palm.model.Institution;
 import de.rwth.i9.palm.model.Location;
 import de.rwth.i9.palm.model.Publication;
+import de.rwth.i9.palm.model.PublicationHistory;
+import de.rwth.i9.palm.model.PublicationSource;
 import de.rwth.i9.palm.model.Reference;
 import de.rwth.i9.palm.model.Role;
 import de.rwth.i9.palm.model.RunTime;
-import de.rwth.i9.palm.model.SessionDataSet;
 import de.rwth.i9.palm.model.Source;
 import de.rwth.i9.palm.model.Subject;
 import de.rwth.i9.palm.model.Topic;
@@ -122,29 +122,29 @@ public class DatabaseConfig
 		sessionFactoryBean.setPackagesToScan( env.getRequiredProperty( PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN ) );
 		sessionFactoryBean.setHibernateProperties( hibProperties() );
 		sessionFactoryBean.setAnnotatedClasses( new Class<?>[] { 
-		/* model class here */
+				/* model class here */
 				Algorithm.class,
 				Author.class,
 				AuthorAlias.class,
-				Concept.class,
+				Conference.class,
+				ConferenceGroup.class,
 				Dataset.class,
 				Function.class,
 				Institution.class,
-				Subject.class,
 				Location.class,
 				Publication.class,
+				PublicationHistory.class,
+				PublicationSource.class,
 				Reference.class,
 				Role.class,
-				RunTime.class,
-				SessionDataSet.class,
+				RunTime.class, 
  				Source.class,
+ 				Subject.class,
 				Topic.class,
 				User.class,
 				UserWidget.class,
-				Conference.class,
-				ConferenceGroup.class,
 				Widget.class
-				} );
+		} );
 		return sessionFactoryBean;
 	}
 
