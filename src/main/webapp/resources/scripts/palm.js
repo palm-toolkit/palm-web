@@ -617,7 +617,7 @@ $(function(){
 	$( "#signin_button" ).click( function( event ){
 		event.preventDefault();
 		// get login form
-		getFormViaAjax( "login" );
+		getFormViaAjax( "login?form=true" );
 	});
 	
 });
@@ -625,9 +625,11 @@ $(function(){
 /**
  * get form via ajax
  */
-function getFormViaAjax( formType , alwaysCallback){
-	var jqxhr = $.get( baseUrl + "/" +  formType, function( html ) {
-		getPopUpForm(  formType, html );
+function getFormViaAjax( url , alwaysCallback){
+	var jqxhr = $.get( baseUrl + "/" +  url, function( html ) {
+		// removing query string
+		var formType = url.split( "?" );
+		getPopUpForm( formType[0], html );
 	})
     .done(function() {
     	// nothing to do
@@ -650,7 +652,7 @@ function getPopUpForm( popUpType, html ){
 	$( ".wrapper" ).addClass( "blur2px" );
 	
 	// create new one
-	$popUpElem = 
+	var $popUpElem = 
 		$( "<div/>" )
 		.addClass( "popup-form-container" )
 		.append(

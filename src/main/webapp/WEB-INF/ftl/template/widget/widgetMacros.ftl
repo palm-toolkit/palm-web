@@ -15,6 +15,20 @@
 		<#local wClassContainer = "col-md-4">
 	</#if>
 	
+	<#-- widget color -->
+	<#if wParams["wColor"]??>
+		<#if wParams["wColor"] == "GREEN">
+			<#local wClassBox = wClassBox + " box-success">
+		<#elseif wParams["wColor"] == "YELLOW">
+			<#local wClassBox = wClassBox + " box-warning">
+		<#elseif wParams["wColor"] == "RED">
+			<#local wClassBox = wClassBox + " box-danger">
+		<#elseif wParams["wColor"] == "BLUE">
+			<#local wClassBox = wClassBox + " box-info">
+		</#if>
+	
+	</#if>
+	
 	<#if wGroup="sidebar">
 		<#local wClassContainer = wClassContainer + " padding0">
 		<#local wClassBox = wClassBox + " border0" >

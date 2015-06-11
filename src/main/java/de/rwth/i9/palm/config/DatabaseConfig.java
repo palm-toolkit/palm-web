@@ -19,26 +19,26 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import de.rwth.i9.palm.model.Algorithm;
+import de.rwth.i9.palm.model.ExtractionService;
 import de.rwth.i9.palm.model.Author;
 import de.rwth.i9.palm.model.AuthorAlias;
-import de.rwth.i9.palm.model.Concept;
+import de.rwth.i9.palm.model.Conference;
+import de.rwth.i9.palm.model.ConferenceGroup;
 import de.rwth.i9.palm.model.Dataset;
 import de.rwth.i9.palm.model.Function;
 import de.rwth.i9.palm.model.Institution;
-import de.rwth.i9.palm.model.Keyword;
 import de.rwth.i9.palm.model.Location;
 import de.rwth.i9.palm.model.Publication;
-import de.rwth.i9.palm.model.PublicationOld;
+import de.rwth.i9.palm.model.PublicationHistory;
+import de.rwth.i9.palm.model.PublicationSource;
+import de.rwth.i9.palm.model.Reference;
 import de.rwth.i9.palm.model.Role;
-import de.rwth.i9.palm.model.RunTime;
-import de.rwth.i9.palm.model.SessionDataSet;
+import de.rwth.i9.palm.model.ExtractionRuntime;
 import de.rwth.i9.palm.model.Source;
-import de.rwth.i9.palm.model.Tag;
-import de.rwth.i9.palm.model.Topic;
+import de.rwth.i9.palm.model.Subject;
+import de.rwth.i9.palm.model.PublicationTopic;
 import de.rwth.i9.palm.model.User;
 import de.rwth.i9.palm.model.UserWidget;
-import de.rwth.i9.palm.model.Venue;
 import de.rwth.i9.palm.model.Widget;
 import de.rwth.i9.palm.persistence.relational.PersistenceStrategyImpl;
 
@@ -122,29 +122,29 @@ public class DatabaseConfig
 		sessionFactoryBean.setPackagesToScan( env.getRequiredProperty( PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN ) );
 		sessionFactoryBean.setHibernateProperties( hibProperties() );
 		sessionFactoryBean.setAnnotatedClasses( new Class<?>[] { 
-		/* model class here */
-				Algorithm.class,
+				/* model class here */
+				ExtractionService.class,
 				Author.class,
 				AuthorAlias.class,
-				Concept.class,
+				Conference.class,
+				ConferenceGroup.class,
 				Dataset.class,
 				Function.class,
 				Institution.class,
-				Keyword.class,
 				Location.class,
 				Publication.class,
-				PublicationOld.class,
+				PublicationHistory.class,
+				PublicationSource.class,
+				Reference.class,
 				Role.class,
-				RunTime.class,
-				SessionDataSet.class,
+				ExtractionRuntime.class, 
  				Source.class,
- 				Tag.class,
-				Topic.class,
+ 				Subject.class,
+				PublicationTopic.class,
 				User.class,
 				UserWidget.class,
-				Venue.class,
 				Widget.class
-				} );
+		} );
 		return sessionFactoryBean;
 	}
 

@@ -22,11 +22,17 @@
 	    	<version>${project.version}</version>
 		</dependency>
 		
-		<!-- tomcat servlet api -->
 		<dependency>
-			<groupId>org.apache.tomcat</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>${tomcat.servlet.api.version}</version>
+			<groupId>de.rwth.i9.palm</groupId>
+	    	<artifactId>palm-ontology</artifactId>
+	    	<version>${project.version}</version>
+		</dependency>
+		
+		<!-- servlet api -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${javax.servlet.api.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		
