@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
     		.csrf()
     			.disable()
             .authorizeRequests()
-.antMatchers( "/", "/home", "/login", "/logout", "/register", "/conference", "/researcher", "/publication", "/sparqlview/**" )
+.antMatchers( "/", "/home", "/login", "/logout", "/register", "/conference/**", "/researcher/**", "/publication/**", "/sparqlview/**" )
                 	.permitAll()
                 .anyRequest()
                 	.authenticated()
