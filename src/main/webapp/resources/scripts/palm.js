@@ -111,7 +111,8 @@ $.PALM.options = {
     sm: 768,
     md: 992,
     lg: 1200
-  }
+  },
+  registeredWidget:[]
 };
 
 /* ------------------
@@ -394,6 +395,32 @@ $.PALM.boxWidget = {
       e.preventDefault();
       _this.remove($(this));
     });
+  },
+  refresh: function ( $widgetElement, options) {
+	var emptyFunction = function(){};
+	//  options
+    var settings = $.extend({
+      //File source to be loaded (e.g: ajax/src.php)
+      source: "",
+      //Callbacks
+      onRefreshStart: emptyFunction, //Right after refresh start
+      onRefreshDone: emptyFunction //Right after refresh done
+    }, options);
+    
+    //The overlay
+    var overlay = $('<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>');
+    
+    $widgetElement.append(overlay);
+    // just before ajax call
+    settings.onRefreshStart( $widgetElement );
+    // load json ajax
+    $.getJSON( settings.source , function( data ){
+    	settings.onRefreshDone( $widgetElement , data);
+    	//Remove overlay and loading img
+    	$widgetElement.find(overlay).remove();
+    });
+    
+    
   },
   moveable: function ( handleSelector ) {
 	 $( "section.content .row" ).sortable({
