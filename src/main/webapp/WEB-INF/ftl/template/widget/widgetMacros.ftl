@@ -1,5 +1,5 @@
 <#macro widget wId="" wTitle="" wType="" wGroup="" wSource="BLANK" wWidth="SMALL" wParams...>
-	<#-- local variables --A
+	<#-- local variables -->
 	<#-- widget container class -->
 	<#local wClassContainer = "">
 	
