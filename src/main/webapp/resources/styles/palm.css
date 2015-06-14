@@ -188,3 +188,32 @@ iframe.externalContent{
 .margin0{margin:0}
 .border0{border:none}
 .marginTop40Px{margin-top:40px}
+.alignCenter{text-align:center}
+.marginBottom0{margin-bottom:0}
+
+.table-container{
+	padding:0 6px 0 0;
+	width:100%;
+}
+.table{
+	table-layout:fixed;
+	width:100%;
+	margin:0;
+}
+
+/* .table tbody{ 
+	display: block;
+	height: 200px;       For the demo 
+    overflow-y: auto;    Vertical scroll   
+    overflow-x: hidden;  Hide the horizontal scroll
+    padding:0 4px;
+ } */
+ 
+ .table-condensed tr{
+	height:24px;
+}
+
+.table-condensed td{
+	white-space: nowrap;
+	overflow:hidden;
+}
