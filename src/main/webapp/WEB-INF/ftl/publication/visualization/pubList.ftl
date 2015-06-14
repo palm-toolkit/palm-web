@@ -86,40 +86,54 @@
 		
 		var options ={
 			source : "<@spring.url '/publication/search' />",
+			query: "",
 			page:0,
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
+							var targetContainer = $( widgetElem ).find( "#publicationTable" ).find("tbody");
+							// remove previous result
+							targetContainer.html( "" );
 							// remove any remaing tooltip
 							$( "body .tooltip" ).remove();
-							// build the publication table
-							var targetContainer = $( widgetElem ).find( "#publicationTable" ).find("tbody");
-							// remove existing
-							targetContainer.html( "" );
-							$.each( data.publication, function( index, item){
-								$.each( item, function( key, value){
-									if( key == "title" ){
-										$( widgetElem ).find( "#publicationTable" ).find("tbody").append( "<tr><td title='" + value + "' data-original-title='" + value + "' data-toggle='tooltip' data-placement='bottom' data-container='body'>" + value + "</td></tr>" )
-									}
-								});
-							});
-							var maxPage = Math.ceil(data.count/data.maxresult);
 							var $pageDropdown = $( widgetElem ).find( "select.page-number" );
-							// set dropdown page
-							for( var i=1;i<maxPage;i++){
-								$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
-							}
-							// enable bootstrap tooltip
-							$( widgetElem ).find( "[data-toggle='tooltip']" ).tooltip();
+							$pageDropdown.find( "option" ).remove();
 							
-							// set page number
-							$pageDropdown.val( data.page + 1 );
-							$( widgetElem ).find( "span.total-page" ).html( maxPage );
-							var endRecord = (data.page + 1) * data.maxresult;
-							if( data.page == maxPage - 1 ) 
-							endRecord = data.count;
-							$( widgetElem ).find( "span.paging-info" ).html( "Displaying publications " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.count );
+							if( data.count > 0 ){
+							
+								// build the publication table
+								$.each( data.publication, function( index, item){
+									$.each( item, function( key, value){
+										if( key == "title" ){
+											$( widgetElem ).find( "#publicationTable" ).find("tbody").append( "<tr><td title='" + value + "' data-original-title='" + value + "' data-toggle='tooltip' data-placement='bottom' data-container='body'>" + value + "</td></tr>" )
+										}
+									});
+								});
+								var maxPage = Math.ceil(data.count/data.maxresult);
+								
+								// set dropdown page
+								for( var i=1;i<maxPage;i++){
+									$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
+								}
+								// enable bootstrap tooltip
+								$( widgetElem ).find( "[data-toggle='tooltip']" ).tooltip();
+								
+								// set page number
+								$pageDropdown.val( data.page + 1 );
+								$( widgetElem ).find( "span.total-page" ).html( maxPage );
+								var endRecord = (data.page + 1) * data.maxresult;
+								if( data.page == maxPage - 1 ) 
+								endRecord = data.count;
+								$( widgetElem ).find( "span.paging-info" ).html( "Displaying publications " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.count );
+							}
+							else{
+								$pageDropdown.append("<option value='0'>0</option>");
+								$( widgetElem ).find( "span.total-page" ).html( 0 );
+								$( widgetElem ).find( "span.paging-info" ).html( "Displaying researchers 0 - 0 of 0" );
+								$( widgetElem ).find( "li.toNext" ).addClass( "disabled" );
+								$( widgetElem ).find( "li.toEnd" ).addClass( "disabled" );
+							}
 						}
 		};
 		
@@ -175,8 +189,11 @@
 					$( obj.element ).find( "li.toEnd" ).addClass( "disabled" );
 				}
 					
-				obj.options.source = "<@spring.url '/publication/search?query=' />" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
-				
+				if( jumpTo === "first") // if new searching performed
+					obj.options.source = "<@spring.url '/publication/search?query=' />" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
+				else
+					obj.options.source = "<@spring.url '/publication/search?query=' />" + obj.options.query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
+					
 				$.PALM.boxWidget.refresh( obj.element , obj.options );
 			}
 		});
