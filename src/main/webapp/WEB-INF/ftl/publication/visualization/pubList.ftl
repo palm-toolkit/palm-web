@@ -113,7 +113,7 @@
 								var maxPage = Math.ceil(data.count/data.maxresult);
 								
 								// set dropdown page
-								for( var i=1;i<maxPage;i++){
+								for( var i=1;i<=maxPage;i++){
 									$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
 								}
 								// enable bootstrap tooltip
@@ -162,7 +162,6 @@
 		$.each( $.PALM.options.registeredWidget, function(index, obj){
 			if( obj.type === "PUBLICATION" && obj.group === "sidebar" ){
 				var maxPage = parseInt($( obj.element ).find( "span.total-page" ).html()) - 1;
-				console.log( maxPage );
 				if( jumpTo === "next")
 					obj.options.page = obj.options.page + 1;
 				else if( jumpTo === "prev")
@@ -176,11 +175,8 @@
 					
 				$( obj.element ).find( ".paginate_button" ).each(function(){
 					$( this ).removeClass( "disabled" );
-					console.log( $( this ).attr( "class" ) );
 				});
-				
-				console.log( "page " +  obj.options.page);
-				
+								
 				if( obj.options.page === 0 ){
 					$( obj.element ).find( "li.toFirst" ).addClass( "disabled" );
 					$( obj.element ).find( "li.toPrev" ).addClass( "disabled" );

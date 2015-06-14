@@ -114,7 +114,7 @@
 								var maxPage = Math.ceil(data.count/data.maxresult);
 								var $pageDropdown = $( widgetElem ).find( "select.page-number" );
 								// set dropdown page
-								for( var i=1;i<maxPage;i++){
+								for( var i=1;i<=maxPage;i++){
 									$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
 								}
 								// enable bootstrap tooltip
@@ -163,7 +163,6 @@
 		$.each( $.PALM.options.registeredWidget, function(index, obj){
 			if( obj.type === "RESEARCHER" && obj.group === "sidebar" ){
 				var maxPage = parseInt($( obj.element ).find( "span.total-page" ).html()) - 1;
-				console.log( maxPage );
 				if( jumpTo === "next")
 					obj.options.page = obj.options.page + 1;
 				else if( jumpTo === "prev")
