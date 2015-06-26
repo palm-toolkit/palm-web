@@ -107,7 +107,13 @@
 								$.each( data.researcher, function( index, item){
 									$.each( item, function( key, value){
 										if( key == "title" ){
-											$( widgetElem ).find( "#researcherTable" ).find("tbody").append( "<tr><td title='" + value + "' data-original-title='" + value + "' data-toggle='tooltip' data-placement='bottom' data-container='body'>" + value + "</td></tr>" )
+											$( widgetElem )
+											.find( "#researcherTable" )
+											.find("tbody")
+											.append( 
+												"<tr>" + 
+													"<td title='" + value + "'>" + value + "</td>" +
+												"</tr>" )
 										}
 									});
 								});

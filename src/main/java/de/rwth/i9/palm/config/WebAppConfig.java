@@ -3,7 +3,10 @@ package de.rwth.i9.palm.config;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.Executor;
 
+import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
+import org.springframework.aop.interceptor.SimpleAsyncUncaughtExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,6 +16,9 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.AsyncConfigurer;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -29,8 +35,9 @@ import de.rwth.i9.palm.analytics.api.PalmAnalyticsImpl;
 @EnableWebMvc
 @ComponentScan( { "de.rwth.i9.palm" } )
 @PropertySource( "classpath:application.properties" )
+@EnableAsync
 @Lazy( true )
-public class WebAppConfig extends WebMvcConfigurerAdapter
+public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfigurer
 {
 
 	@Autowired
@@ -156,5 +163,25 @@ public class WebAppConfig extends WebMvcConfigurerAdapter
 	public PalmAnalyticsImpl configAnalyticsImpl()
 	{
 		return new PalmAnalyticsImpl();
+	}
+
+	/* Scheduling and ThreadPool */
+
+	@Override
+	public Executor getAsyncExecutor()
+	{
+		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+		taskExecutor.setMaxPoolSize( 10 );
+		taskExecutor.setCorePoolSize( 5 );
+		taskExecutor.setQueueCapacity( 25 );
+		taskExecutor.setThreadNamePrefix( "PALMExecutor-" );
+		taskExecutor.initialize();
+		return taskExecutor;
+	}
+
+	@Override
+	public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler()
+	{
+		return new SimpleAsyncUncaughtExceptionHandler();
 	}
 }

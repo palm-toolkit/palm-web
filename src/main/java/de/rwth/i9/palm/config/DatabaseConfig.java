@@ -38,6 +38,7 @@ import de.rwth.i9.palm.model.Source;
 import de.rwth.i9.palm.model.Subject;
 import de.rwth.i9.palm.model.PublicationTopic;
 import de.rwth.i9.palm.model.User;
+import de.rwth.i9.palm.model.UserRequest;
 import de.rwth.i9.palm.model.UserWidget;
 import de.rwth.i9.palm.model.Widget;
 import de.rwth.i9.palm.persistence.relational.PersistenceStrategyImpl;
@@ -142,6 +143,7 @@ public class DatabaseConfig
  				Subject.class,
 				PublicationTopic.class,
 				User.class,
+				UserRequest.class,
 				UserWidget.class,
 				Widget.class
 		} );
