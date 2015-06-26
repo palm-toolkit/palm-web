@@ -9,10 +9,7 @@
   	</div>
   	
   	<div id="table-container-${wId}" class="table-container">
-	  <table id="researcherTable" class="table table-condensed table-hover" style>
-	    <tbody>
-	  	</tbody>
-	  </table>
+
     </div>
 </div>
 
@@ -92,7 +89,7 @@
 			onRefreshStart: function(  widgetElem  ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
-							var targetContainer = $( widgetElem ).find( "#researcherTable" ).find("tbody");
+							var targetContainer = $( widgetElem ).find( "#table-container-${wId}" );
 							// remove previous list
 							targetContainer.html( "" );
 							
@@ -105,17 +102,44 @@
 								// build the researcher table
 								
 								$.each( data.researcher, function( index, item){
-									$.each( item, function( key, value){
-										if( key == "title" ){
-											$( widgetElem )
-											.find( "#researcherTable" )
-											.find("tbody")
-											.append( 
-												"<tr>" + 
-													"<td title='" + value + "'>" + value + "</td>" +
-												"</tr>" )
-										}
-									});
+									var researcherDiv = 
+									$( '<div/>' )
+										.addClass( 'palm_atr' )
+										.attr({ 'id' : item.id })
+										.append(
+											$( '<div/>' )
+											.addClass( 'palm_atr_photo fa fa-user' )
+										).append(
+											$( '<div/>' )
+											.addClass( 'palm_atr_name' )
+											.html( item.name )
+										);
+									if( typeof item.detail != 'undefined')
+										researcherDiv.append(
+											$( '<div/>' )
+											.addClass( 'palm_atr_dtl' )
+											.html( item.detail )
+										);
+									if( typeof item.aff != 'undefined')
+										researcherDiv.append(
+											$( '<div/>' )
+											.addClass( 'palm_atr_aff' )
+											.html( item.aff )
+										);
+										
+									if( typeof item.photo != 'undefined')
+										researcherDiv
+											.find( '.palm_atr_photo' )
+											.append(
+												$( '<img/>' )
+													.attr({ 'src' : item.photo })
+													.addClass( "palm_atr_img" )
+											);
+									
+									targetContainer
+										.append( 
+											researcherDiv
+										)
 								});
 								var maxPage = Math.ceil(data.count/data.maxresult);
 								var $pageDropdown = $( widgetElem ).find( "select.page-number" );
