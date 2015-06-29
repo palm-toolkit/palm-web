@@ -130,6 +130,8 @@
 									if( typeof item.photo != 'undefined')
 										researcherDiv
 											.find( '.palm_atr_photo' )
+											.removeClass( "fa fa-user" )
+											.css({ 'font-size':'14px'})
 											.append(
 												$( '<img/>' )
 													.attr({ 'src' : item.photo })
