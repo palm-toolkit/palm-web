@@ -137,11 +137,17 @@
 													.attr({ 'src' : item.photo })
 													.addClass( "palm_atr_img" )
 											);
+											
+									<#-- add clcik event -->
+									researcherDiv
+										.on( "click", function(){
+											getAuthorDetails( $( this ).attr( 'id' ));
+										} );
 									
 									targetContainer
 										.append( 
 											researcherDiv
-										)
+										);
 								});
 								var maxPage = Math.ceil(data.count/data.maxresult);
 								var $pageDropdown = $( widgetElem ).find( "select.page-number" );
@@ -225,6 +231,10 @@
 				$.PALM.boxWidget.refresh( obj.element , obj.options );
 			}
 		});
+	}
+	
+	function getAuthorDetails( authorId ){
+		console.log( authorId );
 	}
 	
 	// for the window resize
