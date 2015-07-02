@@ -219,7 +219,7 @@ iframe.externalContent{
 }
 .palm_atr{
 	width:300px;
-	max-height:60px;
+	max-height:76px;
 	float:left;
 	cursor:pointer;
 	margin:0 0 2px 0;
@@ -228,20 +228,21 @@ iframe.externalContent{
 	background-color: #f5f5f5;
 }
 .palm_atr_photo{
-	width:46px;
-	height:54px;
+	width:52px;
+	height:70px;
 	padding:3px 2px;
 	float:left;
-	font-size:54px;
+	font-size:60px;
 	overflow:hidden;
 	color:#73A2F8;
 }
 .palm_atr_img{
-	width:46px;
-	height:54px;
+	/*width:52px;*/
+	height:70px;
+	position:relative;
 }
-.palm_atr_name, .palm_atr_dtl, .palm_atr_aff{
-	width:250px;
+.palm_atr_name, .palm_atr_dtl, .palm_atr_aff, .palm_atr_ct{
+	width:244px;
 	overflow:hidden;
 	white-space:nowrap;
 	float:left;
@@ -258,8 +259,14 @@ iframe.externalContent{
 	padding:0 0 0 4px;
 }
 .palm_atr_aff{
-	height:20px;
+	height:17px;
 	line-height: 14px;
 	text-transform:capitalize;
+	padding:0 0 0 4px;
+}
+.palm_atr_ct{
+	height:16px;
+	line-height: 12px;
+	font-size: 12px;
 	padding:0 0 0 4px;
 }

@@ -400,24 +400,20 @@ $.PALM.boxWidget = {
 	var emptyFunction = function(){};
 	//  options
     var settings = $.extend({
-      //File source to be loaded (e.g: ajax/src.php)
+      //File source to be loaded
       source: "",
       //Callbacks
       onRefreshStart: emptyFunction, //Right after refresh start
       onRefreshDone: emptyFunction //Right after refresh done
     }, options);
     
-    //The overlay
-    var overlay = $('<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>');
-    
-    $widgetElement.append(overlay);
     // just before ajax call
     settings.onRefreshStart( $widgetElement );
     // load json ajax
-    $.getJSON( settings.source , function( data ){
+    $.getJSON( settings.source + settings.queryString, function( data ){
     	settings.onRefreshDone( $widgetElement , data);
-    	//Remove overlay and loading img
-    	$widgetElement.find(overlay).remove();
+    	// remove overlay and loading 
+    	$widgetElement.find( ".overlay" ).remove();
     });
     
     

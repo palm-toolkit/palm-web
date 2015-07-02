@@ -28,6 +28,8 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
 import de.rwth.i9.palm.analytics.api.PalmAnalyticsImpl;
+import de.rwth.i9.palm.feature.researcher.ResearcherFeature;
+import de.rwth.i9.palm.feature.researcher.ResearcherFeatureImpl;
 
 //import de.rwth.i9.palm.analytics.api.PalmAnalyticsImpl;
 
@@ -163,6 +165,14 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 	public PalmAnalyticsImpl configAnalyticsImpl()
 	{
 		return new PalmAnalyticsImpl();
+	}
+	
+	/* palm researcher feature */
+	@Bean
+	@Scope( "singleton" )
+	public ResearcherFeature researcherFeature()
+	{
+		return new ResearcherFeatureImpl();
 	}
 
 	/* Scheduling and ThreadPool */
