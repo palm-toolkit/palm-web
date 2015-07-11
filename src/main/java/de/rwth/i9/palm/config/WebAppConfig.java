@@ -182,7 +182,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 	{
 		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
 		taskExecutor.setMaxPoolSize( 100 );
-		taskExecutor.setCorePoolSize( 5 );
+		taskExecutor.setCorePoolSize( 20 );
 		taskExecutor.setQueueCapacity( 1000 );
 		taskExecutor.setThreadNamePrefix( "PALMExecutor-" );
 		taskExecutor.initialize();
