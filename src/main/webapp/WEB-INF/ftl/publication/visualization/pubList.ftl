@@ -34,13 +34,13 @@
 <script>
 	$( function(){
 	
-		// add slimscroll to table
+		<#-- add slimscroll to table -->
 		$("#table-container-${wId}").slimscroll({
 			height: "100%",
 	        size: "3px"
 	    });
 	    
-	    // event for searching publication
+	    <#-- event for searching researcher -->
 	    $( "#publication_search_field" )
 	    .on( "keypress", function(e) {
 			  if ( e.keyCode == 0 || e.keyCode == 13 || e.keyCode == 32 )
@@ -50,59 +50,62 @@
 			    if( $( "#publication_search_field" ).val().length == 0 )
 			    	publicationSearch( $( this ).val() , "first");
 		});
-		// icon search presed
+
+		<#-- icon search presed -->
 		$( "#publication_search_button" ).click( function(){
 			publicationSearch( $( "#publication_search_field" ).val() , "first");
 		});
 		
-		// pagging next
+		<#-- pagging next -->
 		$( "li.toNext" ).click( function(){
 			if( !$( this ).hasClass( "disabled" ) )
 				publicationSearch( $( "#publication_search_field" ).val() , "next");
 		});
 		
-		// pagging prev
+		<#-- pagging prev -->
 		$( "li.toPrev" ).click( function(){
 			if( !$( this ).hasClass( "disabled" ) )
 				publicationSearch( $( "#publication_search_field" ).val() , "prev");
 		});
 		
-		// pagging to first
+		<#-- pagging to first -->
 		$( "li.toFirst" ).click( function(){
 			if( !$( this ).hasClass( "disabled" ) )
 				publicationSearch( $( "#publication_search_field" ).val() , "first");
 		});
 		
-		// pagging to end
+		<#-- pagging to end -->
 		$( "li.toEnd" ).click( function(){
 			if( !$( this ).hasClass( "disabled" ) )
 				publicationSearch( $( "#publication_search_field" ).val() , "end");
 		});
 		
-		// jump to specific page
+		<#-- jump to specific page -->
 		$( "select.page-number" ).change( function(){
 			publicationSearch( $( "#publication_search_field" ).val() , $( this ).val() );
 		});
 		
+		<#-- unique options in each widget -->
 		var options ={
 			source : "<@spring.url '/publication/search' />",
 			query: "",
+			queryString : "",
 			page:0,
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
 							var targetContainer = $( widgetElem ).find( "#publicationTable" ).find("tbody");
-							// remove previous result
+							<#-- remove previous result -->
 							targetContainer.html( "" );
-							// remove any remaing tooltip
+							<#-- remove any remaing tooltip -->
 							$( "body .tooltip" ).remove();
 							var $pageDropdown = $( widgetElem ).find( "select.page-number" );
 							$pageDropdown.find( "option" ).remove();
 							
 							if( data.count > 0 ){
 							
-								// build the publication table
+								<#-- build the publication table -->
 								$.each( data.publication, function( index, item){
 									$.each( item, function( key, value){
 										if( key == "title" ){
@@ -112,14 +115,14 @@
 								});
 								var maxPage = Math.ceil(data.count/data.maxresult);
 								
-								// set dropdown page
+								<#-- set dropdown page -->
 								for( var i=1;i<=maxPage;i++){
 									$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
 								}
-								// enable bootstrap tooltip
+								<#-- enable bootstrap tooltip -->
 								$( widgetElem ).find( "[data-toggle='tooltip']" ).tooltip();
 								
-								// set page number
+								<#-- set page number -->
 								$pageDropdown.val( data.page + 1 );
 								$( widgetElem ).find( "span.total-page" ).html( maxPage );
 								var endRecord = (data.page + 1) * data.maxresult;
@@ -137,7 +140,7 @@
 						}
 		};
 		
-		// register the widget
+		<#-- register the widget -->
 		$.PALM.options.registeredWidget.push({
 			"type":"${wType}",
 			"group": "${wGroup}",
@@ -147,13 +150,13 @@
 			"options": options
 		});
 		
-		// adapt the height for first time
+		<#--// adapt the height for first time-->
 		$(document).ready(function() {
 		    var bodyheight = $(window).height();
 		    $("#table-container-${wId}").height(bodyheight - 192);
 		});
 		
-		// first time on load, list 50 publications
+		<#--// first time on load, list 50 publications-->
 		$.PALM.boxWidget.refresh( $( "#widget-${wId}" ) , options );
 	});
 	

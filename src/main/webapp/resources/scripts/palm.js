@@ -410,7 +410,10 @@ $.PALM.boxWidget = {
     // just before ajax call
     settings.onRefreshStart( $widgetElement );
     // load json ajax
-    $.getJSON( settings.source + settings.queryString, function( data ){
+    var additionalQueryString = "";
+    if( typeof settings.queryString != "undefined" )
+    	additionalQueryString = settings.queryString;
+    $.getJSON( settings.source + additionalQueryString, function( data ){
     	settings.onRefreshDone( $widgetElement , data);
     	// remove overlay and loading 
     	$widgetElement.find( ".overlay" ).remove();
