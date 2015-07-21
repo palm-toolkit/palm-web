@@ -1,0 +1,741 @@
+{  
+   "perspectives":[  
+      {  
+         "count":"",
+         "description":"",
+         "name":"aic",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"individual differences",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"knowledge tracing",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"moodle",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"affective computing",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"engagement",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"affective persistence",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"bayesian knowledge tracing",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"motivation",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"frustration",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"affect",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"affect sequences",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"classification",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"clustering",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"after-school program",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"educational games",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"self-regulated learning",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"adaptive and non-adaptive testing",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"machine learning",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      },
+      {  
+         "count":"",
+         "description":"",
+         "name":"personality",
+         "slug":"",
+         "group":"",
+         "type":"perspective"
+      }
+   ],
+   "themes":[  
+      {  
+         "description":"",
+         "name":"academic performance",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"student modeling",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"ability",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"prediction",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"intelligent tutoring systems",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"assessment",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"mathematics",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"analysis",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"educational data mining",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"personalized learning",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"learning analytics",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"intelligent tutoring system",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"affect detection",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"item response theory",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"aggregate learning",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"user modeling",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"regression",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"moocs",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"supervised learning",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"adaptive systems",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"data mining",
+         "slug":"",
+         "type":"theme"
+      },
+      {  
+         "description":"",
+         "name":"student model",
+         "slug":"",
+         "type":"theme"
+      }
+   ],
+   "episodes":[  
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Ryan S.J.d. Baker (6)",
+         "links":[  
+            "affect",
+            "affect detection",
+            "affect sequences",
+            "affective persistence",
+            "bayesian knowledge tracing",
+            "educational data mining",
+            "frustration",
+            "knowledge tracing",
+            "student modeling",
+            "user modeling"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Danielle S. Mcnamara (5)",
+         "links":[  
+            "individual differences",
+            "intelligent tutoring systems"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Neil T. Heffernan (5)",
+         "links":[  
+            "affect detection",
+            "classification",
+            "educational data mining",
+            "intelligent tutoring system",
+            "knowledge tracing",
+            "prediction",
+            "regression",
+            "student modeling"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Arthur C. Graesser (4)",
+         "links":[  
+            "after-school program",
+            "engagement"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Kenneth R. Koedinger (4)",
+         "links":[  
+            "aic",
+            "individual differences",
+            "item response theory",
+            "machine learning",
+            "student model"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Tiffany Barnes (4)",
+         "links":[  
+            "knowledge tracing"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Andrew S. Lan (3)",
+         "links":[  
+            "adaptive and non-adaptive testing",
+            "learning analytics",
+            "personalized learning"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Christoph Studer (3)",
+         "links":[  
+            "adaptive and non-adaptive testing",
+            "learning analytics",
+            "personalized learning"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Daniel Seaton (3)",
+         "links":[  
+            "bayesian knowledge tracing",
+            "moocs",
+            "regression"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"David E. Pritchard (3)",
+         "links":[  
+            "bayesian knowledge tracing",
+            "moocs",
+            "regression"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Erica L. Snow (3)",
+         "links":[  
+            "individual differences",
+            "intelligent tutoring systems"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"G. Tanner Jackson (3)",
+         "links":[  
+            "individual differences",
+            "intelligent tutoring systems"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Joseph E. Beck (3)",
+         "links":[  
+            "educational data mining",
+            "intelligent tutoring system",
+            "knowledge tracing",
+            "student modeling"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Richard G. Baraniuk (3)",
+         "links":[  
+            "adaptive and non-adaptive testing",
+            "learning analytics",
+            "personalized learning"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Steve Ritter (3)",
+         "links":[  
+            "aggregate learning",
+            "assessment",
+            "intelligent tutoring systems",
+            "knowledge tracing",
+            "mathematics",
+            "student modeling"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Tristan Nixon (3)",
+         "links":[  
+            "aggregate learning",
+            "assessment",
+            "intelligent tutoring systems",
+            "knowledge tracing",
+            "mathematics",
+            "student modeling"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Vasile Rus (3)",
+         "links":[  
+            "assessment"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Yutao Wang (3)",
+         "links":[  
+            "educational data mining",
+            "knowledge tracing",
+            "student modeling"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Alireza Davoodi (2)",
+         "links":[  
+            "educational games",
+            "student model"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Andrew E. Waters (2)",
+         "links":[  
+            "personalized learning"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Angela Bovo (2)",
+         "links":[  
+            "analysis",
+            "clustering",
+            "machine learning",
+            "moodle",
+            "prediction"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Brett Van De Sande (2)",
+         "links":[  
+            "data mining"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"C. Conati (2)",
+         "links":[  
+            "educational games",
+            "student model"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"C. Romero (2)",
+         "links":[  
+            "classification",
+            "data mining"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Colm Mcguinness (2)",
+         "links":[  
+            "ability",
+            "academic performance",
+            "educational data mining",
+            "motivation",
+            "personality",
+            "self-regulated learning"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Dan Stefanescu (2)",
+         "links":[  
+            "assessment"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Emma Brunskill (2)",
+         "links":[  
+            "educational games",
+            "supervised learning",
+            "user modeling"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Geraldine Gray (2)",
+         "links":[  
+            "ability",
+            "academic performance",
+            "educational data mining",
+            "motivation",
+            "personality",
+            "self-regulated learning"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Henry Hua (2)",
+         "links":[  
+            "after-school program"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Ivon Arroyo (2)",
+         "links":[  
+            "classification",
+            "intelligent tutoring system",
+            "prediction",
+            "regression"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Jack Mostow (2)",
+         "links":[  
+            "item response theory",
+            "knowledge tracing",
+            "student modeling"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"Jesus G. Boticario (2)",
+         "links":[  
+            "adaptive systems",
+            "affective computing",
+            "data mining",
+            "educational data mining",
+            "mathematics",
+            "user modeling"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      },
+      {  
+         "episode":1,
+         "description":"",
+         "name":"John C. Stamper (2)",
+         "links":[  
+            "aic"
+         ],
+         "slug":"",
+         "date":"",
+         "type":"episode"
+      }
+   ]
+}

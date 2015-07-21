@@ -74,6 +74,7 @@
 	    <filtering>true</filtering>
 	    <includes>
 			<include>**/*.xml</include>
+			<include>**/*.json</include>
 			<include>**/*.properties</include>
 		</includes>
 	  </resource>

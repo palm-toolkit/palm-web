@@ -5,7 +5,8 @@
 <script src="<@spring.url '/resources/scripts/jquery.dialogextend.js' />"></script>-->
 
 <#-- jQuery 2.1.3 -->
-<script src="<@spring.url '/resources/plugins/jQuery/jQuery-2.1.3.min.js' />" type="text/javascript"></script>
+<#--<script src="<@spring.url '/resources/plugins/jQuery/jQuery-2.1.3.min.js' />" type="text/javascript"></script>-->
+<script src="<@spring.url '/resources/scripts/visualization/jquery-latest.min.js' />" type="text/javascript"></script>
 
 <#-- jQuery UI 1.11.4 -->
 <script src="<@spring.url '/resources/plugins/jQueryUI/jquery-ui.min.js' />" type="text/javascript"></script>
@@ -27,6 +28,13 @@
 
 <#-- used for load D3 visualization library -->
 <script src="<@spring.url '/resources/scripts/d3.min.js' />"></script>
+<script src="<@spring.url '/resources/scripts/visualization/d3.layout.cloud.js' />" type="text/javascript"></script>
+<#--<script src="<@spring.url '/resources/scripts/visualization/d3.v3.min.js' />" type="text/javascript"></script>-->
+<script src="<@spring.url '/resources/scripts/visualization/d3.geo.projection.v0.min.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/scripts/visualization/datamaps.world.min.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/scripts/visualization/jit-yc.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/scripts/visualization/jquery.simplemodal.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/scripts/visualization/topojson.v1.min.js' />" type="text/javascript"></script>
 
 <#-- used for uploading file via ajax, etc-->
 <#--<script src="<@spring.url '/resources/scripts/jquery.fileupload.js' />"></script>-->
