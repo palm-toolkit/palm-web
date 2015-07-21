@@ -41,6 +41,10 @@ import de.rwth.i9.palm.feature.researcher.ResearcherFeatureImpl;
 @Lazy( true )
 public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfigurer
 {
+	private static final String PROPERTY_NAME_TASKEXECUTOR_MAXPOOLSIZE = "taskexecutor.maxpoolsize";
+	private static final String PROPERTY_NAME_TASKEXECUTOR_COREPOOLSIZE = "taskexecutor.corepoolsize";
+	private static final String PROPERTY_NAME_TASKEXECUTOR_QUEUECAPACITY = "taskexecutor.queuecapacity";
+	private static final String PROPERTY_NAME_TASKEXECUTOR_THREADNAMEPREFIX = "taskexecutor.threadnameprefix";
 
 	@Autowired
 	private Environment env;
@@ -181,10 +185,10 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 	public Executor getAsyncExecutor()
 	{
 		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-		taskExecutor.setMaxPoolSize( 100 );
-		taskExecutor.setCorePoolSize( 20 );
-		taskExecutor.setQueueCapacity( 1000 );
-		taskExecutor.setThreadNamePrefix( "PALMExecutor-" );
+		taskExecutor.setMaxPoolSize( Integer.parseInt( env.getRequiredProperty( PROPERTY_NAME_TASKEXECUTOR_MAXPOOLSIZE ) ) );
+		taskExecutor.setCorePoolSize( Integer.parseInt( env.getRequiredProperty( PROPERTY_NAME_TASKEXECUTOR_COREPOOLSIZE ) ) );
+		taskExecutor.setQueueCapacity( Integer.parseInt( env.getRequiredProperty( PROPERTY_NAME_TASKEXECUTOR_QUEUECAPACITY ) ) );
+		taskExecutor.setThreadNamePrefix( env.getRequiredProperty( PROPERTY_NAME_TASKEXECUTOR_THREADNAMEPREFIX ) );
 		taskExecutor.initialize();
 		return taskExecutor;
 	}
