@@ -19,16 +19,28 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.hp.hpl.jena.tdb.base.file.Location;
-
 import de.rwth.i9.palm.model.Author;
+import de.rwth.i9.palm.model.AuthorAlias;
+import de.rwth.i9.palm.model.Conference;
+import de.rwth.i9.palm.model.ConferenceGroup;
+import de.rwth.i9.palm.model.Dataset;
+import de.rwth.i9.palm.model.ExtractionRuntime;
+import de.rwth.i9.palm.model.ExtractionService;
+import de.rwth.i9.palm.model.Function;
 import de.rwth.i9.palm.model.Institution;
-import de.rwth.i9.palm.model.Keyword;
+import de.rwth.i9.palm.model.Location;
 import de.rwth.i9.palm.model.Publication;
+import de.rwth.i9.palm.model.PublicationHistory;
+import de.rwth.i9.palm.model.PublicationSource;
+import de.rwth.i9.palm.model.PublicationTopic;
+import de.rwth.i9.palm.model.Reference;
 import de.rwth.i9.palm.model.Role;
-import de.rwth.i9.palm.model.Topic;
+import de.rwth.i9.palm.model.Source;
+import de.rwth.i9.palm.model.Subject;
 import de.rwth.i9.palm.model.User;
-import de.rwth.i9.palm.model.Venue;
+import de.rwth.i9.palm.model.UserRequest;
+import de.rwth.i9.palm.model.UserWidget;
+import de.rwth.i9.palm.model.Widget;
 import de.rwth.i9.palm.persistence.relational.PersistenceStrategyImpl;
 
 @Configuration
@@ -52,6 +64,7 @@ public class DatabaseConfig
 	private static final String PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN = "entitymanager.packages.to.scan";
 	private static final String PROPERTY_NAME_HIBERNATE_SEARCH_DEFAULT_DIRECTORY_PROVIDER = "hibernate.search.default.directory_provider";
 	private static final String PROPERTY_NAME_HIBERNATE_SEARCH_DEFAULT_INDEXBASE = "hibernate.search.default.indexBase";
+	private static final String PROPERTY_NAME_HIBERNATE_SEARCH_LUCENE_VERSION = "hibernate.search.lucene_version";
 
 	@Autowired
 	private Environment env;
@@ -90,6 +103,7 @@ public class DatabaseConfig
 
 		properties.put( PROPERTY_NAME_HIBERNATE_SEARCH_DEFAULT_DIRECTORY_PROVIDER, env.getRequiredProperty( PROPERTY_NAME_HIBERNATE_SEARCH_DEFAULT_DIRECTORY_PROVIDER ) );
 		properties.put( PROPERTY_NAME_HIBERNATE_SEARCH_DEFAULT_INDEXBASE, env.getRequiredProperty( PROPERTY_NAME_HIBERNATE_SEARCH_DEFAULT_INDEXBASE ) );
+		properties.put( PROPERTY_NAME_HIBERNATE_SEARCH_LUCENE_VERSION, env.getRequiredProperty( PROPERTY_NAME_HIBERNATE_SEARCH_LUCENE_VERSION ) );
 		return properties;
 	}
 
@@ -109,17 +123,30 @@ public class DatabaseConfig
 		sessionFactoryBean.setPackagesToScan( env.getRequiredProperty( PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN ) );
 		sessionFactoryBean.setHibernateProperties( hibProperties() );
 		sessionFactoryBean.setAnnotatedClasses( new Class<?>[] { 
-				/*model class here*/ 
+				/* model class here */
+				AuthorAlias.class,
 				Author.class,
+				Conference.class,
+				ConferenceGroup.class,
+				Dataset.class,
+				ExtractionService.class,
+				Function.class,
 				Institution.class,
-				Keyword.class,
 				Location.class,
 				Publication.class,
+				PublicationHistory.class,
+				PublicationSource.class,
+				Reference.class,
 				Role.class,
-				Topic.class,
+				ExtractionRuntime.class, 
+ 				Source.class,
+ 				Subject.class,
+				PublicationTopic.class,
 				User.class,
-				Venue.class
-				} );
+				UserRequest.class,
+				UserWidget.class,
+				Widget.class
+		} );
 		return sessionFactoryBean;
 	}
 

@@ -5,6 +5,7 @@
     <groupId>de.rwth.i9</groupId>
     <artifactId>palm-project</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../palm-project/pom.xml</relativePath>
   </parent>
   
   <groupId>de.rwth.i9.palm</groupId>
@@ -21,20 +22,20 @@
 	    	<version>${project.version}</version>
 		</dependency>
 		
-		<!-- tomcat servlet api -->
 		<dependency>
-			<groupId>org.apache.tomcat</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>${tomcat.servlet.api.version}</version>
+			<groupId>de.rwth.i9.palm</groupId>
+	    	<artifactId>palm-ontology</artifactId>
+	    	<version>${project.version}</version>
+		</dependency>
+		
+		<!-- servlet api -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${javax.servlet.api.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		
-		<!-- freemarker -->
-	<dependency>
-		<groupId>org.freemarker</groupId>
-		<artifactId>freemarker</artifactId>
-		<version>${freemarker.version}</version>
-	</dependency>
 	</dependencies>
 	
 	
@@ -48,10 +49,12 @@
 		  	<artifactId>maven-war-plugin</artifactId>
 		  	<version>${maven.war.plugin.version}</version>
 		  	<configuration>
-		    	<webXml>src\main\webapp\WEB-INF\web.xml</webXml>        
+		    	<!-- <webXml>src\main\webapp\WEB-INF\web.xml</webXml>-->
+		    	<warsourcedirectory>src/main/webapp</warsourcedirectory>  
+        		<warname>${project.name}</warname>  
+        		<failonmissingwebxml>false</failonmissingwebxml> 
 		  	</configuration>
 		</plugin>
-
 		<plugin>
 	       <groupId>org.apache.tomcat.maven</groupId>
 	        <artifactId>tomcat7-maven-plugin</artifactId>
@@ -71,8 +74,8 @@
 	    <filtering>true</filtering>
 	    <includes>
 			<include>**/*.xml</include>
+			<include>**/*.json</include>
 			<include>**/*.properties</include>
-			<include>**/*.sparql</include>
 		</includes>
 	  </resource>
 	</resources>
