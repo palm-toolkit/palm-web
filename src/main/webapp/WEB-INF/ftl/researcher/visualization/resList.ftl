@@ -259,7 +259,7 @@
 			});
 
 		<#-- chack and fetch pzblication from academic network if necessary -->
-		$.getJSON( "<@spring.url '/researcher/fetchNetworkDataset?id=' />" + authorId + "&force=true", function( data ){
+		$.getJSON( "<@spring.url '/researcher/fetchNetworkDataset?id=' />" + authorId + "&force=false", function( data ){
 			<#-- refresh registered widget -->
 			$.each( $.PALM.options.registeredWidget, function(index, obj){
 				if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){

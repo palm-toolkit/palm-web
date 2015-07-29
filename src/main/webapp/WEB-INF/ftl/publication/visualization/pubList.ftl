@@ -107,11 +107,23 @@
 							
 								<#-- build the publication table -->
 								$.each( data.publication, function( index, item){
-									$.each( item, function( key, value){
-										if( key == "title" ){
-											$( widgetElem ).find( "#publicationTable" ).find("tbody").append( "<tr><td title='" + value + "' data-original-title='" + value + "' data-toggle='tooltip' data-placement='bottom' data-container='body'>" + value + "</td></tr>" )
-										}
+
+									var publicationRow = 
+										$('<tr/>')
+										.attr({ "id" : item.id })
+										.css({"cursor":"pointer"})
+										.append(
+											$('<td/>')
+											.attr({ "title": item.title, "data-original-title":item.title, "data-toggle":"tooltip","data-placement":"bottom","data-container":"body"})
+											.html( item.title)
+										);
+
+									<#-- add clcik event -->
+									publicationRow.on( "click", function(){
+										getPublicationDetails( $( this ).attr( 'id' ));
 									});
+
+									targetContainer.append( publicationRow );
 								});
 								var maxPage = Math.ceil(data.count/data.maxresult);
 								
@@ -193,6 +205,18 @@
 				else
 					obj.options.source = "<@spring.url '/publication/search?query=' />" + obj.options.query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
 					
+				$.PALM.boxWidget.refresh( obj.element , obj.options );
+			}
+		});
+	}
+
+	<#-- when publication list clciked --> 
+	function getPublicationDetails( publicationId ){
+		<#-- put loading overlay -->
+		$.each( $.PALM.options.registeredWidget, function(index, obj){
+			if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
+				obj.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+				obj.options.queryString = "?id=" + publicationId;
 				$.PALM.boxWidget.refresh( obj.element , obj.options );
 			}
 		});
