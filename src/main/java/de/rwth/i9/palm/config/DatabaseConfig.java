@@ -29,6 +29,7 @@ import de.rwth.i9.palm.model.ExtractionService;
 import de.rwth.i9.palm.model.Function;
 import de.rwth.i9.palm.model.Institution;
 import de.rwth.i9.palm.model.Location;
+import de.rwth.i9.palm.model.PalmConfiguration;
 import de.rwth.i9.palm.model.Publication;
 import de.rwth.i9.palm.model.PublicationHistory;
 import de.rwth.i9.palm.model.PublicationSource;
@@ -129,19 +130,20 @@ public class DatabaseConfig
 				Conference.class,
 				ConferenceGroup.class,
 				Dataset.class,
+				ExtractionRuntime.class,
 				ExtractionService.class,
 				Function.class,
 				Institution.class,
 				Location.class,
 				Publication.class,
+				PalmConfiguration.class,
 				PublicationHistory.class,
 				PublicationSource.class,
+				PublicationTopic.class,
 				Reference.class,
 				Role.class,
-				ExtractionRuntime.class, 
  				Source.class,
  				Subject.class,
-				PublicationTopic.class,
 				User.class,
 				UserRequest.class,
 				UserWidget.class,
