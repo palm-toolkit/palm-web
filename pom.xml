@@ -50,9 +50,9 @@
 		  	<version>${maven.war.plugin.version}</version>
 		  	<configuration>
 		    	<!-- <webXml>src\main\webapp\WEB-INF\web.xml</webXml>-->
-		    	<warsourcedirectory>src/main/webapp</warsourcedirectory>  
-        		<warname>${project.name}</warname>  
-        		<failonmissingwebxml>false</failonmissingwebxml> 
+		    	<warSourceDirectory>src/main/webapp</warSourceDirectory>  
+        		<warName>${project.name}</warName>  
+        		<failOnMissingWebXml>false</failOnMissingWebXml>
 		  	</configuration>
 		</plugin>
 		<plugin>
