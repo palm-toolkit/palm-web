@@ -61,6 +61,9 @@ public class DatabaseConfig
 	private static final String PROPERTY_NAME_HIBERNATE_FORMAT_SQL = "hibernate.format_sql";
 	private static final String PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
 	//private static final String PROPERTY_NAME_HIBERNATE_CONNECTION_AUTOCOMMIT = "hibernate.connection.autocommit";
+	private static final String PROPERTY_NAME_HIBERNATE_CONNECTION_CHARSET = "hibernate.connection.CharSet";
+	private static final String PROPERTY_NAME_HIBERNATE_CONNECTION_CHARACTERENCODING = "hibernate.connection.characterEncoding";
+	private static final String PROPERTY_NAME_HIBERNATE_CONNECTION_USEUNICODE = "hibernate.connection.useUnicode";
 
 	private static final String PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN = "entitymanager.packages.to.scan";
 	private static final String PROPERTY_NAME_HIBERNATE_SEARCH_DEFAULT_DIRECTORY_PROVIDER = "hibernate.search.default.directory_provider";
@@ -101,6 +104,9 @@ public class DatabaseConfig
 		properties.put( PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO, env.getRequiredProperty( PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO ) );
 		// properties.put(PROPERTY_NAME_HIBERNATE_CONNECTION_AUTOCOMMIT,
 		// env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_CONNECTION_AUTOCOMMIT));
+		properties.put( PROPERTY_NAME_HIBERNATE_CONNECTION_CHARSET, env.getRequiredProperty( PROPERTY_NAME_HIBERNATE_CONNECTION_CHARSET ) );
+		properties.put( PROPERTY_NAME_HIBERNATE_CONNECTION_CHARACTERENCODING, env.getRequiredProperty( PROPERTY_NAME_HIBERNATE_CONNECTION_CHARACTERENCODING ) );
+		properties.put( PROPERTY_NAME_HIBERNATE_CONNECTION_USEUNICODE, env.getRequiredProperty( PROPERTY_NAME_HIBERNATE_CONNECTION_USEUNICODE ) );
 
 		properties.put( PROPERTY_NAME_HIBERNATE_SEARCH_DEFAULT_DIRECTORY_PROVIDER, env.getRequiredProperty( PROPERTY_NAME_HIBERNATE_SEARCH_DEFAULT_DIRECTORY_PROVIDER ) );
 		properties.put( PROPERTY_NAME_HIBERNATE_SEARCH_DEFAULT_INDEXBASE, env.getRequiredProperty( PROPERTY_NAME_HIBERNATE_SEARCH_DEFAULT_INDEXBASE ) );
