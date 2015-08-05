@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import de.rwth.i9.palm.model.Author;
 import de.rwth.i9.palm.model.AuthorAlias;
+import de.rwth.i9.palm.model.AuthorInterest;
+import de.rwth.i9.palm.model.AuthorInterestProfile;
 import de.rwth.i9.palm.model.Conference;
 import de.rwth.i9.palm.model.ConferenceGroup;
 import de.rwth.i9.palm.model.Dataset;
@@ -40,6 +42,7 @@ import de.rwth.i9.palm.model.Subject;
 import de.rwth.i9.palm.model.User;
 import de.rwth.i9.palm.model.UserRequest;
 import de.rwth.i9.palm.model.UserWidget;
+import de.rwth.i9.palm.model.WeightingAlgorithm;
 import de.rwth.i9.palm.model.Widget;
 import de.rwth.i9.palm.persistence.relational.PersistenceStrategyImpl;
 
@@ -130,8 +133,10 @@ public class DatabaseConfig
 		sessionFactoryBean.setHibernateProperties( hibProperties() );
 		sessionFactoryBean.setAnnotatedClasses( new Class<?>[] { 
 				/* model class here */
-				AuthorAlias.class,
 				Author.class,
+				AuthorAlias.class,
+				AuthorInterest.class,
+				AuthorInterestProfile.class,
 				Conference.class,
 				ConferenceGroup.class,
 				Dataset.class,
@@ -151,7 +156,8 @@ public class DatabaseConfig
 				User.class,
 				UserRequest.class,
 				UserWidget.class,
-				Widget.class
+				Widget.class,
+				WeightingAlgorithm.class
 		} );
 		return sessionFactoryBean;
 	}
