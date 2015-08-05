@@ -1,7 +1,24 @@
 <div class="box-body no-padding">
 	<div class="box-tools">
-	    <div class="input-group" style="width: 100%;">
-	      <input type="text" id="publication_search_field" name="publication_search_field" class="form-control input-sm pull-right" placeholder="Search">
+		<div id="author_block">
+	    	<div class="input-group" id="author_search_block" style="width:100%">
+	      		<input type="text" id="publication_search_field" name="publication_search_field" class="form-control input-sm pull-right" placeholder="Search saved author">
+	      		<div id="publication_search_button" class="input-group-btn">
+	        		<button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
+	      		</div>
+	    	</div>
+
+			<div class="palm_pub_atr" id="selected_author" data_author_id="all">
+				<div class="palm_pub_atr_photo" style="font-size: 14px;">
+					<img src="https://scholar.google.com/citations?view_op=view_photo&amp;user=gyLI8FYAAAAJ&amp;citpid=1" class="palm_pub_atr_img">
+				</div>
+				<div class="palm_atr_name">mohamed amine chatti</div>
+				<div class="palm_atr_aff">rwth aachen university</div>
+			</div>
+        </div>
+
+		<div class="input-group" style="width: 100%;">
+	      <input type="text" id="publication_search_field" name="publication_search_field" class="form-control input-sm pull-right" placeholder="Search publication">
 	      <div id="publication_search_button" class="input-group-btn">
 	        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
 	      </div>
@@ -170,6 +187,32 @@
 		
 		<#--// first time on load, list 50 publications-->
 		$.PALM.boxWidget.refresh( $( "#widget-${wId}" ) , options );
+
+		<#-- autocomplete -->
+		$( "#author_search_block" ).autocomplete({
+      			source: function( request, response ) {
+        			$.ajax({
+          			url: "http://gd.geobytes.com/AutoCompleteCity",
+          			dataType: "jsonp",
+          			data: {
+            			q: request.term
+          			},
+          			success: function( data ) {
+            			response( data );
+          			}
+        		});
+      		},
+      		minLength: 3,
+      		select: function( event, ui ) {
+        		log( ui.item ?"Selected: " + ui.item.label : "Nothing selected, input was " + this.value);
+      		},
+      		open: function() {
+        		$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      		},
+      		close: function() {
+        		$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      		}
+    	});
 	});
 	
 	function publicationSearch( query , jumpTo ){

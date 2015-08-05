@@ -10,7 +10,7 @@
 	$( function(){
 		<#-- add slimscroll to widget body -->
 		$("#boxbody${wId}").slimscroll({
-			height: "500px",
+			height: "550px",
 	        size: "3px"
 	    });
 
@@ -41,7 +41,7 @@
 						.addClass( "btn btn-block btn-default palm_option_btn" )
 						.attr({ "title":  "open " + pdfSource} )
 						.html( "Open Pdf"  )
-						.click( function( event ){ event.preventDefault();window.open( data.publication.pdfurl)})
+						.click( function( event ){ event.preventDefault();openPfdOnDialog( data.publication.pdfurl)})
 					).append(
 						$('<button/>')
 						.addClass( "btn btn-block btn-default palm_option_btn" )
@@ -223,6 +223,28 @@
     				publicationDetailObject.element.find( ".overlay" ).remove();
 				}
     		});
+		}
+
+		function openPfdOnDialog( pdfUrl ){
+			var pdfDialog = $( '<div/>' )
+								.addClass( "palm_pdf_dialog" )
+								.append(
+									$( '<iframe/>' )
+									.addClass( "externalContent" )
+									.attr({ "scrolling":"yes" , "frameborder":"no" , "marginheight":"0" , "marginwidth":"0", "border":"0" , "src": pdfUrl })
+								);
+			$( 'body' ).append( pdfDialog );
+			pdfDialog.dialog( 
+    		{ 
+        		title: 'Pdf View',
+				height: 460,
+				width: 600,
+        		close: function(event, ui) 
+       			{ 
+            		pdfDialog.dialog( "destroy" ).remove();
+        		} 
+    		});
+			pdfDialog.dialog( "open" );
 		}
 	});<#-- end document ready -->
 </script>

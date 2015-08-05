@@ -37,7 +37,7 @@ a.box-home span {
 
 iframe.externalContent{
 	width:100%;
-	min-height:500px;
+	min-height:400px;
 }
 .box-move-handle{
 	cursor:move;
@@ -319,4 +319,27 @@ iframe.externalContent{
 	float:right;
 	width:auto;
 	margin:5px 5px;
+}
+.palm_pdf_dialog{
+	padding:0;
+	overflow:hidden;
+}
+
+/* override jquery ui css */
+.ui-dialog { z-index: 1031 !important ;}
+
+.ui-dialog .ui-dialog-content {
+    padding: 0
+}
+.ui-dialog-titlebar-close{
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome !important;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transform: translate(0, 0);
+}
+.ui-dialog-titlebar-close:before{
+	content: "\f00d";
 }

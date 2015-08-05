@@ -10,7 +10,7 @@
 	$( function(){
 		<#-- add slimscroll to widget body -->
 		$("#boxbody${wId}").slimscroll({
-			height: "500px",
+			height: "250px",
 	        size: "3px"
 	    });
 
