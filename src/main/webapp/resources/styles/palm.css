@@ -37,7 +37,7 @@ a.box-home span {
 
 iframe.externalContent{
 	width:100%;
-	min-height:500px;
+	min-height:400px;
 }
 .box-move-handle{
 	cursor:move;
@@ -190,6 +190,8 @@ iframe.externalContent{
 .marginTop40Px{margin-top:40px}
 .alignCenter{text-align:center}
 .marginBottom0{margin-bottom:0}
+.fleft{ float:left }
+.fright{ float:right }
 
 .table-container{
 	padding:0 6px 0 0;
@@ -269,4 +271,75 @@ iframe.externalContent{
 	line-height: 12px;
 	font-size: 12px;
 	padding:0 0 0 4px;
+}
+.palm_section{
+	margin-bottom: 5px;
+}
+.palm_label{
+	display: inline-block;
+  	width: 100%;
+  	margin-bottom: 3px;
+  	font-weight: 700;
+}
+.palm_content{
+	display: inline-block;
+  	width: 100%;
+  	margin-bottom: 3px;
+}
+.palm_pub_coauthor_blck{
+	width:100%;
+}
+.palm_pub_coauthor_ctr{
+	float:left;
+	width:100%;
+	margin-bottom:15px;
+}
+.palm_pub_atr{
+	max-width:300px;
+	max-height:52px;
+	float:left;
+	margin:0 0 2px 0;
+}
+.palm_pub_atr_photo{
+	height:50px;
+	padding:3px 2px;
+	float:left;
+	font-size:50px;
+	overflow:hidden;
+	color:#73A2F8;
+}
+.palm_pub_atr_img{
+	height:50px;
+	position:relative;
+}
+.palm_option{
+	width:100%;
+}
+.palm_option_btn{
+	float:right;
+	width:auto;
+	margin:5px 5px;
+}
+.palm_pdf_dialog{
+	padding:0;
+	overflow:hidden;
+}
+
+/* override jquery ui css */
+.ui-dialog { z-index: 1031 !important ;}
+
+.ui-dialog .ui-dialog-content {
+    padding: 0
+}
+.ui-dialog-titlebar-close{
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome !important;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transform: translate(0, 0);
+}
+.ui-dialog-titlebar-close:before{
+	content: "\f00d";
 }
