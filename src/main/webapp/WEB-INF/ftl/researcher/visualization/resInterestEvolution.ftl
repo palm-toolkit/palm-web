@@ -197,27 +197,32 @@ function visualizeInterest( yearIndex , yearType ){
 		});
 	}
 
-var somedata = [{"key":"active time","date":"05/13/2013","value":"3860.0"},{"key":"active time","date":"05/14/2013","value":"5167.0"},{"key":"active time","date":"05/15/2013","value":"5663.0"},{"key":"active time","date":"05/16/2013","value":"542.0"},{"key":"active time","date":"05/16/2013","value":"6758.0"},{"key":"active time","date":"05/17/2013","value":"6379.0"},{"key":"active time","date":"05/18/2013","value":"10710.0"},{"key":"active time","date":"05/19/2013","value":"10025.0"},{"key":"active time","date":"05/20/2013","value":"4326.0"},{"key":"active time","date":"05/21/2013","value":"3711.0"},{"key":"active time","date":"05/22/2013","value":"10.0"},{"key":"active time","date":"05/22/2013","value":"3371.0"},{"key":"distance","date":"05/13/2013","value":"5766.0"},{"key":"distance","date":"05/14/2013","value":"7472.0"},{"key":"distance","date":"05/15/2013","value":"8264.0"},{"key":"distance","date":"05/16/2013","value":"797.0"},{"key":"distance","date":"05/16/2013","value":"14842.0"},{"key":"distance","date":"05/17/2013","value":"9369.0"},{"key":"distance","date":"05/18/2013","value":"19950.0"},{"key":"distance","date":"05/19/2013","value":"18100.0"},{"key":"distance","date":"05/20/2013","value":"6547.0"},{"key":"distance","date":"05/21/2013","value":"5583.0"},{"key":"distance","date":"05/22/2013","value":"18.0"},{"key":"distance","date":"05/22/2013","value":"4989.0"},{"key":"steps","date":"05/13/2013","value":"7210.0"},{"key":"steps","date":"05/14/2013","value":"9481.0"},{"key":"steps","date":"05/15/2013","value":"10431.0"},{"key":"steps","date":"05/16/2013","value":"1006.0"},{"key":"steps","date":"05/16/2013","value":"14975.0"},{"key":"steps","date":"05/17/2013","value":"11821.0"},{"key":"steps","date":"05/18/2013","value":"22069.0"},{"key":"steps","date":"05/19/2013","value":"20228.0"},{"key":"steps","date":"05/20/2013","value":"8107.0"},{"key":"steps","date":"05/21/2013","value":"6944.0"},{"key":"steps","date":"05/22/2013","value":"21.0"},{"key":"steps","date":"05/22/2013","value":"6268.0"}];
 
-streamChartData.sort( compareTermWord );
+	streamChartData.sort( compareTermWord );
 
-var streamChartDataComplete = [];
-var startDate = parseInt( data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears[dataPointer.dataYearStart]);
-var endDate = parseInt(data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears[dataPointer.dataYearEnd]);
-var previousTerm = "";
-streamChartData.forEach(function(d) {
-	if( previousTerm != d.key )
-	for( var i = startDate ; i <= endDate ; i++ ){
-		if( d.key)
-	}
-});
+	<#-- fill missing data-->
+	var streamChartDataComplete = [];
+	var streamChartDataCompleteMapIndex= {};
+	var startDate = parseInt( data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears[dataPointer.dataYearStart].year);
+	var endDate = parseInt(data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears[dataPointer.dataYearEnd].year);
+	var previousTerm = "";
+	streamChartData.forEach(function(d) {
+		if( previousTerm != d.key ){
+			for( var i = startDate ; i <= endDate ; i++ ){
+				streamChartDataCompleteMapIndex[ d.key+i ] = streamChartDataComplete.length;
+				var termValueData={
+					"key" : d.key,
+					"date" : i.toString(),
+					"value" : "0.0"
+				}
+				streamChartDataComplete.push( termValueData );
+			}
+		}
+		streamChartDataComplete[ streamChartDataCompleteMapIndex[ d.key+d.date ] ].value = Math.round( d.value ).toFixed(2).toString();
+		previousTerm = d.key;
+	});
 
-
-console.log( streamChartData );
-
-<#-- fixes missing data -->
-
-visualizeStreamChart( somedata );
+	visualizeStreamChart( streamChartDataComplete );
 }
 
 function compareTermWord( a, b){
