@@ -62,7 +62,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
             			"/conference/**", 
             			"/researcher/**", 
             			"/publication/**", 
-            			"/sparqlview/**" 
+            			"/sparqlview/**",
+            			"/admin/**" 
             			)
                 	.permitAll()
                 .anyRequest()

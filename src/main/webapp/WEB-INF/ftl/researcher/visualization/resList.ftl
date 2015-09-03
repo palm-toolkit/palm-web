@@ -261,12 +261,14 @@
 		<#-- chack and fetch pzblication from academic network if necessary -->
 		$.getJSON( "<@spring.url '/researcher/fetch?id=' />" + authorId + "&force=false", function( data ){
 			<#-- refresh registered widget -->
+		<#--
 			$.each( $.PALM.options.registeredWidget, function(index, obj){
 				if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
 					obj.options.queryString = "?id=" + authorId;
 					$.PALM.boxWidget.refresh( obj.element , obj.options );
 				}
 			});
+		-->
 		});
 	}
 	

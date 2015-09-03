@@ -20,6 +20,14 @@
         <li data-link="administration"><a href="<@spring.url '/admin/widget/administration' />"><i class="fa fa-caret-right"></i>Administration Widget</a></li>
       </ul>
     </li>
+
+	<#-- SOurces menu -->
+    <li class="treeview" data-link="source">
+      <a href="<@spring.url '/admin/source' />">
+        <i class="fa fa-book"></i>
+        <span>Sources</span>
+      </a>
+    </li>
     
     <#-- Users menu -->
     <li class="treeview">

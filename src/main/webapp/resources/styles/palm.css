@@ -343,3 +343,12 @@ iframe.externalContent{
 .ui-dialog-titlebar-close:before{
 	content: "\f00d";
 }
+
+/* PALM message pop up */
+.palm_message_popup{
+	position:absolute;
+	z-index:10000;
+	min-height:120px;
+	min-width:400px;
+	left:10px
+}

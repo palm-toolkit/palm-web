@@ -44,7 +44,7 @@ $.PALM.options = {
   //Activate sidebar push menu
   sidebarPushMenu: true,
   //Activate sidebar slimscroll if the fixed layout is set (requires SlimScroll Plugin)
-  sidebarSlimScroll: true,
+  sidebarSlimScroll: false,
   //BoxRefresh Plugin
   enableBoxRefresh: true,
   //Bootstrap.js tooltip
@@ -58,6 +58,9 @@ $.PALM.options = {
   //Box Widget Plugin. Enable this plugin
   //to allow boxes to be collapsed and/or removed
   enableBoxWidget: true,
+  //Pop Up message Plugin. Enable this plugin
+  //to allow information of progress or message shown on popup 
+  enablePopUpMessage: true,
   //Box Widget plugin options
   boxWidgetOptions: {
     boxWidgetIcons: {
@@ -76,6 +79,16 @@ $.PALM.options = {
       // Move button handler
       move: '[data-widget="move"]'
     }
+  },
+  popUpMessageOptions:{
+	  defaultHeight:120,
+	  popUpElement:[],
+	  popUpType:{
+		  normal: 'bg-aqua',
+		  success: 'bg-green',
+		  warn: 'bg-yellow',
+		  error: 'bg-red'
+	  }
   },
   //Direct Chat plugin options
   directChat: {
@@ -201,12 +214,13 @@ $(function () {
  */
 $.PALM.layout = {
   activate: function () {
+	var o = $.PALM.options;
     var _this = this;
     _this.fix();
-    _this.fixSidebar();
+    _this.fixSidebar( o );
     $(window, ".wrapper").resize(function () {
       _this.fix();
-      _this.fixSidebar();
+      _this.fixSidebar( o );
     });
   },
   fix: function () {
@@ -226,9 +240,9 @@ $.PALM.layout = {
       }
     }
   },
-  fixSidebar: function () {
+  fixSidebar: function ( o ) {
     //Make sure the body tag has the .fixed class
-    if (!$("body").hasClass("fixed")) {
+    if (!$("body").hasClass("fixed") && o.sidebarSlimScroll ) {
       if (typeof $.fn.slimScroll != 'undefined') {
         $(".sidebar").slimScroll({destroy: true}).height("auto");
       }
@@ -460,6 +474,109 @@ $.PALM.boxWidget = {
   options: $.PALM.options.boxWidgetOptions
 };
 
+/*
+ * PopUp Message
+ * ============
+ * Plugin for handing notification, message and progress
+ */
+$.PALM.popUpMessage = {
+	create: function( popUpMessage , directlyRemove , popUpHeight , showDuration){
+		
+		if( typeof popUpMessahe === 'undefined' )
+			return false;
+		
+		var o = $.PALM.options.popUpMessageOptions;
+		var _this = this;
+		
+		// set default variable if missing
+		directlyRemove = typeof directlyRemove !== 'undefined' ? directlyRemove : true;
+		popUpHeight = typeof popUpHeight !== 'undefined' ? popUpHeight : o.defaultHeight;
+		showDuration = typeof showDuration !== 'undefined' ? showDuration : 2000;
+		// get new unique id
+		var uniqueId = _this.generateId();
+		// calculate element top position
+		var popUpTop = 0;
+		// calculate element width
+		var popUpWidth = 400;
+		// create new popup 
+		var popUpObject = {
+			id:uniqueId,
+			status:"active",
+			height: popUpHeight,
+			top: popUpTop,
+			element:
+				$( '<div/>' )
+		    	.attr({ 'data-type':'normal' })
+		    	.addClass( "palm_message_popup col-lg-3 col-xs-6 bg-aqua" )
+		    	.css({ "width": popUpWidth + "px" , "height": popUpHeight + "px" , "top": popUpTop + "px"})
+		    	.append(
+		    			$( '<div/>' )
+		    	    	.addClass( "inner" )
+		    	    	.html( popUpMessage )
+				)
+				.hide()
+		}
+		// put element into body
+		$( "body" ).append( popUpObject.element );
+		
+		// put into PALM object
+		o.popUpElement.push( popUpObject );
+	    
+		// display element with animation
+		var popUpContainer = $( popUpObject.element ).find( ".palm_message_popup" );
+		
+		// 
+    	if( directlyRemove ){
+    		// when animation done
+    		$( popUpObject.element ).promise().done(function(){
+    		    // remove object
+    			_this.remove( uniqueId );
+    		});
+    		
+    	}else{
+    		// return object id
+    		return uniqueId;
+    	}
+		
+	},
+	update: function( objectId , newPopUpMessage){
+		var o = $.PALM.options.popUpMessageOptions;
+		// calculate where pop up take place
+		
+	},
+	remove: function( objectId  ){
+		// get the object and remove from document
+		var targetElement = null;
+		$.each( $.PALM.options.popUpMessageOptions.popUpElement, function( e ){
+			if( e.id === objectId ){
+				targetElement = e.element;
+			}
+		});
+		
+		// not found
+		if( targetElement == null )
+			return false;
+		
+		// update with fading efect
+		$( targetElement ).remove();
+		
+		// remove from list
+		$.grep( $.PALM.options.popUpMessageOptions.popUpElement, function( e ){
+			if( e.id === objectId ) // remove when object id match
+				return false;
+			return true;
+		});
+	},
+	generateId: function(){
+		'xxxxxxxx'
+		.replace(/[xy]/g, function(c) {
+			var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;
+			return v.toString(16);
+			}
+		);
+	}
+};
+
 /* ------------------
  * - Custom Plugins -
  * ------------------
@@ -623,6 +740,8 @@ function postFormViaAjax( $form, resultContainerSelector ){
 			
 		}
 	});
+	
+	return false;
 }
 
 
