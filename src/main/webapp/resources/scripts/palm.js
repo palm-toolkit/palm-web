@@ -81,7 +81,9 @@ $.PALM.options = {
     }
   },
   popUpMessageOptions:{
-	  defaultHeight:120,
+	  defaultHeight:35,
+	  defaultDuration:2000,
+	  defaultPopUpType:'normal',
 	  popUpElement:[],
 	  popUpType:{
 		  normal: 'bg-aqua',
@@ -480,9 +482,8 @@ $.PALM.boxWidget = {
  * Plugin for handing notification, message and progress
  */
 $.PALM.popUpMessage = {
-	create: function( popUpMessage , directlyRemove , popUpHeight , showDuration){
-		
-		if( typeof popUpMessahe === 'undefined' )
+	create: function( popUpMessage , popupType, popUpHeight, directlyRemove , showDuration){
+		if( typeof popUpMessage === 'undefined' )
 			return false;
 		
 		var o = $.PALM.options.popUpMessageOptions;
@@ -491,13 +492,29 @@ $.PALM.popUpMessage = {
 		// set default variable if missing
 		directlyRemove = typeof directlyRemove !== 'undefined' ? directlyRemove : true;
 		popUpHeight = typeof popUpHeight !== 'undefined' ? popUpHeight : o.defaultHeight;
-		showDuration = typeof showDuration !== 'undefined' ? showDuration : 2000;
+		showDuration = typeof showDuration !== 'undefined' ? showDuration : o.defaultDuration;
+		popupType = typeof popupType !== 'undefined' ? popupType : o.defaultPopUpType;
 		// get new unique id
 		var uniqueId = _this.generateId();
 		// calculate element top position
-		var popUpTop = 0;
+		var windowHeight = $( window ).height();
+		var popUpTop = windowHeight - popUpHeight - 10;
+		// update other popup element if exist
+		if( o.popUpElement.length > 0 ){
+			$.each( o.popUpElement, function( index, item ){
+				item.top -= ( popUpHeight + 10 );
+				$( item.element ).css({ "top" : item.top + "px"});
+			});
+		}
 		// calculate element width
-		var popUpWidth = 400;
+		var popUpWidth = 450;
+		var windowWidth = $( window ).width();
+		if( windowWidth < 450)
+			popUpWidth = windowWidth - 20;
+		
+		// get popupType style
+		var popUpClass = o.popUpType[ popupType ];
+		
 		// create new popup 
 		var popUpObject = {
 			id:uniqueId,
@@ -507,7 +524,7 @@ $.PALM.popUpMessage = {
 			element:
 				$( '<div/>' )
 		    	.attr({ 'data-type':'normal' })
-		    	.addClass( "palm_message_popup col-lg-3 col-xs-6 bg-aqua" )
+		    	.addClass( "palm_message_popup col-lg-3 col-xs-6 " + popUpClass )
 		    	.css({ "width": popUpWidth + "px" , "height": popUpHeight + "px" , "top": popUpTop + "px"})
 		    	.append(
 		    			$( '<div/>' )
@@ -523,14 +540,18 @@ $.PALM.popUpMessage = {
 		o.popUpElement.push( popUpObject );
 	    
 		// display element with animation
-		var popUpContainer = $( popUpObject.element ).find( ".palm_message_popup" );
-		
-		// 
+		$( popUpObject.element ).fadeIn( "fast" );
+		 
     	if( directlyRemove ){
     		// when animation done
     		$( popUpObject.element ).promise().done(function(){
-    		    // remove object
-    			_this.remove( uniqueId );
+    		    // remove object after duration end
+    			setTimeout(
+				  function() 
+				  {
+					  _this.remove( uniqueId );
+				  }, showDuration);
+    			
     		});
     		
     	}else{
@@ -547,33 +568,35 @@ $.PALM.popUpMessage = {
 	remove: function( objectId  ){
 		// get the object and remove from document
 		var targetElement = null;
-		$.each( $.PALM.options.popUpMessageOptions.popUpElement, function( e ){
-			if( e.id === objectId ){
-				targetElement = e.element;
+		$.each( $.PALM.options.popUpMessageOptions.popUpElement, function( index, item ){
+			if( item.id === objectId ){
+				targetElement = item.element;
 			}
 		});
 		
-		// not found
+		// not found return false
 		if( targetElement == null )
 			return false;
 		
 		// update with fading efect
-		$( targetElement ).remove();
+		$( targetElement ).fadeOut( "fast" );
 		
 		// remove from list
-		$.grep( $.PALM.options.popUpMessageOptions.popUpElement, function( e ){
-			if( e.id === objectId ) // remove when object id match
-				return false;
-			return true;
+		$( targetElement ).promise().done(function(){
+			$( targetElement ).remove();
+			$.grep( $.PALM.options.popUpMessageOptions.popUpElement, function( e ){
+				if( e.id === objectId ) // remove when object id match
+					return false;
+				return true;
+			});
 		});
 	},
 	generateId: function(){
-		'xxxxxxxx'
-		.replace(/[xy]/g, function(c) {
-			var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;
-			return v.toString(16);
-			}
-		);
+		var aplhaNumeric = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		var randomAlphanumeric = "";
+		for (var i = 10; i > 0; --i) 
+			randomAlphanumeric += aplhaNumeric[Math.round(Math.random() * (aplhaNumeric.length - 1))];
+		return randomAlphanumeric;
 	}
 };
 

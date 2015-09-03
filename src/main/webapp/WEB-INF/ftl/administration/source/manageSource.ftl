@@ -1,5 +1,4 @@
 <div class="box-body">
-
 	  <form role="form" id="manageSource" action="<@spring.url '/admin/source' />" method="post">
 	    <#-- text input widget title -->
 		<#list sourceListWrapper.sources as source>

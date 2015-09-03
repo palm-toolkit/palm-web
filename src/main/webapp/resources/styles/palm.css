@@ -348,7 +348,15 @@ iframe.externalContent{
 .palm_message_popup{
 	position:absolute;
 	z-index:10000;
-	min-height:120px;
+	min-height:35px;
 	min-width:400px;
 	left:10px
+	-webkit-box-shadow: 7px 7px 15px -4px rgba(0,0,0,0.75);
+	-moz-box-shadow: 7px 7px 15px -4px rgba(0,0,0,0.75);
+	box-shadow: 7px 7px 15px -4px rgba(0,0,0,0.75);
+}
+.palm_message_popup > .inner{
+	font-size: medium;
+    font-weight: 600;
+    padding: 5px 0;
 }
