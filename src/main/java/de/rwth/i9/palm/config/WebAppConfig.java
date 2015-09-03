@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
@@ -32,6 +33,7 @@ import de.rwth.i9.palm.feature.publication.PublicationFeature;
 import de.rwth.i9.palm.feature.publication.PublicationFeatureImpl;
 import de.rwth.i9.palm.feature.researcher.ResearcherFeature;
 import de.rwth.i9.palm.feature.researcher.ResearcherFeatureImpl;
+import de.rwth.i9.palm.service.ApplicationService;
 
 //import de.rwth.i9.palm.analytics.api.PalmAnalyticsImpl;
 
@@ -208,5 +210,12 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 	public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler()
 	{
 		return new SimpleAsyncUncaughtExceptionHandler();
+	}
+
+	@Bean
+	@DependsOn( { "transactionManager" } )
+	public ApplicationService applicationService()
+	{
+		return new ApplicationService();
 	}
 }
