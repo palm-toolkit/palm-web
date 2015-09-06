@@ -86,10 +86,18 @@ $.PALM.options = {
 	  defaultPopUpType:'normal',
 	  popUpElement:[],
 	  popUpType:{
+		  loading: 'bg-aqua',
 		  normal: 'bg-aqua',
 		  success: 'bg-green',
 		  warn: 'bg-yellow',
 		  error: 'bg-red'
+	  },
+	  popUpIcons: {
+		  loading: 'fa fa-refresh fa-spin',
+		  normal: 'fa fa-refresh fa-spin',
+		  success: 'fa fa-check',
+		  warn: 'fa fa-exclamation-triangle',
+		  error: 'fa fa-frown-o'
 	  }
   },
   //Direct Chat plugin options
@@ -482,7 +490,7 @@ $.PALM.boxWidget = {
  * Plugin for handing notification, message and progress
  */
 $.PALM.popUpMessage = {
-	create: function( popUpMessage , popupType, popUpHeight, directlyRemove , showDuration){
+	create: function( popUpMessage, popupType, directlyRemove, popUpHeight, showDuration){
 		if( typeof popUpMessage === 'undefined' )
 			return false;
 		
@@ -514,6 +522,7 @@ $.PALM.popUpMessage = {
 		
 		// get popupType style
 		var popUpClass = o.popUpType[ popupType ];
+		var popUpIcon = o.popUpIcons[ popupType ];
 		
 		// create new popup 
 		var popUpObject = {
@@ -526,6 +535,11 @@ $.PALM.popUpMessage = {
 		    	.attr({ 'data-type':'normal' })
 		    	.addClass( "palm_message_popup col-lg-3 col-xs-6 " + popUpClass )
 		    	.css({ "width": popUpWidth + "px" , "height": popUpHeight + "px" , "top": popUpTop + "px"})
+		    	.append(
+		    			$( '<div/>' )
+		    	    	.addClass( "icon" )
+		    	    	.addClass( popUpIcon )
+				)
 		    	.append(
 		    			$( '<div/>' )
 		    	    	.addClass( "inner" )
@@ -556,6 +570,7 @@ $.PALM.popUpMessage = {
     		
     	}else{
     		// return object id
+    		$( popUpObject.element ).delay( 1500 );
     		return uniqueId;
     	}
 		
@@ -565,14 +580,9 @@ $.PALM.popUpMessage = {
 		// calculate where pop up take place
 		
 	},
-	remove: function( objectId  ){
+	remove: function( objectId ){
 		// get the object and remove from document
-		var targetElement = null;
-		$.each( $.PALM.options.popUpMessageOptions.popUpElement, function( index, item ){
-			if( item.id === objectId ){
-				targetElement = item.element;
-			}
-		});
+		var targetElement = this.getPopUpObject( objectId );
 		
 		// not found return false
 		if( targetElement == null )
@@ -591,12 +601,55 @@ $.PALM.popUpMessage = {
 			});
 		});
 	},
+	getPopUpObject: function ( objectId ){
+		// get the object and remove from document
+		var targetElement = null;
+		$.each( $.PALM.options.popUpMessageOptions.popUpElement, function( index, item ){
+			if( item.id === objectId ){
+				targetElement = item.element;
+			}
+		});
+		
+		return targetElement;
+	},
 	generateId: function(){
 		var aplhaNumeric = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		var randomAlphanumeric = "";
 		for (var i = 10; i > 0; --i) 
 			randomAlphanumeric += aplhaNumeric[Math.round(Math.random() * (aplhaNumeric.length - 1))];
 		return randomAlphanumeric;
+	}
+};
+
+$.PALM.postForm = {
+	viaAjax:function( $form, resultContainerSelector ){
+		
+	},
+	viaAjaxAndReload: function( $form , message ){
+		// pop up message
+		var popUpId = $.PALM.popUpMessage.create( message, "loading", false );
+		// sent form content via ajax POST
+		$.post( $form.attr( "action" ), $form.serialize() )
+			.done( function ( jsonData ){
+				if( jsonData.format == "json" ){
+					if( jsonData.status == "ok" ){
+						$.PALM.popUpMessage.remove( popUpId );
+						
+						var targetElement = $.PALM.popUpMessage.getPopUpObject( popUpId );
+						// reload page afteranimation complete
+						$( targetElement ).promise().done(function(){
+							window.location.reload( false );
+						});
+					} else 
+						$.PALM.popUpMessage.create( "Sorry, saving process failed please try again", "error" );
+				} else{
+					$.PALM.popUpMessage.create( "Sorry, saving process failed please try again", "error" );
+				}
+			})
+			.fail( function(xhr, textStatus, errorThrown ) {
+				$.PALM.popUpMessage.remove( popUpId );
+				$.PALM.popUpMessage.create( "Sorry, saving process failed please try again", "error" );
+			});
 	}
 };
 
@@ -751,6 +804,23 @@ function getContentViaAjax( url, containerSelector, alwaysCallback){
 
 function postFormViaAjax( $form, resultContainerSelector ){
 	// TODO input check
+	
+	// sent form content via ajax POST
+	$.post( $form.attr( "action" ), $form.serialize(), function ( jsonData ){
+		if( jsonData.format == "json" ){
+			console.log( jsonData.result );
+		} else if( jsonData.format == "javascript" ){
+			
+		}
+		else{// html
+			
+		}
+	});
+	
+	return false;
+}
+
+function postFormAndReloadPageViaAjax( $form , message){
 	
 	// sent form content via ajax POST
 	$.post( $form.attr( "action" ), $form.serialize(), function ( jsonData ){

@@ -74,7 +74,7 @@
   
 </div><#-- ./box-body -->
 <div class="box-footer">
-  	<button type="submit" class="btn btn-primary" onclick="postFormViaAjax( $( 'form#manageSource' ) )">Save Changes</button>
+  	<button type="submit" class="btn btn-primary" onclick="$.PALM.postForm.viaAjaxAndReload( $( 'form#manageSource' ), 'Saving changes on Manage Source and refresh page...' )">Save Changes</button>
 </div><#-- /.box-footer -->
 
 <script>

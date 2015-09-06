@@ -346,7 +346,7 @@ iframe.externalContent{
 
 /* PALM message pop up */
 .palm_message_popup{
-	position:absolute;
+	position:fixed;
 	z-index:10000;
 	min-height:35px;
 	min-width:400px;
@@ -354,6 +354,13 @@ iframe.externalContent{
 	-webkit-box-shadow: 7px 7px 15px -4px rgba(0,0,0,0.75);
 	-moz-box-shadow: 7px 7px 15px -4px rgba(0,0,0,0.75);
 	box-shadow: 7px 7px 15px -4px rgba(0,0,0,0.75);
+}
+.palm_message_popup > .icon{
+	width: 20px;
+    height: 20px;
+    float: left;
+    font-size: 20px;
+    margin: 5px 5px 5px 0;
 }
 .palm_message_popup > .inner{
 	font-size: medium;
