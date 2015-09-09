@@ -58,7 +58,7 @@
 	            						<input name="sources[${source_index}].sourceProperties[${sourceProperty_index}].secondaryIdentifier" type="text" class="form-control" value="<#if sourceProperty.secondaryIdentifier??>${sourceProperty.secondaryIdentifier}</#if>">
 	        						</td>
 	        						<td>
-	        							<textarea name="sources[${source_index}].sourceProperties[${sourceProperty_index}].value9" rows="1" class="form-control"><#if sourceProperty.value??>${sourceProperty.value}</#if></textarea>
+	        							<textarea name="sources[${source_index}].sourceProperties[${sourceProperty_index}].value" rows="1" class="form-control"><#if sourceProperty.value??>${sourceProperty.value}</#if></textarea>
 	    							</td>
 								</tr>
 		                    </#list>
