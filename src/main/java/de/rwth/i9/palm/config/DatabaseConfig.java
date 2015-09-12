@@ -27,6 +27,7 @@ import de.rwth.i9.palm.model.Event;
 import de.rwth.i9.palm.model.EventGroup;
 import de.rwth.i9.palm.model.Dataset;
 import de.rwth.i9.palm.model.ExtractionService;
+import de.rwth.i9.palm.model.ExtractionServiceProperty;
 import de.rwth.i9.palm.model.Function;
 import de.rwth.i9.palm.model.Institution;
 import de.rwth.i9.palm.model.Interest;
@@ -147,6 +148,7 @@ public class DatabaseConfig
 				EventGroup.class,
 				Dataset.class,
 				ExtractionService.class,
+				ExtractionServiceProperty.class,
 				Function.class,
 				Institution.class,
 				Interest.class,
