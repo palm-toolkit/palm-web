@@ -226,6 +226,7 @@ function visualizeTextCloud( words ){
 	
 	var width = 600;
 	var height = 150;
+	var maxFontSize = 18;
 
 	d3.layout.cloud()
   .size([width, height])
@@ -234,11 +235,11 @@ function visualizeTextCloud( words ){
   .rotate(function() { return 0; })
   .font("Impact")
   .fontSize(function(d) {
-		var fontsize = d.size;
+		var fontsize = d.size * maxFontSize;
 		if( fontsize < 12 )
 			fontsize = 12;
-		else if( fontsize < 20 )
-			fontsize += 6;
+		if( fontsize > 18 )
+			fontsize = 20;
 		return fontsize;
 	})
   .on("end", draw)
