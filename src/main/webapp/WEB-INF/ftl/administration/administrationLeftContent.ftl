@@ -20,6 +20,30 @@
         <li data-link="administration"><a href="<@spring.url '/admin/widget/administration' />"><i class="fa fa-caret-right"></i>Administration Widget</a></li>
       </ul>
     </li>
+
+	<#-- Sources menu -->
+    <li class="treeview" data-link="source">
+      <a href="<@spring.url '/admin/source' />">
+        <i class="fa fa-globe"></i>
+        <span>Sources</span>
+      </a>
+    </li>
+
+	<#-- Sources menu -->
+    <li class="treeview" data-link="termextraction">
+      <a href="<@spring.url '/admin/termextraction' />">
+        <i class="fa fa-tint"></i>
+        <span>Terms Extraction</span>
+      </a>
+    </li>
+
+	<#-- Sources menu -->
+    <li class="treeview" data-link="termweighting">
+      <a href="<@spring.url '/admin/termweighting' />">
+        <i class="fa fa-balance-scale"></i>
+        <span>Terms Weighting</span>
+      </a>
+    </li>
     
     <#-- Users menu -->
     <li class="treeview">

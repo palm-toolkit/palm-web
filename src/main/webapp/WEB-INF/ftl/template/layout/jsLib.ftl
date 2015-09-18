@@ -6,13 +6,15 @@
 
 <#-- jQuery 2.1.3 -->
 <#--<script src="<@spring.url '/resources/plugins/jQuery/jQuery-2.1.3.min.js' />" type="text/javascript"></script>-->
-<script src="<@spring.url '/resources/scripts/visualization/jquery-latest.min.js' />" type="text/javascript"></script>
 
 <#-- jQuery UI 1.11.4 -->
 <script src="<@spring.url '/resources/plugins/jQueryUI/jquery-ui.min.js' />" type="text/javascript"></script>
 
 <#-- Bootstrap 3.3.2 JS -->
 <script src="<@spring.url '/resources/bootstrap/js/bootstrap.min.js' />" type="text/javascript"></script>
+
+<#-- Bootstrap-select v1.7.2 -->
+<script src="<@spring.url '/resources/bootstrap/js/bootstrap-select.min.js' />" type="text/javascript"></script>
 
 <#-- FastClick -->
 <script src="<@spring.url '/resources/plugins/fastclick/fastclick.min.js' />" type="text/javascript"></script>
@@ -57,6 +59,8 @@
 			<#if x_index == 0>
 				var $menu = $( "section.sidebar li[data-link='${x}']" );
 				$menu.addClass( "active" );
+				<#-- load content -->
+				getContentViaAjax( $menu.find( "a" ).attr( "href" ), "section.content .row");
 			<#else>
 				var $subMenu =$menu.find( "li[data-link='${x}']" );
 				$subMenu.addClass( "active" );

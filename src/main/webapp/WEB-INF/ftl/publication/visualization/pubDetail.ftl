@@ -246,5 +246,12 @@
     		});
 			pdfDialog.dialog( "open" );
 		}
+
+
+<#-- IFRAME LOAD READY -->
+<#-- http://stackoverflow.com/questions/205087/jquery-ready-in-a-dynamically-inserted-iframe -->
+
+
+
 	});<#-- end document ready -->
 </script>

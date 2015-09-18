@@ -13,8 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.context.request.RequestContextListener;
 
-import de.rwth.i9.palm.controller.LoginSuccessHandler;
-import de.rwth.i9.palm.controller.LogoutSuccessHandler;
+import de.rwth.i9.palm.security.LogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -54,7 +53,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
     		.csrf()
     			.disable()
             .authorizeRequests()
-.antMatchers( "/", "/home", "/login", "/logout", "/register", "/conference/**", "/researcher/**", "/publication/**", "/sparqlview/**" )
+            	.antMatchers( 
+            			"/", 
+            			"/home", 
+            			"/login", 
+            			"/logout", 
+            			"/register", 
+            			"/conference/**", 
+            			"/researcher/**", 
+            			"/publication/**", 
+            			"/sparqlview/**",
+            			"/admin/**" 
+            			)
                 	.permitAll()
                 .anyRequest()
                 	.authenticated()
@@ -62,14 +72,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
         	.formLogin()
         		.usernameParameter("j_username") // form-login@username-parameter
                 .passwordParameter("j_password") // form-login@password-parameter
-				// .loginPage( "/login" ) // form-login@login-page
+				.loginPage( "/login" ) // form-login@login-page
 				.defaultSuccessUrl( "/" )// form-login@default-target-url /form-login@always-use-default-target
-				.failureUrl( "/login" )
+				.failureUrl( "/login?auth=fail" )
+				.permitAll()
 				// .successHandler( loginSuccessHandler() )
             .and()
         	.logout()
         		.logoutUrl( "/logout" )
-.invalidateHttpSession( true );
+        		.invalidateHttpSession( true );
 		// .logoutSuccessHandler( logoutSuccessHandler() );
     }
 
@@ -81,7 +92,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 	
 	@Bean
 	public AuthenticationSuccessHandler loginSuccessHandler(){
-		return new LoginSuccessHandler( "/home" );
+		return new de.rwth.i9.palm.security.LoginSuccessHandler( "/home" );
 	}
 	
 	@Bean

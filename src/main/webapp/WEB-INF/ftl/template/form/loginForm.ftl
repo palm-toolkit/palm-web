@@ -4,7 +4,16 @@
   </div><#-- /.login-logo -->
   <div class="login-box-body">
     <#--<p class="login-box-msg">Sign in to start your session</p>-->
-    <form method="POST" action="j_spring_security_check">
+    <form action="<@spring.url '/login' />" method="POST">
+		
+	<#if auth?? && auth=="fail">
+			<div class="alert alert-danger alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				<h4><i class="icon fa fa-ban"></i> Error!</h4>
+				Invalid Username or Password
+			</div>
+    </#if>
+
       <div class="form-group has-feedback">
         <input type="text" name="j_username" class="form-control" placeholder="Email"/>
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
@@ -23,7 +32,7 @@
         </div><#-- /.col -->
         <div class="col-xs-4">
           <#--<button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>-->
-          <input name="submit" class="btn btn-primary btn-block btn-flat" type="submit" value="Sign In"/>
+          <input name="submit" class="btn btn-primary btn-block btn-flat" type="submit" value="Sign in"/>
         </div><#-- /.col -->
       </div>
     </form>

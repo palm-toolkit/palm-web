@@ -10,8 +10,8 @@
 		<meta name="description" content="Personal Academic Learner Model" />
 		<#-- all styles -->
 		<#include "cssStyle.ftl" />
-		<#-- javascript call at the end, avoiding resource blocking-->
-		<#include "jsLib.ftl" />
+
+		<script src="<@spring.url '/resources/scripts/visualization/jquery-latest.min.js' />" type="text/javascript"></script>
 	</head>
 	
 	<body class="<#if classStyle != "">${classStyle}<#else>skin-blue-light</#if>">
@@ -21,6 +21,8 @@
 			<#nested />
 			
 		</div>
+		<#-- javascript call at the end, avoiding resource blocking-->
+		<#include "jsLib.ftl" />
 	</body>
 
 </html>

@@ -343,3 +343,57 @@ iframe.externalContent{
 .ui-dialog-titlebar-close:before{
 	content: "\f00d";
 }
+
+/* PALM message pop up */
+.palm_message_popup{
+	position:fixed;
+	z-index:10000;
+	min-height:35px;
+	min-width:400px;
+	left:10px
+	-webkit-box-shadow: 7px 7px 15px -4px rgba(0,0,0,0.75);
+	-moz-box-shadow: 7px 7px 15px -4px rgba(0,0,0,0.75);
+	box-shadow: 7px 7px 15px -4px rgba(0,0,0,0.75);
+}
+.palm_message_popup > .icon{
+	width: 20px;
+    height: 20px;
+    float: left;
+    font-size: 20px;
+    margin: 5px 5px 5px 0;
+}
+.palm_message_popup > .inner{
+	font-size: medium;
+    font-weight: 600;
+    padding: 5px 0;
+}
+
+.svg-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* aspect ratio */
+    vertical-align: top;
+    overflow: hidden;
+}
+.svg-content-responsive {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 0;
+}
+.timeline>li .fa-user {
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    line-height: 30px;
+    background: #d2d6de;
+    border-radius: 50%;
+    text-align: center;
+}
+.timeline-author-img {
+    border-radius: 50%;
+    /* float: left; */
+    width: 40px;
+    height: 40px;
+}

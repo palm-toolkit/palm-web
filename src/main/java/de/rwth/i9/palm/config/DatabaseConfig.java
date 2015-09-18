@@ -27,19 +27,24 @@ import de.rwth.i9.palm.model.Event;
 import de.rwth.i9.palm.model.EventGroup;
 import de.rwth.i9.palm.model.Dataset;
 import de.rwth.i9.palm.model.ExtractionService;
+import de.rwth.i9.palm.model.ExtractionServiceProperty;
 import de.rwth.i9.palm.model.Function;
 import de.rwth.i9.palm.model.Institution;
 import de.rwth.i9.palm.model.Interest;
 import de.rwth.i9.palm.model.InterestAuthor;
+import de.rwth.i9.palm.model.InterestProfile;
+import de.rwth.i9.palm.model.InterestProfileProperty;
 import de.rwth.i9.palm.model.Location;
 import de.rwth.i9.palm.model.PalmConfiguration;
 import de.rwth.i9.palm.model.Publication;
+import de.rwth.i9.palm.model.PublicationFile;
 import de.rwth.i9.palm.model.PublicationHistory;
 import de.rwth.i9.palm.model.PublicationSource;
 import de.rwth.i9.palm.model.PublicationTopic;
 import de.rwth.i9.palm.model.Reference;
 import de.rwth.i9.palm.model.Role;
 import de.rwth.i9.palm.model.Source;
+import de.rwth.i9.palm.model.SourceProperty;
 import de.rwth.i9.palm.model.Subject;
 import de.rwth.i9.palm.model.User;
 import de.rwth.i9.palm.model.UserRequest;
@@ -143,12 +148,16 @@ public class DatabaseConfig
 				EventGroup.class,
 				Dataset.class,
 				ExtractionService.class,
+				ExtractionServiceProperty.class,
 				Function.class,
 				Institution.class,
 				Interest.class,
 				InterestAuthor.class,
+				InterestProfile.class,
+				InterestProfileProperty.class,
 				Location.class,
 				Publication.class,
+				PublicationFile.class,
 				PalmConfiguration.class,
 				PublicationHistory.class,
 				PublicationSource.class,
@@ -156,6 +165,7 @@ public class DatabaseConfig
 				Reference.class,
 				Role.class,
  				Source.class,
+ 				SourceProperty.class,
  				Subject.class,
 				User.class,
 				UserRequest.class,
