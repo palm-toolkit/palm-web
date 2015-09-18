@@ -1,5 +1,4 @@
 <div id="boxbody${wId}" class="box-body">
-	researcher interest cloud
 </div>
 
 <div class="box-footer">
@@ -9,7 +8,7 @@
 	$( function(){
 		<#-- add slimscroll to widget body -->
 		$("#boxbody${wId}").slimscroll({
-			height: "250px",
+			height: "300px",
 	        size: "3px"
 	    });
 
@@ -37,22 +36,25 @@ var dataPointer = {
 var algorithmProfileDropDown = 
 	$( '<select/>' )
 	.attr({ "id": "algorithm_profile"})
+	.css({ "max-width": "210px"})
 	.on( "change", function(){ getLanguagesFromProfile( $( this ).val() ) } );
 
 <#-- loop interst algorithm --> 								
 $.each( data.interest, function(index, dataAlgorithmProfile){
 	algorithmProfileDropDown.append( $( '<option/>' )
-								.attr({ "value" : index , "title" : dataAlgorithmProfile.description })
+								.attr({ "value" : index })
 								.html( dataAlgorithmProfile.profile )
 							);
 });
+<#-- assign bootstrap select  -->
+algorithmProfileDropDown.addClass( "selectpicker" );
 
 <#-- interest algorithm profile container -->
 var algorithmProfileContainer = 
 	$( "<span/>" )
-	.css({ "margin":"0 20px 0 0"})
+	.css({ "margin":"0 10px 0 0"})
 	.append(
-		$( "<span/>" ).html( "Algorithm profile : " )
+		$( "<span/>" ).html( "Algorithm : " )
 	).append(
 		algorithmProfileDropDown
 	);
@@ -63,6 +65,7 @@ targetContainer.append( algorithmProfileContainer );
 <#-- create dropdown interest language -->
 var interestLanguageDropDown = 
 	$( '<select/>' )
+	.css({ "max-width" : "70px" })
 	.attr({ "id": "interest_language"})
 	.on( "change", function(){ getYearFromLanguage( $( this ).val() ) } );
 
@@ -71,7 +74,7 @@ var interestLanguageContainer =
 	$( "<span/>" )
 	.css({ "margin":"0 20px 0 0"})
 	.append(
-		$( "<span/>" ).html( "Language : " )
+		$( "<span/>" ).html( "Lang : " )
 	).append(
 		interestLanguageDropDown
 	);
@@ -82,11 +85,13 @@ targetContainer.append( interestLanguageContainer );
 <#-- create dropdown interest years -->
 var interestYearStartDropDown = 
 	$( '<select/>' )
+	.css({ "max-width" : "60px" })
 	.attr({ "id": "interest_year_start"})
 	.on( "change", function(){ visualizeInterest( $( this ).val() , "startyear") } );
 
 var interestYearEndDropDown = 
 	$( '<select/>' )
+	.css({ "max-width" : "60px" })
 	.attr({ "id": "interest_year_end"})
 	.on( "change", function(){ visualizeInterest( $( this ).val() , "endyear") } );
 
@@ -94,12 +99,12 @@ var interestYearEndDropDown =
 var interestYearContainer = 
 	$( "<span/>" ) 
 	.append(
-		$( "<span/>" ).html( "Start : " )
+		$( "<span/>" ).html( "Period : " )
 	).append(
 		interestYearStartDropDown
 	)
 	.append(
-		$( "<span/>" ).html( "End : " )
+		/*$( "<span/>" ).html( "End : " )*/
 	).append(
 		interestYearEndDropDown
 	);
@@ -118,6 +123,9 @@ function getLanguagesFromProfile( profileIndex ){
 	
 	<#-- clear previous option -->
 	interestLanguageDropDown.html( "" );
+	<#-- remove bootstrap select style -->
+	interestLanguageDropDown.removeClass( "selectpicker" );
+
 	<#-- loop interst languages --> 
 	if( typeof data.interest[ dataPointer.dataProfileIndex ] != "undefined" )	{						
 		$.each( data.interest[ dataPointer.dataProfileIndex ].interestlanguages , function(index, dataInterestLanguage){
@@ -130,6 +138,9 @@ function getLanguagesFromProfile( profileIndex ){
 		<#-- call function to get the year  -->
 		getYearFromLanguage( dataPointer.dataLanguageIndex );
 	}
+	<#-- assign bootstrap select  -->
+	interestLanguageDropDown.addClass( "selectpicker" );
+	interestLanguageDropDown.selectpicker();
 }
 
 function getYearFromLanguage( languageIndex ){
@@ -208,6 +219,9 @@ function visualizeInterest( yearIndex , yearType ){
 		 uniqueWords =  uniqueWords.slice(0,20);
 
 	visualizeTextCloud( uniqueWords );
+
+	<#-- activate bootstrap select -->
+	targetContainer.find('.selectpicker').selectpicker();
 }
 
 function compareTermWord( a, b){
@@ -219,13 +233,15 @@ function compareTermWord( a, b){
 }
 							
 function visualizeTextCloud( words ){
+	var mainContainer = $("#widget-${wId} .box-body");
 	<#-- remove previous svg if exist -->
-	$("#widget-${wId} .box-body").find( "#textCloud").remove();
+	mainContainer.find( ".svg-container").remove();
 	<#-- the visualization -->
 	var fill = d3.scale.category20();
 	
-	var width = 600;
-	var height = 150;
+	var width = mainContainer.width() * 0.9;
+	var height = 200;
+	var maxFontSize = 18;
 
 	d3.layout.cloud()
   .size([width, height])
@@ -234,11 +250,11 @@ function visualizeTextCloud( words ){
   .rotate(function() { return 0; })
   .font("Impact")
   .fontSize(function(d) {
-		var fontsize = d.size;
+		var fontsize = d.size * maxFontSize;
 		if( fontsize < 12 )
 			fontsize = 12;
-		else if( fontsize < 20 )
-			fontsize += 6;
+		if( fontsize > 18 )
+			fontsize = 20;
 		return fontsize;
 	})
   .on("end", draw)
@@ -246,9 +262,16 @@ function visualizeTextCloud( words ){
 
 	function draw(words) {
     d3.select("#widget-${wId} .box-body")
+	  .append("div")
+      .classed("svg-container", true) //container class to make it responsive
       .append("svg")
-      .attr("width", width)
-      .attr("height", height)
+	  //responsive SVG needs these 2 attributes and no width and height attr
+   	  .attr("preserveAspectRatio", "xMinYMin meet")
+      .attr("viewBox", "0 0 " + width + " " + height)
+      //class to make it responsive
+      .classed("svg-content-responsive", true)
+      //.attr("width", width)
+      //.attr("height", height)
 	  .attr( "id", "textCloud")
       .append("g")
       .attr("transform", "translate("+ width/2 +","+ height/2 +")")
@@ -283,7 +306,6 @@ function visualizeTextCloud( words ){
 			"element": $( "#widget-${wId}" ),
 			"options": options
 		});
-	    
 	    
 	});<#-- end document ready -->
 </script>

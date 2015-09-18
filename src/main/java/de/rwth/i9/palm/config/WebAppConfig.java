@@ -84,6 +84,8 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 				"/WEB-INF/ftl/administration/source",
 				"/WEB-INF/ftl/administration/statistic",
 				"/WEB-INF/ftl/administration/system",
+				"/WEB-INF/ftl/administration/termextraction",
+				"/WEB-INF/ftl/administration/termweighting",
 				"/WEB-INF/ftl/administration/user",
 				"/WEB-INF/ftl/administration/widget",
 				"/WEB-INF/ftl/conference",
