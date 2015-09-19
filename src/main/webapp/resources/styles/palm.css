@@ -397,3 +397,12 @@ iframe.externalContent{
     width: 40px;
     height: 40px;
 }
+.box-filter{
+	background-color: #fafafa;
+    border-radius: 3px;
+    border: 1px solid transparent;
+	
+}
+.box-filter-option{
+	padding: 6px 12px;
+}

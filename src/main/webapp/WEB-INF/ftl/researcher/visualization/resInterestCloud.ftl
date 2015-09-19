@@ -1,16 +1,24 @@
 <div id="boxbody${wId}" class="box-body">
-</div>
-
-<div class="box-footer">
+	<div style="display:none" class="box-filter">
+		<div class="box-filter-option" style="display:none">lalaa</div>
+		<button class="btn btn-block btn-default box-filter-button" onclick="$( this ).prev().slideToggle( 'slow' )">
+			<i class="fa fa-filter pull-left"></i>
+			<span>Something</span>
+		</button>
+	</div>
+	<div class="box-content">
+	</div>
 </div>
 
 <script>
 	$( function(){
 		<#-- add slimscroll to widget body -->
+<#--
 		$("#boxbody${wId}").slimscroll({
 			height: "300px",
 	        size: "3px"
 	    });
+-->
 
 		<#-- set widget unique options -->
 		var options ={
@@ -21,10 +29,15 @@
 						},
 			onRefreshDone: function(  widgetElem , data ){
 
-var targetContainer = $( widgetElem ).find( "#boxbody${wId}" );
+var targetContainerContent = $( widgetElem ).find( "#boxbody${wId}" ).find( ".box-content" );
+var targetContainerFilter = $( widgetElem ).find( "#boxbody${wId}" ).find( ".box-filter" );
 
 <#-- clean target container -->
-targetContainer.html( "" );
+targetContainerContent.html( "" );
+targetContainerFilter.show();
+targetContainerFilter.find( ".box-filter-option" ).html( "" );
+targetContainerFilter.find( ".box-filter-button" ).find( "span" ).html( "" );
+
 <#-- the pointer of selected data -->
 var dataPointer = {
 	"dataProfileIndex" : 0,
@@ -36,6 +49,7 @@ var dataPointer = {
 var algorithmProfileDropDown = 
 	$( '<select/>' )
 	.attr({ "id": "algorithm_profile"})
+	.addClass( "selectpicker" )
 	.css({ "max-width": "210px"})
 	.on( "change", function(){ getLanguagesFromProfile( $( this ).val() ) } );
 
@@ -46,12 +60,10 @@ $.each( data.interest, function(index, dataAlgorithmProfile){
 								.html( dataAlgorithmProfile.profile )
 							);
 });
-<#-- assign bootstrap select  -->
-algorithmProfileDropDown.addClass( "selectpicker" );
 
 <#-- interest algorithm profile container -->
 var algorithmProfileContainer = 
-	$( "<span/>" )
+	$( "<div/>" )
 	.css({ "margin":"0 10px 0 0"})
 	.append(
 		$( "<span/>" ).html( "Algorithm : " )
@@ -60,18 +72,22 @@ var algorithmProfileContainer =
 	);
 
 <#-- append to container -->
-targetContainer.append( algorithmProfileContainer );
+targetContainerFilter.find( ".box-filter-option" ).append( algorithmProfileContainer );
+
+<#-- assign bootstrap select  -->
+algorithmProfileDropDown.selectpicker( 'refresh' );
 
 <#-- create dropdown interest language -->
 var interestLanguageDropDown = 
 	$( '<select/>' )
 	.css({ "max-width" : "70px" })
+	.addClass( "selectpicker" )
 	.attr({ "id": "interest_language"})
 	.on( "change", function(){ getYearFromLanguage( $( this ).val() ) } );
 
 <#-- interest language container -->
 var interestLanguageContainer = 
-	$( "<span/>" )
+	$( "<div/>" )
 	.css({ "margin":"0 20px 0 0"})
 	.append(
 		$( "<span/>" ).html( "Lang : " )
@@ -80,37 +96,39 @@ var interestLanguageContainer =
 	);
 
 <#-- append to container -->
-targetContainer.append( interestLanguageContainer );
+targetContainerFilter.find( ".box-filter-option" ).append( interestLanguageContainer );
 
 <#-- create dropdown interest years -->
 var interestYearStartDropDown = 
 	$( '<select/>' )
 	.css({ "max-width" : "60px" })
+	.addClass( "selectpicker" )
 	.attr({ "id": "interest_year_start"})
 	.on( "change", function(){ visualizeInterest( $( this ).val() , "startyear") } );
 
 var interestYearEndDropDown = 
 	$( '<select/>' )
 	.css({ "max-width" : "60px" })
+	.addClass( "selectpicker" )
 	.attr({ "id": "interest_year_end"})
 	.on( "change", function(){ visualizeInterest( $( this ).val() , "endyear") } );
 
 <#-- interest language container -->
 var interestYearContainer = 
-	$( "<span/>" ) 
+	$( "<div/>" ) 
 	.append(
-		$( "<span/>" ).html( "Period : " )
+		$( "<span/>" ).html( "Start : " )
 	).append(
 		interestYearStartDropDown
 	)
 	.append(
-		/*$( "<span/>" ).html( "End : " )*/
+		$( "<span/>" ).html( "End : " )
 	).append(
 		interestYearEndDropDown
 	);
 
 <#-- append to container -->
-targetContainer.append( interestYearContainer );
+targetContainerFilter.find( ".box-filter-option" ).append( interestYearContainer );
 
 <#-- on the first load, call the following functions -->
 getLanguagesFromProfile( 0 );
@@ -120,11 +138,9 @@ function getLanguagesFromProfile( profileIndex ){
 	<#-- set index profile and other to 0 -->
 	dataPointer.dataProfileIndex = profileIndex;
 	dataPointer.dataLanguageIndex = 0;
-	
+
 	<#-- clear previous option -->
 	interestLanguageDropDown.html( "" );
-	<#-- remove bootstrap select style -->
-	interestLanguageDropDown.removeClass( "selectpicker" );
 
 	<#-- loop interst languages --> 
 	if( typeof data.interest[ dataPointer.dataProfileIndex ] != "undefined" )	{						
@@ -139,8 +155,7 @@ function getLanguagesFromProfile( profileIndex ){
 		getYearFromLanguage( dataPointer.dataLanguageIndex );
 	}
 	<#-- assign bootstrap select  -->
-	interestLanguageDropDown.addClass( "selectpicker" );
-	interestLanguageDropDown.selectpicker();
+	interestLanguageDropDown.selectpicker( 'refresh' );
 }
 
 function getYearFromLanguage( languageIndex ){
@@ -168,11 +183,14 @@ function getYearFromLanguage( languageIndex ){
 		});
 		<#-- change selected index of end year -->
 		interestYearEndDropDown.children().eq( countYear - 1 ).attr( 'selected',true );
-		<#-- -->
+		<#-- reset -->
 		dataPointer.dataYearStart = 0,
 		dataPointer.dataYearEnd = countYear - 1;
 		visualizeInterest( 0, "startyear");
 	}
+	<#-- assign bootstrap select  -->
+	interestYearStartDropDown.selectpicker( 'refresh' );
+	interestYearEndDropDown.selectpicker( 'refresh' );
 }
 
 function visualizeInterest( yearIndex , yearType ){
@@ -182,6 +200,7 @@ function visualizeInterest( yearIndex , yearType ){
 			interestYearEndDropDown.children().eq( dataPointer.dataYearEnd ).attr( 'selected',true );
 		}
 		dataPointer.dataYearStart = yearIndex;
+		interestYearEndDropDown.selectpicker( 'refresh' );
 	}
 	else{
 		if( dataPointer.dataYearStart > yearIndex ){
@@ -189,7 +208,19 @@ function visualizeInterest( yearIndex , yearType ){
 			interestYearStartDropDown.children().eq( dataPointer.dataYearStart ).attr( 'selected',true );
 		}
 		dataPointer.dataYearEnd = yearIndex;
+		interestYearStartDropDown.selectpicker( 'refresh' );
 	}
+	<#-- set filter button label  -->
+	targetContainerFilter
+		.find( ".box-filter-button" )
+		.find( "span" )
+		.html( 
+			data.interest[ dataPointer.dataProfileIndex ].profile + ", " +
+			data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].language + ", " +
+			data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears[dataPointer.dataYearStart].year + "-" +
+			data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears[dataPointer.dataYearEnd].year
+		);
+
 	<#-- construct the data for interest cloud -->
 	var uniqueWordsHelperMap ={};
 	var uniqueWords = [];
@@ -221,9 +252,10 @@ function visualizeInterest( yearIndex , yearType ){
 	visualizeTextCloud( uniqueWords );
 
 	<#-- activate bootstrap select -->
-	targetContainer.find('.selectpicker').selectpicker();
+	//targetContainerFilter.find( ".box-filter-option" ).find('.selectpicker').selectpicker();
 }
 
+<#-- comparator for sorting weight of terms -->
 function compareTermWord( a, b){
 	if (a.size < b.size)
     	return 1;
@@ -231,16 +263,17 @@ function compareTermWord( a, b){
     	return -1;
   	return 0;
 }
-							
+
+<#-- visualize text cloud -->				
 function visualizeTextCloud( words ){
-	var mainContainer = $("#widget-${wId} .box-body");
+	var mainContainer = $("#widget-${wId}").find( ".box-content" );
 	<#-- remove previous svg if exist -->
 	mainContainer.find( ".svg-container").remove();
 	<#-- the visualization -->
 	var fill = d3.scale.category20();
 	
 	var width = mainContainer.width() * 0.9;
-	var height = 200;
+	var height = mainContainer.width() * 0.9;
 	var maxFontSize = 18;
 
 	d3.layout.cloud()
@@ -261,7 +294,7 @@ function visualizeTextCloud( words ){
   .start();
 
 	function draw(words) {
-    d3.select("#widget-${wId} .box-body")
+    d3.select("#widget-${wId} .box-content" )
 	  .append("div")
       .classed("svg-container", true) //container class to make it responsive
       .append("svg")
