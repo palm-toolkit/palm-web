@@ -1,8 +1,10 @@
 <div class="box-body no-padding">
-	<div class="box-tools">
+	<div class="box-filter">
+		<div class="box-filter-option" style="display:none">
+
 		<div id="author_block">
 	    	<div class="input-group" id="author_search_block" style="width:100%">
-	      		<input type="text" id="publication_search_field" name="publication_search_field" class="form-control input-sm pull-right" placeholder="Search saved author">
+	      		<input type="text" id="publication_search_field" name="publication_search_field" class="form-control input-sm pull-right" placeholder="Search researcher from database">
 	      		<div id="publication_search_button" class="input-group-btn">
 	        		<button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
 	      		</div>
@@ -17,8 +19,17 @@
 			</div>
         </div>
 
+		</div>
+		<button class="btn btn-block btn-default box-filter-button" onclick="$( this ).prev().slideToggle( 'slow' )">
+			<i class="fa fa-filter pull-left"></i>
+			<span>Something</span>
+		</button>
+	</div>
+	<div class="box-content">
+	</div>
+	<div class="box-tools">
 		<div class="input-group" style="width: 100%;">
-	      <input type="text" id="publication_search_field" name="publication_search_field" class="form-control input-sm pull-right" placeholder="Search publication">
+	      <input type="text" id="publication_search_field" name="publication_search_field" class="form-control input-sm pull-right" placeholder="Search publication from database">
 	      <div id="publication_search_button" class="input-group-btn">
 	        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
 	      </div>

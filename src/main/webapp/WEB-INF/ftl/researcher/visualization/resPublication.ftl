@@ -48,7 +48,7 @@
 											.append( 
 												$( '<span/>' )
 												.addClass( "bg-green" )
-												.html( item.date.substring(0, 4) )
+												.html( "Publications in " + item.date.substring(0, 4) )
 											);
 							timeLineContainer.append( liTimeGroup );
 						}
@@ -60,7 +60,7 @@
 											.append( 
 												$( '<span/>' )
 												.addClass( "bg-green" )
-												.html( "????" )
+												.html( "Unknown publications date" )
 											);
 							timeLineContainer.append( liTimeGroup );
 

@@ -397,3 +397,33 @@ iframe.externalContent{
     width: 40px;
     height: 40px;
 }
+.box-filter{
+	background-color: #fafafa;
+    border-radius: 3px;
+    border: 1px solid transparent;
+	
+}
+.box-filter-option{
+	padding: 6px 12px;
+}
+
+/* Pie Chart style */
+.d3-pie-chart .total{
+  font-size: 18px;
+  font-weight: bold;
+}
+.d3-pie-chart .units{
+  fill: gray;
+  font-size: 12px;
+}
+.d3-pie-chart .label{
+  fill: #CCC;
+  font-size: 12px;
+  font-weight: bold;
+}
+.d3-pie-chart .value{
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* End of pie chart style */
