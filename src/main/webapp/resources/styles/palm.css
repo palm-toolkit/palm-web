@@ -427,3 +427,44 @@ iframe.externalContent{
 }
 
 /* End of pie chart style */
+
+/* publication list style */
+#publication-list .publication{
+	margin-bottom: 10px;
+	cursor:pointer;
+	border-left: 3px solid transparent;
+}
+#publication-list .publication{
+	margin-bottom: 10px;
+	cursor:pointer;
+	border-left: 3px solid transparent;
+}
+#publication-list .publication.active, #publication-list .publication:hover{
+	background-color: #EBEBEB;
+	border-left-color: #3c8dbc;
+}
+#publication-list .publication>.fa{
+	margin-left: 2px;
+	width: 30px;
+    height: 30px;
+    font-size: 15px;
+    line-height: 30px;
+    background: #d2d6de;
+    border-radius: 50%;
+    text-align: center;
+}
+#publication-list .publication>.detail {
+    margin-left: 35px;
+    margin-top: -30px;
+}
+#publication-list .publication>.detail>.title {
+    display: block;
+    font-weight: 600;
+    color: #3c8dbc;
+}
+#publication-list .publication>.detail>.author {
+    display: block;
+}
+#publication-list .publication>.detail>.venue {
+    display: block;
+}

@@ -1,4 +1,5 @@
-<div class="box-body no-padding">
+<div id="boxbody${wId}" class="box-body no-padding">
+	<#-- filters -->
 	<div class="box-filter">
 		<div class="box-filter-option" style="display:none">
 
@@ -25,8 +26,8 @@
 			<span>Something</span>
 		</button>
 	</div>
-	<div class="box-content">
-	</div>
+
+	<#--  search block -->
 	<div class="box-tools">
 		<div class="input-group" style="width: 100%;">
 	      <input type="text" id="publication_search_field" name="publication_search_field" class="form-control input-sm pull-right" placeholder="Search publication from database">
@@ -36,11 +37,7 @@
 	    </div>
   	</div>
   	
-  	<div id="table-container-${wId}" class="table-container">
-	  <table id="publicationTable" class="table table-condensed table-hover" style>
-	    <tbody>
-	  	</tbody>
-	  </table>
+  	<div id="publication-list">
     </div>
 </div>
 
@@ -63,7 +60,7 @@
 	$( function(){
 	
 		<#-- add slimscroll to table -->
-		$("#table-container-${wId}").slimscroll({
+		$("#publication-list").slimscroll({
 			height: "100%",
 	        size: "3px"
 	    });
@@ -123,35 +120,66 @@
 			onRefreshStart: function(  widgetElem  ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
-							var targetContainer = $( widgetElem ).find( "#publicationTable" ).find("tbody");
+							var publicationListContainer = $( widgetElem ).find( "#publication-list" );
 							<#-- remove previous result -->
-							targetContainer.html( "" );
-							<#-- remove any remaing tooltip -->
-							$( "body .tooltip" ).remove();
+							publicationListContainer.html( "" );
+
 							var $pageDropdown = $( widgetElem ).find( "select.page-number" );
 							$pageDropdown.find( "option" ).remove();
 							
 							if( data.count > 0 ){
 							
 								<#-- build the publication table -->
-								$.each( data.publication, function( index, item){
+								$.each( data.publication, function( index, itemPublication ){
 
-									var publicationRow = 
-										$('<tr/>')
-										.attr({ "id" : item.id })
-										.css({"cursor":"pointer"})
-										.append(
-											$('<td/>')
-											.attr({ "title": item.title, "data-original-title":item.title, "data-toggle":"tooltip","data-placement":"bottom","data-container":"body"})
-											.html( item.title)
-										);
+									var publicationItem = 
+										$('<div/>')
+										.addClass( "publication" )
+										.attr({ "data-id": itemPublication.id });
+						
+									<#-- publication icon -->
+									var pubIcon = $('<i/>');
+									if( typeof itemPublication.type !== "undefined" ){
+										if( itemPublication.type == "Conference" )
+											pubIcon.addClass( "fa fa-file-text-o bg-blue" ).attr({ "title":"Conference" });
+										else if( itemPublication.type == "Journal" )
+											pubIcon.addClass( "fa fa-files-o bg-red" ).attr({ "title":"Journal" });
+										else if( itemPublication.type == "Book" )
+											pubIcon.addClass( "fa fa-book bg-green" ).attr({ "title":"Book" });
+									}else{
+										pubIcon.addClass( "fa fa-question bg-purple" ).attr({ "title":"Unknown publication type" });
+									}
+									publicationItem.append( pubIcon );
 
-									<#-- add clcik event -->
-									publicationRow.on( "click", function(){
-										getPublicationDetails( $( this ).attr( 'id' ));
+									<#-- publication detail -->
+									var pubDetail = $('<div/>').addClass( "detail" );
+									<#-- title -->
+									var pubTitle = $('<div/>').addClass( "title" ).html( itemPublication.title );
+
+									<#--author-->
+									var pubAuthor = $('<div/>').addClass( "author" );
+									$.each( itemPublication.authors , function( index, itemAuthor ){
+										if( index > 0)
+											pubAuthor.append(", ");
+										pubAuthor.append( itemAuthor.name );
 									});
 
-									targetContainer.append( publicationRow );
+									<#-- append detail -->
+									pubDetail.append( pubTitle );
+									pubDetail.append( pubAuthor );
+
+									<#-- append to item -->
+									publicationItem.append( pubDetail );
+
+									<#-- add clcik event -->
+									publicationItem.on( "click", function(){
+										<#-- remove active class -->
+										$( this ).siblings().removeClass( "active" );
+										$( this ).addClass( "active" );
+										getPublicationDetails( $( this ).data( 'id' ));
+									});
+
+									publicationListContainer.append( publicationItem );
 								});
 								var maxPage = Math.ceil(data.count/data.maxresult);
 								
@@ -159,8 +187,6 @@
 								for( var i=1;i<=maxPage;i++){
 									$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
 								}
-								<#-- enable bootstrap tooltip -->
-								$( widgetElem ).find( "[data-toggle='tooltip']" ).tooltip();
 								
 								<#-- set page number -->
 								$pageDropdown.val( data.page + 1 );
@@ -193,7 +219,7 @@
 		<#--// adapt the height for first time-->
 		$(document).ready(function() {
 		    var bodyheight = $(window).height();
-		    $("#table-container-${wId}").height(bodyheight - 192);
+		    $("#publication-list").height(bodyheight - 192);
 		});
 		
 		<#--// first time on load, list 50 publications-->
@@ -279,6 +305,6 @@
 	// for the window resize
 	$(window).resize(function() {
 	    var bodyheight = $(window).height();
-	    $("#table-container-${wId}").height(bodyheight - 192);
+	    $("#publication-list").height(bodyheight - 192);
 	});
 </script>
