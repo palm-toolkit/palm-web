@@ -167,6 +167,10 @@ $(function () {
   //Activate sidebar push menu
   if (o.sidebarPushMenu) {
     $.PALM.pushMenu(o.sidebarToggleSelector);
+    
+    if ($(window).width() < ($.PALM.options.screenSizes.sm - 1)) {
+        $( o.sidebarToggleSelector ).click();
+    }
   }
 
   //Activate Bootstrap tooltip
