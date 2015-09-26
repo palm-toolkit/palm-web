@@ -135,7 +135,9 @@ $.PALM.options = {
     md: 992,
     lg: 1200
   },
-  registeredWidget:[]
+  registeredWidget:[],
+  // main nav menu selector
+  navMenuSelector : ".navbar-custom-menu"
 };
 
 /* ------------------
@@ -167,9 +169,10 @@ $(function () {
   //Activate sidebar push menu
   if (o.sidebarPushMenu) {
     $.PALM.pushMenu(o.sidebarToggleSelector);
-    
+    // for small screen
     if ($(window).width() < ($.PALM.options.screenSizes.sm - 1)) {
         $( o.sidebarToggleSelector ).click();
+        $( o.navMenuSelector ).find( "strong" ).hide();
     }
   }
 
