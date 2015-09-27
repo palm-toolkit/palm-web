@@ -5,7 +5,7 @@
 
 		<div id="author_block">
 	    	<div class="input-group" id="author_search_block" style="width:100%">
-	      		<input type="text" id="publication_search_field" name="publication_search_field" class="form-control input-sm pull-right" placeholder="Search researcher from database">
+	      		<input type="text" id="author_search_field" name="author_search_field" class="form-control input-sm pull-right" placeholder="Search researcher from database">
 	      		<div id="publication_search_button" class="input-group-btn">
 	        		<button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
 	      		</div>
@@ -109,6 +109,9 @@
 		$( "select.page-number" ).change( function(){
 			publicationSearch( $( "#publication_search_field" ).val() , $( this ).val() );
 		});
+
+		<#-- button search loading -->
+		$( "#publication_search_button" ).find( "i" ).removeClass( "fa-search" ).addClass( "fa-refresh fa-spin" );
 		
 		<#-- unique options in each widget -->
 		var options ={
@@ -120,9 +123,12 @@
 			onRefreshStart: function(  widgetElem  ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
+
 							var publicationListContainer = $( widgetElem ).find( "#publication-list" );
 							<#-- remove previous result -->
 							publicationListContainer.html( "" );
+							<#-- button search loading -->
+							$( "#publication_search_button" ).find( "i" ).removeClass( "fa-refresh fa-spin" ).addClass( "fa-search" );
 
 							var $pageDropdown = $( widgetElem ).find( "select.page-number" );
 							$pageDropdown.find( "option" ).remove();
