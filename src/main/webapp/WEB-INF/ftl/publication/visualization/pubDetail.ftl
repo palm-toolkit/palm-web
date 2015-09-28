@@ -1,6 +1,30 @@
 <div id="boxbody${wId}" class="box-body">
-	<form role="form" action="<@spring.url '/publication' />" method="post">
-	</form>
+	<div id="tab_publication_detail" class="nav-tabs-custom" style="display:none">
+        <ul class="nav nav-tabs">
+			<li id="header_publicationresult" class="active">
+				<a href="#tab_publicationresult" data-toggle="tab" aria-expanded="true">Detail</a>
+			</li>
+			<li id="header_sources">
+				<a href="#tab_publicationsources" data-toggle="tab" aria-expanded="true">Sources</a>
+			</li>
+			<li id="header_htmlpdf">
+				<a href="#tab_publicationhtmlpdf" data-toggle="tab" aria-expanded="true">Html & Pdf</a>
+			</li>
+			<li id="header_revision">
+				<a href="#tab_publicationrevision" data-toggle="tab" aria-expanded="true">Revision</a>
+			</li>
+        </ul>
+        <div class="tab-content">
+			<div id="tab_publicationresult" class="tab-pane active">
+			</div>
+			<div id="tab_publicationsources" class="tab-pane">
+			</div>
+			<div id="tab_publicationhtmlpdf" class="tab-pane">
+			</div>
+			<div id="tab_publicationrevision" class="tab-pane">
+			</div>
+        </div>
+	</div>
 </div>
 
 <div class="box-footer">
@@ -22,37 +46,28 @@
 			onRefreshStart: function( widgetElem ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
-				var targetContainer = $( widgetElem ).find( "form:first" );
+				<#-- show tab -->
+				var tabPublicationDetail = $( widgetElem ).find( "#tab_publication_detail" ).first();
+				tabPublicationDetail.show();
+
+				<#-- publication tab -->
+				var tabHeaderPublicationResult = $( widgetElem ).find( "#header_publicationresult" ).first();
+				var tabContentPublicationResult = $( widgetElem ).find( "#tab_publicationresult" ).first();
+
+				<#-- sources tab -->
+				var tabHeaderPublicationSources = $( widgetElem ).find( "#header_publicationsources" ).first();
+				var tabContentPublicationSources = $( widgetElem ).find( "#tab_publicationsources" ).first();
+
+				<#-- htmlpdf tab -->
+				var tabHeaderPublicationHtmlPdfs = $( widgetElem ).find( "#header_publicationhtmlpdf" ).first();
+				var tabContentPublicationHtmlPdfs = $( widgetElem ).find( "#tab_publicationhtmlpdf" ).first();
+
 
 				<#--remove previous content -->
-				targetContainer.html( "" );
+				tabContentPublicationResult.html( "" );
+				tabContentPublicationSources.html( "" );
 
-				if( typeof data.publication.pdfurl != 'undefined'){
-					var pdfSource;
-					if( typeof data.publication.pdf != 'undefined')
-						pdfSource = data.publication.pdf;
-					else
-						pdfSource = data.publication.pdfurl;
-					var pubOption = 
-					$('<div/>')
-					.addClass( "palm_option" )
-					.append(
-						$('<button/>')
-						.addClass( "btn btn-block btn-default palm_option_btn" )
-						.attr({ "title":  "open " + pdfSource} )
-						.html( "Open Pdf"  )
-						.click( function( event ){ event.preventDefault();openPfdOnDialog( data.publication.pdfurl)})
-					).append(
-						$('<button/>')
-						.addClass( "btn btn-block btn-default palm_option_btn" )
-						.html( "Extract Pdf"  )
-						.click( function( event ){ event.preventDefault();extractPdf( data.publication.id )})
-					);
-
-					targetContainer
-					.append( pubOption );
-
-				}
+				<#-- title -->
 				var pubTitle = 
 					$('<div/>')
 					.addClass( "palm_section" )
@@ -66,7 +81,7 @@
 						.html( data.publication.title )
 					);
 
-
+				<#-- authors -->
 				var pubCoauthor = 
 					$('<div/>')
 					.addClass( "palm_pub_coauthor_blck" );
@@ -119,10 +134,11 @@
 					.append( pubCoauthorHeader )
 					.append( pubCoauthorContainer );
 
-				targetContainer
+				tabContentPublicationResult
 					.append( pubTitle )
 					.append( pubCoauthor );
 
+				<#-- keywords -->
 				if( typeof data.publication.keyword != 'undefined'){
 					var pubKeyword = 
 						$('<div/>')
@@ -137,10 +153,11 @@
 							.html( data.publication.keyword )
 						);
 							
-				targetContainer
+				tabContentPublicationResult
 					.append( pubKeyword );
 				}	
 
+				<#-- abstract -->
 				if( typeof data.publication.abstract != 'undefined'){
 					var pubAbstract = 
 						$('<div/>')
@@ -155,10 +172,11 @@
 							.html( data.publication.abstract )
 						);
 							
-				targetContainer
+				tabContentPublicationResult
 					.append( pubAbstract );
 				}	
 
+				<#-- content -->
 				if( typeof data.publication.content != 'undefined'){
 					var pubContent = 
 						$('<div/>')
@@ -173,10 +191,11 @@
 							.html( data.publication.content.replace(/(\t\n)+/g, '<br /><strong>').replace(/(\n\t)+/g, '</strong><br />').replace(/(\n)/g, '<br />') )
 						);
 							
-				targetContainer
+				tabContentPublicationResult
 					.append( pubContent );
 				}
 
+				<#-- references -->
 				if( typeof data.publication.reference != 'undefined'){
 					var pubReference = 
 						$('<div/>')
@@ -191,9 +210,181 @@
 							.html( data.publication.reference )
 						);
 							
-				targetContainer
+				tabContentPublicationResult
 					.append( pubReference );
 				}
+
+				<#-- publication sources -->
+				var publicationSourceInnerTabs = $( '<div/>' )
+													.attr({"id":"tab_inner_publication_sources"})
+													.addClass( "nav-tabs-custom" );
+				var publicationSourceInnerTabsHeaders = $( '<ul/>' )
+													.addClass( "nav nav-tabs" );
+				var publicationSourceInnerTabsContents = $( '<div/>' )
+													.addClass( "tab-content" );
+
+				<#-- append tab header and content -->
+				publicationSourceInnerTabs.append( publicationSourceInnerTabsHeaders ).append( publicationSourceInnerTabsContents );
+
+				<#-- set inner tab into main tab -->
+				tabContentPublicationSources.html( publicationSourceInnerTabs );
+
+				<#-- fill with sources -->
+				$.each( data.publication.sources , function( index, source_item ){
+					<#-- tab header -->
+					var tabHeaderText = capitalizeFirstLetter( source_item.source );
+					var tabHeaderTextShort = tabHeaderText;
+					if( tabHeaderText.length > 6 )
+						tabHeaderTextShort = tabHeaderText.substring(0,6);
+
+					var tabHeader = $( '<li/>' )
+						.append(
+							$( '<a/>' )
+							.attr({ "href": "#tab_" + tabHeaderText, "data-toggle":"tab" , "aria-expanded" : "true", "title" : tabHeaderText})
+							.html( tabHeaderTextShort )
+						);
+		
+					<#-- tab content -->
+					var tabContent = $( '<div/>' )
+						.attr({ "id" : "tab_" + tabHeaderText })
+						.addClass( "tab-pane" )
+						.html( printKeyValue( source_item ));
+
+					if( index == 0 ){
+						tabHeader.addClass( "active" );
+						tabContent.addClass( "active" );
+					}
+
+					<#-- append tab header and content -->
+					publicationSourceInnerTabsHeaders.append( tabHeader );
+					publicationSourceInnerTabsContents.append( tabContent );
+
+				});
+
+				<#-- publication htmlpdfs -->
+				var publicationHtmlPdfInnerTabs = $( '<div/>' )
+													.attr({"id":"tab_inner_publication_htmlpdfs"})
+													.addClass( "nav-tabs-custom" );
+				var publicationHtmlPdfInnerTabsHeaders = $( '<ul/>' )
+													.addClass( "nav nav-tabs" );
+				var publicationHtmlPdfInnerTabsContents = $( '<div/>' )
+													.addClass( "tab-content" );
+
+				<#-- append tab header and content -->
+				publicationHtmlPdfInnerTabs.append( publicationHtmlPdfInnerTabsHeaders ).append( publicationHtmlPdfInnerTabsContents );
+
+				<#-- set inner tab into main tab -->
+				tabContentPublicationHtmlPdfs.html( publicationHtmlPdfInnerTabs );
+
+				<#-- fill with htmlpdfs -->
+				$.each( data.publication.files , function( index, htmlpdf_item ){
+					<#-- tab header -->
+					var tabHeaderText = htmlpdf_item.type + " from " + htmlpdf_item.label;
+					var tabHeaderTextShort = ( index + 1 ) + "-" + htmlpdf_item.type;
+
+					var tabHeader = $( '<li/>' )
+						.append(
+							$( '<a/>' )
+							.attr({ "href": "#tab_" + tabHeaderTextShort, "data-toggle":"tab" , "aria-expanded" : "true", "title" : tabHeaderText})
+							.html( tabHeaderTextShort )
+						);
+
+					<#-- content detail -->
+					var contentDetail = $( '<dl/>' )
+										.addClass( "dl-horizontal" )
+										.append(
+											$( '<dt/>' ).html( "Obtained from : " )
+										)
+										.append(
+											$( '<dd/>' ).html( htmlpdf_item.source )
+										)
+										.append(
+											$( '<dt/>' ).html( "Source name:" )
+										)
+										.append(
+											$( '<dd/>' ).html( htmlpdf_item.label )
+										)
+										.append(
+											$( '<dt/>' ).html( "Source url:" )
+										)
+										.append(
+											$( '<dd/>' ).html( htmlpdf_item.url )
+										)
+
+					<#-- content extractedContent -->
+					var contentExtractedResult = $( '<div/>' )
+													.attr({ "id" : "result" + tabHeaderTextShort })
+													.css({ "width" : "100%" })
+													.html( 'Please press "Extract ' + htmlpdf_item.type + '" button to see the extracted result here'  );
+
+					<#-- content navigation -->
+					var contentNavigation = 
+					$('<div/>')
+					.addClass( "palm_option" )
+					.append(
+						$('<button/>')
+						.addClass( "btn btn-block btn-default palm_option_btn" )
+						.attr({ "title":  "open " + tabHeaderText} )
+						.html( "Open " + htmlpdf_item.type + " in new small window" )
+						.click( function( event ){ event.preventDefault();window.open( htmlpdf_item.url , tabHeaderText ,'scrollbars=yes,width=650,height=500')})
+					).append(
+						$('<button/>')
+						.addClass( "btn btn-block btn-default palm_option_btn" )
+						.html( "Extract " + htmlpdf_item.type )
+						.click( function( event ){ event.preventDefault();extractHtmlOrPublication( htmlpdf_item.url , htmlpdf_item.type , contentExtractedResult );})
+					);
+		
+					<#-- tab content -->
+					var tabContent = $( '<div/>' )
+						.attr({ "id" : "tab_" + tabHeaderTextShort })
+						.addClass( "tab-pane" )
+						.append( contentNavigation )
+						.append( contentDetail )
+						.append( contentExtractedResult );
+
+					if( index == 0 ){
+						tabHeader.addClass( "active" );
+						tabContent.addClass( "active" );
+					}
+
+					<#-- append tab header and content -->
+					publicationHtmlPdfInnerTabsHeaders.append( tabHeader );
+					publicationHtmlPdfInnerTabsContents.append( tabContent );
+
+				});
+
+				function printKeyValue( jsObject ){
+					var descriptionList = $( '<dl/>' );
+					$.each( jsObject , function( k, v){
+						if( k == "source" )
+							return;
+						descriptionList.append(
+											$( '<dt/>' ).html( k )
+										)
+										.append(
+											$( '<dd/>' ).html( v )
+										);
+					});
+					return descriptionList;
+				} 
+
+				function capitalizeFirstLetter(string) {
+    				return string.charAt(0).toUpperCase() + string.toLowerCase().slice(1);
+				}
+
+				function extractHtmlOrPublication( sourceUrl , targetType, contentExtractedResult ){
+					contentExtractedResult.html( "Extracting " + targetType + " from " + sourceUrl + " ..."  );
+					if( targetType == "PDF" ){
+						$.getJSON( "<@spring.url '/publication/pdfExtractTest' />" + "?url=" + encodeURIComponent(sourceUrl) , function( data ) {
+  							contentExtractedResult.html( printKeyValue( data ));
+  						});
+					} else if( targetType == "HTML" ){
+						$.getJSON( "<@spring.url '/publication/htmlExtractTest' />" + "?url=" + encodeURIComponent(sourceUrl) , function( data ) {
+  							contentExtractedResult.html( printKeyValue( data ));
+  						});
+					}
+				}
+
 			}
 		};
 

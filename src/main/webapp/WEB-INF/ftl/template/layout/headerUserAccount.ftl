@@ -1,5 +1,5 @@
   <li>
-	<a href="#" id="signin_button"><strong>Sign in</strong></a>
+	<a href="#" id="signin_button"><i class="fa fa-sign-in"></i><strong> Sign in</strong></a>
   </li>
   
   <#-- if already login -->

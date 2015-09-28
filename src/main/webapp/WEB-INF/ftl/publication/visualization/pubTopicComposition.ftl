@@ -179,7 +179,7 @@ function visualizeTermValue( termValueMap, svgContainer )
 	  .attr("class", "total")
 	  .attr("dy", 7)
 	  .attr("text-anchor", "middle") // text-align: right
-	  .text("Waiting...");
+	  .text("No Data");
 	  
 	<#-- run the visualization -->
 	update();

@@ -23,9 +23,9 @@ import de.rwth.i9.palm.model.Author;
 import de.rwth.i9.palm.model.AuthorAlias;
 import de.rwth.i9.palm.model.AuthorInterest;
 import de.rwth.i9.palm.model.AuthorInterestProfile;
+import de.rwth.i9.palm.model.Dataset;
 import de.rwth.i9.palm.model.Event;
 import de.rwth.i9.palm.model.EventGroup;
-import de.rwth.i9.palm.model.Dataset;
 import de.rwth.i9.palm.model.ExtractionService;
 import de.rwth.i9.palm.model.ExtractionServiceProperty;
 import de.rwth.i9.palm.model.Function;
@@ -37,6 +37,7 @@ import de.rwth.i9.palm.model.InterestProfileProperty;
 import de.rwth.i9.palm.model.Location;
 import de.rwth.i9.palm.model.PalmConfiguration;
 import de.rwth.i9.palm.model.Publication;
+import de.rwth.i9.palm.model.PublicationAuthor;
 import de.rwth.i9.palm.model.PublicationFile;
 import de.rwth.i9.palm.model.PublicationHistory;
 import de.rwth.i9.palm.model.PublicationSource;
@@ -157,6 +158,7 @@ public class DatabaseConfig
 				InterestProfileProperty.class,
 				Location.class,
 				Publication.class,
+				PublicationAuthor.class,
 				PublicationFile.class,
 				PalmConfiguration.class,
 				PublicationHistory.class,
