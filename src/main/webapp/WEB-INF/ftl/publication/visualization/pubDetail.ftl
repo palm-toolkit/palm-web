@@ -8,7 +8,7 @@
 				<a href="#tab_publicationsources" data-toggle="tab" aria-expanded="true">Sources</a>
 			</li>
 			<li id="header_htmlpdf">
-				<a href="#tab_publicationhtmlpdf" data-toggle="tab" aria-expanded="true">Html & Pdf</a>
+				<a href="#tab_publicationhtmlpdf" data-toggle="tab" aria-expanded="true">Html&Pdf</a>
 			</li>
 			<li id="header_revision">
 				<a href="#tab_publicationrevision" data-toggle="tab" aria-expanded="true">Revision</a>
@@ -33,9 +33,11 @@
 <script>
 	$( function(){
 		<#-- add slimscroll to widget body -->
-		$("#boxbody${wId}").slimscroll({
+		$("#boxbody${wId} #tab_publication_detail").slimscroll({
 			height: "550px",
-	        size: "3px"
+	        size: "3px",
+			allowPageScroll: true,
+   			touchScrollStep: 50
 	    });
 
 		<#-- set widget unique options -->

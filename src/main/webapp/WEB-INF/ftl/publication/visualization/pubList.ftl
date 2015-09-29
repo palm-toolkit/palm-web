@@ -62,7 +62,8 @@
 		<#-- add slimscroll to table -->
 		$("#publication-list").slimscroll({
 			height: "100%",
-	        size: "3px"
+	        size: "3px",
+   			touchScrollStep: 30
 	    });
 	    
 	    <#-- event for searching researcher -->

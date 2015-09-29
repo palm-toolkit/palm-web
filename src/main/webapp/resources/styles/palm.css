@@ -33,6 +33,10 @@ a.box-home span {
 .box-header>.box-tools {
   top: 0;
 }
+
+.nav-tabs-custom>.nav>li>a {
+    padding: 10px 10px;
+}
 /* end overwritten style */
 
 iframe.externalContent{
