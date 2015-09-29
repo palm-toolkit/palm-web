@@ -99,7 +99,10 @@ $.PALM.options = {
 		  success: 'fa fa-check',
 		  warn: 'fa fa-exclamation-triangle',
 		  error: 'fa fa-frown-o'
-	  }
+	  },
+	  polling:false,
+	  pollingUrl: "",
+	  pollingTime: 2000
   },
   //Direct Chat plugin options
   directChat: {
@@ -503,14 +506,14 @@ $.PALM.popUpMessage = {
 			return false;
 		
 		var o = $.PALM.options.popUpMessageOptions;
+		var _this = this;
 		
 		if( typeof popUpOptions != "undefined" )
 			o = $.extend( $.PALM.options.popUpMessageOptions, popUpOptions );
 		
-		var _this = this;
-
-		// get new unique id
-		var uniqueId = _this.generateId();
+		if(  typeof uniqueId != "undefined" )
+			o.uniqueId = $.PALM.utility.generateUniqueId();
+		
 		// calculate element top position
 		var windowHeight = $( window ).height();
 		var popUpTop = windowHeight - o.popUpHeight - 10;
@@ -533,10 +536,11 @@ $.PALM.popUpMessage = {
 		
 		// create new popup 
 		var popUpObject = {
-			id:uniqueId,
+			id: o.uniqueId,
 			status:"active",
 			height: o.popUpHeight,
 			top: popUpTop,
+			polling: o.polling,
 			element:
 				$( '<div/>' )
 		    	.attr({ 'data-type':'normal' })
@@ -554,6 +558,11 @@ $.PALM.popUpMessage = {
 				)
 				.hide()
 		}
+		// for polling message
+		if( o.polling ){
+			popUpObject.pollingObject = setInterval( function(){ _this.polling( o.uniqueId, o.pollingUrl , _this); }, o.pollingTime);
+		}
+		
 		// put element into body
 		$( "body" ).append( popUpObject.element );
 		
@@ -570,7 +579,7 @@ $.PALM.popUpMessage = {
     			setTimeout(
 				  function() 
 				  {
-					  _this.remove( uniqueId );
+					  _this.remove( o.uniqueId );
 				  }, o.showDuration);
     			
     		});
@@ -578,29 +587,37 @@ $.PALM.popUpMessage = {
     	}else{
     		// return object id
     		$( popUpObject.element ).delay( 1500 );
-    		return uniqueId;
+    		return o.uniqueId;
     	}
 		
 	},
-	update: function( objectId , newPopUpMessage){
-		var o = $.PALM.options.popUpMessageOptions;
-		// calculate where pop up take place
-		
+	polling: function( objectId , pollingUrl , _this){
+		$.get( pollingUrl , function( data ) {
+			_this.update( objectId, data , _this);
+		});
+	},
+	update: function( objectId , newPopUpMessage, _this){
+		var targetObject = _this.getPopUpObject( objectId );
+		$( targetObject.element ).find( ".inner" ).html( newPopUpMessage );
 	},
 	remove: function( objectId ){
 		// get the object and remove from document
-		var targetElement = this.getPopUpObject( objectId );
+		var targetElement = $.PALM.popUpMessage.getPopUpObject( objectId );
 		
 		// not found return false
 		if( targetElement == null )
 			return false;
 		
 		// update with fading efect
-		$( targetElement ).fadeOut( "fast" );
+		$( targetElement.element ).fadeOut( "fast" );
+		
+		// if target element is polling, stop polling
+		if( targetElement.polling )
+			clearInterval( targetElement.pollingObject );
 		
 		// remove from list
-		$( targetElement ).promise().done(function(){
-			$( targetElement ).remove();
+		$( targetElement.element ).promise().done(function(){
+			$( targetElement.element ).remove();
 			$.grep( $.PALM.options.popUpMessageOptions.popUpElement, function( e ){
 				if( e.id === objectId ) // remove when object id match
 					return false;
@@ -613,13 +630,16 @@ $.PALM.popUpMessage = {
 		var targetElement = null;
 		$.each( $.PALM.options.popUpMessageOptions.popUpElement, function( index, item ){
 			if( item.id === objectId ){
-				targetElement = item.element;
+				targetElement = item;
 			}
 		});
 		
 		return targetElement;
-	},
-	generateId: function(){
+	}
+};
+
+$.PALM.utility = {
+	generateUniqueId: function(){
 		var aplhaNumeric = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		var randomAlphanumeric = "";
 		for (var i = 10; i > 0; --i) 
@@ -627,7 +647,7 @@ $.PALM.popUpMessage = {
 		return randomAlphanumeric;
 	}
 };
-
+ 
 $.PALM.postForm = {
 	viaAjax:function( $form, resultContainerSelector ){
 		
