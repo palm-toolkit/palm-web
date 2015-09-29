@@ -1,5 +1,5 @@
 <div id="boxbody${wId}" class="box-body">
-	<div class="content">
+	<div class="box-content">
 	</div>
 </div>
 
@@ -10,7 +10,7 @@
 	$( function(){
 
 		<#-- add slimscroll to widget body -->
-		$("#boxbody${wId} .content").slimscroll({
+		$("#boxbody${wId} .box-content").slimscroll({
 			height: "600px",
 	        size: "3px",
 			allowPageScroll: true,
@@ -166,7 +166,7 @@
 				});
 
 				<#-- append everything to  -->
-				$("#widget-${wId} .content").html( timeLineContainer );
+				$("#widget-${wId} .box-content").html( timeLineContainer );
 			}
 		};
 		
