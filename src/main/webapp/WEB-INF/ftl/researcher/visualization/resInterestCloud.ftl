@@ -19,6 +19,8 @@
 	        size: "3px"
 	    });
 -->
+		<#-- generate unique id for progress log -->
+		var uniquePidInterestCloud = $.PALM.utility.generateUniqueId();
 
 		<#-- set widget unique options -->
 		var options ={
@@ -26,8 +28,13 @@
 			queryString : "",
 			id: "",
 			onRefreshStart: function( widgetElem ){
+				<#-- show pop up progress log -->
+				$.PALM.popUpMessage.create( "Extracting author interest", { uniqueId:uniquePidInterestCloud, popUpHeight:40, directlyRemove:false , polling:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){
+
+				<#-- remove  pop up progress log -->
+				$.PALM.popUpMessage.remove( uniquePidInterestCloud );
 
 var targetContainerContent = $( widgetElem ).find( "#boxbody${wId}" ).find( ".box-content" );
 var targetContainerFilter = $( widgetElem ).find( "#boxbody${wId}" ).find( ".box-filter" );

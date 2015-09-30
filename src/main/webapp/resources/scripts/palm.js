@@ -598,7 +598,10 @@ $.PALM.popUpMessage = {
 	},
 	update: function( objectId , newPopUpMessage, _this){
 		var targetObject = _this.getPopUpObject( objectId );
-		$( targetObject.element ).find( ".inner" ).html( newPopUpMessage );
+		var logMessageContainer = $( targetObject.element ).find( ".inner" )
+		logMessageContainer.html( newPopUpMessage );
+		// scroll to bottom
+		logMessageContainer.scrollTop(logMessageContainer.prop("scrollHeight"));
 	},
 	remove: function( objectId ){
 		// get the object and remove from document
