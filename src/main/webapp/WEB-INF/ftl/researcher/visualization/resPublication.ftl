@@ -1,7 +1,6 @@
 <div id="boxbody${wId}" class="box-body">
-	<select class="selectpicker">
-    	<option data-content="<i class='fa fa-files-o bg-red' title='Journal'></i>Journal">Relish</option>
-  	</select>
+	<div class="box-content">
+	</div>
 </div>
 
 <div class="box-footer">
@@ -11,9 +10,11 @@
 	$( function(){
 
 		<#-- add slimscroll to widget body -->
-		$("#boxbody${wId}").slimscroll({
+		$("#boxbody${wId} .box-content").slimscroll({
 			height: "600px",
-	        size: "3px"
+	        size: "3px",
+			allowPageScroll: true,
+   			touchScrollStep: 50
 	    });
 
 		<#-- set widget unique options -->
@@ -165,7 +166,7 @@
 				});
 
 				<#-- append everything to  -->
-				$("#widget-${wId} .box-body").html( timeLineContainer );
+				$("#widget-${wId} .box-content").html( timeLineContainer );
 			}
 		};
 		

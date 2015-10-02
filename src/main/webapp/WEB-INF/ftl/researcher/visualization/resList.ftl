@@ -81,6 +81,9 @@
 		$( "select.page-number" ).change( function(){
 			researcherSearch( $( "#researcher_search_field" ).val() , $( this ).val() );
 		});
+
+		<#-- generate unique id for progress log -->
+		var uniquePidResearcherWidget = $.PALM.utility.generateUniqueId();
 		
 		<#-- unique options in each widget -->
 		var options ={
@@ -90,8 +93,14 @@
 			page:0,
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
+				<#-- show pop up progress log -->
+				$.PALM.popUpMessage.create( "loading researchers...", { uniqueId:uniquePidResearcherWidget, popUpHeight:40, directlyRemove:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){
+
+							<#-- remove  pop up progress log -->
+							$.PALM.popUpMessage.remove( uniquePidResearcherWidget );
+
 							var targetContainer = $( widgetElem ).find( "#table-container-${wId}" );
 							<#-- remove previous list -->
 							targetContainer.html( "" );
@@ -258,10 +267,14 @@
 				}
 			});
 
+		<#-- show pop up progress log -->
+		var uniquePid = $.PALM.utility.generateUniqueId();
+		$.PALM.popUpMessage.create( "Collecting author publications...", { uniqueId:uniquePid, popUpHeight:150, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
 		<#-- chack and fetch pzblication from academic network if necessary -->
-		$.getJSON( "<@spring.url '/researcher/fetch?id=' />" + authorId + "&force=false", function( data ){
+		$.getJSON( "<@spring.url '/researcher/fetch?id=' />" + authorId + "&pid=" + uniquePid + "&force=false", function( data ){
+			<#-- remove  pop up progress log -->
+			$.PALM.popUpMessage.remove( uniquePid );
 			<#-- refresh registered widget -->
-		
 			$.each( $.PALM.options.registeredWidget, function(index, obj){
 				if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
 					obj.options.queryString = "?id=" + authorId;
@@ -269,7 +282,9 @@
 				}
 			});
 		
-		});
+		}).fail(function() {
+   	 		$.PALM.popUpMessage.remove( uniquePid );
+  		});
 	}
 	
 	<#--// for the window resize-->

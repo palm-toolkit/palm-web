@@ -9,9 +9,11 @@
 <script>
 	$( function(){
 		<#-- add slimscroll to widget body -->
-		$("#boxbody${wId}").slimscroll({
+		$("#boxbody${wId} form").slimscroll({
 			height: "250px",
-	        size: "3px"
+	        size: "3px",
+			allowPageScroll: true,
+   			touchScrollStep: 50
 	    });
 
 		<#-- set widget unique options -->

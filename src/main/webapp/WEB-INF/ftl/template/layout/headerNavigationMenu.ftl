@@ -8,5 +8,5 @@
 	<a href="<@spring.url '/publication' />"><i class="fa fa-file-text-o"></i><strong> Publications</strong></a>
 </li>
 <li<#if link == "administration"> class="open"</#if>>
-	<a href="<@spring.url '/admin' />"><i class="fa fa-lock"></i><strong> Administration</strong></a>
+	<a href="<@spring.url '/admin' />"><i class="fa fa-lock"></i><strong> Admin</strong></a>
 </li>

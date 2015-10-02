@@ -81,11 +81,12 @@ $.PALM.options = {
     }
   },
   popUpMessageOptions:{
-	  defaultHeight:35,
-	  defaultDuration:2000,
-	  defaultPopUpType:'normal',
+	  directlyRemove:true,
+  	  popUpHeight:35,
+  	  showDuration:2000,
+  	  popupType:'normal',
 	  popUpElement:[],
-	  popUpType:{
+	  popUpTypeClasses:{
 		  loading: 'bg-aqua',
 		  normal: 'bg-aqua',
 		  success: 'bg-green',
@@ -98,7 +99,10 @@ $.PALM.options = {
 		  success: 'fa fa-check',
 		  warn: 'fa fa-exclamation-triangle',
 		  error: 'fa fa-frown-o'
-	  }
+	  },
+	  polling:false,
+	  pollingUrl: "",
+	  pollingTime: 2000
   },
   //Direct Chat plugin options
   directChat: {
@@ -497,27 +501,26 @@ $.PALM.boxWidget = {
  * Plugin for handing notification, message and progress
  */
 $.PALM.popUpMessage = {
-	create: function( popUpMessage, popupType, directlyRemove, popUpHeight, showDuration){
+	create: function( popUpMessage, popUpOptions){
 		if( typeof popUpMessage === 'undefined' )
 			return false;
 		
 		var o = $.PALM.options.popUpMessageOptions;
 		var _this = this;
 		
-		// set default variable if missing
-		directlyRemove = typeof directlyRemove !== 'undefined' ? directlyRemove : true;
-		popUpHeight = typeof popUpHeight !== 'undefined' ? popUpHeight : o.defaultHeight;
-		showDuration = typeof showDuration !== 'undefined' ? showDuration : o.defaultDuration;
-		popupType = typeof popupType !== 'undefined' ? popupType : o.defaultPopUpType;
-		// get new unique id
-		var uniqueId = _this.generateId();
+		if( typeof popUpOptions != "undefined" )
+			o = $.extend( $.PALM.options.popUpMessageOptions, popUpOptions );
+		
+		if(  typeof uniqueId != "undefined" )
+			o.uniqueId = $.PALM.utility.generateUniqueId();
+		
 		// calculate element top position
 		var windowHeight = $( window ).height();
-		var popUpTop = windowHeight - popUpHeight - 10;
+		var popUpTop = windowHeight - o.popUpHeight - 10;
 		// update other popup element if exist
 		if( o.popUpElement.length > 0 ){
 			$.each( o.popUpElement, function( index, item ){
-				item.top -= ( popUpHeight + 10 );
+				item.top -= ( o.popUpHeight + 10 );
 				$( item.element ).css({ "top" : item.top + "px"});
 			});
 		}
@@ -528,20 +531,21 @@ $.PALM.popUpMessage = {
 			popUpWidth = windowWidth - 20;
 		
 		// get popupType style
-		var popUpClass = o.popUpType[ popupType ];
-		var popUpIcon = o.popUpIcons[ popupType ];
+		var popUpClass = o.popUpTypeClasses[ o.popupType ];
+		var popUpIcon = o.popUpIcons[ o.popupType ];
 		
 		// create new popup 
 		var popUpObject = {
-			id:uniqueId,
+			id: o.uniqueId,
 			status:"active",
-			height: popUpHeight,
+			height: o.popUpHeight,
 			top: popUpTop,
+			polling: o.polling,
 			element:
 				$( '<div/>' )
 		    	.attr({ 'data-type':'normal' })
 		    	.addClass( "palm_message_popup col-lg-3 col-xs-6 " + popUpClass )
-		    	.css({ "width": popUpWidth + "px" , "height": popUpHeight + "px" , "top": popUpTop + "px"})
+		    	.css({ "width": popUpWidth + "px" , "height": o.popUpHeight + "px" , "top": popUpTop + "px"})
 		    	.append(
 		    			$( '<div/>' )
 		    	    	.addClass( "icon" )
@@ -554,6 +558,11 @@ $.PALM.popUpMessage = {
 				)
 				.hide()
 		}
+		// for polling message
+		if( o.polling ){
+			popUpObject.pollingObject = setInterval( function(){ _this.polling( o.uniqueId, o.pollingUrl , _this); }, o.pollingTime);
+		}
+		
 		// put element into body
 		$( "body" ).append( popUpObject.element );
 		
@@ -563,44 +572,55 @@ $.PALM.popUpMessage = {
 		// display element with animation
 		$( popUpObject.element ).fadeIn( "fast" );
 		 
-    	if( directlyRemove ){
+    	if( o.directlyRemove ){
     		// when animation done
     		$( popUpObject.element ).promise().done(function(){
     		    // remove object after duration end
     			setTimeout(
 				  function() 
 				  {
-					  _this.remove( uniqueId );
-				  }, showDuration);
+					  _this.remove( o.uniqueId );
+				  }, o.showDuration);
     			
     		});
     		
     	}else{
     		// return object id
     		$( popUpObject.element ).delay( 1500 );
-    		return uniqueId;
+    		return o.uniqueId;
     	}
 		
 	},
-	update: function( objectId , newPopUpMessage){
-		var o = $.PALM.options.popUpMessageOptions;
-		// calculate where pop up take place
-		
+	polling: function( objectId , pollingUrl , _this){
+		$.get( pollingUrl , function( data ) {
+			_this.update( objectId, data , _this);
+		});
+	},
+	update: function( objectId , newPopUpMessage, _this){
+		var targetObject = _this.getPopUpObject( objectId );
+		var logMessageContainer = $( targetObject.element ).find( ".inner" )
+		logMessageContainer.html( newPopUpMessage );
+		// scroll to bottom
+		logMessageContainer.scrollTop(logMessageContainer.prop("scrollHeight"));
 	},
 	remove: function( objectId ){
 		// get the object and remove from document
-		var targetElement = this.getPopUpObject( objectId );
+		var targetElement = $.PALM.popUpMessage.getPopUpObject( objectId );
 		
 		// not found return false
 		if( targetElement == null )
 			return false;
 		
 		// update with fading efect
-		$( targetElement ).fadeOut( "fast" );
+		$( targetElement.element ).fadeOut( "fast" );
+		
+		// if target element is polling, stop polling
+		if( targetElement.polling )
+			clearInterval( targetElement.pollingObject );
 		
 		// remove from list
-		$( targetElement ).promise().done(function(){
-			$( targetElement ).remove();
+		$( targetElement.element ).promise().done(function(){
+			$( targetElement.element ).remove();
 			$.grep( $.PALM.options.popUpMessageOptions.popUpElement, function( e ){
 				if( e.id === objectId ) // remove when object id match
 					return false;
@@ -613,13 +633,16 @@ $.PALM.popUpMessage = {
 		var targetElement = null;
 		$.each( $.PALM.options.popUpMessageOptions.popUpElement, function( index, item ){
 			if( item.id === objectId ){
-				targetElement = item.element;
+				targetElement = item;
 			}
 		});
 		
 		return targetElement;
-	},
-	generateId: function(){
+	}
+};
+
+$.PALM.utility = {
+	generateUniqueId: function(){
 		var aplhaNumeric = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		var randomAlphanumeric = "";
 		for (var i = 10; i > 0; --i) 
@@ -627,14 +650,14 @@ $.PALM.popUpMessage = {
 		return randomAlphanumeric;
 	}
 };
-
+ 
 $.PALM.postForm = {
 	viaAjax:function( $form, resultContainerSelector ){
 		
 	},
 	viaAjaxAndReload: function( $form , message ){
 		// pop up message
-		var popUpId = $.PALM.popUpMessage.create( message, "loading", false );
+		var popUpId = $.PALM.popUpMessage.create( message, {popupType:"loading", directlyRemove:false} );
 		// sent form content via ajax POST
 		$.post( $form.attr( "action" ), $form.serialize() )
 			.done( function ( jsonData ){
@@ -648,14 +671,14 @@ $.PALM.postForm = {
 							window.location.reload( false );
 						});
 					} else 
-						$.PALM.popUpMessage.create( "Sorry, saving process failed please try again", "error" );
+						$.PALM.popUpMessage.create( "Sorry, saving process failed please try again", {popupType:"error"} );
 				} else{
-					$.PALM.popUpMessage.create( "Sorry, saving process failed please try again", "error" );
+					$.PALM.popUpMessage.create( "Sorry, saving process failed please try again", {popupType:"error"} );
 				}
 			})
 			.fail( function(xhr, textStatus, errorThrown ) {
 				$.PALM.popUpMessage.remove( popUpId );
-				$.PALM.popUpMessage.create( "Sorry, saving process failed please try again", "error" );
+				$.PALM.popUpMessage.create( "Sorry, saving process failed please try again", {popupType:"error"} );
 			});
 	}
 };

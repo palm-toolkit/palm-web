@@ -33,6 +33,10 @@ a.box-home span {
 .box-header>.box-tools {
   top: 0;
 }
+
+.nav-tabs-custom>.nav>li>a {
+    padding: 10px 10px;
+}
 /* end overwritten style */
 
 iframe.externalContent{
@@ -367,6 +371,9 @@ iframe.externalContent{
 	font-size: medium;
     font-weight: 600;
     padding: 5px 0;
+    margin-left: 29px;
+    overflow: auto;
+    height: 100%;
 }
 
 .svg-container {
