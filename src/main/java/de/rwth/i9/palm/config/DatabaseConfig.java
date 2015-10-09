@@ -23,7 +23,6 @@ import de.rwth.i9.palm.model.Author;
 import de.rwth.i9.palm.model.AuthorAlias;
 import de.rwth.i9.palm.model.AuthorInterest;
 import de.rwth.i9.palm.model.AuthorInterestProfile;
-import de.rwth.i9.palm.model.Dataset;
 import de.rwth.i9.palm.model.Event;
 import de.rwth.i9.palm.model.EventGroup;
 import de.rwth.i9.palm.model.ExtractionService;
@@ -146,7 +145,6 @@ public class DatabaseConfig
 				AuthorInterestProfile.class,
 				Event.class,
 				EventGroup.class,
-				Dataset.class,
 				ExtractionService.class,
 				ExtractionServiceProperty.class,
 				Function.class,
