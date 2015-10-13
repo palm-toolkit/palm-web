@@ -1,5 +1,5 @@
-<li<#if link == "conference"> class="open"</#if>>
-	<a href="<@spring.url '/conference' />"><i class="fa fa-globe"></i><strong> Conferences</strong></a>
+<li<#if link == "venue"> class="open"</#if>>
+	<a href="<@spring.url '/venue' />"><i class="fa fa-globe"></i><strong> Venues</strong></a>
 </li>
 <li<#if link == "researcher"> class="open"</#if>>
 	<a href="<@spring.url '/researcher' />"><i class="fa fa-users"></i><strong> Researchers</strong></a>

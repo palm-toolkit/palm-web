@@ -10,11 +10,11 @@
  	
  		<div class="row center-content padding-home-content">
  		
-            <a href="<@spring.url '/conference' />" class="col-md-3 col-sm-6 col-xs-12 box-home">
+            <a href="<@spring.url '/venue' />" class="col-md-3 col-sm-6 col-xs-12 box-home">
               <div class="info-box">
                 <span class="info-box-icon info-box-home-icon bg-aqua"><i class="fa fa-home fa-globe"></i></span>
                 <div class="info-box-content info-box-home-text">
-                  <span class="info-box-number fontsize24">CONFERENCES</span>
+                  <span class="info-box-number fontsize24">VENUES</span>
                 </div>
               </div>
             </a>
