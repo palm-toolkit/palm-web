@@ -83,15 +83,24 @@
 		$( "select.page-number" ).change( function(){
 			conferenceSearch( $( "#conference_search_field" ).val() , $( this ).val() );
 		});
+
+		<#-- generate unique id for progress log -->
+		var uniquePidVenueWidget = $.PALM.utility.generateUniqueId();
 		
 		var options ={
-			source : "<@spring.url '/conference/search' />",
+			source : "<@spring.url '/venue/search' />",
 			query: "",
+			queryString : "",
 			page:0,
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
+						<#-- show pop up progress log -->
+						$.PALM.popUpMessage.create( "loading venues...", { uniqueId:uniquePidVenueWidget, popUpHeight:40, directlyRemove:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){
+							<#-- remove  pop up progress log -->
+							$.PALM.popUpMessage.remove( uniquePidVenueWidget );
+
 							var targetContainer = $( widgetElem ).find( "#conferenceTable" ).find("tbody");
 							// remove previous result
 							targetContainer.html( "" );
@@ -108,10 +117,15 @@
 									var confLabel = confType.charAt(0).toUpperCase() + confType.slice(1) + " " + item[ 'title' ] + " " + item[ 'year' ];
 									$( widgetElem ).find( "#conferenceTable" )
 									.find("tbody")
-									.append( "<tr><td title='" + confLabel + "' data-original-title='" + confLabel + "' data-toggle='tooltip' data-placement='bottom' data-container='body'>" + confLabel + "</td></tr>" )
+									.append( "<tr><td class='venue-item' title='" + confLabel + "' data-original-title='" + confLabel + "' data-id='" + item[ 'id' ] + "' data-toggle='tooltip' data-placement='bottom' data-container='body'>" + confLabel + "</td></tr>" )
 								});
 								var maxPage = Math.ceil(data.count/data.maxresult);
-								
+
+								<#-- enable click -->
+								$( "td.venue-item" ).on( "click", function(){
+									getVenueDetails( $( this ).data( 'id' ));
+								} );
+
 								// set dropdown page
 								for( var i=1;i<=maxPage;i++){
 									$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
@@ -194,8 +208,37 @@
 			}
 		});
 	}
+
+	<#-- when author list clciked --> 
+	function getVenueDetails( venueId ){
+		<#-- put loading overlay -->
+    	$.each( $.PALM.options.registeredWidget, function(index, obj){
+				if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
+					obj.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+				}
+			});
+
+		<#-- show pop up progress log -->
+		var uniquePid = $.PALM.utility.generateUniqueId();
+		$.PALM.popUpMessage.create( "Fetch venue details...", { uniqueId:uniquePid, popUpHeight:150, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
+		<#-- chack and fetch pzblication from academic network if necessary -->
+		$.getJSON( "<@spring.url '/venue/fetch?id=' />" + venueId + "&pid=" + uniquePid + "&force=false", function( data ){
+			<#-- remove  pop up progress log -->
+			$.PALM.popUpMessage.remove( uniquePid );
+			<#-- refresh registered widget -->
+			$.each( $.PALM.options.registeredWidget, function(index, obj){
+				if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
+					obj.options.queryString = "?id=" + venueId;
+					$.PALM.boxWidget.refresh( obj.element , obj.options );
+				}
+			});
+		
+		}).fail(function() {
+   	 		$.PALM.popUpMessage.remove( uniquePid );
+  		});
+	}
 	
-	// for the window resize
+	<#--// for the window resize-->
 	$(window).resize(function() {
 	    var bodyheight = $(window).height();
 	    $("#table-container-${wId}").height(bodyheight - 192);

@@ -29,6 +29,8 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
 import de.rwth.i9.palm.analytics.api.PalmAnalyticsImpl;
+import de.rwth.i9.palm.feature.academicevent.AcademicEventFeature;
+import de.rwth.i9.palm.feature.academicevent.AcademicEventFeatureImpl;
 import de.rwth.i9.palm.feature.publication.PublicationFeature;
 import de.rwth.i9.palm.feature.publication.PublicationFeatureImpl;
 import de.rwth.i9.palm.feature.researcher.ResearcherFeature;
@@ -178,6 +180,14 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 		return new PalmAnalyticsImpl();
 	}
 	
+	/* palm academic event feature */
+	@Bean
+	@Scope( "singleton" )
+	public AcademicEventFeature academicEventFeature()
+	{
+		return new AcademicEventFeatureImpl();
+	}
+
 	/* palm researcher feature */
 	@Bean
 	@Scope( "singleton" )

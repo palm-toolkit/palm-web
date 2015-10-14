@@ -23,7 +23,6 @@ import de.rwth.i9.palm.model.Author;
 import de.rwth.i9.palm.model.AuthorAlias;
 import de.rwth.i9.palm.model.AuthorInterest;
 import de.rwth.i9.palm.model.AuthorInterestProfile;
-import de.rwth.i9.palm.model.Dataset;
 import de.rwth.i9.palm.model.Event;
 import de.rwth.i9.palm.model.EventGroup;
 import de.rwth.i9.palm.model.ExtractionService;
@@ -42,7 +41,6 @@ import de.rwth.i9.palm.model.PublicationFile;
 import de.rwth.i9.palm.model.PublicationHistory;
 import de.rwth.i9.palm.model.PublicationSource;
 import de.rwth.i9.palm.model.PublicationTopic;
-import de.rwth.i9.palm.model.Reference;
 import de.rwth.i9.palm.model.Role;
 import de.rwth.i9.palm.model.Source;
 import de.rwth.i9.palm.model.SourceProperty;
@@ -147,7 +145,6 @@ public class DatabaseConfig
 				AuthorInterestProfile.class,
 				Event.class,
 				EventGroup.class,
-				Dataset.class,
 				ExtractionService.class,
 				ExtractionServiceProperty.class,
 				Function.class,
@@ -164,7 +161,6 @@ public class DatabaseConfig
 				PublicationHistory.class,
 				PublicationSource.class,
 				PublicationTopic.class,
-				Reference.class,
 				Role.class,
  				Source.class,
  				SourceProperty.class,
