@@ -40,13 +40,16 @@
 	    <#-- event for searching researcher -->
 	    $( "#researcher_search_field" )
 	    .on( "keypress", function(e) {
-			  if ( e.keyCode == 0 || e.keyCode == 13 || e.keyCode == 32 )
+			  if ( e.keyCode == 0 || e.keyCode == 13 /* || e.keyCode == 32*/ )
 			    researcherSearch( $( this ).val().trim() , "first");
-		}).on( "keydown", function(e) {
+		})
+		<#-- when pressing backspace until -->
+		.on( "keydown", function(e) {
 			  if( e.keyCode == 8 || e.keyCode == 46 )
-			    if( $( "#researcher_search_field" ).val().length == 0 )
+			    if( $( "#researcher_search_field" ).val().length < 2 )
 			    	researcherSearch( $( this ).val().trim() , "first");
 		});
+		
 
 		<#-- icon search presed -->
 		$( "#researcher_search_button" ).click( function(){
