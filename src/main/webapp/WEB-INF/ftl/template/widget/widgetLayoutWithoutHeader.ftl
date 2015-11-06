@@ -17,7 +17,6 @@
 			wMoveableEnabled="${w.moveableEnabled?c}"
 			wColorEnabled="${w.colorEnabled?c}"
 			wColor="${w.color}"
-			wHeaderVisible="${w.headerVisible?c}"
 			/>
 		</#if>
 		

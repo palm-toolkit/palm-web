@@ -1,11 +1,14 @@
 <#-- external -->
 <#-- simplifies javascript programming -->
-<#--<script src="<@spring.url '/resources/scripts/jquery-1.8.2.js' />"></script>
+<#--<script src="<@spring.url '/resources/scripts/jquery-1.8.2.js' />"></script>-->
 <script src="<@spring.url '/resources/scripts/jquery-ui-1.9.2.custom.js' />"></script>
-<script src="<@spring.url '/resources/scripts/jquery.dialogextend.js' />"></script>-->
+<#--<script src="<@spring.url '/resources/scripts/jquery.dialogextend.js' />"></script>-->
 
 <#-- jQuery 2.1.3 -->
 <#--<script src="<@spring.url '/resources/plugins/jQuery/jQuery-2.1.3.min.js' />" type="text/javascript"></script>-->
+
+<#-- jQuery fileupload -->
+<script src="<@spring.url '/resources/scripts/jquery.fileupload.js' />" type="text/javascript"></script>
 
 <#-- jQuery UI 1.11.4 -->
 <script src="<@spring.url '/resources/plugins/jQueryUI/jquery-ui.min.js' />" type="text/javascript"></script>

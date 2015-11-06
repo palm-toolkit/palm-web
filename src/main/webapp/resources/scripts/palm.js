@@ -104,6 +104,22 @@ $.PALM.options = {
 	  pollingUrl: "",
 	  pollingTime: 2000
   },
+  popUpIframeOptions:{
+	  popUpWidth:"60%",
+	  popUpHeight:"80%",
+	  popUpMaxWidth:"1000px",
+	  popUpCloseSelector:"dialog-close",
+	  popUpIframeClasses:{
+		  modalContainer : "dialog-modal-container",
+		  modalOverlay: "dialog-overlay",
+		  dialogContainer: "dialog-container",
+		  dialogHeader: "dialog-header",
+		  dialogContent: "dialog-content",
+		  dialogCloseContainer: "dialog-close-container",
+		  dialogCloseButton: "dialog-close-button fa fa-times"
+	  },
+	  popUpIframe:[]
+  },
   //Direct Chat plugin options
   directChat: {
     //Enable direct chat by default
@@ -501,7 +517,7 @@ $.PALM.boxWidget = {
  * Plugin for handing notification, message and progress
  */
 $.PALM.popUpMessage = {
-	create: function( popUpMessage, popUpOptions){
+	create: function( popUpMessage, popUpOptions ){
 		if( typeof popUpMessage === 'undefined' )
 			return false;
 		
@@ -641,6 +657,86 @@ $.PALM.popUpMessage = {
 	}
 };
 
+/**
+ * PopUp Iframe
+ * =============
+ * Plugin for handling pop up iframe
+ */
+
+$.PALM.popUpIframe = {
+	create: function( iframeUrl, popUpOptions, iframeTitle){
+		if( typeof iframeUrl === 'undefined' )
+			return false;
+		
+		var o = $.PALM.options.popUpIframeOptions;
+		var _this = this;
+		
+		// remove previous popup iframe if exist
+		_this.remove( o );
+		
+		// combine options
+		if( typeof popUpOptions != "undefined" )
+			o = $.extend( o, popUpOptions );
+				
+		// get popUp content
+		var iframeObject = $( '<iframe/>' )
+							.attr({ "width":"1", "height":"1", "width":"1", "scrolling": "no",
+								"frameborder" : "no", "marginheight":"0", "marginwidth":"0", "border":"0", "src":iframeUrl})
+							.addClass( "externalContent" );
+							
+		var popUpContainer = 
+			$( '<div/>' )
+	    	.addClass( o.popUpIframeClasses.dialogContent )
+	    	.append(
+	    		$( '<div/>' )
+	    	    .addClass( o.popUpIframeClasses.dialogCloseContainer )
+	    	    .append(
+	    			$( '<i/>' )
+	    			.addClass( o.popUpIframeClasses.dialogCloseButton )
+	    			.click( function(){ _this.remove( o ) })
+	    		)
+	    	);
+		
+		if( typeof iframeTitle !== "undefined" ){
+			popUpContainer.append(
+				$( '<div/>' )
+		    	.addClass( o.popUpIframeClasses.dialogHeader )
+		    	.html( iframeTitle )
+			);
+		}
+	    	
+	    popUpContainer.append( iframeObject )
+		
+		// create new popUp
+		var popUpModal = $( '<div/>' )
+	    	.addClass( o.popUpIframeClasses.modalContainer )
+	    	.append(
+    			$( '<div/>' )
+    	    	.addClass( o.popUpIframeClasses.modalOverlay )
+			)
+	    	.append(
+    			$( '<div/>' )
+    	    	.addClass( o.popUpIframeClasses.dialogContainer )
+    	    	.append(
+	    	    		popUpContainer
+				)
+			);
+			
+		// put popup into body
+		$( "body" ).append( popUpModal );
+		
+		// put into PALM object
+		o.popUpIframe.push( popUpModal );
+	}, remove: function( options ){
+		if( options.popUpIframe.length > 0 ){
+			// remove element from DOM
+			options.popUpIframe[0].remove();
+			// clear array
+			options.popUpIframe = [];
+		}
+	}
+};
+
 $.PALM.utility = {
 	generateUniqueId: function(){
 		var aplhaNumeric = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -648,6 +744,11 @@ $.PALM.utility = {
 		for (var i = 10; i > 0; --i) 
 			randomAlphanumeric += aplhaNumeric[Math.round(Math.random() * (aplhaNumeric.length - 1))];
 		return randomAlphanumeric;
+	},
+	stripHtmlTag: function( inputText ){
+		var div = document.createElement("div");
+		div.innerHTML = inputText;
+		return div.textContent || div.innerText || "";
 	}
 };
  
@@ -887,7 +988,6 @@ $(function(){
 		// get login form
 		getFormViaAjax( "login?form=true" );
 	});
-	
 });
 
 /**
@@ -931,6 +1031,35 @@ function getPopUpForm( popUpType, html ){
 				$( "<div/>" )
 				.addClass( popUpType + "-container" )
 				.html( html )
+				)
+		.appendTo( "body" );
+}
+
+/**
+ * Get popup form and display it
+ */
+function getPopUpIframe( url ){
+	// remove existing popup if exist
+	$( ".popup-form-container" ).remove();
+	/* add blur */
+	$( ".wrapper" ).addClass( "blur2px" );
+	
+	// create new one
+	var $popUpElem = 
+		$( "<div/>" )
+		.addClass( "popup-form-container" )
+		.append(
+				$( "<div/>" )
+				.addClass( "dialog-overlay" )
+				)
+		.append(
+				$( "<div/>" )
+				.addClass( "iframe-center-container" )
+				.append(
+							$( "<div/>" )
+							.addClass( "iframe-container" )
+							.append( '<iframe class="externalContent" alt="external source" width="1" height="1" scrolling="yes" frameborder="no" marginheight="0" marginwidth="0" border="0" src="' + url + '"></iframe>' )
+						)
 				)
 		.appendTo( "body" );
 }
@@ -1011,7 +1140,12 @@ function convertToAjaxMultipleFileUpload( $inputFile, $progressBar , $resultCont
         dataType: 'json',
  
         done: function (e, data) {
-        	printUploadedArticles( $container, data.result , []);
+        	$container.find( "#title" ).val( data.result.title );
+        	$container.find( "#author" ).val( data.result.author );
+        	$container.find( "#abstractText" ).val( data.result.abstract );
+        	$container.find( "#keywords" ).val( data.result.keyword );
+        	$container.find( "#contentText" ).val( data.result.content );
+        	$container.find( "#referenceText" ).val( data.result.reference );
         },
  
         progressall: function (e, data) {
@@ -1035,7 +1169,7 @@ function printUploadedArticles( $containerSelector, data , addedOptions){
 	if( $container.find( "textarea" ).length == 0){
 		$container
 			.append( $('<textarea/>')
-					.css({'width': '99%', 'height' : "410px", 'resize' : ' none'})
+					.css({'width': '99%', 'height' : "410px", 'resize' : 'none'})
 					)
 			.css({'width': '100%', 'height' : "450px"})
 			.resizable({

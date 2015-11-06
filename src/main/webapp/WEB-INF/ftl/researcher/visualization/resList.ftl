@@ -46,7 +46,7 @@
 		<#-- when pressing backspace until -->
 		.on( "keydown", function(e) {
 			  if( e.keyCode == 8 || e.keyCode == 46 )
-			    if( $( "#researcher_search_field" ).val().length < 2 )
+			    if( $( "#researcher_search_field" ).val().length == 0 )
 			    	researcherSearch( $( this ).val().trim() , "first");
 		});
 		

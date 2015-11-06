@@ -41,7 +41,7 @@ a.box-home span {
 
 iframe.externalContent{
 	width:100%;
-	min-height:400px;
+	min-height:100%;
 }
 .box-move-handle{
 	cursor:move;
@@ -119,7 +119,7 @@ iframe.externalContent{
 }
 
 /* form */
-.popup-form-container, .login-container, .register-container{
+.popup-form-container, .login-container, .register-container, .iframe-center-container,.dialog-container{
 	position: absolute;
     left: 0;
     top: 0;
@@ -127,12 +127,34 @@ iframe.externalContent{
     height: 100%;
 }
 
-.popup-form-container{
+.iframe-container,.dialog-content {
+    width: 90%;
+    height: 80%;
+    max-width: 1000px;
+    margin: 4% auto;
+    /*background-color:#fff;*/
+}
+
+.popup-form-container, .dialog-modal-container{
 	z-index: 10000;
 }
 
-.login-container, .register-container{
+.login-container, .register-container, .dialog-container, .iframe-center-container{
     z-index: 10002;
+}
+
+.dialog-close-container{
+	position:relative;
+	width:100%;
+	height:0;
+	color:#fff;
+}
+
+.dialog-close-button{
+	position:absolute;
+	cursor:pointer;
+	top:7px;
+	right:10px;
 }
 
 /* css3 effect */
@@ -163,10 +185,16 @@ iframe.externalContent{
 	box-shadow: -3px 7px 27px -13px rgba(0,0,0,0.75);
 }
 
-.skin-blue-light .login-logo, .skin-blue-light .register-logo {
+.skin-blue-light .login-logo, .skin-blue-light .register-logo, .skin-blue-light .dialog-header {
   background-color: #3c8dbc;
   margin: 0;
   color: #fff;
+}
+
+.dialog-header {
+    font-size: 30px;
+    text-align: center;
+    font-weight: 500;
 }
 
 .skin-blue-light .login-logo a, .skin-blue-light .register-logo a{
@@ -477,4 +505,22 @@ iframe.externalContent{
 }
 #publication-list .publication>.detail>.venue {
     display: block;
+}
+#new-publication-circle{
+	position:fixed;
+	bottom:20px;
+	right:20px;
+	width: 50px;
+    height: 50px;
+}
+#new-publication-circle .fa{
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    line-height: 50px;
+    background: #d2d6de;
+    border-radius: 50%;
+    text-align: center;
+    display:block;
+    cursor:pointer;
 }

@@ -4,7 +4,10 @@
 <link href="<@spring.url '/resources/bootstrap/css/bootstrap-select.min.css' />" rel="stylesheet" type="text/css" />
 
 <#--Font Awesome Icons -->
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<#--<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />-->
+
+<#-- Local font awesome -->
+<link href="<@spring.url '/resources/font/font-awesome/4.4.0/css/font-awesome.min.css' />" rel="stylesheet" type="text/css" />
 
 <#--Ionicons -->
 <#--

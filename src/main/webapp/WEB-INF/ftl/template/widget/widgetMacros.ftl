@@ -33,10 +33,18 @@
 		<#local wClassContainer = wClassContainer + " padding0">
 		<#local wClassBox = wClassBox + " border0" >
 	</#if>
-	
+
+	<#local headerVisible = true>
+
+	<#if wParams["wHeaderVisible"]?? && wParams["wHeaderVisible"] == "false">
+		<#local headerVisible = false>
+	</#if>
+
 	<#-- The widget -->
 	<div id="widget-${wId}" class="${wClassContainer}">
-      <div class="${wClassBox}">
+      <div class="${wClassBox}" <#if !headerVisible>style="border:none"</#if>>
+		
+	<#if headerVisible>
         <div class="box-header with-border">
         
           <#-- widget handle moveable button -->
@@ -82,7 +90,8 @@
         	</#if>
           </div>
         </div><#-- /.box-header -->
-        
+    </#if>
+
         <#if wSource == "INCLUDE">
     		<#include wParams["wSourcePath"] />
 		<#else>
