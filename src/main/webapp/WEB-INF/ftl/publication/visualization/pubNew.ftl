@@ -63,7 +63,6 @@
 
 <div class="box-footer">
 	<button id="submit" type="submit" class="btn btn-primary">Submit</button>
-	<button id="submit" class="btn btn-primary">Cancel</button>
 </div>
 
 <script>

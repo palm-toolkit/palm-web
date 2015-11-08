@@ -680,7 +680,7 @@ $.PALM.popUpIframe = {
 				
 		// get popUp content
 		var iframeObject = $( '<iframe/>' )
-							.attr({ "width":"1", "height":"1", "width":"1", "scrolling": "no",
+							.attr({ "width":"1", "height":"1", "width":"1", "scrolling": "yes",
 								"frameborder" : "no", "marginheight":"0", "marginwidth":"0", "border":"0", "src":iframeUrl})
 							.addClass( "externalContent" );
 							
