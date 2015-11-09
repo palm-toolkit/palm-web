@@ -16,6 +16,11 @@
 <#-- Bootstrap 3.3.2 JS -->
 <script src="<@spring.url '/resources/bootstrap/js/bootstrap.min.js' />" type="text/javascript"></script>
 
+<#-- input mask -->
+<script src="<@spring.url '/resources/plugins/input-mask/jquery.inputmask.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/plugins/input-mask/jquery.inputmask.date.extensions.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/plugins/input-mask/jquery.inputmask.extensions.js' />" type="text/javascript"></script>
+
 <#-- Bootstrap-select v1.7.2 -->
 <script src="<@spring.url '/resources/bootstrap/js/bootstrap-select.min.js' />" type="text/javascript"></script>
 
