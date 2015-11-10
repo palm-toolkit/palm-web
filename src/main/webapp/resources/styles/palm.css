@@ -378,6 +378,11 @@ iframe.externalContent{
 	content: "\f00d";
 }
 
+.ui-autocomplete-loading {
+	opacity: 0.4;
+	background: white url("../images/spinner.gif") right center no-repeat;
+}
+
 /* PALM message pop up */
 .palm_message_popup{
 	position:fixed;
@@ -524,4 +529,51 @@ iframe.externalContent{
     text-align: center;
     display:block;
     cursor:pointer;
+}
+
+
+/* Tagging style */
+.palm-tagsinput{
+	 border:1px solid #d2d6de;
+	 padding:0;
+	 width:100%;
+	 min-height:34px;
+}
+
+.palm-tagsinput-focus {
+    border-color: #3c8dbc !important;
+    outline: 0;
+}
+
+.palm-tagsinput>span.tag-item{
+	display:block;
+	float:left;
+	padding:0 18px 0 0;
+	margin:5px 0 2px 13px;
+}
+
+.palm-tagsinput>span:hover{
+  	background-color:#efefef;
+}
+.palm-tagsinput>span.tag-item>i{
+	cursor:pointer;
+ 	position: absolute;
+    border: 1px solid #d2d6de;
+    color: #d2d6de;
+    padding: 0;
+    width: 16px;
+    height: 16px;
+    margin: 0 0 0 3px;
+    font-size: 16px;
+    line-height: 13px;
+}
+.palm-tagsinput input{
+  	border:0;
+  	margin:0;
+  	padding:5px 12px;
+  	width:260px;;
+}
+.palm-tagsinput input:focus{
+  	border: none;
+    outline: 0;
 }

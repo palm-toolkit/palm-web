@@ -25,7 +25,8 @@
 		<#-- author -->
 		<div class="form-group">
 	      <label>Author</label>
-	      <textarea id="author" class="form-control" rows="3" placeholder="Author"></textarea>
+	      <div class="palm-tagsinput" tabindex="-1">
+	      </div>
 	    </div>
 
 		<#-- publication-date -->
@@ -82,7 +83,10 @@
 		<#-- keyword -->
 		<div class="form-group">
 	      <label>Keywords</label>
-	      <textarea id="keywords" class="form-control" rows="3" placeholder="Keywords"></textarea>
+	      <div id="keywords" class="palm-tagsinput" tabindex="-1">
+	      		<input type="text" value="" placeholder="Keywords, separated by comma" />
+	      </div>
+	      <input type="hidden" id="keyword-list" name="keyword-list" value="">
 	    </div>
 
 		<#-- content -->
@@ -131,5 +135,101 @@
 				$( "#volume-container,#issue-container" ).show();
 			}
 		});
+		
+		$("#venue").autocomplete({
+		    source: function (request, response) {
+		        $.ajax({
+		            url: "<@spring.url '/venue/autocomplete' />",
+		            dataType: "json",
+		            data: {
+						query: request.term
+					},
+		            success: function (data) {
+		                response($.map(data, function(v,i){
+		                    return {
+		                            label: v.name,
+		                            value: v.name,
+		                            labelShort: v.abbr,
+		                            url: v.url,
+		                            type: v.type
+		                           };
+		                }));
+		            }
+		        });
+		    },
+			minLength: 3,
+			select: function( event, ui ) {
+				<#-- select appropriate vanue type -->
+				$( '#venue-type' ).val( ui.item.type ).change();
+				console.log( ui.item ?
+					"Selected: " + ui.item.label :
+					"Nothing selected, input was " + this.value);
+			},
+			open: function() {
+				$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+			},
+			close: function() {
+				$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+			}
+		});
+
+		<#-- focus in and out on tag style -->
+		$(".palm-tagsinput").on('focusin',function() {
+		  	$( this ).addClass( "palm-tagsinput-focus" );
+		});
+		$(".palm-tagsinput").on('focusout',function() {
+		  	$( this ).removeClass( "palm-tagsinput-focus" );
+		});
+		$(".palm-tagsinput").on('click',function() {
+			$( this ).find( 'input' ).focus();
+		});
+		<#-- keyword tags -->
+		$('#keywords input').on('focusout',function(){    
+			<#-- allowed characters -->
+    		var inputKeyword = this.value.replace(/[^a-zA-Z0-9\+\-\.\#\s]/g,'');
+    		<#-- remove multiple spaces -->
+			inputKeyword = inputKeyword.replace(/ +(?= )/g,'');
+			if( inputKeyword.length > 2 && !isTagDuplicated( '#keyword-list', inputKeyword )) {
+      			$(this).before(
+      				$( '<span/>' )
+      					.addClass( "tag-item" )
+      					.html( inputKeyword )
+      					.append(
+      						$( '<i/>' )
+      						.addClass( "fa fa-times" )
+      						.click( function(){ 
+      							$(this).parent().remove()
+      							updateInputList( '#keywords' )
+      						})
+      					)
+  				);
+  				<#-- update stored value -->
+				updateInputList( '#keywords' );
+    		}
+   			this.value="";   			
+  		}).on('keyup',function( e ){
+   			if(/(188|13)/.test(e.which)) 
+   				$(this).focusout().focus();
+  		});
+  		
+  		function isTagDuplicated( inputListSelector, newText){
+  			var keywordList = $( inputListSelector ).val().split(',');
+  			if( $.inArray( newText , keywordList ) > -1 )
+  				return true;
+  			else
+  				return false;
+  		}
+  		
+  		function updateInputList( tagContainerSelector ){
+  			var keywordList = "";
+			$( tagContainerSelector ).find( "span" ).each(function(index, item){
+				if( index > 0)
+					keywordList += ",";
+				keywordList += $( item ).text();
+			});
+			$( tagContainerSelector ).next( "input" ).val( keywordList );
+  		}
+		
 	});
+
 </script>
