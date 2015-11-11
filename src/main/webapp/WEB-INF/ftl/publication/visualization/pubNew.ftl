@@ -25,8 +25,10 @@
 		<#-- author -->
 		<div class="form-group">
 	      <label>Author</label>
-	      <div class="palm-tagsinput" tabindex="-1">
+	      <div id="authors" class="palm-tagsinput" tabindex="-1">
+	      		<input type="text" value="" placeholder="Author fullname, separated by comma" />
 	      </div>
+	      <input type="hidden" id="author-list" name="keyword-list" value="">
 	    </div>
 
 		<#-- publication-date -->
@@ -183,34 +185,55 @@
 		$(".palm-tagsinput").on('click',function() {
 			$( this ).find( 'input' ).focus();
 		});
+		
 		<#-- keyword tags -->
-		$('#keywords input').on('focusout',function(){    
-			<#-- allowed characters -->
-    		var inputKeyword = this.value.replace(/[^a-zA-Z0-9\+\-\.\#\s]/g,'');
-    		<#-- remove multiple spaces -->
-			inputKeyword = inputKeyword.replace(/ +(?= )/g,'');
-			if( inputKeyword.length > 2 && !isTagDuplicated( '#keyword-list', inputKeyword )) {
-      			$(this).before(
-      				$( '<span/>' )
-      					.addClass( "tag-item" )
-      					.html( inputKeyword )
-      					.append(
-      						$( '<i/>' )
-      						.addClass( "fa fa-times" )
-      						.click( function(){ 
-      							$(this).parent().remove()
-      							updateInputList( '#keywords' )
-      						})
-      					)
-  				);
-  				<#-- update stored value -->
-				updateInputList( '#keywords' );
-    		}
-   			this.value="";   			
-  		}).on('keyup',function( e ){
+		$('#keywords input')
+		.on('focusout',function(){    
+			addKeyword( this );	
+  		})
+  		.on('keyup',function( e ){
    			if(/(188|13)/.test(e.which)) 
    				$(this).focusout().focus();
-  		});
+  		})
+  		.on('keydown', function( e ){
+  			if( this.value.length == 0)
+    			return e.which !== 32;
+		})
+		.on('paste', function () {
+			var element = this;
+			setTimeout(function () {
+				$( element ).focusout().focus();
+			}, 100);
+		});
+		
+		function addKeyword( inputElem ){
+			<#-- allowed characters -->
+    		var inputKeywords = inputElem.value.replace(/[^a-zA-Z0-9\+\-\.\#\s\,]/g,'');
+    		
+    		<#-- split by comma -->
+			$.each( inputKeywords.split(","), function(index, inputKeyword ){
+	    		<#-- remove multiple spaces -->
+				inputKeyword = inputKeyword.replace(/ +(?= )/g,'').trim();
+				if( inputKeyword.length > 2 && !isTagDuplicated( '#keyword-list', inputKeyword )) {
+	      			$( inputElem ).before(
+	      				$( '<span/>' )
+	      					.addClass( "tag-item" )
+	      					.html( inputKeyword )
+	      					.append(
+	      						$( '<i/>' )
+	      						.addClass( "fa fa-times" )
+	      						.click( function(){ 
+	      							$( this ).parent().remove()
+	      							updateInputList( '#keywords' )
+	      						})
+	      					)
+	  				);
+	  				<#-- update stored value -->
+					updateInputList( '#keywords' );
+	    		}
+    		});
+   			inputElem.value="";
+		}
   		
   		function isTagDuplicated( inputListSelector, newText){
   			var keywordList = $( inputListSelector ).val().split(',');
@@ -229,7 +252,46 @@
 			});
 			$( tagContainerSelector ).next( "input" ).val( keywordList );
   		}
-		
+  		
+  		<#-- author -->
+		$('#authors input')
+		.on('focusout',function(){    
+			<#-- allowed characters -->
+    		var inputAuthor = this.value.replace(/[^a-zA-Z\s]/g,'');
+    		<#-- remove multiple spaces -->
+			inputAuthor = inputAuthor.replace(/ +(?= )/g,'').trim();
+			if( inputAuthor.length > 3 && !isTagDuplicated( '#author-list', inputAuthor )) {
+      			$(this).before(
+      				$( '<span/>' )
+      					.addClass( "tag-item" )
+      					.html( inputAuthor )
+      					.append(
+      						$( '<i/>' )
+      						.addClass( "fa fa-times" )
+      						.click( function(){ 
+      							$(this).parent().remove()
+      							updateInputList( '#authors' )
+      						})
+      					)
+  				);
+  				<#-- update stored value -->
+				updateInputList( '#authors' );
+    		}
+   			this.value="";   			
+  		})
+  		.on('keyup',function( e ){
+   			if(/(188|13)/.test(e.which)) 
+   				$(this).focusout().focus();
+  		})
+  		.on('keydown', function( e ){
+  			if( this.value.length == 0)
+    			return e.which !== 32;
+    		else
+    			return this.value.replace(/[^a-zA-Z\s]/g,'');
+		})
+		.on('paste', function () {
+			
+		});
 	});
 
 </script>
