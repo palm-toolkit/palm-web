@@ -1,34 +1,25 @@
 <div id="boxbody<#--${wId}-->" class="box-body">
 
-		<table style="width:100%">
-	        <tr style="background:transparent">
-	            <td style="width:70%;padding:0">
-	            	<span style="margin-top:5px;">Upload your publication (PDF format) : </span>
-	            	<input id="fileupload" style="width:60%;max-width:none" type="file" name="files[]" data-url="<@spring.url '/publication/upload' />" multiple />
-				</td>
-	            <td style="padding:0">
-	            	<div id="progress" class="progress" style="width:70%;display:none">
-				        <div class="bar" style="width: 0%;"></div>
-				    </div>
-				</td>
-	        </tr>
-	    </table>
-
-	 <form role="form" id="addPublication" action="<@spring.url '/publication/add' />" method="post">
+	 <form role="form" id="addPublication" action="<@spring.url '/publication/edit' />" method="post">
 		
 		<#-- title -->
 		<div class="form-group">
 	      <label>Title</label>
-	      <input type="text" id="title" name="title" class="form-control" placeholder="Publication">
+	      <input type="text" id="title" name="title" class="form-control" placeholder="Publication" value="${publication.title}">
 	    </div>
+	    
+	    <#assign authorText = "">
+	    <#list publication.authors as eachAuthor>
+	    	<#assign authorText = authorText + eachAuthor.name + ",">
+	    </#list>
 
 		<#-- author -->
 		<div class="form-group">
 	      <label>Author</label>
 	      <div id="authors" class="palm-tagsinput" tabindex="-1">
-	      		<input type="text" value="" placeholder="Author fullname, separated by comma" />
+	      		<input type="text" value="${authorText}" placeholder="Author fullname, separated by comma" />
 	      </div>
-	      <input type="hidden" id="author-list" name="keyword-list" value="">
+	      <input type="hidden" id="author-list" name="author-list" value="">
 	    </div>
 
 		<#-- publication-date -->
@@ -44,34 +35,25 @@
 
 		<#-- Venue -->
 		<div class="form-group">
-          <label>Publication Type</label>
-          <select id="venue-type" name="venue-type" class="form-control" style="width:120px">
-            <option value="conference">Conference</option>
-            <option value="journal">Journal</option>
-          </select>
-        </div>
-        
-        <#-- Conference/Journal -->
-		<div id="venue-title" class="form-group">
-          <label><span>Conference</span> Name</label>
+          <label>Venue</label>
           <div style="width:100%">
+	          <select id="venue-type" name="venue-type" class="form-control pull-left" style="width:120px">
+	            <option value="conference">Conference</option>
+	            <option value="journal">Journal</option>
+	          </select>
 	          <span style="display:block;overflow:hidden;padding:0 5px">
-	          	<input type="text" id="venue" name="venue" class="form-control" placeholder="e.g. Educational Data Mining">
+	          	<input type="text" id="venue" name="venue" class="form-control">
 	          </span>
 	      </div>
         </div>
         
         <#-- Venue properties -->
 		<div class="form-group" style="width:100%;float:left">
-			<div id="venue-abbr-container" class="col-xs-2 minwidth150Px">
-				<label><span>Conference</span> Abbr.</label>
-				<input type="text" id="venue-abbr" name="venue-abbr" placeholder="e.g. EDM" class="form-control">
-			</div>
-			<div id="volume-container" class="col-xs-2 minwidth150Px" style="display:none">
+			<div id="volume-container" class="col-xs-3 minwidth150Px" style="display:none">
 				<label>Volume</label>
 				<input type="text" id="volume" name="volume" class="form-control">
 			</div>
-			<div id="issue-container" class="col-xs-2 minwidth150Px" style="display:none">
+			<div id="issue-container" class="col-xs-3 minwidth150Px" style="display:none">
 				<label>Issue</label>
 				<input type="text" id="issue" name="issue" class="form-control">
 			</div>
@@ -79,7 +61,7 @@
 				<label>Pages</label>
 				<input type="text" id="pages" name="pages" class="form-control">
 			</div>
-			<div id="publisher-container" class="col-xs-3 minwidth150Px">
+			<div class="col-xs-3 minwidth150Px">
 				<label>Publisher</label>
 				<input type="text" id="publisher" name="publisher" class="form-control">
 			</div>
@@ -88,22 +70,22 @@
 		<#-- abstract -->
 		<div class="form-group">
 	      <label>Abstract</label>
-	      <textarea name="abstractText" id="abstractText" class="form-control" rows="3" placeholder="Abstract"></textarea>
+	      <textarea name="abstractText" id="abstractText" class="form-control" rows="3" placeholder="Abstract">${publication.abstractText!''}</textarea>
 	    </div>
 
 		<#-- keyword -->
 		<div class="form-group">
 	      <label>Keywords</label>
 	      <div id="keywords" class="palm-tagsinput" tabindex="-1">
-	      		<input type="text" value="" placeholder="Keywords, separated by comma" />
+	      		<input type="text" value="${publication.keywordText!''}" placeholder="Keywords, separated by comma" />
 	      </div>
-	      <input type="hidden" id="keyword-list" name="keyword-list" value="">
+	      <input type="hidden" id="keyword-list" name="keywordText" value="">
 	    </div>
 
 		<#-- content -->
 		<div class="form-group">
 	      <label>Content</label>
-	      <textarea name="contentText" id="contentText" class="form-control" rows="3" placeholder="Publication body/content"></textarea>
+	      <textarea name="contentText" id="contentText" class="form-control" rows="3" placeholder="Publication body/content">${publication.contentText!''}</textarea>
 	    </div>
 
 		<#-- references -->
@@ -122,7 +104,7 @@
 </div>
 
 <div class="box-footer">
-	<button id="submit" type="submit" class="btn btn-primary">Submit</button>
+	<button id="submit" type="submit" class="btn btn-primary">Save Changes</button>
 </div>
 
 <script>
@@ -141,10 +123,8 @@
 		$( "#venue-type" ).change( function(){
 			var selectionValue = $(this).val();
 			if( selectionValue == "conference" ){
-				$( "#venue-title>label>span,#venue-abbr-container>label>span" ).html( "Conference" );
 				$( "#volume-container,#issue-container" ).hide();
 			} else if( selectionValue == "journal" ){
-				$( "#venue-title>label>span,#venue-abbr-container>label>span" ).html( "Journal" );
 				$( "#volume-container,#issue-container" ).show();
 			}
 		});
@@ -174,8 +154,9 @@
 			select: function( event, ui ) {
 				<#-- select appropriate vanue type -->
 				$( '#venue-type' ).val( ui.item.type ).change();
-				console.log( ui.item.labelShort );
-				$( '#venue-abbr' ).val( ui.item.labelShort );
+				console.log( ui.item ?
+					"Selected: " + ui.item.label :
+					"Nothing selected, input was " + this.value);
 			},
 			open: function() {
 				$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
@@ -266,48 +247,7 @@
   		<#-- author -->
 		$('#authors input')
 		.on('focusout',function(){    
-			<#-- allowed characters -->
-    		var inputAuthor = this.value.replace(/[^a-zA-Z\s]/g,'');
-    		<#-- remove multiple spaces -->
-			inputAuthor = inputAuthor.replace(/ +(?= )/g,'').trim();
-			if( inputAuthor.length > 3 && !isTagDuplicated( '#author-list', inputAuthor )) {
-				var authorObj =  $( '<span/>' )
-      					.addClass( "tag-item" );
-      					
-      				authorObj
-      					.append(
-      						$( "<i/>" )
-	        						 .attr({ 'class':'fa fa-user bg-aqua'})
-	        			);
-	        			
-	        		var itemDesc = $( "<div/>" )
-        						 .attr({'class':'f-a-desc'})
-        						
-        						 
-        			itemDesc.append(
-				 		$( "<div/>" )
-    						 .attr({'class':'f-a-name'})
-    						 .html( inputAuthor )
-					 );
-					 
-					 authorObj.append( itemDesc );
-					 
-					 authorObj
-	        			.append( 
-      						$( '<i/>' )
-      						.addClass( "fa fa-times" )
-      						.click( function(){ 
-      							$(this).parent().remove()
-      							updateInputList( '#authors' )
-      						})
-      					);
-      					
-      			<#-- append -->
-      			$(this).before( authorObj);
-  				<#-- update stored value -->
-				updateInputList( '#authors' );
-    		}
-   			this.value="";   			
+			addAuthor( this );
   		})
   		.on('keyup',function( e ){
    			if(/(188|13)/.test(e.which)) 
@@ -331,11 +271,6 @@
 						name: request.term
 					},
 		            success: function (data) {
-		            	if( data.count == 0){
-		            		$('#authors input').removeClass( "ui-autocomplete-loading" );
-		            		return false;
-		            	}
-		            		
 		                response($.map(data.author , function(v,i){
 		                	var researcherMap = {
 		                		id: v.id,
@@ -436,6 +371,10 @@
     		});
    			inputElem.value="";
 		}
+		
+		
+		$('#keywords input').focusout();
+		//$('#authors input').focusout();
 	});
 
 </script>

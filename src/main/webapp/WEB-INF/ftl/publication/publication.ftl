@@ -28,9 +28,7 @@ $(function(){
 
 	$( "#new-publication-circle>i" ).click( function( event ){
 		event.preventDefault();
-		// get login form
-		//getPopUpIframe( $(this).data("url") );
-		$.PALM.popUpIframe.create( $(this).data("url") , {}, "Add New Publiction");
+		$.PALM.popUpIframe.create( $(this).data("url") , {}, "Add New Publication");
 	});
 	
 });

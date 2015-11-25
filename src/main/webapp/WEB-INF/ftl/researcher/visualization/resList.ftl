@@ -253,7 +253,7 @@
 				}
 				
 				if( jumpTo === "first") // if new searching performed
-					obj.options.source = "<@spring.url '/researcher/search?query=' />" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
+					obj.options.source = "<@spring.url '/researcher/search?query=' />" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult + "&source=all";
 				else
 					obj.options.source = "<@spring.url '/researcher/search?query=' />" + obj.options.query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
 				$.PALM.boxWidget.refresh( obj.element , obj.options );

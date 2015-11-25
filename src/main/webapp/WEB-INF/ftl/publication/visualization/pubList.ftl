@@ -143,6 +143,10 @@
 										$('<div/>')
 										.addClass( "publication" )
 										.attr({ "data-id": itemPublication.id });
+										
+									<#-- publication menu -->
+									var pubNav = $( '<div/>' )
+										.attr({'class':'nav'});
 						
 									<#-- publication icon -->
 									var pubIcon = $('<i/>');
@@ -156,7 +160,36 @@
 									}else{
 										pubIcon.addClass( "fa fa-question bg-purple" ).attr({ "title":"Unknown publication type" });
 									}
-									publicationItem.append( pubIcon );
+									
+									pubNav.append( pubIcon );
+									
+									<#-- edit option -->
+									var pubEdit = $('<i/>')
+												.attr({
+													'class':'fa fa-edit', 
+													'title':'edit publication',
+													'data-url':'<@spring.url '/publication/edit' />' + '?id=' + itemPublication.id,
+													'style':'display:none'
+												});
+												
+									<#-- add click event to edit publication -->
+									pubEdit.click( function( event ){
+										event.preventDefault();
+										$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Publication");
+									});
+									
+									<#-- append edit  -->
+									pubNav.append( pubEdit );
+									
+									publicationItem.append( pubNav );
+									
+									publicationItem.hover(function()
+									{
+									     pubEdit.show();
+									}, function()
+									{ 
+									     pubEdit.hide();
+									});
 
 									<#-- publication detail -->
 									var pubDetail = $('<div/>').addClass( "detail" );
@@ -179,11 +212,11 @@
 									publicationItem.append( pubDetail );
 
 									<#-- add clcik event -->
-									publicationItem.on( "click", function(){
+									pubDetail.on( "click", function(){
 										<#-- remove active class -->
-										$( this ).siblings().removeClass( "active" );
-										$( this ).addClass( "active" );
-										getPublicationDetails( $( this ).data( 'id' ));
+										$( this ).parent().siblings().removeClass( "active" );
+										$( this ).parent().addClass( "active" );
+										getPublicationDetails( $( this ).parent().data( 'id' ));
 									});
 
 									publicationListContainer.append( publicationItem );

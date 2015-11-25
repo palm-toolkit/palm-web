@@ -225,6 +225,7 @@ iframe.externalContent{
 .fleft{ float:left }
 .fright{ float:right }
 .minwidth150Px{min-width:150px}
+.height50px{height:50px}
 
 .table-container{
 	padding:0 6px 0 0;
@@ -433,7 +434,7 @@ iframe.externalContent{
     border-radius: 50%;
     text-align: center;
 }
-.timeline-author-img {
+.timeline-author-img, .author-circle-img {
     border-radius: 50%;
     /* float: left; */
     width: 40px;
@@ -473,13 +474,9 @@ iframe.externalContent{
 /* publication list style */
 #publication-list .publication{
 	margin-bottom: 10px;
-	cursor:pointer;
 	border-left: 3px solid transparent;
-}
-#publication-list .publication{
-	margin-bottom: 10px;
-	cursor:pointer;
-	border-left: 3px solid transparent;
+	float:left;
+	min-height:80px;
 }
 #publication-list .publication.active, #publication-list .publication:hover{
 	background-color: #EBEBEB;
@@ -487,19 +484,32 @@ iframe.externalContent{
 #publication-list .publication.active{
 	border-left-color: #3c8dbc;
 }
-#publication-list .publication>.fa{
+#publication-list .publication>.nav{
+    width:35px;
+    float:left;
+    height:100%;
+    padding: 5px 0;
+}
+#publication-list .publication>.nav>.fa{
 	margin-left: 2px;
 	width: 30px;
     height: 30px;
     font-size: 15px;
     line-height: 30px;
-    background: #d2d6de;
     border-radius: 50%;
     text-align: center;
 }
+#publication-list .publication>.nav>.fa-edit{
+	color: #999;
+    margin-top: 10px;
+    background-color:#fff;
+    font-size: 16px;
+}
 #publication-list .publication>.detail {
-    margin-left: 35px;
-    margin-top: -30px;
+	cursor:pointer;
+    margin-left: 0;
+    float:left;
+    width:260px
 }
 #publication-list .publication>.detail>.title {
     display: block;
@@ -538,6 +548,8 @@ iframe.externalContent{
 	 padding:0;
 	 width:100%;
 	 min-height:34px;
+	 float: left;
+   	 margin-bottom: 15px;
 }
 
 .palm-tagsinput-focus {
@@ -555,7 +567,7 @@ iframe.externalContent{
 .palm-tagsinput>span:hover{
   	background-color:#efefef;
 }
-.palm-tagsinput>span.tag-item>i{
+.palm-tagsinput>span.tag-item>.fa-times{
 	cursor:pointer;
  	position: absolute;
     border: 1px solid #d2d6de;
@@ -576,4 +588,38 @@ iframe.externalContent{
 .palm-tagsinput input:focus{
   	border: none;
     outline: 0;
+}
+
+/* author filter style */
+.f-a-cont{
+	height:50px
+}
+.f-a-cont .fa-user, .tag-item .fa-user{
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    line-height: 30px;
+    background: #d2d6de;
+    border-radius: 50%;
+    text-align: center;
+    float: left;
+}
+.f-a-img{
+	float:left
+}
+.f-a-desc{
+	float: left;
+    margin: 0 0 0 6px;
+}
+.f-a-name, .f-a-aff{
+    max-height: 25px;
+    max-width: 190px;
+    white-space: nowrap;
+}
+.f-a-name{
+	text-transform: capitalize;
+	font-size: 15px;
+}
+.f-a-aff{
+	line-height: 14px;
 }
