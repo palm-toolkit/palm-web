@@ -8,12 +8,10 @@
 	    </div>
   	</div>
   	
-  	<div id="table-container-${wId}" class="table-container">
-	  <table id="conferenceTable" class="table table-condensed table-hover" style>
-	    <tbody>
-	  	</tbody>
-	  </table>
+	<div id="event-list">
     </div>
+    
+    
 </div>
 
 <div class="box-footer no-padding">
@@ -35,51 +33,53 @@
 	$( function(){
 	
 		// add slimscroll to table
-		$("#table-container-${wId}").slimscroll({
+		$("#event-list").slimscroll({
 			height: "100%",
-	        size: "3px"
+	        size: "3px",
+   			touchScrollStep: 30
 	    });
 	    
-	    // event for searching conference
+	    <#-- event for searching conference -->
 	    $( "#conference_search_field" )
 	    .on( "keypress", function(e) {
-			  if ( e.keyCode == 0 || e.keyCode == 13 || e.keyCode == 32 )
+			  if ( e.keyCode == 0 || e.keyCode == 13 /* || e.keyCode == 32 */ )
 			    conferenceSearch( $( this ).val() , "first");
 		}).on( "keydown", function(e) {
 			  if( e.keyCode == 8 || e.keyCode == 46 )
 			    if( $( "#conference_search_field" ).val().length == 0 )
 			    	conferenceSearch( $( this ).val() , "first");
 		});
-		// icon search presed
+		
+		<#-- icon search presed -->
 		$( "#conference_search_button" ).click( function(){
 			conferenceSearch( $( "#conference_search_field" ).val() , "first");
 		});
 		
-		// pagging next
+		<#-- pagging next -->
 		$( "li.toNext" ).click( function(){
 			if( !$( this ).hasClass( "disabled" ) )
 				conferenceSearch( $( "#conference_search_field" ).val() , "next");
 		});
 		
-		// pagging prev
+		<#-- pagging prev -->
 		$( "li.toPrev" ).click( function(){
 			if( !$( this ).hasClass( "disabled" ) )
 				conferenceSearch( $( "#conference_search_field" ).val() , "prev");
 		});
 		
-		// pagging to first
+		<#-- pagging to first -->
 		$( "li.toFirst" ).click( function(){
 			if( !$( this ).hasClass( "disabled" ) )
 				conferenceSearch( $( "#conference_search_field" ).val() , "first");
 		});
 		
-		// pagging to end
+		<#-- pagging to end -->
 		$( "li.toEnd" ).click( function(){
 			if( !$( this ).hasClass( "disabled" ) )
 				conferenceSearch( $( "#conference_search_field" ).val() , "end");
 		});
 		
-		// jump to specific page
+		<#-- jump to specific page -->
 		$( "select.page-number" ).change( function(){
 			conferenceSearch( $( "#conference_search_field" ).val() , $( this ).val() );
 		});
@@ -101,9 +101,9 @@
 							<#-- remove  pop up progress log -->
 							$.PALM.popUpMessage.remove( uniquePidVenueWidget );
 
-							var targetContainer = $( widgetElem ).find( "#conferenceTable" ).find("tbody");
-							// remove previous result
-							targetContainer.html( "" );
+							var eventListContainer = $( widgetElem ).find( "#event-list" );
+							<#-- remove previous result -->
+							eventListContainer.html( "" );
 							// remove any remaing tooltip
 							$( "body .tooltip" ).remove();
 							var $pageDropdown = $( widgetElem ).find( "select.page-number" );
@@ -112,20 +112,92 @@
 							if( data.count > 0 ){
 							
 								// build the conference table
-								$.each( data.conference, function( index, item){
-									var confType = item[ 'type' ].toLowerCase();
-									var confLabel = confType.charAt(0).toUpperCase() + confType.slice(1) + " " + item[ 'title' ] + " " + item[ 'year' ];
-									$( widgetElem ).find( "#conferenceTable" )
-									.find("tbody")
-									.append( "<tr><td class='venue-item' title='" + confLabel + "' data-original-title='" + confLabel + "' data-id='" + item[ 'id' ] + "' data-toggle='tooltip' data-placement='bottom' data-container='body'>" + confLabel + "</td></tr>" )
+								$.each( data.eventGroups, function( index, itemEvent ){
+									var eventItem = 
+										$('<div/>')
+										.addClass( "event" )
+										.attr({ "data-id": itemEvent.id });
+										
+									<#-- event menu -->
+									var eventNav = $( '<div/>' )
+										.attr({'class':'nav'});
+						
+									<#-- event icon -->
+									var eventIcon = $('<i/>');
+									if( typeof itemEvent.type !== "undefined" ){
+										if( itemEvent.type == "conference" )
+											eventIcon.addClass( "fa fa-file-text-o bg-blue" ).attr({ "title":"Conference" });
+										else if( itemEvent.type == "journal" )
+											eventIcon.addClass( "fa fa-files-o bg-red" ).attr({ "title":"Journal" });
+										else if( itemEvent.type == "book" )
+											eventIcon.addClass( "fa fa-book bg-green" ).attr({ "title":"Book" });
+									}else{
+										eventIcon.addClass( "fa fa-question bg-purple" ).attr({ "title":"Unknown event type" });
+									}
+									
+									eventNav.append( eventIcon );
+									
+									<#-- edit option -->
+									var eventEdit = $('<i/>')
+												.attr({
+													'class':'fa fa-edit', 
+													'title':'edit event',
+													'data-url':'<@spring.url '/event/edit' />' + '?id=' + itemEvent.id,
+													'style':'display:none'
+												});
+												
+									<#-- add click event to edit event -->
+									eventEdit.click( function( event ){
+										event.preventDefault();
+										$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Event");
+									});
+									
+									<#-- append edit  -->
+									eventNav.append( eventEdit );
+									
+									eventItem.append( eventNav );
+									
+									eventItem.hover(function()
+									{
+									     eventEdit.show();
+									}, function()
+									{ 
+									     eventEdit.hide();
+									});
+
+									<#-- event detail -->
+									var eventDetail = $('<div/>').addClass( "detail" );
+									<#-- title -->
+									var eventName = $('<div/>').addClass( "title" ).html( itemEvent.name );
+
+
+									<#-- append detail -->
+									eventDetail.append( eventName );
+
+									<#-- append to item -->
+									eventItem.append( eventDetail );
+									
+									<#-- event list on event group -->
+									eventItem.append( 
+										$('<div/>')
+										.attr({ "class":"event-year" })
+										.css({"width":"100%","float":"left"})
+									 );
+
+									<#-- add clcik event -->
+									eventDetail.on( "click", function(){
+										<#-- remove active class -->
+										$( this ).parent().siblings().removeClass( "active" );
+										$( this ).parent().addClass( "active" );
+										getVenueGroupDetails( $( this ).parent().data( 'id' ));
+									});
+									
+									eventListContainer.append( eventItem );
+									
 								});
 								var maxPage = Math.ceil(data.count/data.maxresult);
-
-								<#-- enable click -->
-								$( "td.venue-item" ).on( "click", function(){
-									getVenueDetails( $( this ).data( 'id' ));
-								} );
-
+						
+						
 								// set dropdown page
 								for( var i=1;i<=maxPage;i++){
 									$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
@@ -164,7 +236,7 @@
 		// adapt the height for first time
 		$(document).ready(function() {
 		    var bodyheight = $(window).height();
-		    $("#table-container-${wId}").height(bodyheight - 192);
+		    $("#event-list").height(bodyheight - 192);
 		});
 		
 		// first time on load, list 50 conferences
@@ -200,13 +272,95 @@
 				}
 					
 				if( jumpTo === "first") // if new searching performed
-					obj.options.source = "<@spring.url '/conference/search?query=' />" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
+					obj.options.source = "<@spring.url '/venue/search?query=' />" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult + "&source=all";
 				else
-					obj.options.source = "<@spring.url '/conference/search?query=' />" + obj.options.query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
+					obj.options.source = "<@spring.url '/venue/search?query=' />" + obj.options.query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
 					
 				$.PALM.boxWidget.refresh( obj.element , obj.options );
 			}
 		});
+	}
+	
+	<#-- when author list clciked --> 
+	function getVenueGroupDetails( venueId ){
+
+		<#-- show pop up progress log -->
+		var uniquePid = $.PALM.utility.generateUniqueId();
+		$.PALM.popUpMessage.create( "Fetch venue group details...", { uniqueId:uniquePid, popUpHeight:150, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
+		<#-- chack and fetch pzblication from academic network if necessary -->
+		$.getJSON( "<@spring.url '/venue/fetchGroup?id=' />" + venueId + "&pid=" + uniquePid + "&force=false", function( data ){
+			<#-- remove  pop up progress log -->
+			$.PALM.popUpMessage.remove( uniquePid );
+			
+			var containerList = $( "[data-id='" + venueId + "']" ).find( ".event-year" );
+			containerList.html( "" );
+			$.each( data.events, function( index, itemEvent ){
+				
+				var eventItem = 
+						$('<div/>')
+						.addClass( "event-item" )
+						.attr({ "data-id": itemEvent.id });
+						
+					<#-- event menu -->
+					var eventNav = $( '<div/>' )
+						.attr({'class':'nav'});
+					
+					<#-- edit option -->
+					var eventEdit = $('<i/>')
+								.attr({
+									'class':'fa fa-edit', 
+									'title':'edit event',
+									'data-url':'<@spring.url '/event/edit' />' + '?id=' + itemEvent.id,
+									'style':'display:none'
+								});
+								
+					<#-- add click event to edit event -->
+					eventEdit.click( function( event ){
+						event.preventDefault();
+						$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Event");
+					});
+					
+					<#-- append edit  -->
+					eventNav.append( eventEdit );
+					
+					eventItem.append( eventNav );
+					
+					eventItem.hover(function()
+					{
+					     eventEdit.show();
+					}, function()
+					{ 
+					     eventEdit.hide();
+					});
+
+					<#-- event detail -->
+					var eventDetail = $('<div/>').addClass( "detail" );
+					<#-- title -->
+					var eventName = $('<div/>').addClass( "title" ).html( itemEvent.name );
+
+
+					<#-- append detail -->
+					eventDetail.append( eventName );
+
+					<#-- append to item -->
+					eventItem.append( eventDetail );
+
+					<#-- add clcik event -->
+					eventDetail.on( "click", function(){
+						<#-- remove active class -->
+						$( this ).parent().siblings().removeClass( "active" );
+						$( this ).parent().addClass( "active" );
+						getVenueDetails( $( this ).parent().data( 'id' ));
+					});
+					
+					containerList.append( eventItem );
+				
+			});
+			
+		
+		}).fail(function() {
+   	 		$.PALM.popUpMessage.remove( uniquePid );
+  		});
 	}
 
 	<#-- when author list clciked --> 
@@ -241,6 +395,6 @@
 	<#--// for the window resize-->
 	$(window).resize(function() {
 	    var bodyheight = $(window).height();
-	    $("#table-container-${wId}").height(bodyheight - 192);
+	    $("#event-list").height(bodyheight - 192);
 	});
 </script>

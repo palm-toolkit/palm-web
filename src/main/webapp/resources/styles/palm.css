@@ -471,26 +471,26 @@ iframe.externalContent{
 
 /* End of pie chart style */
 
-/* publication list style */
-#publication-list .publication{
+/*  list style */
+#publication-list .publication, #event-list .event, .event-year>.event-item{
 	margin-bottom: 10px;
 	border-left: 3px solid transparent;
 	float:left;
 	min-height:80px;
 }
-#publication-list .publication.active, #publication-list .publication:hover{
+#publication-list .publication.active, #publication-list .publication:hover, #event-list .event>.detail.active, #event-list .event>.detail:hover, .event-year>.event-item:hover{
 	background-color: #EBEBEB;
 }
-#publication-list .publication.active{
+#publication-list .publication.active, #event-list .event.active{
 	border-left-color: #3c8dbc;
 }
-#publication-list .publication>.nav{
+#publication-list .publication>.nav, #event-list .event>.nav, .event-year>.event-item>.nav{
     width:35px;
     float:left;
     height:100%;
     padding: 5px 0;
 }
-#publication-list .publication>.nav>.fa{
+#publication-list .publication>.nav>.fa, #event-list .event>.nav>.fa, .event-year>.event-item>.nav>.fa{
 	margin-left: 2px;
 	width: 30px;
     height: 30px;
@@ -499,19 +499,25 @@ iframe.externalContent{
     border-radius: 50%;
     text-align: center;
 }
-#publication-list .publication>.nav>.fa-edit{
+#publication-list .publication>.nav>.fa-edit, #event-list .event>.nav>.fa-edit, .event-year>.event-item>fa-edit{
 	color: #999;
     margin-top: 10px;
     background-color:#fff;
     font-size: 16px;
 }
-#publication-list .publication>.detail {
+#publication-list .publication>.detail, #event-list .event>.detail, .event-year>.event-item>.detail {
 	cursor:pointer;
     margin-left: 0;
     float:left;
     width:260px
 }
-#publication-list .publication>.detail>.title {
+#event-list .event>.detail{
+	min-height: 80px;
+}
+.event-year>.event-item>.detail {
+    width:257px
+}
+#publication-list .publication>.detail>.title, #event-list .event>.detail>.title, .event-year>.event-item>.detail>.title {
     display: block;
     font-weight: 600;
     color: #3c8dbc;
