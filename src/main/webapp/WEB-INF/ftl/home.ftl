@@ -14,7 +14,7 @@
               <div class="info-box">
                 <span class="info-box-icon info-box-home-icon bg-aqua"><i class="fa fa-home fa-globe"></i></span>
                 <div class="info-box-content info-box-home-text">
-                  <span class="info-box-number fontsize24">VENUES</span>
+                  <span class="info-box-number fontsize24">CONFERENCES</span>
                 </div>
               </div>
             </a>

@@ -528,25 +528,43 @@ iframe.externalContent{
 #publication-list .publication>.detail>.venue {
     display: block;
 }
-#new-publication-circle{
+.new-circle{
 	position:fixed;
 	bottom:20px;
 	right:20px;
 	width: 50px;
     height: 50px;
+    border-radius: 50%;
+    cursor:pointer;
+    overflow:hidden;
 }
-#new-publication-circle .fa{
+.new-circle .fa-lg{
     width: 50px;
     height: 50px;
     font-size: 20px;
     line-height: 50px;
-    background: #d2d6de;
-    border-radius: 50%;
     text-align: center;
     display:block;
-    cursor:pointer;
 }
 
+.fa-stack-1x-left {
+    position: absolute;
+    left: -5px;
+    width: 100%;
+    line-height: 50px;
+    text-align: center;
+    font-size: 26px;
+}
+
+.fa-stack-1x-right {
+    position: absolute;
+    left: 14px;
+    width: 100%;
+    font-size: 16px;
+    line-height: 60px;
+    text-align: center;
+    font-weight: bold;
+}
 
 /* Tagging style */
 .palm-tagsinput{

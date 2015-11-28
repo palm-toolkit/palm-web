@@ -19,18 +19,19 @@
  	</@content.contentWrapper>
 
 	<#-- add new publication -->
-	<div id="new-publication-circle">
-		<i class="fa fa-plus bg-red shadow-dialog" data-url="<@spring.url '/publication/add' />" title="Add new publication"></i>
+	<div id="new-publication-circle" class="new-circle" title="Add new publication" data-url="<@spring.url '/publication/add' />">
+		<span class="fa-stack fa-lg bg-red">
+			<i class="fa fa-file-text-o fa-stack-1x-left"></i>
+			<i class="fa fa-plus fa-stack-1x-right"></i>
+		</span>
 	</div>
 
 <script>
 $(function(){
-
-	$( "#new-publication-circle>i" ).click( function( event ){
+	$( "#new-publication-circle" ).click( function( event ){
 		event.preventDefault();
 		$.PALM.popUpIframe.create( $(this).data("url") , {}, "Add New Publication");
 	});
-	
 });
 </script>
  	

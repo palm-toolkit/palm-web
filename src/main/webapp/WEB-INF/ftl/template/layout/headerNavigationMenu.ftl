@@ -1,5 +1,8 @@
+<li<#if link?? && link == "circle"> class="open"</#if>>
+	<a href="<@spring.url '/circle' />"><i class="fa fa-circle-o"></i><strong> Circles</strong></a>
+</li>
 <li<#if link?? && link == "venue"> class="open"</#if>>
-	<a href="<@spring.url '/venue' />"><i class="fa fa-globe"></i><strong> Venues</strong></a>
+	<a href="<@spring.url '/venue' />"><i class="fa fa-globe"></i><strong> Conferences</strong></a>
 </li>
 <li<#if link?? && link == "researcher"> class="open"</#if>>
 	<a href="<@spring.url '/researcher' />"><i class="fa fa-users"></i><strong> Researchers</strong></a>
