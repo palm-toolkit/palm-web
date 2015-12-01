@@ -7,73 +7,33 @@
  
   <!-- To enable JMX Management -->
   <jmxConfigurator/>
-  
-  	<property resource="application.properties" />
- 
+   
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			<pattern>%d{HH:mm:ss.SSS} %-5level | %logger - %msg%n</pattern>
 		</encoder>
 	</appender>
+	
+	<logger name="de.rwth" level="ALL" />
 
-	<appender name="GENERAL-FILE" class="ch.qos.logback.core.FileAppender">
-		<file>log-palm-general.log</file>
+	<appender name="PERSISTENCE_LOGGER_FILE" class="ch.qos.logback.core.FileAppender">
+		<file>log-palm-persistence.log</file>
 		
 		<encoder>
 			<pattern>%d{HH:mm:ss.SSS} %-5level | %logger{10} | %msg%n</pattern>
 		</encoder>
 	</appender>
 
-	<!-- contains ONLY INFO-level log messages -->
-	<appender name="INFO-FILE" class="ch.qos.logback.core.FileAppender">
-		<file>log-palm-info.log</file>
-		
-		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} %-5level | %logger{10} | %msg%n</pattern>
-		</encoder>
-		
-		<!-- ONLY INFO-level -->
-		<filter class="ch.qos.logback.classic.filter.LevelFilter">
-			<level>INFO</level>
-			<onMatch>ACCEPT</onMatch>
-			<onMismatch>DENY</onMismatch>
-		</filter>
-	</appender>
-
-	<!-- contains ONLY INFO- and DEBUG-level log messages -->
-	<appender name="DEBUG-FILE" class="ch.qos.logback.core.FileAppender">
-		<file>log-palm-debug.log</file>
-		
-		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} %-5level | %logger{10} | %msg%n</pattern>
-		</encoder>
-		
-		<!-- include INFO and below -->
-		<filter class="ch.qos.logback.classic.filter.LevelFilter">
-			<level>DEBUG</level>
-			<onMatch>ACCEPT</onMatch>
-			<onMismatch>DENY</onMismatch>
-		</filter>
-	</appender>
-
-	<logger name="de.rwth" level="ALL" additivity="false">
-		<appender-ref ref="CONSOLE" />
+	<logger name="de.rwth.i9.palm.persistence" level="debug">
+		<appender-ref ref="PERSISTENCE_LOGGER_FILE" />
 	</logger>
 	
-	<logger name="org.springframework" level="INFO" additivity="false">
-		<appender-ref ref="CONSOLE" />
-	</logger>
-	
-	<logger name="org.apache" level="INFO" additivity="false">
-		<appender-ref ref="CONSOLE" />
-	</logger>
+	<logger name="org.springframework" level="INFO" />
   
-	<logger name="org.hibernate" level="INFO" additivity="false">
-		<appender-ref ref="CONSOLE" />
-	</logger>
+	<logger name="org.hibernate" level="WARN" />
 
 	<!-- the root logger --> 
-	<root level="INFO" additivity="false">
+	<root level="WARN">
 		<appender-ref ref="CONSOLE" />
 	</root>
   
