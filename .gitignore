@@ -3,3 +3,4 @@
 .settings/
 /target/
 data_index/
+*.log
