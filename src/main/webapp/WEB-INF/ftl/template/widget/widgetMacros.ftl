@@ -42,7 +42,7 @@
 
 	<#-- The widget -->
 	<div id="widget-${wId}" class="${wClassContainer}">
-      <div class="${wClassBox}" <#if !headerVisible>style="border:none"</#if>>
+      <div class="${wClassBox}" <#if !headerVisible>style="border:none;margin:0"</#if>>
 		
 	<#if headerVisible>
         <div class="box-header with-border">

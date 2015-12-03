@@ -1,12 +1,14 @@
 <div class="box-body no-padding">
 	<div class="box-tools">
 	    <div class="input-group" style="width: 100%;">
-	      <input type="text" id="researcher_search_field" name="researcher_search_field" class="form-control input-sm pull-right" placeholder="Search">
+	      <input type="text" id="researcher_search_field" name="researcher_search_field" class="form-control input-sm pull-right" 
+	      placeholder="Search" value="<#if targetName??>${targetName!''}</#if>">
 	      <div id="researcher_search_button" class="input-group-btn">
 	        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
 	      </div>
 	    </div>
   	</div>
+  	
   	
   	<div id="table-container-${wId}" class="table-container">
 
@@ -30,6 +32,12 @@
 
 <script>
 	$( function(){
+		<#-- set target author id -->
+		<#if targetId??>
+			var targetId = "${targetId!''}";
+		<#else>
+			var targetId = "";
+		</#if>
 	
 		<#-- add slimscroll to table -->
 		$("#table-container-${wId}").slimscroll({
@@ -162,7 +170,11 @@
 									<#-- add clcik event -->
 									researcherDiv
 										.on( "click", function(){
-											getAuthorDetails( $( this ).attr( 'id' ));
+											if( item.isAdded ){
+												getAuthorDetails( item.id );
+											} else {
+												$.PALM.popUpIframe.create( "<@spring.url '/researcher/add' />?id=" + item.id + "&name=" + item.name , {popUpHeight:"416px"}, "Add " + item.name + " to PALM");
+											}
 										} );
 									
 									targetContainer
@@ -176,6 +188,22 @@
 											imageAuthor.css({ "left" : (52 - imageAuthor.width())/2 + "px" });
 										}
 									}, 1000);
+									
+									<#-- display first author detail -->
+									if( targetId == "" ){
+										if( index == 0 )
+											getAuthorDetails( item.id );
+									} else {
+										if( targetId == item.id ){
+											if( item.isAdded ){
+												getAuthorDetails( item.id );
+												targetId = "";
+											} else {
+												$.PALM.popUpIframe.create( "<@spring.url '/researcher/add' />?id=" + item.id + "&name=" + item.name , {popUpHeight:"416px"}, "Add " + item.name + " to PALM");
+											}
+										}
+									}
+
 								});
 								var maxPage = Math.ceil(data.count/data.maxresult);
 								var $pageDropdown = $( widgetElem ).find( "select.page-number" );
@@ -193,6 +221,8 @@
 								if( data.page == maxPage - 1 ) 
 								endRecord = data.count;
 								$( widgetElem ).find( "span.paging-info" ).html( "Displaying researchers " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.count );
+							
+								
 							}
 							else{
 								$pageDropdown.append("<option value='0'>0</option>");
@@ -221,7 +251,8 @@
 		});
 		
 		<#--// first time on load, list 50 researchers-->
-		$.PALM.boxWidget.refresh( $( "#widget-${wId}" ) , options );
+		//$.PALM.boxWidget.refresh( $( "#widget-${wId}" ) , options );
+		researcherSearch( $( "#researcher_search_field" ).val().trim() , "first");
 	});
 	
 	function researcherSearch( query , jumpTo ){
@@ -253,7 +284,7 @@
 				}
 				
 				if( jumpTo === "first") // if new searching performed
-					obj.options.source = "<@spring.url '/researcher/search?query=' />" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult + "&source=all";
+					obj.options.source = "<@spring.url '/researcher/search?query=' />" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
 				else
 					obj.options.source = "<@spring.url '/researcher/search?query=' />" + obj.options.query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
 				$.PALM.boxWidget.refresh( obj.element , obj.options );

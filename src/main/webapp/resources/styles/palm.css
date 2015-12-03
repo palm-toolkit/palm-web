@@ -128,8 +128,6 @@ iframe.externalContent{
 }
 
 .iframe-container,.dialog-content {
-    width: 90%;
-    height: 80%;
     max-width: 1000px;
     margin: 4% auto;
     /*background-color:#fff;*/

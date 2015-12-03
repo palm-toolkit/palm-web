@@ -687,6 +687,7 @@ $.PALM.popUpIframe = {
 		var popUpContainer = 
 			$( '<div/>' )
 	    	.addClass( o.popUpIframeClasses.dialogContent )
+	    	.css({width:o.popUpWidth, height:o.popUpHeight})
 	    	.append(
 	    		$( '<div/>' )
 	    	    .addClass( o.popUpIframeClasses.dialogCloseContainer )

@@ -139,7 +139,7 @@
 
 							<#-- name -->
 							var eachAuthorName = $( '<a/>' )
-												.attr({ "href" : "#"})
+												.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name})
 												.css({"padding" : "0 15px 0 5px"})
 												.html( authorItem.name );
 							eachAuthor.append( eachAuthorName );
