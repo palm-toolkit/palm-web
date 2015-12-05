@@ -246,12 +246,45 @@
    			inputElem.value="";
 		}
 		
+		$( "#affiliation" ).autocomplete({
+		    source: function (request, response) {
+		        $.ajax({
+		            url: "<@spring.url '/institution/search' />",
+		            dataType: "json",
+		            data: {
+						query: request.term
+					},
+		            success: function (data) {
+		            	if( data.count > 0 ){
+			                response($.map( data.institutions, function(v,i){
+			                    return {
+			                    		id: v.id,
+			                            label: v.name,
+			                            value: v.name,
+			                           };
+			                }));
+		                }
+		            }
+		        });
+		    },
+			minLength: 3,
+			select: function( event, ui ) {
+
+			},
+			open: function() {
+				$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+			},
+			close: function() {
+				$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+			}
+		});
+		
 		<#-- trigger autocomplete is there is value on name input -->
-		<#if author.name != "">
+		<#if author.name??>
 			$('#name').bind('focus', function(){ $(this).autocomplete("search"); } );
 			$('#name').val("${author.name}").focus();
-			var textToShow = $(id).find(":selected").text();
-   			$(id).parent().find("span").find("input").val(textToShow);
+			var textToShow = $('#name').find(":selected").text();
+   			$('#name').parent().find("span").find("input").val(textToShow);
 		</#if>
 	});
 

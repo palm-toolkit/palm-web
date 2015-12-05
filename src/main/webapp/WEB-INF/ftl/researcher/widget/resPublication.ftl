@@ -106,11 +106,14 @@
 						timelineTime.append( item.date );
 					}
 					timelineItem.append( timelineTime );
-
+					
+					<#-- clean non alpha numeric from title -->
+					var cleanTitle = item.title.replace(/[^\w\s]/gi, '');
+					
 					<#-- timeline header -->
 					var timelineHeader = $( '<h3/>' )
 						.addClass( "timeline-header" )
-						.append( "<strong>" + item.title + "</strong>" );
+						.append( "<strong><a href='<@spring.url '/publication' />?id=" + item.id + "&title=" + cleanTitle +"'>" + item.title + "</a></strong>" );
 					timelineItem.append( timelineHeader );
 
 					<#-- timeline body -->

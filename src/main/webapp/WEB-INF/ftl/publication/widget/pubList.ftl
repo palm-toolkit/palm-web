@@ -5,7 +5,8 @@
 
 		<div id="author_block">
 	    	<div class="input-group" id="author_search_block" style="width:100%">
-	      		<input type="text" id="author_search_field" name="author_search_field" class="form-control input-sm pull-right" placeholder="Search researcher from database">
+	      		<input type="text" id="author_search_field" name="author_search_field" class="form-control input-sm pull-right" 
+	      		placeholder="Search author on database"/>
 	      		<div id="publication_search_button" class="input-group-btn">
 	        		<button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
 	      		</div>
@@ -30,7 +31,8 @@
 	<#--  search block -->
 	<div class="box-tools">
 		<div class="input-group" style="width: 100%;">
-	      <input type="text" id="publication_search_field" name="publication_search_field" class="form-control input-sm pull-right" placeholder="Search publication from database">
+	      <input type="text" id="publication_search_field" name="publication_search_field" class="form-control input-sm pull-right" 
+	      placeholder="Search publication on database" value="<#if targetTitle??>${targetTitle!''}</#if>"/>
 	      <div id="publication_search_button" class="input-group-btn">
 	        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
 	      </div>
@@ -58,6 +60,12 @@
 
 <script>
 	$( function(){
+		<#-- set target author id -->
+		<#if targetId??>
+			var targetId = "${targetId!''}";
+		<#else>
+			var targetId = "";
+		</#if>
 	
 		<#-- add slimscroll to table -->
 		$("#publication-list").slimscroll({
@@ -220,6 +228,22 @@
 									});
 
 									publicationListContainer.append( publicationItem );
+								
+									<#-- display first publication detail -->
+									if( targetId == "" ){
+										if( index == 0 ){
+											pubDetail.parent().siblings().removeClass( "active" );
+											pubDetail.parent().addClass( "active" );
+											getPublicationDetails( itemPublication.id );
+										}
+									} else {
+										if( targetId == itemPublication.id ){
+											pubDetail.parent().siblings().removeClass( "active" );
+											pubDetail.parent().addClass( "active" );
+											getPublicationDetails( itemPublication.id );
+										}
+									}
+								
 								});
 								var maxPage = Math.ceil(data.count/data.maxresult);
 								
@@ -263,7 +287,8 @@
 		});
 		
 		<#--// first time on load, list 50 publications-->
-		$.PALM.boxWidget.refresh( $( "#widget-${wId}" ) , options );
+		//$.PALM.boxWidget.refresh( $( "#widget-${wId}" ) , options );
+		publicationSearch( $( "#publication_search_field" ).val()  , "first" );
 
 		<#-- autocomplete -->
 		$( "#author_search_block" ).autocomplete({

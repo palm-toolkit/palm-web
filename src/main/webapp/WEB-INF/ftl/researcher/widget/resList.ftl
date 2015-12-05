@@ -2,7 +2,7 @@
 	<div class="box-tools">
 	    <div class="input-group" style="width: 100%;">
 	      <input type="text" id="researcher_search_field" name="researcher_search_field" class="form-control input-sm pull-right" 
-	      placeholder="Search" value="<#if targetName??>${targetName!''}</#if>">
+	      placeholder="Search researchers on database" value="<#if targetName??>${targetName!''}</#if>">
 	      <div id="researcher_search_button" class="input-group-btn">
 	        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
 	      </div>
@@ -40,7 +40,7 @@
 		</#if>
 	
 		<#-- add slimscroll to table -->
-		$("#table-container-${wId}").slimscroll({
+		$("#table-container-${wId}, .content-wrapper>.content").slimscroll({
 			height: "100%",
 	        size: "3px"
 	    });
@@ -137,11 +137,17 @@
 											.addClass( 'palm_atr_name' )
 											.html( item.name )
 										);
-									if( typeof item.detail != 'undefined')
+										
+									if( !item.isAdded ){
+										researcherDiv.css("display","none");
+										data.count--;
+									}
+									
+									if( typeof item.status != 'undefined')
 										researcherDiv.append(
 											$( '<div/>' )
 											.addClass( 'palm_atr_dtl' )
-											.html( item.detail )
+											.html( item.status )
 										);
 									if( typeof item.aff != 'undefined')
 										researcherDiv.append(
@@ -248,6 +254,7 @@
 		$(document).ready(function() {
 		    var bodyheight = $(window).height();
 		    $("#table-container-${wId}").height(bodyheight - 192);
+		    $(".content-wrapper").height(bodyheight);
 		});
 		
 		<#--// first time on load, list 50 researchers-->
@@ -325,5 +332,6 @@
 	$(window).resize(function() {
 	    var bodyheight = $(window).height();
 	    $("#table-container-${wId}").height(bodyheight - 192);
+	    $(".content-wrapper").height(bodyheight);
 	});
 </script>

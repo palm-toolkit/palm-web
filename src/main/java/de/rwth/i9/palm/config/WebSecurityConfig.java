@@ -64,7 +64,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
             			"/register", 
             			"/venue/**", 
             			"/researcher/**", 
-            			"/publication/**", 
+            			"/publication/**",
+            			"/institution/**", 
             			"/sparqlview/**",
             			"/admin/**" 
             			)

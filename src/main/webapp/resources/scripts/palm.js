@@ -268,12 +268,12 @@ $.PALM.layout = {
     //Set the min-height of the content and sidebar based on the
     //the height of the document.
     if ($("body").hasClass("fixed")) {
-      $(".content-wrapper, .right-side").css('min-height', window_height - $('.main-footer').outerHeight());
+      //$(".content-wrapper, .right-side").css('min-height', window_height - $('.main-footer').outerHeight());
     } else {
       if (window_height >= sidebar_height) {
-        $(".content-wrapper, .right-side").css('min-height', window_height - neg);
+        //$(".content-wrapper, .right-side").css('min-height', window_height - neg);
       } else {
-        $(".content-wrapper, .right-side").css('min-height', sidebar_height);
+        //$(".content-wrapper, .right-side").css('min-height', sidebar_height);
       }
     }
   },
@@ -473,7 +473,15 @@ $.PALM.boxWidget = {
     
   },
   moveable: function ( handleSelector ) {
-	 $( "section.content .row" ).sortable({
+	 // $.PALM.gridster = $("section.content>.row").gridster({
+     //     widget_base_dimensions: [200, 200],
+     //     widget_margins: [5, 5],
+          //draggable: {
+          //  handle: handleSelector
+          //}
+     //   }).data('gridster');
+	  
+	  $.PALM.boxWidget.sortable = $( "section.content .row" ).sortable({
 	   connectWith: "section.content .row",
 	   handle: handleSelector,
 	   cursor: "move",
@@ -483,6 +491,7 @@ $.PALM.boxWidget = {
            ui.placeholder.width(ui.helper.outerWidth() - 30);
        }
 	  });
+	  
   },
   collapse: function (element) {
     //Find the box parent

@@ -93,43 +93,32 @@
 					.addClass( "palm_label" )
 					.html( "Coauthor :" );
 
-				var pubCoauthorContainer =
-					$('<div/>')
-					.addClass( "palm_pub_coauthor_ctr" );
-									
-				$.each( data.publication.coauthor, function( index, eachauthor){
-					var eachAuthor =
-						$( '<div/>' )
-							.addClass( 'palm_pub_atr' )
-							.attr({ 'id' : eachauthor.id })
-							.append(
-								$( '<div/>' )
-								.addClass( 'palm_pub_atr_photo fa fa-user' )
-							).append(
-								$( '<div/>' )
-								.addClass( 'palm_atr_name' )
-								.html( eachauthor.name )
-							);
+				var pubCoauthorContainer = $( '<div/>' );
 
-					if( typeof eachauthor.aff != 'undefined')
-						eachAuthor.append(
-							$( '<div/>' )
-								.addClass( 'palm_atr_aff' )
-								.html( eachauthor.aff )
-							);
-					if( typeof eachauthor.photo != 'undefined'){
-						eachAuthor
-							.find( '.palm_pub_atr_photo' )
-							.removeClass( "fa fa-user" )
-							.css({ 'font-size':'14px'})
-							.append(
-								$( '<img/>' )
-									.attr({ 'src' : eachauthor.photo })
-									.addClass( "palm_pub_atr_img" )
-							);
+				$.each( data.publication.coauthor, function( index, authorItem ){
+					var eachAuthor = $( '<span/>' );
+					
+					<#-- photo -->
+					var eachAuthorImage = null;
+					if( typeof authorItem.photo !== 'undefined' ){
+						eachAuthorImage = $( '<img/>' )
+							.addClass( "timeline-author-img" )
+							.attr({ "width":"40px" , "src" : authorItem.photo , "alt" : authorItem.name });
+					} else {
+						eachAuthorImage = $( '<i/>' )
+							.addClass( "fa fa-user bg-aqua" )
+							.attr({ "title" : authorItem.name });
 					}
-					<#-- put click action here -->
-					pubCoauthorContainer.append( eachAuthor)
+					eachAuthor.append( eachAuthorImage );
+
+					<#-- name -->
+					var eachAuthorName = $( '<a/>' )
+										.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name})
+										.css({"padding" : "0 15px 0 5px"})
+										.html( authorItem.name );
+					eachAuthor.append( eachAuthorName );
+					
+					pubCoauthorContainer.append( eachAuthor );
 				});
 
 				pubCoauthor

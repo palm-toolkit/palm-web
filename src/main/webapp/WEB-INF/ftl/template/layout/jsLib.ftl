@@ -10,6 +10,10 @@
 <#-- jQuery fileupload -->
 <script src="<@spring.url '/resources/scripts/jquery.fileupload.js' />" type="text/javascript"></script>
 
+<#-- gridster -->
+<#--
+<script src="<@spring.url '/resources/plugins/gridster/jquery.gridster.js' />" type="text/javascript"></script>
+-->
 <#-- jQuery UI 1.11.4 -->
 <script src="<@spring.url '/resources/plugins/jQueryUI/jquery-ui.min.js' />" type="text/javascript"></script>
 

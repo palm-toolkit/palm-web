@@ -1,4 +1,4 @@
-<div id="boxbody${wId}" class="box-body">
+<div id="boxbody${wId}" class="box-body" style="height:300px;overflow:hidden">
 	researcher interest evolution
 </div>
 
@@ -8,10 +8,10 @@
 <script>
 	$( function(){
 		<#-- add slimscroll to widget body -->
-		$("#boxbody${wId}").slimscroll({
-			height: "250px",
-	        size: "3px"
-	    });
+//		$("#boxbody${wId}").slimscroll({
+//			height: "300px",
+//	        size: "3px"
+//	    });
 
 				<#-- set widget unique options -->
 		var options ={
@@ -164,7 +164,14 @@ function getYearFromLanguage( languageIndex ){
 	}
 }
 
+<#-- Most of this code is copied from internet -->
+<#-- forgot the source url though...  -->
 function visualizeInterest( yearIndex , yearType ){
+
+	var mainContainer = $("#widget-${wId}").find( ".box-body" );
+	<#-- remove previous svg if exist -->
+	mainContainer.find( ".svg-container").remove();
+	
 	if( yearType == "startyear"){
 		if( dataPointer.dataYearEnd < yearIndex ){
 			dataPointer.dataYearEnd = yearIndex;
@@ -234,6 +241,23 @@ function compareTermWord( a, b){
 }
 					
 function visualizeStreamChart( data ){
+
+var fill = d3.scale.category20();
+
+// Define the div for the tooltip
+//var div = d3.select("body").append("div")	
+//    .attr("class", "d3-tooltip")				
+//    .style("opacity", 0);
+
+var tooltip = d3.select("#widget-${wId} .box-body")
+    .append("div")
+    .attr("class", "remove")
+    .style("position", "absolute")
+    .style("z-index", "20")
+    .style("visibility", "hidden")
+    .style("top", "80px")
+    .style("left", "80px")
+    .style("font-weight", "bold");
 	
 margin = {top: 20, right: 20, bottom: 20, left: 30};
     width = 550 - margin.left - margin.right;
@@ -279,11 +303,24 @@ margin = {top: 20, right: 20, bottom: 20, left: 30};
         .y0(function(d) { return y(d.y0); })
         .y1(function(d) { return y(d.y0 + d.y); });
 
-    svg = d3.select("#widget-${wId} .box-body").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    svg = d3
+    .select("#widget-${wId} .box-body")
+     .append("div")
+      .classed("svg-container", true) //container class to make it responsive
+      .append("svg")
+	  //responsive SVG needs these 2 attributes and no width and height attr
+//   	  .attr("preserveAspectRatio", "xMinYMin meet")
+//      .attr("viewBox", "0 0 " + width + " " + height)
+      //class to make it responsive
+//      .classed("svg-content-responsive", true)
+      //.attr("width", width)
+      //.attr("height", height)
+	  .attr( "id", "interestCloud")
+    //.append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         
     layers = stack(nest.entries(data));
 
@@ -295,7 +332,52 @@ margin = {top: 20, right: 20, bottom: 20, left: 30};
           .enter().append("path")
           .attr("class", "layer")
           .attr("d", function(d) { return area(d.values); })
-          .style("fill", function(d, i) { return z(i); });
+          //.style("fill", function(d, i) { return z(i); });
+          .style("fill", function(d, i) { return fill(i); })
+      	  .style( "cursor", "pointer" )
+		 /* .on("mouseover", function(d) {		
+            div.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            div	.html( "test"  + d.close);	
+               // .style("left", (d3.event.pageX) + "px")		
+               // .style("top", (d3.event.pageY - 28) + "px");	
+            })					
+        .on("mouseout", function(d) {		
+            div.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
+        });*/
+        
+        .on("mouseover", function(d, i) {
+      svg.selectAll(".layer").transition()
+      .duration(250)
+      .attr("opacity", function(d, j) {
+        return j != i ? 0.6 : 1;
+    })})
+
+    .on("mousemove", function(d, i) {
+      mousex = d3.mouse(this);
+      mousex = mousex[0];
+      var invertedx = x.invert(mousex);
+      invertedx = invertedx.getMonth() + invertedx.getDate();
+
+      d3.select(this)
+      .classed("hover", true)
+      .attr("stroke", "#000")
+      .attr("stroke-width", "0.5px"), 
+      tooltip.html( "<p>" + d.key + "</p>" ).style("visibility", "visible");
+      
+    })
+    .on("mouseout", function(d, i) {
+     svg.selectAll(".layer")
+      .transition()
+      .duration(250)
+      .attr("opacity", "1");
+      d3.select(this)
+      .classed("hover", false)
+      .attr("stroke-width", "0px"), tooltip.html( "<p>" + d.key + "</p>" ).style("visibility", "hidden");
+  })
 
     svg.append("g")
         .attr("class", "x axis")
@@ -309,6 +391,7 @@ margin = {top: 20, right: 20, bottom: 20, left: 30};
 
     svg.append("g")
           .attr("class", "y axis")
+          .attr("transform", "translate(30, 0)")
           .call(yAxis.orient("left"));
 
 
@@ -365,7 +448,9 @@ margin = {top: 20, right: 20, bottom: 20, left: 30};
 		    .y0(function(d) { return y(d.y0); })
 		    .y1(function(d) { return y(d.y0 + d.y); });
 		
-		var svg = d3.select("#widget-${wId} .box-body").append("svg")
+		var svg = d3
+			.select("#widget-${wId} .box-body")
+			.append("svg")
 		    .attr("width", width + margin.left + margin.right)
 		    .attr("height", height + margin.top + margin.bottom)
 			.attr( "id", "streamChart")
@@ -389,14 +474,47 @@ margin = {top: 20, right: 20, bottom: 20, left: 30};
 		      .attr("class", "layer")
 		      .attr("d", function(d) { return area(d.values); })
 		      .style("fill","black")
-		      .on("mouseover", function(d) {
-		   				d3.select(this)
-		   				.style("opacity", 1.0)
-		  		})
-			.on("mouseout", function() {
-				  d3.select(this)
-				  .style("opacity", 0.8)
-				  });
+		  
+			.on("mouseover", function(d, i) {
+			      svg.selectAll(".layer").transition()
+			      .duration(250)
+			      .attr("opacity", function(d, j) {
+			        return j != i ? 0.6 : 1;
+			    })})
+
+		    .on("mousemove", function(d, i) {
+		      mousex = d3.mouse(this);
+		      mousex = mousex[0];
+		      var invertedx = x.invert(mousex);
+		      invertedx = invertedx.getMonth() + invertedx.getDate();
+		      var selected = (d.values);
+		      for (var k = 0; k < selected.length; k++) {
+		        datearray[k] = selected[k].date
+		        datearray[k] = datearray[k].getMonth() + datearray[k].getDate();
+		      }
+		
+		      mousedate = datearray.indexOf(invertedx);
+		      pro = d.values[mousedate].value;
+		
+		      d3.select(this)
+		      .classed("hover", true)
+		      .attr("stroke", strokecolor)
+		      .attr("stroke-width", "0.5px"), 
+		      tooltip.html( "<p>" + d.key + "<br>" + pro + "</p>" ).style("visibility", "visible");
+		      
+		    })
+		    .on("mouseout", function(d, i) {
+		     svg.selectAll(".layer")
+		      .transition()
+		      .duration(250)
+		      .attr("opacity", "1");
+		      d3.select(this)
+		      .classed("hover", false)
+		      .attr("stroke-width", "0px"), tooltip.html( "<p>" + d.key + "<br>" + pro + "</p>" ).style("visibility", "hidden");
+		  });  
+				  
+				  
+				  
 			dataLayerEnter.append("title").text(function(d) {return d.key+": "+"[2008:"+d.values[0].value+"]"+"[2009:"+d.values[1].value+"]"+"[2010:"+d.values[2].value+"]"+"[2011:"+d.values[3].value+"]"+"[2012:"+d.values[4].value+"]"+"[2013:"+d.values[5].value+"]"+" papers"});	  				 
 					  		
 		

@@ -19,6 +19,11 @@
 <#--icheck style -->
 <link href="<@spring.url '/resources/plugins/icheck/square/blue.css' />" rel="stylesheet" type="text/css" />
 
+<#-- gridster style -->
+<#--
+<link href="<@spring.url '/resources/plugins/gridster/jquery.gridster.css' />" rel="stylesheet" type="text/css" />
+-->
+
 <#-- jQUeryUi -->
 <link href="<@spring.url '/resources/plugins/jQueryUI/jquery-ui.min.css' />" rel="stylesheet" type="text/css" />
 
