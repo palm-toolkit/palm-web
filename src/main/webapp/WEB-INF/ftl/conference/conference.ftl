@@ -30,7 +30,7 @@
 $(function(){
 	$( "#new-event-circle" ).click( function( event ){
 		event.preventDefault();
-		$.PALM.popUpIframe.create( $(this).data("url") , {}, $(this).attr("title") );
+		$.PALM.popUpIframe.create( $(this).data("url") , { "popUpHeight":"430px"}, $(this).attr("title") );
 	});
 });
 </script>

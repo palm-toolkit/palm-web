@@ -1,14 +1,15 @@
 <div class="box-body no-padding">
 	<div class="box-tools">
 	    <div class="input-group" style="width: 100%;">
-	      <input type="text" id="conference_search_field" name="conference_search_field" class="form-control input-sm pull-right" placeholder="Search">
+	      <input type="text" id="conference_search_field" name="conference_search_field" 
+	      class="form-control input-sm pull-right" value="<#if targetName??>${targetName!''}</#if>" placeholder="Search conference/journal on database">
 	      <div id="conference_search_button" class="input-group-btn">
 	        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
 	      </div>
 	    </div>
   	</div>
   	
-	<div id="event-list">
+	<div class="content-list">
     </div>
     
     
@@ -31,14 +32,39 @@
 
 <script>
 	$( function(){
-	
-		// add slimscroll to table
-		$("#event-list").slimscroll({
-			height: "100%",
-	        size: "3px",
-   			touchScrollStep: 30
-	    });
-	    
+	    <#-- add conference object -->
+		var eventObj = {};
+		<#if targetId??>
+			eventObj.id = "${targetId!''}";
+		</#if>
+		<#if targetEventId??>
+			eventObj.eventId = "${targetEventId!''}";
+		</#if>
+		<#if targetName??>
+			eventObj.name = "${targetName!''}";
+		</#if>
+		<#if targetType??>
+			eventObj.type = "${targetType!''}";
+		</#if>
+		<#if targetYear??>
+			eventObj.year = "${targetYear!''}";
+		</#if>
+		<#if targetVolume??>
+			eventObj.volume = "${targetVolume!''}";
+		</#if>
+		<#if publicationId??>
+			eventObj.publicationId = "${publicationId!''}";
+		</#if>
+		
+		
+		<#-- add slim scroll -->
+	      $(".content-list, .content-wrapper>.content").slimscroll({
+				height: "100%",
+		        size: "3px",
+	        	allowPageScroll: true,
+	   			touchScrollStep: 50
+		  });
+	  
 	    <#-- event for searching conference -->
 	    $( "#conference_search_field" )
 	    .on( "keypress", function(e) {
@@ -101,7 +127,7 @@
 							<#-- remove  pop up progress log -->
 							$.PALM.popUpMessage.remove( uniquePidVenueWidget );
 
-							var eventListContainer = $( widgetElem ).find( "#event-list" );
+							var eventListContainer = $( widgetElem ).find( ".content-list" );
 							<#-- remove previous result -->
 							eventListContainer.html( "" );
 							// remove any remaing tooltip
@@ -149,7 +175,7 @@
 									<#-- add click event to edit event -->
 									eventEdit.click( function( event ){
 										event.preventDefault();
-										$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Event");
+										$.PALM.popUpIframe.create( $(this).data("url") , { "popUpHeight":"430px"}, "Edit Event");
 									});
 									
 									<#-- append edit  -->
@@ -194,6 +220,31 @@
 									
 									eventListContainer.append( eventItem );
 									
+									
+									<#-- display first conference detail -->
+									if( itemEvent.isAdded ){
+										if( ( typeof eventObj.id == "undefined" || eventObj.id == "" ) && eventObj.id == itemEvent.id ){
+											getVenueGroupDetails( eventObj.id );
+											eventObj.id = "";
+										}
+										else{
+											if( index == 0 )
+												getVenueGroupDetails( itemEvent.id );
+										}
+									} else {
+										var eventUrl = "<@spring.url '/venue/add' />?eventId=" + eventObj.eventId + "&type=" + eventObj.type + "&name=" + eventObj.name;
+										if( typeof eventObj.volume !== "undefined" ){
+											eventUrl += "&volume=" + eventObj.volume;
+										}
+										if( typeof eventObj.year !== "undefined" ){
+											eventUrl += "&year=" + eventObj.year;
+										}
+										if( typeof eventObj.publicationId !== "undefined" ){
+											eventUrl += "&publicationId=" + eventObj.publicationId;
+										}
+										$.PALM.popUpIframe.create( eventUrl, { "popUpHeight":"430px"} , "Add New Conference/Journal to PALM");
+									}
+									
 								});
 								var maxPage = Math.ceil(data.count/data.maxresult);
 						
@@ -219,6 +270,31 @@
 								$( widgetElem ).find( "span.paging-info" ).html( "Displaying researchers 0 - 0 of 0" );
 								$( widgetElem ).find( "li.toNext" ).addClass( "disabled" );
 								$( widgetElem ).find( "li.toEnd" ).addClass( "disabled" );
+								
+								<#-- pop up iframe when eventObj.id and eventObj.type exist -->
+								var eventUrl = "<@spring.url '/venue/add?' />";
+								if( typeof eventObj.eventId !== "undefined" ){
+									eventUrl += "eventId=" + eventObj.eventId + "&";
+								}
+								if( typeof eventObj.name !== "undefined" ){
+									eventUrl += "name=" + eventObj.name + "&";
+								}
+								if( typeof eventObj.type !== "undefined" ){
+									eventUrl += "type=" + eventObj.type + "&";
+								}
+								if( typeof eventObj.volume !== "undefined" ){
+									eventUrl += "volume=" + eventObj.volume + "&";
+								}
+								if( typeof eventObj.year !== "undefined" ){
+									eventUrl += "year=" + eventObj.year + "&";
+								}
+								if( typeof eventObj.publicationId !== "undefined" ){
+									eventUrl += "publicationId=" + eventObj.publicationId;
+								}
+								if( typeof eventObj.name !== "undefined" && eventObj.name != "" ){
+									$.PALM.popUpIframe.create( eventUrl, {popUpHeight:"430px"}, "Add New Conference/Journal to PALM");
+									eventObj.name = "";
+								}
 							}
 						}
 		};
@@ -233,168 +309,168 @@
 			"options": options
 		});
 		
-		// adapt the height for first time
-		$(document).ready(function() {
-		    var bodyheight = $(window).height();
-		    $("#event-list").height(bodyheight - 192);
-		});
-		
-		// first time on load, list 50 conferences
-		$.PALM.boxWidget.refresh( $( "#widget-${wId}" ) , options );
-	});
+		<#--// first time on load, list 50 conferences-->
+		//$.PALM.boxWidget.refresh( $( "#widget-${wId}" ) , options );
+		conferenceSearch( $( "#conference_search_field" ).val().trim() , "first");
 	
-	function conferenceSearch( query , jumpTo ){
-		//find the element option
-		$.each( $.PALM.options.registeredWidget, function(index, obj){
-			if( obj.type === "CONFERENCE" && obj.group === "sidebar" ){
-				var maxPage = parseInt($( obj.element ).find( "span.total-page" ).html()) - 1;
-				if( jumpTo === "next")
-					obj.options.page = obj.options.page + 1;
-				else if( jumpTo === "prev")
-					obj.options.page = obj.options.page - 1;
-				else if( jumpTo === "first")
-					obj.options.page = 0;
-				else if( jumpTo === "end")
-					obj.options.page = maxPage;
-				else
-					obj.options.page = parseInt( jumpTo ) - 1;
-					
-				$( obj.element ).find( ".paginate_button" ).each(function(){
-					$( this ).removeClass( "disabled" );
-				});
-								
-				if( obj.options.page === 0 ){
-					$( obj.element ).find( "li.toFirst" ).addClass( "disabled" );
-					$( obj.element ).find( "li.toPrev" ).addClass( "disabled" );
-				} else if( obj.options.page > maxPage - 1){
-					$( obj.element ).find( "li.toNext" ).addClass( "disabled" );
-					$( obj.element ).find( "li.toEnd" ).addClass( "disabled" );
-				}
-					
-				if( jumpTo === "first") // if new searching performed
-					obj.options.source = "<@spring.url '/venue/search?query=' />" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult + "&source=all";
-				else
-					obj.options.source = "<@spring.url '/venue/search?query=' />" + obj.options.query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
-					
-				$.PALM.boxWidget.refresh( obj.element , obj.options );
-			}
-		});
-	}
 	
-	<#-- when author list clciked --> 
-	function getVenueGroupDetails( venueId ){
-
-		<#-- show pop up progress log -->
-		var uniquePid = $.PALM.utility.generateUniqueId();
-		$.PALM.popUpMessage.create( "Fetch venue group details...", { uniqueId:uniquePid, popUpHeight:150, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
-		<#-- chack and fetch pzblication from academic network if necessary -->
-		$.getJSON( "<@spring.url '/venue/fetchGroup?id=' />" + venueId + "&pid=" + uniquePid + "&force=false", function( data ){
-			<#-- remove  pop up progress log -->
-			$.PALM.popUpMessage.remove( uniquePid );
-			
-			var containerList = $( "[data-id='" + venueId + "']" ).find( ".event-year" );
-			containerList.html( "" );
-			$.each( data.events, function( index, itemEvent ){
-				
-				var eventItem = 
-						$('<div/>')
-						.addClass( "event-item" )
-						.attr({ "data-id": itemEvent.id });
-						
-					<#-- event menu -->
-					var eventNav = $( '<div/>' )
-						.attr({'class':'nav'});
-					
-					<#-- edit option -->
-					var eventEdit = $('<i/>')
-								.attr({
-									'class':'fa fa-edit', 
-									'title':'edit event',
-									'data-url':'<@spring.url '/event/edit' />' + '?id=' + itemEvent.id,
-									'style':'display:none'
-								});
-								
-					<#-- add click event to edit event -->
-					eventEdit.click( function( event ){
-						event.preventDefault();
-						$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Event");
-					});
-					
-					<#-- append edit  -->
-					eventNav.append( eventEdit );
-					
-					eventItem.append( eventNav );
-					
-					eventItem.hover(function()
-					{
-					     eventEdit.show();
-					}, function()
-					{ 
-					     eventEdit.hide();
-					});
-
-					<#-- event detail -->
-					var eventDetail = $('<div/>').addClass( "detail" );
-					<#-- title -->
-					var eventName = $('<div/>').addClass( "title" ).html( itemEvent.name );
-
-
-					<#-- append detail -->
-					eventDetail.append( eventName );
-
-					<#-- append to item -->
-					eventItem.append( eventDetail );
-
-					<#-- add clcik event -->
-					eventDetail.on( "click", function(){
-						<#-- remove active class -->
-						$( this ).parent().siblings().removeClass( "active" );
-						$( this ).parent().addClass( "active" );
-						getVenueDetails( $( this ).parent().data( 'id' ));
-					});
-					
-					containerList.append( eventItem );
-				
-			});
-			
-		
-		}).fail(function() {
-   	 		$.PALM.popUpMessage.remove( uniquePid );
-  		});
-	}
-
-	<#-- when author list clciked --> 
-	function getVenueDetails( venueId ){
-		<#-- put loading overlay -->
-    	$.each( $.PALM.options.registeredWidget, function(index, obj){
-				if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
-					obj.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
-				}
-			});
-
-		<#-- show pop up progress log -->
-		var uniquePid = $.PALM.utility.generateUniqueId();
-		$.PALM.popUpMessage.create( "Fetch venue details...", { uniqueId:uniquePid, popUpHeight:150, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
-		<#-- chack and fetch pzblication from academic network if necessary -->
-		$.getJSON( "<@spring.url '/venue/fetch?id=' />" + venueId + "&pid=" + uniquePid + "&force=false", function( data ){
-			<#-- remove  pop up progress log -->
-			$.PALM.popUpMessage.remove( uniquePid );
-			<#-- refresh registered widget -->
+		function conferenceSearch( query , jumpTo ){
+			//find the element option
 			$.each( $.PALM.options.registeredWidget, function(index, obj){
-				if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
-					obj.options.queryString = "?id=" + venueId;
+				if( obj.type === "CONFERENCE" && obj.group === "sidebar" ){
+					var maxPage = parseInt($( obj.element ).find( "span.total-page" ).html()) - 1;
+					if( jumpTo === "next")
+						obj.options.page = obj.options.page + 1;
+					else if( jumpTo === "prev")
+						obj.options.page = obj.options.page - 1;
+					else if( jumpTo === "first")
+						obj.options.page = 0;
+					else if( jumpTo === "end")
+						obj.options.page = maxPage;
+					else
+						obj.options.page = parseInt( jumpTo ) - 1;
+						
+					$( obj.element ).find( ".paginate_button" ).each(function(){
+						$( this ).removeClass( "disabled" );
+					});
+									
+					if( obj.options.page === 0 ){
+						$( obj.element ).find( "li.toFirst" ).addClass( "disabled" );
+						$( obj.element ).find( "li.toPrev" ).addClass( "disabled" );
+					} else if( obj.options.page > maxPage - 1){
+						$( obj.element ).find( "li.toNext" ).addClass( "disabled" );
+						$( obj.element ).find( "li.toEnd" ).addClass( "disabled" );
+					}
+						
+					if( jumpTo === "first") // if new searching performed
+						obj.options.source = "<@spring.url '/venue/search?query=' />" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult + "&source=internal" + ( typeof eventObj.type !== 'undefined' ? "&type=" + eventObj.type : "");
+					else
+						obj.options.source = "<@spring.url '/venue/search?query=' />" + obj.options.query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult + "&source=internal" + ( typeof eventObj.type !== 'undefined' ? "&type=" + eventObj.type : "");
+						
 					$.PALM.boxWidget.refresh( obj.element , obj.options );
 				}
 			});
+		}
 		
-		}).fail(function() {
-   	 		$.PALM.popUpMessage.remove( uniquePid );
-  		});
-	}
+		<#-- when author list clciked --> 
+		function getVenueGroupDetails( venueId ){
 	
-	<#--// for the window resize-->
-	$(window).resize(function() {
-	    var bodyheight = $(window).height();
-	    $("#event-list").height(bodyheight - 192);
+			<#-- show pop up progress log -->
+			var uniquePid = $.PALM.utility.generateUniqueId();
+			$.PALM.popUpMessage.create( "Fetch venue group details...", { uniqueId:uniquePid, popUpHeight:150, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
+			<#-- chack and fetch pzblication from academic network if necessary -->
+			$.getJSON( "<@spring.url '/venue/fetchGroup?id=' />" + venueId + "&pid=" + uniquePid + "&force=false", function( data ){
+				<#-- remove  pop up progress log -->
+				$.PALM.popUpMessage.remove( uniquePid );
+				
+				var containerList = $( "[data-id='" + venueId + "']" ).find( ".event-year" );
+				containerList.html( "" );
+				$.each( data.events, function( index, itemEvent ){
+					
+					var eventItem = 
+							$('<div/>')
+							.addClass( "event-item" )
+							.attr({ "data-id": itemEvent.id });
+							
+						<#-- event menu -->
+						var eventNav = $( '<div/>' )
+							.attr({'class':'nav'});
+						
+						<#-- edit option -->
+						var eventEdit = $('<i/>')
+									.attr({
+										'class':'fa fa-edit', 
+										'title':'edit event',
+										'data-url':'<@spring.url '/event/edit' />' + '?id=' + itemEvent.id,
+										'style':'display:none'
+									});
+									
+						<#-- add click event to edit event -->
+						eventEdit.click( function( event ){
+							event.preventDefault();
+							$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Event");
+						});
+						
+						<#-- append edit  -->
+						eventNav.append( eventEdit );
+						
+						eventItem.append( eventNav );
+						
+						eventItem.hover(function()
+						{
+						     eventEdit.show();
+						}, function()
+						{ 
+						     eventEdit.hide();
+						});
+	
+						<#-- event detail -->
+						var eventDetail = $('<div/>').addClass( "detail" );
+						<#-- title -->
+						var eventName = $('<div/>').addClass( "title" ).html( itemEvent.name );
+						
+						if( !itemEvent.isAdded )
+							eventName.addClass( "grey-content" );
+						else{
+							if( ( typeof eventObj.eventId != "undefined" && eventObj.eventId != "" ) && eventObj.eventId == itemEvent.id ){
+								getVenueDetails( eventObj.eventId );
+								eventObj.eventId = "";
+							}
+						}
+						<#-- append detail -->
+						eventDetail.append( eventName );
+	
+						<#-- append to item -->
+						eventItem.append( eventDetail );
+	
+						<#-- add clcik event -->
+						eventDetail.on( "click", function(){
+							<#-- remove active class -->
+							$( this ).parent().siblings().removeClass( "active" );
+							$( this ).parent().addClass( "active" );
+							getVenueDetails( $( this ).parent().data( 'id' ));
+						});
+						
+						containerList.append( eventItem );
+						
+						
+						
+					
+				});
+				
+			
+			}).fail(function() {
+	   	 		$.PALM.popUpMessage.remove( uniquePid );
+	  		});
+		}
+	
+		<#-- when author list clciked --> 
+		function getVenueDetails( venueId ){
+			<#-- put loading overlay -->
+	    	$.each( $.PALM.options.registeredWidget, function(index, obj){
+					if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
+						obj.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+					}
+				});
+	
+			<#-- show pop up progress log -->
+			var uniquePid = $.PALM.utility.generateUniqueId();
+			$.PALM.popUpMessage.create( "Fetch venue details...", { uniqueId:uniquePid, popUpHeight:150, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
+			<#-- chack and fetch pzblication from academic network if necessary -->
+			$.getJSON( "<@spring.url '/venue/fetch?id=' />" + venueId + "&pid=" + uniquePid + "&force=false", function( data ){
+				<#-- remove  pop up progress log -->
+				$.PALM.popUpMessage.remove( uniquePid );
+				<#-- refresh registered widget -->
+				$.each( $.PALM.options.registeredWidget, function(index, obj){
+					if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
+						obj.options.queryString = "?id=" + venueId;
+						$.PALM.boxWidget.refresh( obj.element , obj.options );
+					}
+				});
+			
+			}).fail(function() {
+	   	 		$.PALM.popUpMessage.remove( uniquePid );
+	  		});
+		}
 	});
 </script>

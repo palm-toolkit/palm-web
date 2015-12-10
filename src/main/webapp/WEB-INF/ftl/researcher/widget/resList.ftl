@@ -9,9 +9,7 @@
 	    </div>
   	</div>
   	
-  	
-  	<div id="table-container-${wId}" class="table-container">
-
+  	<div class="content-list">
     </div>
 </div>
 
@@ -38,24 +36,29 @@
 		<#else>
 			var targetId = "";
 		</#if>
-	
-		<#-- add slimscroll to table -->
-		$("#table-container-${wId}, .content-wrapper>.content").slimscroll({
-			height: "100%",
-	        size: "3px"
-	    });
+
+			<#-- add slim scroll -->
+	      $(".content-list, .content-wrapper>.content").slimscroll({
+				height: "100%",
+		        size: "3px",
+	        	allowPageScroll: true,
+	   			touchScrollStep: 50
+		  });
 	    
 	    <#-- event for searching researcher -->
+		var tempInput = $( "#researcher_search_field" ).val();
 	    $( "#researcher_search_field" )
 	    .on( "keypress", function(e) {
 			  if ( e.keyCode == 0 || e.keyCode == 13 /* || e.keyCode == 32*/ )
 			    researcherSearch( $( this ).val().trim() , "first");
+			 tempInput = $( this ).val().trim();
 		})
 		<#-- when pressing backspace until -->
 		.on( "keydown", function(e) {
 			  if( e.keyCode == 8 || e.keyCode == 46 )
-			    if( $( "#researcher_search_field" ).val().length == 0 )
+			    if( $( "#researcher_search_field" ).val().length == 0 && tempInput != $( this ).val().trim())
 			    	researcherSearch( $( this ).val().trim() , "first");
+			  tempInput = $( this ).val().trim();
 		});
 		
 
@@ -112,7 +115,7 @@
 							<#-- remove  pop up progress log -->
 							$.PALM.popUpMessage.remove( uniquePidResearcherWidget );
 
-							var targetContainer = $( widgetElem ).find( "#table-container-${wId}" );
+							var targetContainer = $( widgetElem ).find( ".content-list" );
 							<#-- remove previous list -->
 							targetContainer.html( "" );
 							
@@ -196,18 +199,17 @@
 									}, 1000);
 									
 									<#-- display first author detail -->
-									if( targetId == "" ){
-										if( index == 0 )
-											getAuthorDetails( item.id );
-									} else {
-										if( targetId == item.id ){
-											if( item.isAdded ){
+									if( item.isAdded ){
+										if( targetId == "" ){
+											if( index == 0 )
 												getAuthorDetails( item.id );
-												targetId = "";
-											} else {
-												$.PALM.popUpIframe.create( "<@spring.url '/researcher/add' />?id=" + item.id + "&name=" + item.name , {popUpHeight:"416px"}, "Add " + item.name + " to PALM");
-											}
 										}
+										if( targetId == item.id ){
+											getAuthorDetails( item.id );
+											targetId = "";
+										}
+									} else {
+										$.PALM.popUpIframe.create( "<@spring.url '/researcher/add' />?id=" + item.id + "&name=" + item.name , {popUpHeight:"416px"}, "Add " + item.name + " to PALM");
 									}
 
 								});
@@ -248,13 +250,6 @@
 			"selector": "#widget-${wId}",
 			"element": $( "#widget-${wId}" ),
 			"options": options
-		});
-		
-		<#--// adapt the height for first time-->
-		$(document).ready(function() {
-		    var bodyheight = $(window).height();
-		    $("#table-container-${wId}").height(bodyheight - 192);
-		    $(".content-wrapper").height(bodyheight);
 		});
 		
 		<#--// first time on load, list 50 researchers-->
@@ -327,11 +322,4 @@
    	 		$.PALM.popUpMessage.remove( uniquePid );
   		});
 	}
-	
-	<#--// for the window resize-->
-	$(window).resize(function() {
-	    var bodyheight = $(window).height();
-	    $("#table-container-${wId}").height(bodyheight - 192);
-	    $(".content-wrapper").height(bodyheight);
-	});
 </script>

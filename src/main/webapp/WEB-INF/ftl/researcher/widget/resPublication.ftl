@@ -128,6 +128,7 @@
 							var eachAuthor = $( '<span/>' );
 							
 							<#-- photo -->
+							<#--
 							var eachAuthorImage = null;
 							if( typeof authorItem.photo !== 'undefined' ){
 								eachAuthorImage = $( '<img/>' )
@@ -139,12 +140,14 @@
 									.attr({ "title" : authorItem.name });
 							}
 							eachAuthor.append( eachAuthorImage );
-
+							-->
 							<#-- name -->
 							var eachAuthorName = $( '<a/>' )
 												.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name})
-												.css({"padding" : "0 15px 0 5px"})
 												.html( authorItem.name );
+												
+							if( index > 0 )
+								eachAuthor.append( ", " );
 							eachAuthor.append( eachAuthorName );
 							
 							timeLineAuthor.append( eachAuthor );
@@ -152,15 +155,75 @@
 
 						timelineBody.append( timeLineAuthor );
 					}
-
+					<#-- venue -->
+					
+					if( typeof item.event !== 'undefined' ){
+						var eventElem = $( '<div/>' )
+										.addClass( 'event-detail font-xs' );
+													
+						var venueText = item.event.name;
+						var venueHref = "<@spring.url '/venue' />?eventId=" + item.event.id + "&type=" + item.type.toLowerCase() + "&name=" + item.event.name.toLowerCase().replace(/[^\w\s]/gi, '');
+						
+						if( typeof item.volume != 'undefined' ){
+							venueText += " (" + item.volume + ")";
+							venueHref += "&volume=" + item.volume;
+						}
+						if( typeof item.date != 'undefined' ){
+							venueText += " " + item.date.substring(0, 4);
+							venueHref += "&year=" + item.date.substring(0, 4);
+						}
+						
+						var eventPart = $( '<a/>' )
+												.attr({ "href" : venueHref })
+												.html( venueText );
+						eventElem.append( eventPart );
+						
+						<#-- pages -->
+						if( typeof item.pages !== 'undefined' ){
+							eventElem.append( " : " + item.pages );
+						}
+	
+						timelineBody.append( eventElem );			
+					} else if( typeof item.venue !== 'undefined'){
+						var eventElem = $( '<div/>' )
+										.addClass( 'event-detail font-xs' );
+													
+						var venueText = item.venue;
+						var venueHref = "<@spring.url '/venue' />?type=" + item.type.toLowerCase() + "&name=" + item.venue.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id ;
+						
+						if( typeof item.volume != 'undefined' ){
+							venueText += " (" + item.volume + ")";
+							venueHref += "&volume=" + item.volume;
+						}
+						if( typeof item.date != 'undefined' ){
+							venueText += " " + item.date.substring(0, 4);
+							venueHref += "&year=" + item.date.substring(0, 4);
+						}
+						
+						var eventPart = $( '<a/>' )
+												.attr({ "href" : venueHref })
+												.html( venueText );
+						eventElem.append( eventPart );
+						
+						<#-- pages -->
+						if( typeof item.pages !== 'undefined' ){
+							eventElem.append( " : " + item.pages );
+						}
+	
+						timelineBody.append( eventElem );
+					}
+					
+				
 					<#-- abstract -->
+					<#--
 					if( typeof item.abstract !== 'undefined' )
 						timelineBody.append( '<strong>Abstract</strong><br/>' + item.abstract + '<br/>');
-
+					-->
 					<#-- keyword -->
+					<#--
 					if( typeof item.keyword !== 'undefined' )
 						timelineBody.append( '<strong>Keyword</strong><br/>' + item.keyword.replace(/,/g, ', ') + '<br/>');
-	
+					-->
 					timelineItem.append( timelineBody );
 
 					publicationItem.append( timelineItem );

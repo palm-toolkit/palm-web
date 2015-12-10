@@ -93,7 +93,8 @@
 					.addClass( "palm_label" )
 					.html( "Coauthor :" );
 
-				var pubCoauthorContainer = $( '<div/>' );
+				var pubCoauthorContainer = $( '<div/>' )
+											.addClass( "author-list" );
 
 				$.each( data.publication.coauthor, function( index, authorItem ){
 					var eachAuthor = $( '<span/>' );

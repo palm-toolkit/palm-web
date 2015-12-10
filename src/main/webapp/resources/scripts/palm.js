@@ -152,7 +152,7 @@ $.PALM.options = {
   screenSizes: {
     xs: 480,
     sm: 768,
-    md: 992,
+    md: 970,
     lg: 1200
   },
   registeredWidget:[],
@@ -190,7 +190,7 @@ $(function () {
   if (o.sidebarPushMenu) {
     $.PALM.pushMenu(o.sidebarToggleSelector);
     // for small screen
-    if ($(window).width() < ($.PALM.options.screenSizes.sm - 1)) {
+    if ($(window).width() <= $.PALM.options.screenSizes.md ) {
         $( o.sidebarToggleSelector ).click();
         $( o.navMenuSelector ).find( "strong" ).hide();
     }
@@ -259,6 +259,12 @@ $.PALM.layout = {
       _this.fix();
       _this.fixSidebar( o );
     });
+    _this.fixContentScroll();
+    // for the window resize
+	$(window).resize(function() {
+	    var bodyheight = $(window).height();
+	    $(".content-list").height(bodyheight - 192);
+	});
   },
   fix: function () {
     //Get window height and the wrapper height
@@ -300,9 +306,15 @@ $.PALM.layout = {
         });
       }
     }
+  },
+  fixContentScroll: function(){
+	  var bodyheight = $(window).height();
+      $(".content-list").height(bodyheight - 192);
+      $(".content-wrapper").height(bodyheight);
   }
+  
 };
-
+ 
 /* PushMenu()
  * ==========
  * Adds the push menu functionality to the sidebar.
@@ -319,7 +331,7 @@ $.PALM.pushMenu = function (toggleBtn) {
     e.preventDefault();
 
     //Enable sidebar push menu
-    if ($(window).width() > (screenSizes.sm - 1)) {
+    if ($(window).width() > screenSizes.md ) {
       $("body").toggleClass('sidebar-collapse');
     }
     //Handle sidebar push menu for small screens
@@ -335,7 +347,7 @@ $.PALM.pushMenu = function (toggleBtn) {
 
   $(".content-wrapper").click(function () {
     //Enable hide menu when clicking on the content-wrapper on small screens
-    if ($(window).width() <= (screenSizes.sm - 1) && $("body").hasClass("sidebar-open")) {
+    if ($(window).width() <= screenSizes.md && $("body").hasClass("sidebar-open")) {
       $("body").removeClass('sidebar-open');
     }
   });

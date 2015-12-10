@@ -3,19 +3,20 @@
 		
 		<#-- Venue -->
 		<div class="form-group">
-          <label>Publication Type</label>
+          <label>Publication Type *</label>
           <select id="venue-type" name="venue-type" class="form-control" style="width:120px">
             <option value="conference">Conference</option>
+            <option value="workshop">Workshop</option>
             <option value="journal">Journal</option>
           </select>
         </div>
         
         <#-- Conference/Journal -->
 		<div id="venue-title" class="form-group">
-          <label><span>Conference</span> Name</label>
+          <label><span>Conference</span> Name *</label>
           <div style="width:100%">
 	          <span style="display:block;overflow:hidden;padding:0 5px">
-	          	<input type="text" id="venue" name="venue" class="form-control" placeholder="e.g. Educational Data Mining">
+	          	<input type="text" id="name" name="name" class="form-control" placeholder="e.g. Educational Data Mining">
 	          </span>
 	      </div>
         </div>
@@ -24,56 +25,125 @@
 		<div class="form-group" style="width:100%;float:left">
 			<div id="venue-abbr-container" class="col-xs-2 minwidth150Px">
 				<label><span>Conference</span> Abbr.</label>
-				<input type="text" id="venue-abbr" name="venue-abbr" placeholder="e.g. EDM" class="form-control">
+				<input type="text" id="notation" name="notation" placeholder="e.g. EDM" class="form-control">
 			</div>
 		</div>
 
 		<#-- description -->
 		<div class="form-group">
 	      <label>Description</label>
-	      <textarea name="descriptionText" id="descriptionText" class="form-control" rows="3" placeholder="Description"></textarea>
+	      <textarea name="description" id="description" class="form-control" rows="3" placeholder="Description"></textarea>
 	    </div>
+	    
+	    <input type="hidden" id="type" name="type"<#if targetType??> value="${type!''}"</#if>>
+	    
+	    <input type="hidden" id="dblpUrl" name="dblpUrl">
+	    
+	    <#if targetEventId??>
+	    	<input type="hidden" id="eventId" name="eventId" value="${targetEventId!''}">
+	    </#if>
+		
+		<#if targetVolume??>
+	    	<input type="hidden" id="volume" name="volume" value="${targetVolume!''}">
+	    </#if>
+
+		<#if targetYear??> 
+	    	<input type="hidden" id="year" name="year"value="${targetYear!''}">
+	    </#if>
+	    
+	    <#if publicationId??>
+	    	<input type="hidden" id="publicationId" name="publicationId" value="${publicationId!''}">
+	    </#if>
+	    
+	    <div class="pull-left">
+          * Mandatory fields
+        </div>
 
 	</form>
 </div>
 
 <div class="box-footer">
-	<button id="submit" type="submit" class="btn btn-primary">Submit</button>
+	<button id="submit" type="submit" class="btn btn-primary">Save</button>
 </div>
 
 <script>
 	$(function(){
-
+		function inIframe () {
+		    try {
+		        return window.self !== window.top;
+		    } catch (e) {
+		        return true;
+		    }
+		}
+		
+		<#-- jquery post on button click -->
 		$( "#submit" ).click( function(){
-			$("#addVenue").submit();
+			<#-- todo check input valid -->
+			$.post( $("#addVenue").attr( "action" ), $("#addVenue").serialize(), function( data ){
+				<#-- todo for error response -->
+
+				<#-- if status ok -->
+				if( data.status == "ok" ){
+					<#-- reload main page with target author -->
+					var url = "<@spring.url '/venue' />?id=" + data.eventGroup.id +
+							"&name=" + data.eventGroup.name;
+					if( typeof eventId !== "undefined" )
+						url += "&eventId=" + data.eventId;
+					if( typeof volume !== "undefined" )
+						url += "&volume=" + data.volume;
+					if( typeof eventId !== "undefined" )
+						url += "&year=" + data.year;
+						
+					if( inIframe() ){
+						window.top.location = url;
+					} else {
+						window.location = url;
+					}
+				}
+			});
 		});
 		
 		$( "#venue-type" ).change( function(){
-			var selectionValue = $(this).val();
-			if( selectionValue == "conference" ){
-				$( "#venue-title>label>span,#venue-abbr-container>label>span" ).html( "Conference" );
-			} else if( selectionValue == "journal" ){
-				$( "#venue-title>label>span,#venue-abbr-container>label>span" ).html( "Journal" );
-			}
+			setConferenceDropDown( $(this).val() );
+			$( "#name,#notation,#description" ).val( "" );
 		});
 		
-		$("#venue").autocomplete({
+		<#if targetType??>
+			setConferenceDropDown( "${targetType!''}" );
+		</#if>
+		
+		function setConferenceDropDown( type ){
+			if( type == "conference" ){
+				$( "#venue-title>label>span,#venue-abbr-container>label>span" ).html( "Conference" );
+			} else if( type == "journal" ){
+				$( "#venue-title>label>span,#venue-abbr-container>label>span" ).html( "Journal" );
+			}
+		}
+		
+		$("#name").autocomplete({
 		    source: function (request, response) {
 		        $.ajax({
-		            url: "<@spring.url '/venue/autocomplete' />",
+		            url: "<@spring.url '/venue/search' />",
 		            dataType: "json",
 		            data: {
-						query: request.term
+						query: request.term,
+						source: "all",
+						type: $( "#venue-type" ).val()
 					},
-		            success: function (data) {
-		                response($.map(data, function(v,i){
-		                    return {
+		            success: function (data) {		            	
+		                response($.map(data.eventGroups, function(v,i){
+		                	var results = {
+		                			id: v.id,
 		                            label: v.name,
 		                            value: v.name,
-		                            labelShort: v.abbr,
 		                            url: v.url,
 		                            type: v.type
-		                           };
+		                	};
+		                	if( typeof v.abbr !== "undefined" ){
+		                		results.labelShort = v.abbr;
+		                		results.label = v.name + " (" + v.abbr + ")";
+		                	}
+		                    return results;
 		                }));
 		            }
 		        });
@@ -82,8 +152,9 @@
 			select: function( event, ui ) {
 				<#-- select appropriate vanue type -->
 				$( '#venue-type' ).val( ui.item.type ).change();
-				console.log( ui.item.labelShort );
-				$( '#venue-abbr' ).val( ui.item.labelShort );
+				$( '#dblpUrl' ).val( ui.item.url );
+				$( '#type' ).val( ui.item.type )
+				$( '#notation' ).val( ui.item.labelShort );
 			},
 			open: function() {
 				$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
@@ -92,6 +163,14 @@
 				$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
 			}
 		});
+		
+		<#-- trigger autocomplete is there is value on name input -->
+		<#if targetName??>
+			$('#name').bind('focus', function(){ $(this).autocomplete("search"); } );
+			$('#name').val("${targetName}").focus();
+			var textToShow = $('#name').find(":selected").text();
+   			$('#name').parent().find("span").find("input").val(textToShow);
+		</#if>
 
 	});
 

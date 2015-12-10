@@ -39,7 +39,7 @@
 	    </div>
   	</div>
   	
-  	<div id="publication-list">
+  	<div class="content-list">
     </div>
 </div>
 
@@ -67,12 +67,21 @@
 			var targetId = "";
 		</#if>
 	
-		<#-- add slimscroll to table -->
-		$("#publication-list").slimscroll({
-			height: "100%",
-	        size: "3px",
-   			touchScrollStep: 30
-	    });
+		<#-- add slim scroll -->
+	      $(".content-list").slimscroll({
+				height: "100%",
+		        size: "3px",
+	        	allowPageScroll: true,
+	   			touchScrollStep: 50
+		  });
+		   $(".content-wrapper>.content").slimscroll({
+				height: "100%",
+		        size: "8px",
+	        	allowPageScroll: true,
+	   			touchScrollStep: 50,
+	   			railVisible: true,
+    			alwaysVisible: true
+		  });
 	    
 	    <#-- event for searching researcher -->
 	    $( "#publication_search_field" )
@@ -133,7 +142,7 @@
 						},
 			onRefreshDone: function(  widgetElem , data ){
 
-							var publicationListContainer = $( widgetElem ).find( "#publication-list" );
+							var publicationListContainer = $( widgetElem ).find( ".content-list" );
 							<#-- remove previous result -->
 							publicationListContainer.html( "" );
 							<#-- button search loading -->
@@ -280,12 +289,6 @@
 			"options": options
 		});
 		
-		<#--// adapt the height for first time-->
-		$(document).ready(function() {
-		    var bodyheight = $(window).height();
-		    $("#publication-list").height(bodyheight - 192);
-		});
-		
 		<#--// first time on load, list 50 publications-->
 		//$.PALM.boxWidget.refresh( $( "#widget-${wId}" ) , options );
 		publicationSearch( $( "#publication_search_field" ).val()  , "first" );
@@ -367,9 +370,4 @@
 		});
 	}
 	
-	// for the window resize
-	$(window).resize(function() {
-	    var bodyheight = $(window).height();
-	    $("#publication-list").height(bodyheight - 192);
-	});
 </script>
