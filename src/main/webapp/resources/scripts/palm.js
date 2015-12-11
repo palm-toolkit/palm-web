@@ -263,7 +263,10 @@ $.PALM.layout = {
     // for the window resize
 	$(window).resize(function() {
 	    var bodyheight = $(window).height();
-	    $(".content-list").height(bodyheight - 192);
+	    var listHeightOffset = 192;
+	    if ( $(window).width() < $.PALM.options.screenSizes.sm )
+	    	listHeightOffset += 50;
+	    $(".content-list").height( bodyheight - listHeightOffset );
 	});
   },
   fix: function () {
@@ -309,7 +312,10 @@ $.PALM.layout = {
   },
   fixContentScroll: function(){
 	  var bodyheight = $(window).height();
-      $(".content-list").height(bodyheight - 192);
+	  var listHeightOffset = 192;
+	  if ( $(window).width() < $.PALM.options.screenSizes.sm )
+	      listHeightOffset += 50;
+	  $(".content-list").height( bodyheight - listHeightOffset );
       $(".content-wrapper").height(bodyheight);
   }
   

@@ -58,11 +58,20 @@
 		
 		
 		<#-- add slim scroll -->
-	      $(".content-list, .content-wrapper>.content").slimscroll({
+	      $(".content-list").slimscroll({
 				height: "100%",
 		        size: "3px",
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50
+		  });
+		  
+		   $(".content-wrapper>.content").slimscroll({
+				height: "100%",
+		        size: "8px",
+	        	allowPageScroll: true,
+	   			touchScrollStep: 50,
+	   			railVisible: true,
+    			alwaysVisible: true
 		  });
 	  
 	    <#-- event for searching conference -->
@@ -147,6 +156,12 @@
 									<#-- event menu -->
 									var eventNav = $( '<div/>' )
 										.attr({'class':'nav'});
+										
+									<#-- count result -->
+									if( !itemEvent.isAdded ){
+										researcherDiv.css("display","none");
+										data.count--;
+									}
 						
 									<#-- event icon -->
 									var eventIcon = $('<i/>');
@@ -194,7 +209,7 @@
 									<#-- event detail -->
 									var eventDetail = $('<div/>').addClass( "detail" );
 									<#-- title -->
-									var eventName = $('<div/>').addClass( "title" ).html( itemEvent.name );
+									var eventName = $('<div/>').addClass( "title" ).html( typeof itemEvent.abbr != "undefined" ? itemEvent.name + " (" + itemEvent.abbr + ")" : itemEvent.name );
 
 
 									<#-- append detail -->
@@ -232,17 +247,19 @@
 												getVenueGroupDetails( itemEvent.id );
 										}
 									} else {
-										var eventUrl = "<@spring.url '/venue/add' />?eventId=" + eventObj.eventId + "&type=" + eventObj.type + "&name=" + eventObj.name;
-										if( typeof eventObj.volume !== "undefined" ){
-											eventUrl += "&volume=" + eventObj.volume;
+										if( data.count == 0 ){
+											var eventUrl = "<@spring.url '/venue/add' />?eventId=" + eventObj.eventId + "&type=" + eventObj.type + "&name=" + eventObj.name;
+											if( typeof eventObj.volume !== "undefined" ){
+												eventUrl += "&volume=" + eventObj.volume;
+											}
+											if( typeof eventObj.year !== "undefined" ){
+												eventUrl += "&year=" + eventObj.year;
+											}
+											if( typeof eventObj.publicationId !== "undefined" ){
+												eventUrl += "&publicationId=" + eventObj.publicationId;
+											}
+											$.PALM.popUpIframe.create( eventUrl, { "popUpHeight":"430px"} , "Add New Conference/Journal to PALM");
 										}
-										if( typeof eventObj.year !== "undefined" ){
-											eventUrl += "&year=" + eventObj.year;
-										}
-										if( typeof eventObj.publicationId !== "undefined" ){
-											eventUrl += "&publicationId=" + eventObj.publicationId;
-										}
-										$.PALM.popUpIframe.create( eventUrl, { "popUpHeight":"430px"} , "Add New Conference/Journal to PALM");
 									}
 									
 								});
@@ -358,7 +375,7 @@
 			<#-- show pop up progress log -->
 			var uniquePid = $.PALM.utility.generateUniqueId();
 			$.PALM.popUpMessage.create( "Fetch venue group details...", { uniqueId:uniquePid, popUpHeight:150, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
-			<#-- chack and fetch pzblication from academic network if necessary -->
+			<#-- chack and fetch publication from academic network if necessary -->
 			$.getJSON( "<@spring.url '/venue/fetchGroup?id=' />" + venueId + "&pid=" + uniquePid + "&force=false", function( data ){
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniquePid );

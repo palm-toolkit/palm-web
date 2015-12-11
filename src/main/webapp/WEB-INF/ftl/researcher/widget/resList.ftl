@@ -38,11 +38,20 @@
 		</#if>
 
 			<#-- add slim scroll -->
-	      $(".content-list, .content-wrapper>.content").slimscroll({
+	      $(".content-list").slimscroll({
 				height: "100%",
 		        size: "3px",
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50
+		  });
+		  
+		   $(".content-wrapper>.content").slimscroll({
+				height: "100%",
+		        size: "8px",
+	        	allowPageScroll: true,
+	   			touchScrollStep: 50,
+	   			railVisible: true,
+    			alwaysVisible: true
 		  });
 	    
 	    <#-- event for searching researcher -->
@@ -130,15 +139,27 @@
 								$.each( data.researcher, function( index, item){
 									var researcherDiv = 
 									$( '<div/>' )
-										.addClass( 'palm_atr' )
-										.attr({ 'id' : item.id })
+										.addClass( 'author' )
+										.attr({ 'id' : item.id });
+										
+									var researcherNav =
+									$( '<div/>' )
+										.addClass( 'nav' );
+										
+									var researcherDetail =
+									$( '<div/>' )
+										.addClass( 'detail' )
 										.append(
 											$( '<div/>' )
-											.addClass( 'palm_atr_photo fa fa-user' )
+												.addClass( 'name' )
+												.html( item.name )
+										);
+										
+									researcherDiv
+										.append(
+											researcherNav
 										).append(
-											$( '<div/>' )
-											.addClass( 'palm_atr_name' )
-											.html( item.name )
+											researcherDetail
 										);
 										
 									if( !item.isAdded ){
@@ -147,38 +168,61 @@
 									}
 									
 									if( typeof item.status != 'undefined')
-										researcherDiv.append(
+										researcherDetail.append(
 											$( '<div/>' )
-											.addClass( 'palm_atr_dtl' )
-											.html( item.status )
+											.addClass( 'status' )
+											.append( 
+												$( '<i/>' )
+												.addClass( 'fa fa-briefcase icon font-xs' )
+											).append( 
+												$( '<span/>' )
+												.addClass( 'info font-xs' )
+												.html( item.status )
+											)
 										);
 									if( typeof item.aff != 'undefined')
-										researcherDiv.append(
+										researcherDetail.append(
 											$( '<div/>' )
-											.addClass( 'palm_atr_aff' )
-											.html( item.aff )
+											.addClass( 'affiliation' )
+											.append( 
+												$( '<i/>' )
+												.addClass( 'fa fa-institution icon font-xs' )
+											).append( 
+												$( '<span/>' )
+												.addClass( 'info font-xs' )
+												.html( item.aff )
+											)
 										);
 									if( typeof item.citedBy != 'undefined')
-										researcherDiv.append(
+										researcherDetail.append(
 											$( '<div/>' )
-											.addClass( 'palm_atr_ct' )
-											.html( "Cited by : " + item.citedBy )
+											.addClass( 'paper font-xs' )
+											.html( "Paper : " + item.citedBy + " || Cited : " + item.citedBy)
 										);
-									if( typeof item.photo != 'undefined'){
-										researcherDiv
-											.find( '.palm_atr_photo' )
-											.removeClass( "fa fa-user" )
-											.css({ 'font-size':'14px'})
-											.append(
-												$( '<img/>' )
-													.attr({ 'src' : item.photo })
-													.addClass( "palm_atr_img" )
-											);
 										
+									if( typeof item.photo != 'undefined'){
+										researcherNav
+											.append(
+											$( '<div/>' )
+												.addClass( 'photo' )
+												.css({ 'font-size':'14px'})
+												.append(
+													$( '<img/>' )
+														.attr({ 'src' : item.photo })
+												)
+											);
+									} else {
+										researcherNav
+										.append(
+											$( '<div/>' )
+											.addClass( 'photo fa fa-user' )
+										);
 									}
 									<#-- add clcik event -->
-									researcherDiv
+									researcherDetail
 										.on( "click", function(){
+											$( this ).parent().siblings().removeClass( "active" );
+											$( this ).parent().addClass( "active" );
 											if( item.isAdded ){
 												getAuthorDetails( item.id );
 											} else {

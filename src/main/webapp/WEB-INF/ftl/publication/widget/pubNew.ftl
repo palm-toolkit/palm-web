@@ -127,6 +127,13 @@
 
 <script>
 	$(function(){
+	
+		 $(".content-wrapper>.content").slimscroll({
+				height: "100%",
+		        size: "8px",
+	        	allowPageScroll: true,
+	   			touchScrollStep: 50
+		  });
 
 		<#-- multiple file-upload -->
     	convertToAjaxMultipleFileUpload( $( '#fileupload' ), $( '#progress' ) , $("#addPublication") );

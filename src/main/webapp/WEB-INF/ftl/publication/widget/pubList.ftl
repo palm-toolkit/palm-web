@@ -1,5 +1,6 @@
 <div id="boxbody${wId}" class="box-body no-padding">
 	<#-- filters -->
+<#--
 	<div class="box-filter">
 		<div class="box-filter-option" style="display:none">
 
@@ -27,7 +28,7 @@
 			<span>Something</span>
 		</button>
 	</div>
-
+-->
 	<#--  search block -->
 	<div class="box-tools">
 		<div class="input-group" style="width: 100%;">

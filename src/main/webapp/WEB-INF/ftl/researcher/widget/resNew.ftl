@@ -27,7 +27,7 @@
           <label><i style="width: 20px;" class="fa fa-camera"></i>Picture URL</label>
           <div style="width:100%">
           	<div class="form-control palm_atr_photo fa fa-user pull-left" style="margin:0;padding:0">
-	          	<img id="resPicture" src="" class="palm_atr_img">
+	          	<img id="resPicture" src="">
           	</div>
           	<span style="display:block;overflow:hidden;padding:0 5px">
           		<input type="text" id="photoUrl" name="photoUrl" class="form-control"  placeholder="picture url, e.g. http://example.org/img.jpg" />

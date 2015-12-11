@@ -1183,9 +1183,9 @@ a:focus {
     }
     .navbar-custom-menu>.navbar-nav>li {
         position: static;
-        width: 65px;
+        width: 52px;
     	text-align: center;
-    	padding:0 3px;
+    	padding:0 2px;
     }
     .navbar-custom-menu>.navbar-nav>li>.dropdown-menu {
         position: absolute;

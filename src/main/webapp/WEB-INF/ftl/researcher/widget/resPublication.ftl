@@ -12,9 +12,11 @@
 		<#-- add slimscroll to widget body -->
 		$("#boxbody${wId} .box-content").slimscroll({
 			height: "600px",
-	        size: "3px",
+	        size: "6px",
 			allowPageScroll: true,
-   			touchScrollStep: 50
+   			touchScrollStep: 50,
+   			railVisible: true,
+    		alwaysVisible: true
 	    });
 
 		<#-- set widget unique options -->
@@ -39,12 +41,52 @@
 						.addClass( "timeline" );
 
 				var timeLineGroupYear = "";
-
+				
+				var noOfConferenceYearly;
+				var noOfJournalYearly;
+				var noOfBookYearly;
+				<#-- timeline group -->
+				var liTimeGroup;
+				
 				$.each( data.publications, function( index, item ){
 					<#-- timeline group -->
 					if( typeof item.date !== 'undefined' ){
 						if( timeLineGroupYear !== item.date.substring(0, 4)){
-							var liTimeGroup = $( '<li/>' )
+							if( typeof liTimeGroup !== "undefined" ){
+								if( noOfConferenceYearly > 0 ){
+									liTimeGroup.append( 
+												$( '<span/>' )
+												.addClass( "bg-blue" )
+												.css({ "margin-left" : "10px" })
+												.html( noOfConferenceYearly + " Conferences/Workshops" )
+											);
+								}
+								if( noOfJournalYearly > 0 ){
+									liTimeGroup.append( 
+												$( '<span/>' )
+												.addClass( "bg-red" )
+												.css({ "margin-left" : "10px" })
+												.html( noOfJournalYearly + " Journals" )
+											);
+								}
+								if( noOfBookYearly > 0 ){
+									liTimeGroup.append( 
+												$( '<span/>' )
+												.addClass( "bg-green" )
+												.css({ "margin-left" : "10px" })
+												.html( noOfBookYearly + " Books" )
+											);
+								}
+								
+								var firstTimelineSpan = $( liTimeGroup) .find( "span:first" );
+								firstTimelineSpan.html( (noOfConferenceYearly + noOfJournalYearly + noOfBookYearly) + " " + firstTimelineSpan.html() );
+							}
+							
+							noOfConferenceYearly = 0;
+							noOfJournalYearly = 0;
+							noOfBookYearly = 0;
+							
+							liTimeGroup = $( '<li/>' )
 											.addClass( "time-label" )
 											.append( 
 												$( '<span/>' )
@@ -56,7 +98,7 @@
 						timeLineGroupYear = item.date.substring(0, 4);
 					} else {
 						if( timeLineGroupYear != null ){
-							var liTimeGroup = $( '<li/>' )
+							liTimeGroup = $( '<li/>' )
 											.addClass( "time-label" )
 											.append( 
 												$( '<span/>' )
@@ -78,14 +120,17 @@
 						if( item.type == "JOURNAL" ){
 							timelineDot.addClass( "fa fa-files-o bg-red" );
 							timelineDot.attr({ "title" : "Journal" });
+							noOfJournalYearly++;
 						}
 						else if( item.type == "CONFERENCE" ){
 							timelineDot.addClass( "fa fa-file-text-o bg-blue" );
 							timelineDot.attr({ "title" : "Conference" });
+							noOfConferenceYearly++;
 						}
 						else if( item.type == "BOOK" ){
 							timelineDot.addClass( "fa fa-book bg-green" );
 							timelineDot.attr({ "title" : "Book" });
+							noOfBookYearly++;
 						}
 					}else{
 						timelineDot.addClass( "fa fa-question bg-purple" );
