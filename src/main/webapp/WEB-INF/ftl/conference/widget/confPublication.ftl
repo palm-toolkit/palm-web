@@ -87,6 +87,14 @@
 							timelineDot.addClass( "fa fa-book bg-green" );
 							timelineDot.attr({ "title" : "Book" });
 						}
+						else if( item.type == "WORKSHOP" ){
+							timelineDot.addClass( "fa fa-file-text-o bg-blue" );
+							timelineDot.attr({ "title" : "Workshop" });
+						}
+						else if( item.type == "EDITORSHIP" ){
+							timelineDot.addClass( "fa fa-book bg-teal" );
+							timelineDot.attr({ "title" : "Editorship" });
+						}
 					}else{
 						timelineDot.addClass( "fa fa-question bg-purple" );
 							timelineDot.attr({ "title" : "Unknown" });

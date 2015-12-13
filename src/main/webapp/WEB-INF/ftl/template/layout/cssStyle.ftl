@@ -7,7 +7,7 @@
 <#--<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />-->
 
 <#-- Local font awesome -->
-<link href="<@spring.url '/resources/font/font-awesome/4.4.0/css/font-awesome.min.css' />" rel="stylesheet" type="text/css" />
+<link href="<@spring.url '/resources/font/font-awesome/4.5.0/css/font-awesome.min.css' />" rel="stylesheet" type="text/css" />
 
 <#--Theme style -->
 <link href="<@spring.url '/resources/adminLTE/css/AdminLTE.css' />" rel="stylesheet" type="text/css" />
