@@ -132,7 +132,7 @@ iframe.externalContent{
 }
 
 .iframe-container,.dialog-content {
-    max-width: 1000px;
+    /*max-width: 1000px;*/
     margin: 4% auto;
     /*background-color:#fff;*/
 }
