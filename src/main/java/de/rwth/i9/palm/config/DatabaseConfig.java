@@ -23,8 +23,7 @@ import de.rwth.i9.palm.model.Author;
 import de.rwth.i9.palm.model.AuthorAlias;
 import de.rwth.i9.palm.model.AuthorInterest;
 import de.rwth.i9.palm.model.AuthorInterestProfile;
-import de.rwth.i9.palm.model.CircleAuthor;
-import de.rwth.i9.palm.model.CirclePublication;
+import de.rwth.i9.palm.model.Circle;
 import de.rwth.i9.palm.model.Country;
 import de.rwth.i9.palm.model.Event;
 import de.rwth.i9.palm.model.EventGroup;
@@ -146,8 +145,7 @@ public class DatabaseConfig
 				AuthorAlias.class,
 				AuthorInterest.class,
 				AuthorInterestProfile.class,
-				CircleAuthor.class,
-				CirclePublication.class,
+				Circle.class,
 				Country.class,
 				Event.class,
 				EventGroup.class,

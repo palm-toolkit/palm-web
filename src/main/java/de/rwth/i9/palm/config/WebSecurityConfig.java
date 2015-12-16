@@ -56,6 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
             .authorizeRequests()
             	.antMatchers( 
             			"/", 
+            			"/circle/**", 
             			"/data/**", 
             			"/home", 
             			"/login", 
