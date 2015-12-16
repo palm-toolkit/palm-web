@@ -293,15 +293,14 @@
 								});
 								var maxPage = Math.ceil(data.count/data.maxresult);
 						
-						
-								// set dropdown page
+								<#-- set dropdown page -->
 								for( var i=1;i<=maxPage;i++){
 									$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
 								}
-								// enable bootstrap tooltip
+								<#-- enable bootstrap tooltip -->
 								$( widgetElem ).find( "[data-toggle='tooltip']" ).tooltip();
 								
-								// set page number
+								<#-- set page number -->
 								$pageDropdown.val( data.page + 1 );
 								$( widgetElem ).find( "span.total-page" ).html( maxPage );
 								var endRecord = (data.page + 1) * data.maxresult;
@@ -397,7 +396,7 @@
 			});
 		}
 		
-		<#-- when author list clciked --> 
+		<#-- when author list clicked --> 
 		function getVenueGroupDetails( venueId ){
 	
 			<#-- show pop up progress log -->
@@ -417,10 +416,154 @@
 				
 				var eventYearItem;
 				var eventVolumeList;
+				var eventArray = [];
+				
+				<#-- add empty object into event, to add loop -->
+				data.events.push( {} );
 				
 				$.each( data.events, function( index, itemEvent ){
 				
 					if( eventCurrentYear != itemEvent.year ){
+					
+					
+						<#-- put previous content for volume here -->
+						if( typeof eventCurrentYear !== "undefined" ){
+							<#-- check array of event volume -->
+
+							if( eventArray.length === 0 ){
+								return;<#-- empty array just continue -->
+							} else if ( eventArray.length === 1 ){
+								<#-- add more properties such as number of paper -->
+
+							} else {
+
+
+								<#-- put into event year item -->
+									
+								<#-- event Volume List -->
+								eventVolumeList =
+									$('<div/>')
+									.addClass( "eventvolume-list" );
+								
+								<#-- append Event Volume list -->
+								eventYearItem.append( eventVolumeList );
+								
+								<#-- Put inside for each statement -->
+								$.each( eventArray, function( index2, eventVolume){
+								
+									<#-- event volume item -->
+									var eventVolumeItem = 
+											$('<div/>')
+											.addClass( "eventvolume" )
+											.attr({ "data-id": eventVolume.id });
+									
+									<#-- not in database flag -->	
+									if( !eventVolume.isAdded ){
+										eventVolumeItem.addClass( "text-gray" );
+									}
+									
+									<#-- append event volume item to event volume list -->
+									eventVolumeList.append( eventVolumeItem );
+									
+									<#-- event volume navigation -->
+									var eventVolumeNav = $( '<div/>' )
+										.attr({'class':'nav'});
+									
+									<#-- append event volume navigation to event volume item-->
+									eventVolumeItem.append( eventVolumeNav );
+									
+									<#-- event detail -->
+									var eventVolumeDetail = $('<div/>').addClass( "detail" );
+				
+									<#-- append to item -->
+									eventVolumeItem.append( eventVolumeDetail );
+									
+									
+									<#-- event volume -->
+									if( typeof eventVolume.volume !== "undefined" )
+									{
+										var eventVolumeElement = $('<div/>')
+														.addClass( "info" )
+														.append(
+															$('<i/>')
+															.attr({
+																'class':'fa fa-check icon font-xs',
+															})
+														)
+														.append(
+															$('<span/>')
+															.attr({
+																'class':'volume',
+															})
+															.html( "Volume " + eventVolume.volume )
+														);
+										eventVolumeDetail.append( eventVolumeElement );
+									} else {
+										var eventVolumeElement = $('<div/>')
+														.addClass( "info" )
+														.append(
+															$('<i/>')
+															.attr({
+																'class':'fa fa-check icon font-xs',
+															})
+														)
+														.append(
+															$('<span/>')
+															.attr({
+																'class':'volume',
+															})
+															.html( "Selected papers" )
+														);
+										eventVolumeDetail.append( eventVolumeElement );
+									}
+									
+									<#-- edit option -->
+									var eventVolumeEdit = $('<i/>')
+												.attr({
+													'class':'fa fa-edit', 
+													'title':'edit event',
+													'data-url':'<@spring.url '/event/edit' />' + '?id=' + eventVolume.id,
+													'style':'display:none'
+												});
+												
+									<#-- add click event to edit event -->
+									eventVolumeEdit.click( function( event ){
+										event.preventDefault();
+										$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Event");
+									});
+									
+									<#-- append edit  -->
+									eventVolumeNav.append( eventVolumeEdit );
+									
+									eventVolumeItem.hover(function()
+									{
+									     eventVolumeEdit.show();
+									}, function()
+									{ 
+									     eventVolumeEdit.hide();
+									});
+								
+			
+									<#-- add clcik event -->
+									eventVolumeDetail.on( "click", function(){
+										<#-- remove active class -->
+										$( this ).parent().siblings().removeClass( "active" );
+										$( this ).parent().addClass( "active" );
+										getVenueDetails( $( this ).parent().data( 'id' ));
+									});
+									
+								});<#-- end of foreach staement -->
+								
+								<#-- append event volume list to eventyear -->
+								eventYearItem.append( eventVolumeList );
+							}
+							
+							<#-- reset event array -->
+							eventArray = [];
+						}
+					
+					
+					
 						eventYearItem =
 							$('<div/>')
 							.addClass( "eventyear-item" );
@@ -439,15 +582,6 @@
 							
 						<#-- append Event Year to Event Year Item -->
 						eventYearItem.append( eventYear );
-						
-						<#-- event Volume List -->
-						eventVolumeList =
-							$('<div/>')
-							.addClass( "eventvolume-list" );
-						
-						<#-- append Event Volume list -->
-						eventYearItem.append( eventVolumeList );
-						
 						
 						<#-- event navigation -->
 						var eventYearNav = $( '<div/>' )
@@ -581,74 +715,16 @@
 							}
 
 						<#-- end of event detail content -->
-						
-						
-	
+
 						<#-- store changes -->
 						eventCurrentYear = itemEvent.year;
-					}
+					}<#-- end of currentYear != tempYear --> 
 					
-					<#-- event volume item -->
-					var eventVolumeItem = 
-							$('<div/>')
-							.addClass( "event-item" )
-							.attr({ "data-id": itemEvent.id });
-					
-					<#-- append event volume item to event volume list -->
-					eventVolumeList.append( eventVolumeItem );
-					
-					<#-- event volume navigation -->
-					var eventVolumeNav = $( '<div/>' )
-						.attr({'class':'nav'});
-					
-					<#-- append event volume navigation to event volume item-->
-					eventVolumeItem.append( eventVolumeNav );
-					
-					<#-- event detail -->
-					var eventVolumeDetail = $('<div/>').addClass( "detail" );
+					<#-- put item into array -->
+					eventArray.push( itemEvent );
 
-					<#-- append to item -->
-					eventVolumeItem.append( eventVolumeDetail );
 					
-					<#-- edit option -->
-					var eventVolumeEdit = $('<i/>')
-								.attr({
-									'class':'fa fa-edit', 
-									'title':'edit event',
-									'data-url':'<@spring.url '/event/edit' />' + '?id=' + itemEvent.id,
-									'style':'display:none'
-								});
-								
-					<#-- add click event to edit event -->
-					eventVolumeEdit.click( function( event ){
-						event.preventDefault();
-						$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Event");
-					});
-					
-					<#-- append edit  -->
-					eventVolumeNav.append( eventVolumeEdit );
-					
-					<#--
-					eventVolumeItem.hover(function()
-					{
-					     eventVolumeEdit.show();
-					}, function()
-					{ 
-					     eventVolumeEdit.hide();
-					});
-					-->
-					
-
-					<#-- add clcik event -->
-					eventVolumeDetail.on( "click", function(){
-						<#-- remove active class -->
-						$( this ).parent().siblings().removeClass( "active" );
-						$( this ).parent().addClass( "active" );
-						getVenueDetails( $( this ).parent().data( 'id' ));
-					});
-					
-					
-				});
+				});<#-- end of foreach staement -->
 				
 				<#-- changed scroll position -->
 				var scrollTo_val = containerList.parent()[0].offsetTop + 'px';

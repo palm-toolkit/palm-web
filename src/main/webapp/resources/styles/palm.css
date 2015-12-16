@@ -401,15 +401,20 @@ div.d3-tooltip {
 	float:left;
 }
 
-
-.eventyear-list>.eventyear-item>.eventyear{
+.eventyear-list>.eventyear-item>.eventyear,
+.eventvolume-list>.eventvolume{
 	border-left:3px solid transparent;
 	margin:4px 0 0 0;
 	float: left;
+	min-height:36px;
+}
+.eventyear-list>.eventyear-item>.eventyear{
 	margin-left:35px;
 	width:263px;
-	min-height:36px;
-	margin-bottom: 5px;
+}
+.eventvolume-list>.eventvolume{
+	margin-left:70px;
+	width:230px;
 }
 .eventyear-item>.eventyear>.detail{
     min-height: 36px;
@@ -421,32 +426,41 @@ div.d3-tooltip {
 .content-list>.author{
 	min-height:95px;
 }
+.content-list>.eventgroup-item,
+.eventyear-list>.eventyear-item{
+	float:left;
+}
+
 .content-list>.publication.active, .content-list>.publication:hover, 
 .content-list>.eventgroup-item>.eventgroup.active, .content-list>.eventgroup-item>.eventgroup:hover,
 .content-list>.author.active, .content-list>.author:hover,
 .eventyear-list>.eventyear-item>.eventyear.active,
-.eventyear-list>.eventyear-item>.eventyear:hover{
+.eventyear-list>.eventyear-item>.eventyear:hover,
+.eventvolume-list>.eventvolume.active,
+.eventvolume-list>.eventvolume:hover{
 	background-color: #EBEBEB;
 }
 .content-list>.publication.active,
 .content-list>.author.active, 
 .content-list>.eventgroup-item>.eventgroup.active,
-.eventyear-list>.eventyear-item>.eventyear.active{
+.eventyear-list>.eventyear-item>.eventyear.active,
+.eventvolume-list>.eventvolume.active{
 	border-left-color: #3c8dbc;
 }
 .content-list>.publication>.nav, .content-list>.eventgroup-item>.eventgroup>.nav,
-.content-list>.author>.nav, .eventyear-list>.eventyear-item>.eventyear>.nav{
+.content-list>.author>.nav, .eventyear-list>.eventyear-item>.eventyear>.nav,
+.eventvolume-list>.eventvolume>.nav{
     width:35px;
     float:left;
     height:100%;
     padding: 2px 0;
 }
-+
+
 .eventyear-list>.eventyear-item>.eventyear>.nav{
     padding: 0;
 }
 
-.eventyear-list>.eventyear-item>.eventyear>.nav{
+.eventyear-list>.eventyear-item>.eventyear>.nav, .eventvolume-list>.eventvolume>.nav{
 	min-height:36px;
 	height:100%
 }
@@ -470,7 +484,7 @@ div.d3-tooltip {
 	width:60px;
 }
 .content-list>.publication>.nav>.fa, .content-list>.eventgroup-item>.eventgroup>.nav>.fa, 
-.eventyear-list>.eventyear-item>.eventyear>.nav>.fa{
+.eventyear-list>.eventyear-item>.eventyear>.nav>.fa, .eventvolume-list>.eventvolume>.nav>.fa{
 	margin-left: 2px;
 	margin-bottom: 2px;
 	width: 30px;
@@ -481,16 +495,18 @@ div.d3-tooltip {
     text-align: center;
 }
 .content-list>.publication>.nav>.fa-edit, .content-list>.eventgroup-item>.eventgroup>.nav>.fa-edit,
-.content-list>.author>.nav>.fa-edit, .eventyear-list>.eventyear-item>.eventyear>.nav>.fa-edit{
+.content-list>.author>.nav>.fa-edit, .eventyear-list>.eventyear-item>.eventyear>.nav>.fa-edit,
+.eventvolume-list>.eventvolume>.nav>.fa-edit{
 	color: #999;
     margin-top: 1px;
     background-color:#fff;
     font-size: 16px;
 }
 .content-list>.publication>.detail, .content-list>.eventgroup-item>.eventgroup>.detail, 
-.content-list>.author>.detail, .eventyear-list>.eventyear-item>.detail {
+.content-list>.author>.detail, .eventyear-list>.eventyear-item>.detail,
+.eventvolume-list>.eventvolume>.detail {
 	cursor:pointer;
-    margin-left: 0;
+    margin-left:0;
     float:left;
     width:260px
 }
@@ -502,6 +518,9 @@ div.d3-tooltip {
 }
 .eventyear-list>.eventyear-item>.detail {
     width:257px
+}
+.eventvolume-list>.eventvolume>.detail {
+	width:190px
 }
 /*
 .palm_atr_ct{
@@ -582,7 +601,8 @@ div.d3-tooltip {
 	float: left;
 }
 .content-list>.author>.detail .icon,
-.eventyear-item>.eventyear>.detail .icon
+.eventyear-item>.eventyear>.detail .icon,
+.eventvolume-list>.eventvolume>.detail .icon
 {
 	float: left;
     line-height: 20px;
@@ -590,7 +610,8 @@ div.d3-tooltip {
 .content-list>.author>.detail .info, 
 .eventyear-item>.eventyear>.detail .number,
 .eventyear-item>.eventyear>.detail .date,
-.eventyear-item>.eventyear>.detail .location{
+.eventyear-item>.eventyear>.detail .location,
+.eventvolume-list>.eventvolume>.detail .volume{
 	margin-left: 5px;
     float: left;
 }

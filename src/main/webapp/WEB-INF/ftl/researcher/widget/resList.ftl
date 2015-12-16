@@ -197,7 +197,7 @@
 										researcherDetail.append(
 											$( '<div/>' )
 											.addClass( 'paper font-xs' )
-											.html( "Paper : " + item.citedBy + " || Cited : " + item.citedBy)
+											.html( "Publications: " + item.publicationsNumber + " || Cited by: " + item.citedBy)
 										);
 										
 									if( typeof item.photo != 'undefined'){
