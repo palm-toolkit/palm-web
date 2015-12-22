@@ -1948,6 +1948,9 @@ a:focus {
     padding: 0;
     list-style: none
 }
+.notatimeline:before{
+	content:none !important;
+}
 .timeline:before {
     content: '';
     position: absolute;
@@ -1958,6 +1961,9 @@ a:focus {
     left: 31px;
     margin: 0;
     border-radius: 2px
+}
+.notatimeline>li{
+	margin-right: 0 !imo;
 }
 .timeline>li {
     position: relative;
@@ -1971,6 +1977,9 @@ a:focus {
 }
 .timeline>li:after {
     clear: both
+}
+.notatimeline>li>.timeline-item {
+	margin-left: 40px !important;
 }
 .timeline>li>.timeline-item {
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
@@ -2012,6 +2021,9 @@ a:focus {
     display: inline-block;
     background-color: #fff;
     border-radius: 4px
+}
+.notatimeline>li>.fa{
+	left:0 !important;
 }
 .timeline>li>.fa,
 .timeline>li>.glyphicon,
@@ -3772,6 +3784,7 @@ fieldset[disabled] .btn-vk.active {
 .bg-yellow,
 .bg-aqua,
 .bg-blue,
+.bg-blue-dark,
 .bg-light-blue,
 .bg-green,
 .bg-navy,
@@ -3860,6 +3873,9 @@ fieldset[disabled] .btn-vk.active {
 }
 .bg-blue {
     background-color: #0073b7 !important
+}
+.bg-blue-dark {
+	background-color: #004F7E !important;
 }
 .bg-light-blue,
 .label-primary,

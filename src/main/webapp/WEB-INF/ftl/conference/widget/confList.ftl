@@ -434,6 +434,15 @@
 								return;<#-- empty array just continue -->
 							} else if ( eventArray.length === 1 ){
 								<#-- add more properties such as number of paper -->
+								<#-- add clcik event -->
+								eventYearItem.attr({ "data-id": eventArray[0].id });
+												
+								eventYearItem.find( ".detail:first" ).on( "click", function(){
+									<#-- remove active class -->
+									$( this ).parent().parent().siblings().removeClass( "active" );
+									$( this ).parent().parent().addClass( "active" );
+									getVenueDetails( $( this ).parent().parent().data( 'id' ));
+								});
 
 							} else {
 
@@ -562,161 +571,161 @@
 							eventArray = [];
 						}
 					
+						if( typeof itemEvent.year !== "undefined"){
 					
-					
-						eventYearItem =
-							$('<div/>')
-							.addClass( "eventyear-item" );
+							eventYearItem =
+								$('<div/>')
+								.addClass( "eventyear-item" );
+								
+							if( !itemEvent.isAdded ){
+								eventYearItem.addClass( "text-gray" );
+							}
+								
+							<#-- append Event Year Item -->
+							containerList.append( eventYearItem );
 							
-						if( !itemEvent.isAdded ){
-							eventYearItem.addClass( "text-gray" );
-						}
+							<#-- event year -->
+							eventYear =
+								$('<div/>')
+								.addClass( "eventyear" );
+								
+							<#-- append Event Year to Event Year Item -->
+							eventYearItem.append( eventYear );
 							
-						<#-- append Event Year Item -->
-						containerList.append( eventYearItem );
-						
-						<#-- event year -->
-						eventYear =
-							$('<div/>')
-							.addClass( "eventyear" );
+							<#-- event navigation -->
+							var eventYearNav = $( '<div/>' )
+								.attr({'class':'nav'});
+								
+							<#-- append Event Year Navigation to Event Year -->
+							eventYear.append( eventYearNav );
 							
-						<#-- append Event Year to Event Year Item -->
-						eventYearItem.append( eventYear );
-						
-						<#-- event navigation -->
-						var eventYearNav = $( '<div/>' )
-							.attr({'class':'nav'});
+							<#-- event detail -->
+							var eventYearDetail = $('<div/>').addClass( "detail" );
 							
-						<#-- append Event Year Navigation to Event Year -->
-						eventYear.append( eventYearNav );
-						
-						<#-- event detail -->
-						var eventYearDetail = $('<div/>').addClass( "detail" );
-						
-						<#-- add click event -->
-						eventYearDetail.on( "click", function(){
-							<#-- remove active class -->
-							<#--$( this ).parent().siblings().removeClass( "active" )-->
-							$( this ).parent().addClass( "active" );
-						});
-						
-						<#-- append Event Detail to Event Year -->
-						eventYear.append( eventYearDetail );
-						
-
-						<#-- edit option -->
-						var eventYearEdit = $('<i/>')
-									.attr({
-										'class':'fa fa-edit', 
-										'title':'edit event',
-										'data-url':'<@spring.url '/event/edit' />' + '?id=' + itemEvent.id,
-										'style':'display:none'
-									});
-						
-						<#-- hide show edit button -->	
-						eventYearItem.hover(function()
-						{
-						     eventYearEdit.show();
-						}, function()
-						{ 
-						     eventYearEdit.hide();
-						});
-						
+							<#-- add click event -->
+							eventYearDetail.on( "click", function(){
+								<#-- remove active class -->
+								<#--$( this ).parent().siblings().removeClass( "active" )-->
+								$( this ).parent().addClass( "active" );
+							});
+							
+							<#-- append Event Detail to Event Year -->
+							eventYear.append( eventYearDetail );
+							
+	
+							<#-- edit option -->
+							var eventYearEdit = $('<i/>')
+										.attr({
+											'class':'fa fa-edit', 
+											'title':'edit event',
+											'data-url':'<@spring.url '/event/edit' />' + '?id=' + itemEvent.id,
+											'style':'display:none'
+										});
+							
+							<#-- hide show edit button -->	
+							eventYearItem.hover(function()
+							{
+							     eventYearEdit.show();
+							}, function()
+							{ 
+							     eventYearEdit.hide();
+							});
+							
+										
+							<#-- add click event to edit event -->
+							eventYearEdit.click( function( event ){
+								event.preventDefault();
+								$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Event");
+							});
+							
+							<#-- append edit  -->
+							eventYearNav.append( eventYearEdit );
+							
+							<#-- event year detail content -->
+								<#-- event title -->
+								var eventYearTitleText = "";
+								if( typeof data.eventGroup.abbr !== "undefined" ){
+									eventYearTitleText = data.eventGroup.abbr;
+								} else{
+									eventYearTitleText = data.eventGroup.name;
+								}
+															
+								<#-- event year title -->
+								var eventYearTitle = $('<div/>').addClass( "title" ).html( eventYearTitleText + " - " + itemEvent.year);
+								
+								<#-- append Event Title to Event Year Detail-->
+								eventYearDetail.append( eventYearTitle );
+							
+								<#-- event number -->
+								if( typeof itemEvent.number !== "undefined" )
+								{
+									var eventNumber = itemEvent.number;
+									eventNumber == "1" ? eventNumber += "st" : eventNumber == "2" ? eventNumber += "nd" : eventNumber += "th";
 									
-						<#-- add click event to edit event -->
-						eventYearEdit.click( function( event ){
-							event.preventDefault();
-							$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Event");
-						});
-						
-						<#-- append edit  -->
-						eventYearNav.append( eventYearEdit );
-						
-						<#-- event year detail content -->
-							<#-- event title -->
-							var eventYearTitleText = "";
-							if( typeof data.eventGroup.abbr !== "undefined" ){
-								eventYearTitleText = data.eventGroup.abbr;
-							} else{
-								eventYearTitleText = data.eventGroup.name;
-							}
-														
-							<#-- event year title -->
-							var eventYearTitle = $('<div/>').addClass( "title" ).html( eventYearTitleText + " - " + itemEvent.year);
-							
-							<#-- append Event Title to Event Year Detail-->
-							eventYearDetail.append( eventYearTitle );
-						
-							<#-- event number -->
-							if( typeof itemEvent.number !== "undefined" )
-							{
-								var eventNumber = itemEvent.number;
-								eventNumber == "1" ? eventNumber += "st" : eventNumber == "2" ? eventNumber += "nd" : eventNumber += "th";
-								
-								eventNumber += " " + eventYearTitleText;
-								
-								var eventNumberElement = $('<div/>')
-												.addClass( "info" )
-												.append(
-													$('<i/>')
-													.attr({
-														'class':'fa fa-hashtag icon font-xs',
-													})
-												)
-												.append(
-													$('<span/>')
-													.attr({
-														'class':'number',
-													})
-													.html( eventNumber )
-												);
-								eventYearDetail.append( eventNumberElement );
-							}
-							<#-- event date -->
-							if( typeof itemEvent.date !== "undefined" )
-							{
-								var eventDateElement = $('<div/>')
-												.addClass( "info" )
-												.append(
-													$('<i/>')
-													.attr({
-														'class':'fa fa-calendar icon font-xs',
-													})
-												)
-												.append(
-													$('<span/>')
-													.attr({
-														'class':'date',
-													})
-													.html( itemEvent.date + ", " + itemEvent.year )
-												);
-								eventYearDetail.append( eventDateElement );
-							}
-
-							<#-- event location -->
-							if( typeof itemEvent.location !== "undefined" )
-							{
-								var eventLocationElement = $('<div/>')
-												.addClass( "info" )
-												.append(
-													$('<i/>')
-													.attr({
-														'class':'fa fa-map-marker icon font-xs',
-													})
-												)
-												.append(
-													$('<span/>')
-													.attr({
-														'class':'date',
-													})
-													.html( itemEvent.location )
-												);
-								eventYearDetail.append( eventLocationElement );
-							}
-
-						<#-- end of event detail content -->
-
-						<#-- store changes -->
+									eventNumber += " " + eventYearTitleText;
+									
+									var eventNumberElement = $('<div/>')
+													.addClass( "info" )
+													.append(
+														$('<i/>')
+														.attr({
+															'class':'fa fa-hashtag icon font-xs',
+														})
+													)
+													.append(
+														$('<span/>')
+														.attr({
+															'class':'number',
+														})
+														.html( eventNumber )
+													);
+									eventYearDetail.append( eventNumberElement );
+								}
+								<#-- event date -->
+								if( typeof itemEvent.date !== "undefined" )
+								{
+									var eventDateElement = $('<div/>')
+													.addClass( "info" )
+													.append(
+														$('<i/>')
+														.attr({
+															'class':'fa fa-calendar icon font-xs',
+														})
+													)
+													.append(
+														$('<span/>')
+														.attr({
+															'class':'date',
+														})
+														.html( itemEvent.date + ", " + itemEvent.year )
+													);
+									eventYearDetail.append( eventDateElement );
+								}
+	
+								<#-- event location -->
+								if( typeof itemEvent.location !== "undefined" )
+								{
+									var eventLocationElement = $('<div/>')
+													.addClass( "info" )
+													.append(
+														$('<i/>')
+														.attr({
+															'class':'fa fa-map-marker icon font-xs',
+														})
+													)
+													.append(
+														$('<span/>')
+														.attr({
+															'class':'date',
+														})
+														.html( itemEvent.location )
+													);
+									eventYearDetail.append( eventLocationElement );
+								}
+	
+							<#-- end of event detail content -->
+							}<#-- end of typeof eventItem.year !== "undefined" -->
+						<#-- store year changes -->
 						eventCurrentYear = itemEvent.year;
 					}<#-- end of currentYear != tempYear --> 
 					

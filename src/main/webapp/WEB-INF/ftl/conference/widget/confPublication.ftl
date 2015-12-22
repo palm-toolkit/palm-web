@@ -36,7 +36,7 @@
 
 				var timeLineContainer = 
 					$( '<ul/>' )
-						.addClass( "timeline" );
+						.addClass( "timeline notatimeline" );
 
 				var timeLineGroupYear = "";
 
@@ -88,7 +88,7 @@
 							timelineDot.attr({ "title" : "Book" });
 						}
 						else if( item.type == "WORKSHOP" ){
-							timelineDot.addClass( "fa fa-file-text-o bg-blue" );
+							timelineDot.addClass( "fa fa-file-text-o bg-blue-dark" );
 							timelineDot.attr({ "title" : "Workshop" });
 						}
 						else if( item.type == "EDITORSHIP" ){
@@ -104,16 +104,6 @@
 
 					<#-- timeline container -->
 					var timelineItem = $( '<div/>' ).addClass( "timeline-item" );
-						
-					<#-- timeline time -->
-					var timelineTime = 
-						$( '<span/>' ).addClass( "time" )
-							.append( $( '<i/>' ).addClass( "fa fa-clock-o" ) );
-							
-					if( typeof item.date !== 'undefined' ){
-						timelineTime.append( item.date );
-					}
-					timelineItem.append( timelineTime );
 					
 					<#-- clean non alpha numeric from title -->
 					var cleanTitle = item.title.replace(/[^\w\s]/gi, '');

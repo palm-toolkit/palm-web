@@ -4,10 +4,9 @@
 		<#-- Venue -->
 		<div class="form-group">
           <label>Publication Type *</label>
-          <select id="venue-type" name="venue-type" class="form-control" style="width:120px">
-            <option value="conference">Conference</option>
-            <option value="workshop">Workshop</option>
-            <option value="journal">Journal</option>
+          <select id="type" name="type" class="form-control" style="width:120px">
+            <option value="conference">Conference / Workshop</option>
+            <option value="journal"<#if targetType?? && targetType == "journal"> selected</#if>>Journal</option>
           </select>
         </div>
         
@@ -35,7 +34,6 @@
 	      <textarea name="description" id="description" class="form-control" rows="3" placeholder="Description"></textarea>
 	    </div>
 	    
-	    <input type="hidden" id="type" name="type"<#if targetType??> value="${type!''}"</#if>>
 	    
 	    <input type="hidden" id="dblpUrl" name="dblpUrl">
 	    
@@ -122,6 +120,7 @@
 		
 		$("#name").autocomplete({
 		    source: function (request, response) {
+		    	var _this = this;
 		        $.ajax({
 		            url: "<@spring.url '/venue/search' />",
 		            dataType: "json",
@@ -130,7 +129,12 @@
 						source: "all",
 						type: $( "#venue-type" ).val()
 					},
-		            success: function (data) {		            	
+		            success: function (data) {
+		            	$("#name").removeClass( "ui-autocomplete-loading" );
+		            	
+		            	if( typeof data.eventGroups === "undefined" )
+		            		return false;
+		            			            	
 		                response($.map(data.eventGroups, function(v,i){
 		                	var results = {
 		                			id: v.id,
@@ -162,7 +166,13 @@
 			close: function() {
 				$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
 			}
-		});
+		}).keypress(function(e){ 
+		    if (!e) e = window.event;   
+		    if (e.keyCode == '13'){
+		      $('#search').autocomplete('close');
+		      return false;
+		    }
+		  });
 		
 		<#-- trigger autocomplete is there is value on name input -->
 		<#if targetName??>

@@ -107,6 +107,7 @@ $.PALM.options = {
   popUpIframeOptions:{
 	  popUpWidth:"60%",
 	  popUpHeight:"80%",
+	  popUpMargin:"4% auto",
 	  popUpMaxWidth:"1000px",
 	  popUpCloseSelector:"dialog-close",
 	  popUpIframeClasses:{
@@ -714,7 +715,7 @@ $.PALM.popUpIframe = {
 		var popUpContainer = 
 			$( '<div/>' )
 	    	.addClass( o.popUpIframeClasses.dialogContent )
-	    	.css({width:o.popUpWidth, height:o.popUpHeight})
+	    	.css({width:o.popUpWidth, height:o.popUpHeight, margin:o.popUpMargin})
 	    	.append(
 	    		$( '<div/>' )
 	    	    .addClass( o.popUpIframeClasses.dialogCloseContainer )

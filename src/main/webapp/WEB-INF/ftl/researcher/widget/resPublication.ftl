@@ -127,6 +127,11 @@
 							timelineDot.attr({ "title" : "Conference" });
 							noOfConferenceYearly++;
 						}
+						else if( item.type == "WORKSHOP" ){
+							timelineDot.addClass( "fa fa-file-text-o bg-blue-dark" );
+							timelineDot.attr({ "title" : "Workshop" });
+							noOfConferenceYearly++;
+						}
 						else if( item.type == "BOOK" ){
 							timelineDot.addClass( "fa fa-book bg-green" );
 							timelineDot.attr({ "title" : "Book" });
@@ -191,6 +196,11 @@
 												.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name})
 												.html( authorItem.name );
 												
+							<#-- check whether author is added -->
+							if( !authorItem.isAdded ){
+								eachAuthorName.addClass( "text-gray" );
+							}
+												
 							if( index > 0 )
 								eachAuthor.append( ", " );
 							eachAuthor.append( eachAuthorName );
@@ -205,7 +215,8 @@
 					if( typeof item.event !== 'undefined' ){
 						var eventElem = $( '<div/>' )
 										.addClass( 'event-detail font-xs' );
-													
+						
+											
 						var venueText = item.event.name;
 						var venueHref = "<@spring.url '/venue' />?eventId=" + item.event.id + "&type=" + item.type.toLowerCase() + "&name=" + item.event.name.toLowerCase().replace(/[^\w\s]/gi, '');
 						
@@ -220,8 +231,13 @@
 						
 						var eventPart = $( '<a/>' )
 												.attr({ "href" : venueHref })
+												.addClass( "text-gray" )
 												.html( venueText );
 						eventElem.append( eventPart );
+						
+						if( item.event.isAdded ){
+							eventPart.removeClass( "text-gray" );
+						}
 						
 						<#-- pages -->
 						if( typeof item.pages !== 'undefined' ){
@@ -247,6 +263,7 @@
 						
 						var eventPart = $( '<a/>' )
 												.attr({ "href" : venueHref })
+												.addClass( "text-gray" )
 												.html( venueText );
 						eventElem.append( eventPart );
 						
