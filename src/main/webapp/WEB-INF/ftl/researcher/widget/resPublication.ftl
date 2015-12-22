@@ -43,46 +43,77 @@
 				var timeLineGroupYear = "";
 				
 				var noOfConferenceYearly;
+				var noOfWorkshopYearly;
 				var noOfJournalYearly;
 				var noOfBookYearly;
 				<#-- timeline group -->
 				var liTimeGroup;
 				
+				<#-- add empty object, to add more loop -->
+				data.publications.push( { "date":"endpublication"} );
+					
 				$.each( data.publications, function( index, item ){
 					<#-- timeline group -->
 					if( typeof item.date !== 'undefined' ){
-						if( timeLineGroupYear !== item.date.substring(0, 4)){
+						if( timeLineGroupYear !== item.date.substring(0, 4) ){
 							if( typeof liTimeGroup !== "undefined" ){
-								if( noOfConferenceYearly > 0 ){
+								if( noOfConferenceYearly > 0 || noOfWorkshopYearly > 0){
+									var noOfPublicationInfo = "";
+									if( noOfConferenceYearly == 1 )
+										noOfPublicationInfo += "1 Conference";
+									else if( noOfConferenceYearly > 1 )
+										noOfPublicationInfo += noOfConferenceYearly + " Conferences";
+										
+									if( noOfConferenceYearly > 0 && noOfWorkshopYearly > 0 )
+										noOfPublicationInfo += " & ";
+										
+									if( noOfWorkshopYearly == 1 )
+										noOfPublicationInfo += "1 Workshop";
+									else if( noOfWorkshopYearly > 1 )
+										noOfPublicationInfo += noOfWorkshopYearly + " Workshops";
+										
 									liTimeGroup.append( 
 												$( '<span/>' )
 												.addClass( "bg-blue" )
 												.css({ "margin-left" : "10px" })
-												.html( noOfConferenceYearly + " Conferences/Workshops" )
+												.html( noOfPublicationInfo )
 											);
 								}
 								if( noOfJournalYearly > 0 ){
+									var noOfPublicationInfo = "";
+									if( noOfJournalYearly == 1 )
+										noOfPublicationInfo += "1 Journal";
+									else if( noOfJournalYearly > 1 )
+										noOfPublicationInfo += noOfJournalYearly + " Journals";
+										
 									liTimeGroup.append( 
 												$( '<span/>' )
 												.addClass( "bg-red" )
 												.css({ "margin-left" : "10px" })
-												.html( noOfJournalYearly + " Journals" )
+												.html( noOfPublicationInfo )
 											);
 								}
 								if( noOfBookYearly > 0 ){
+									var noOfPublicationInfo = "";
+									if( noOfBookYearly == 1 )
+										noOfPublicationInfo += "1 Book";
+									else if( noOfBookYearly > 1 )
+										noOfPublicationInfo += noOfBookYearly + " Books";
+										
 									liTimeGroup.append( 
 												$( '<span/>' )
 												.addClass( "bg-green" )
 												.css({ "margin-left" : "10px" })
-												.html( noOfBookYearly + " Books" )
+												.html( noOfPublicationInfo )
 											);
 								}
 								
 								var firstTimelineSpan = $( liTimeGroup) .find( "span:first" );
-								firstTimelineSpan.html( (noOfConferenceYearly + noOfJournalYearly + noOfBookYearly) + " " + firstTimelineSpan.html() );
+								firstTimelineSpan.html( (noOfConferenceYearly + noOfWorkshopYearly + noOfJournalYearly + noOfBookYearly) + " " + firstTimelineSpan.html() );
 							}
 							
 							noOfConferenceYearly = 0;
+							noOfWorkshopYearly = 0;
 							noOfJournalYearly = 0;
 							noOfBookYearly = 0;
 							
@@ -111,186 +142,188 @@
 						}
 					}
 
+					if( typeof item.title !== "undefined" ){
 					
-					var publicationItem = $( '<li/>' );
-
-					<#-- timeline mark -->
-					var timelineDot = $( '<i/>' );
-					if( typeof item.type !== 'undefined'){
-						if( item.type == "JOURNAL" ){
-							timelineDot.addClass( "fa fa-files-o bg-red" );
-							timelineDot.attr({ "title" : "Journal" });
-							noOfJournalYearly++;
-						}
-						else if( item.type == "CONFERENCE" ){
-							timelineDot.addClass( "fa fa-file-text-o bg-blue" );
-							timelineDot.attr({ "title" : "Conference" });
-							noOfConferenceYearly++;
-						}
-						else if( item.type == "WORKSHOP" ){
-							timelineDot.addClass( "fa fa-file-text-o bg-blue-dark" );
-							timelineDot.attr({ "title" : "Workshop" });
-							noOfConferenceYearly++;
-						}
-						else if( item.type == "BOOK" ){
-							timelineDot.addClass( "fa fa-book bg-green" );
-							timelineDot.attr({ "title" : "Book" });
-							noOfBookYearly++;
-						}
-					}else{
-						timelineDot.addClass( "fa fa-question bg-purple" );
-							timelineDot.attr({ "title" : "Unknown" });
-					}
-
-					publicationItem.append( timelineDot );
-
-					<#-- timeline container -->
-					var timelineItem = $( '<div/>' ).addClass( "timeline-item" );
-						
-					<#-- timeline time -->
-					var timelineTime = 
-						$( '<span/>' ).addClass( "time" )
-							.append( $( '<i/>' ).addClass( "fa fa-clock-o" ) );
-							
-					if( typeof item.date !== 'undefined' ){
-						timelineTime.append( item.date );
-					}
-					timelineItem.append( timelineTime );
-					
-					<#-- clean non alpha numeric from title -->
-					var cleanTitle = item.title.replace(/[^\w\s]/gi, '');
-					
-					<#-- timeline header -->
-					var timelineHeader = $( '<h3/>' )
-						.addClass( "timeline-header" )
-						.append( "<strong><a href='<@spring.url '/publication' />?id=" + item.id + "&title=" + cleanTitle +"'>" + item.title + "</a></strong>" );
-					timelineItem.append( timelineHeader );
-
-					<#-- timeline body -->
-					var timelineBody = $( '<div/>' ).addClass( "timeline-body" );
-
-					if( typeof item.coauthor !== 'undefined' ){
-						
-						<#-- authors -->
-						var timeLineAuthor = $( '<div/>' );
-
-						$.each( item.coauthor, function( index, authorItem ){
-							var eachAuthor = $( '<span/>' );
-							
-							<#-- photo -->
-							<#--
-							var eachAuthorImage = null;
-							if( typeof authorItem.photo !== 'undefined' ){
-								eachAuthorImage = $( '<img/>' )
-									.addClass( "timeline-author-img" )
-									.attr({ "width":"40px" , "src" : authorItem.photo , "alt" : authorItem.name });
-							} else {
-								eachAuthorImage = $( '<i/>' )
-									.addClass( "fa fa-user bg-aqua" )
-									.attr({ "title" : authorItem.name });
+						var publicationItem = $( '<li/>' );
+	
+						<#-- timeline mark -->
+						var timelineDot = $( '<i/>' );
+						if( typeof item.type !== 'undefined'){
+							if( item.type == "JOURNAL" ){
+								timelineDot.addClass( "fa fa-files-o bg-red" );
+								timelineDot.attr({ "title" : "Journal" });
+								noOfJournalYearly++;
 							}
-							eachAuthor.append( eachAuthorImage );
-							-->
-							<#-- name -->
-							var eachAuthorName = $( '<a/>' )
-												.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name})
-												.html( authorItem.name );
-												
-							<#-- check whether author is added -->
-							if( !authorItem.isAdded ){
-								eachAuthorName.addClass( "text-gray" );
+							else if( item.type == "CONFERENCE" ){
+								timelineDot.addClass( "fa fa-file-text-o bg-blue" );
+								timelineDot.attr({ "title" : "Conference" });
+								noOfConferenceYearly++;
 							}
-												
-							if( index > 0 )
-								eachAuthor.append( ", " );
-							eachAuthor.append( eachAuthorName );
-							
-							timeLineAuthor.append( eachAuthor );
-						});
-
-						timelineBody.append( timeLineAuthor );
-					}
-					<#-- venue -->
-					
-					if( typeof item.event !== 'undefined' ){
-						var eventElem = $( '<div/>' )
-										.addClass( 'event-detail font-xs' );
-						
-											
-						var venueText = item.event.name;
-						var venueHref = "<@spring.url '/venue' />?eventId=" + item.event.id + "&type=" + item.type.toLowerCase() + "&name=" + item.event.name.toLowerCase().replace(/[^\w\s]/gi, '');
-						
-						if( typeof item.volume != 'undefined' ){
-							venueText += " (" + item.volume + ")";
-							venueHref += "&volume=" + item.volume;
-						}
-						if( typeof item.date != 'undefined' ){
-							venueText += " " + item.date.substring(0, 4);
-							venueHref += "&year=" + item.date.substring(0, 4);
-						}
-						
-						var eventPart = $( '<a/>' )
-												.attr({ "href" : venueHref })
-												.addClass( "text-gray" )
-												.html( venueText );
-						eventElem.append( eventPart );
-						
-						if( item.event.isAdded ){
-							eventPart.removeClass( "text-gray" );
-						}
-						
-						<#-- pages -->
-						if( typeof item.pages !== 'undefined' ){
-							eventElem.append( " : " + item.pages );
+							else if( item.type == "WORKSHOP" ){
+								timelineDot.addClass( "fa fa-file-text-o bg-blue-dark" );
+								timelineDot.attr({ "title" : "Workshop" });
+								noOfWorkshopYearly++;
+							}
+							else if( item.type == "BOOK" ){
+								timelineDot.addClass( "fa fa-book bg-green" );
+								timelineDot.attr({ "title" : "Book" });
+								noOfBookYearly++;
+							}
+						}else{
+							timelineDot.addClass( "fa fa-question bg-purple" );
+								timelineDot.attr({ "title" : "Unknown" });
 						}
 	
-						timelineBody.append( eventElem );			
-					} else if( typeof item.venue !== 'undefined'){
-						var eventElem = $( '<div/>' )
-										.addClass( 'event-detail font-xs' );
+						publicationItem.append( timelineDot );
+	
+						<#-- timeline container -->
+						var timelineItem = $( '<div/>' ).addClass( "timeline-item" );
+							
+						<#-- timeline time -->
+						var timelineTime = 
+							$( '<span/>' ).addClass( "time" )
+								.append( $( '<i/>' ).addClass( "fa fa-clock-o" ) );
+								
+						if( typeof item.date !== 'undefined' ){
+							timelineTime.append( item.date );
+						}
+						timelineItem.append( timelineTime );
+						
+						<#-- clean non alpha numeric from title -->
+						var cleanTitle = item.title.replace(/[^\w\s]/gi, '');
+						
+						<#-- timeline header -->
+						var timelineHeader = $( '<h3/>' )
+							.addClass( "timeline-header" )
+							.append( "<strong><a href='<@spring.url '/publication' />?id=" + item.id + "&title=" + cleanTitle +"'>" + item.title + "</a></strong>" );
+						timelineItem.append( timelineHeader );
+	
+						<#-- timeline body -->
+						var timelineBody = $( '<div/>' ).addClass( "timeline-body" );
+	
+						if( typeof item.coauthor !== 'undefined' ){
+							
+							<#-- authors -->
+							var timeLineAuthor = $( '<div/>' );
+	
+							$.each( item.coauthor, function( index, authorItem ){
+								var eachAuthor = $( '<span/>' );
+								
+								<#-- photo -->
+								<#--
+								var eachAuthorImage = null;
+								if( typeof authorItem.photo !== 'undefined' ){
+									eachAuthorImage = $( '<img/>' )
+										.addClass( "timeline-author-img" )
+										.attr({ "width":"40px" , "src" : authorItem.photo , "alt" : authorItem.name });
+								} else {
+									eachAuthorImage = $( '<i/>' )
+										.addClass( "fa fa-user bg-aqua" )
+										.attr({ "title" : authorItem.name });
+								}
+								eachAuthor.append( eachAuthorImage );
+								-->
+								<#-- name -->
+								var eachAuthorName = $( '<a/>' )
+													.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name})
+													.html( authorItem.name );
 													
-						var venueText = item.venue;
-						var venueHref = "<@spring.url '/venue' />?type=" + item.type.toLowerCase() + "&name=" + item.venue.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id ;
-						
-						if( typeof item.volume != 'undefined' ){
-							venueText += " (" + item.volume + ")";
-							venueHref += "&volume=" + item.volume;
-						}
-						if( typeof item.date != 'undefined' ){
-							venueText += " " + item.date.substring(0, 4);
-							venueHref += "&year=" + item.date.substring(0, 4);
-						}
-						
-						var eventPart = $( '<a/>' )
-												.attr({ "href" : venueHref })
-												.addClass( "text-gray" )
-												.html( venueText );
-						eventElem.append( eventPart );
-						
-						<#-- pages -->
-						if( typeof item.pages !== 'undefined' ){
-							eventElem.append( " : " + item.pages );
-						}
+								<#-- check whether author is added -->
+								if( !authorItem.isAdded ){
+									eachAuthorName.addClass( "text-gray" );
+								}
+													
+								if( index > 0 )
+									eachAuthor.append( ", " );
+								eachAuthor.append( eachAuthorName );
+								
+								timeLineAuthor.append( eachAuthor );
+							});
 	
-						timelineBody.append( eventElem );
-					}
+							timelineBody.append( timeLineAuthor );
+						}
+						<#-- venue -->
+						
+						if( typeof item.event !== 'undefined' ){
+							var eventElem = $( '<div/>' )
+											.addClass( 'event-detail font-xs' );
+							
+												
+							var venueText = item.event.name;
+							var venueHref = "<@spring.url '/venue' />?eventId=" + item.event.id + "&type=" + item.type.toLowerCase() + "&name=" + item.event.name.toLowerCase().replace(/[^\w\s]/gi, '');
+							
+							if( typeof item.volume != 'undefined' ){
+								venueText += " (" + item.volume + ")";
+								venueHref += "&volume=" + item.volume;
+							}
+							if( typeof item.date != 'undefined' ){
+								venueText += " " + item.date.substring(0, 4);
+								venueHref += "&year=" + item.date.substring(0, 4);
+							}
+							
+							var eventPart = $( '<a/>' )
+													.attr({ "href" : venueHref })
+													.addClass( "text-gray" )
+													.html( venueText );
+							eventElem.append( eventPart );
+							
+							if( item.event.isAdded ){
+								eventPart.removeClass( "text-gray" );
+							}
+							
+							<#-- pages -->
+							if( typeof item.pages !== 'undefined' ){
+								eventElem.append( " : " + item.pages );
+							}
+		
+							timelineBody.append( eventElem );			
+						} else if( typeof item.venue !== 'undefined'){
+							var eventElem = $( '<div/>' )
+											.addClass( 'event-detail font-xs' );
+														
+							var venueText = item.venue;
+							var venueHref = "<@spring.url '/venue' />?type=" + item.type.toLowerCase() + "&name=" + item.venue.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id ;
+							
+							if( typeof item.volume != 'undefined' ){
+								venueText += " (" + item.volume + ")";
+								venueHref += "&volume=" + item.volume;
+							}
+							if( typeof item.date != 'undefined' ){
+								venueText += " " + item.date.substring(0, 4);
+								venueHref += "&year=" + item.date.substring(0, 4);
+							}
+							
+							var eventPart = $( '<a/>' )
+													.attr({ "href" : venueHref })
+													.addClass( "text-gray" )
+													.html( venueText );
+							eventElem.append( eventPart );
+							
+							<#-- pages -->
+							if( typeof item.pages !== 'undefined' ){
+								eventElem.append( " : " + item.pages );
+							}
+		
+							timelineBody.append( eventElem );
+						}
+						
 					
-				
-					<#-- abstract -->
-					<#--
-					if( typeof item.abstract !== 'undefined' )
-						timelineBody.append( '<strong>Abstract</strong><br/>' + item.abstract + '<br/>');
-					-->
-					<#-- keyword -->
-					<#--
-					if( typeof item.keyword !== 'undefined' )
-						timelineBody.append( '<strong>Keyword</strong><br/>' + item.keyword.replace(/,/g, ', ') + '<br/>');
-					-->
-					timelineItem.append( timelineBody );
-
-					publicationItem.append( timelineItem );
-
-					timeLineContainer.append( publicationItem );
+						<#-- abstract -->
+						<#--
+						if( typeof item.abstract !== 'undefined' )
+							timelineBody.append( '<strong>Abstract</strong><br/>' + item.abstract + '<br/>');
+						-->
+						<#-- keyword -->
+						<#--
+						if( typeof item.keyword !== 'undefined' )
+							timelineBody.append( '<strong>Keyword</strong><br/>' + item.keyword.replace(/,/g, ', ') + '<br/>');
+						-->
+						timelineItem.append( timelineBody );
+	
+						publicationItem.append( timelineItem );
+	
+						timeLineContainer.append( publicationItem );
+					}
 				});
 
 				<#-- append everything to  -->
