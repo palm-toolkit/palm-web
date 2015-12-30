@@ -117,14 +117,17 @@
 							noOfJournalYearly = 0;
 							noOfBookYearly = 0;
 							
-							liTimeGroup = $( '<li/>' )
-											.addClass( "time-label" )
-											.append( 
-												$( '<span/>' )
-												.addClass( "bg-green" )
-												.html( "Publications in " + item.date.substring(0, 4) )
-											);
-							timeLineContainer.append( liTimeGroup );
+							
+							if( item.date != "endpublication" ){
+								liTimeGroup = $( '<li/>' )
+												.addClass( "time-label" )
+												.append( 
+													$( '<span/>' )
+													.addClass( "bg-green" )
+													.html( "Publications in " + item.date.substring(0, 4) )
+												);
+								timeLineContainer.append( liTimeGroup );
+							}
 						}
 						timeLineGroupYear = item.date.substring(0, 4);
 					} else {

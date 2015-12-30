@@ -116,7 +116,7 @@
 		            		return false;
 		            	}
 		            		
-		                response($.map(data.researcher , function(v,i){
+		                response($.map(data.researchers , function(v,i){
 		                	var researcherMap = {
 		                		id: v.id,
 	                            label: v.name,

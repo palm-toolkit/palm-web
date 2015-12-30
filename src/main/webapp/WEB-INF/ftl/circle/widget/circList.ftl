@@ -134,7 +134,7 @@
 		
 		<#-- unique options in each widget -->
 		var options ={
-			source : "<@spring.url '/publication/search' />",
+			source : "<@spring.url '/circle/search' />",
 			query: "",
 			queryString : "",
 			page:0,
@@ -350,9 +350,9 @@
 				}
 					
 				if( jumpTo === "first") // if new searching performed
-					obj.options.source = "<@spring.url '/publication/search?query=' />" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
+					obj.options.source = "<@spring.url '/circle/search?query=' />" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
 				else
-					obj.options.source = "<@spring.url '/publication/search?query=' />" + obj.options.query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
+					obj.options.source = "<@spring.url '/circle/search?query=' />" + obj.options.query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
 					
 				$.PALM.boxWidget.refresh( obj.element , obj.options );
 			}

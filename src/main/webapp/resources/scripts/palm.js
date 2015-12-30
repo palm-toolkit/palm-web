@@ -161,6 +161,7 @@ $.PALM.options = {
   navMenuSelector : ".navbar-custom-menu"
 };
 
+
 /* ------------------
  * - Implementation -
  * ------------------
@@ -240,6 +241,263 @@ $(function () {
  * ----------------------
  * All PALM functions are implemented below.
  */
+
+/*
+ * Global object, pointer to selected item
+ */
+$.PALM.selected = {
+	record: function( typeSelected, selectedObject, activeObjects ){
+		var _this = this;
+		_this.reset();
+		if( typeSelected == "researcher" ){
+			_this.researcher = selectedObject;
+		} else if ( typeSelected == "publication" ){
+			_this.publication = selectedObject;
+		} else if ( typeSelected == "event" ){
+			_this.event = selectedObject;
+		} else if ( typeSelected == "circle" ){
+			_this.circle = selectedObject;
+		}
+		if( typeof activeObjects !== "undefined" && activeObjects.length > 0 ){
+			$.each( activeObjects , function( index, item){
+				$( item ).removeClass( "text-gray" );
+				$( item ).addClass( "active" );  
+			});
+		}
+		// record active objects
+		_this.activeObjects = activeObjects;
+	},
+	reset: function(){
+		var _this = this;
+		if( typeof _this.activeObjects !== "undefined" && _this.activeObjects.length > 0 ){
+			$.each( _this.activeObjects , function( index, item){
+				$( item ).removeClass( "active" );  
+			});
+			// make array empty
+			_this.activeObjects = [];
+		}
+	}
+};
+
+/* PALM circle
+ * =============
+ * This relevant to circle object
+ * 
+ * Variables:
+ * _this = $.PALM.circle
+ * 
+ * // contain current researcher / publication list from AJAX paging
+ * _this.currentResearcherData
+ * _this.currentPublicationData
+ * 
+ * // contain clean (minus researcher/publication already on circle) current
+ * // researcher / publication list from AJAX paging
+ * _this.currentCleanResearcherData
+ * _this.currentCleanPublicationData
+ * 
+ * // contain list of researcher / publication objects on circle
+ * _this.reseacherOnCircle
+ * 
+ * 
+ */
+$.PALM.circle = {
+	circleResearcher:[],
+	circlePublication:[],
+	currentCleanResearcherData:[],
+	currentCleanPublicationData:[],
+	/**
+	 * state where the circle is loaded
+	 * either new or edit
+	 */
+	load: function ( loadType , circleId){
+		
+	},
+	/**
+	 * Every time data is loaded via AJAX, replace current data
+	 * check whether researcher objects already on circle 
+	 */
+	setCurrentResearcherData: function ( currentResearcherData ){
+		var _this = this;
+		// put researcher data into PALM variable
+		_this.currentResearcherData = currentResearcherData;
+		
+		// clean / check with researcher on publication
+		_this.cleanCurrentResearcherData();
+	},
+	/**
+	 * Check if researcher already on circle
+	 * fill currentCleanResearcherData with currentResearcherData not on circle
+	 */
+	cleanCurrentResearcherData: function(){
+		var _this = this;
+		// reset
+		_this.currentCleanResearcherData = [];
+		// check for availability
+		if( _this.circleResearcher.length > 0 && _this.currentResearcherData.length > 0){
+			// check for duplication between current and circle
+			$.each( _this.circleResearcher , function( indexCircle, itemCircle ){
+				var isExistOnCircle = false;
+				$.each( _this.currentResearcherData , function( indexResearcher, itemResearcher ){ 
+					if( itemCircle.id == itemResearcher.id ){
+						isExistOnCircle = true;
+						return;
+					}
+				});
+				
+				if( !isExistOnCircle )
+					currentCleanResearcherData.push( itemResearcher );
+			});
+			
+		} else {
+			_this.currentCleanResearcherData = _this.currentResearcherData;
+		}
+	},
+	getCleanResearcherData: function(){
+		return this.currentCleanResearcherData;
+	},
+	
+	/**
+	 * Every time data is loaded via AJAX, replace current data
+	 * check whether publication objects already on circle 
+	 */
+	setCurrentPublicationData: function ( currentPublicationData ){
+		var _this = this;
+		// put researcher data into PALM variable
+		_this.currentPublicationData = currentPublicationData;
+		
+		// clean / check with researcher on publication
+		_this.cleanCurrentPublicationData();
+	},
+	cleanCurrentPublicationData: function(){
+		var _this = this;
+		// reset
+		_this.currentCleanPublicationData = [];
+		// check for availability
+		if( _this.circlePublication.length > 0 && _this.currentPublicationData.length > 0){
+			// check for duplication between current and circle
+			$.each( _this.circlePublication , function( indexCircle, itemCircle ){
+				var isExistOnCircle = false;
+				$.each( _this.currentPublicationData , function( indexPublication, itemPublication ){ 
+					if( itemCircle.id == itemPublication.id ){
+						isExistOnCircle = true;
+						return;
+					}
+				});
+				
+				if( !isExistOnCircle )
+					currentCleanPublicationData.push( itemPublication );
+			});
+			
+		} else {
+			_this.currentCleanPublicationData = _this.currentPublicationData;
+		}
+	},
+	getCleanPublicationData: function(){
+		return this.currentCleanPublicationData;
+	},
+	
+	
+	addResearcher: function ( researcherId , triggerElement ){
+		var _this = this;
+		// get researcher div
+		var researcherElement = $( triggerElement ).parent().parent().parent();
+		// assumes that input is already clean (no publication/researcher on circle duplicated on input)
+		$.each( _this.currentCleanResearcherData , function( index, item ){
+			if( item.id == researcherId ){
+				_this.circleResearcher.push( item );
+				_this.currentCleanResearcherData.splice(index,1);
+				return false;
+			}
+		});
+		
+		// change button for remove researcher div
+		$( triggerElement )
+			.html( "- remove from circle" )
+			.removeClass( "btn-success" )
+			.addClass( "btn-danger" )
+			// clear old events bind to element
+			.unbind()
+			// bind new event
+			.on( "click", function(){
+				// remove researcher div
+				researcherElement.remove();
+				// update circle object
+				_this.removeResearcher( researcherId );
+			});
+		
+		researcherElement.appendTo( _this.researcherCircleList );
+	},
+	removeResearcher: function ( researcherId ){
+		var _this = this;
+		$.each( _this.circleResearcher , function( index, item ){
+			if( item.id == researcherId ){
+				_this.currentCleanResearcherData.push( item );
+				_this.circleResearcher.splice(index,1);
+				return false;
+			}
+		});
+	},
+	
+	
+	addPublication: function( publicationId , triggerElement ){
+		var _this = this;
+		// get publication div
+		var publicationElement = $( triggerElement ).parent().parent().parent();
+
+		// assumes that input is already clean (no publication/researcher on circle duplicated on input)
+		$.each( _this.currentCleanPublicationData , function( index, item ){
+			if( item.id == publicationId ){
+				_this.circlePublication.push( item );
+				_this.currentCleanPublicationData.splice(index,1);
+				return false;
+			}
+		});
+		
+		$( triggerElement )
+			.html( "- remove from circle" )
+			.removeClass( "btn-success" )
+			.addClass( "btn-danger" )
+			// clear old events bind to element
+			.unbind()
+			// bind new event
+			.on( "click", function(){
+				// remove researcher div
+				
+				publicationElement.remove();
+				// update circle object
+				_this.removePublication( publicationId );
+			});
+		
+		publicationElement.appendTo( _this.publicationCircleList );
+	},
+	removePublication: function( publicationId ){
+		var _this = this;
+		$.each( _this.circlePublication , function( index, item ){
+			if( item.id == publicationId ){
+				_this.currentCleanPublicationData.push( item );
+				_this.circlePublication.splice(index,1);
+				return false;
+			}
+		});
+	},
+	
+	
+	setResearchersCircle: function( researchersCircleData){
+		
+	},
+	getResearchersCircle: function(){
+		return this.circleResearcher;
+	},
+	
+	
+	setPublicationCircle: function( researchersCircleData){
+		
+	},
+	getPublicationCircle: function(){
+		return this.circlePublication;
+	}
+	
+}
 
 /* prepareLayout
  * =============

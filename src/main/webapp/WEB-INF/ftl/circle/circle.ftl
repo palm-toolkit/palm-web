@@ -30,7 +30,7 @@
 $(function(){
 	$( "#new-circle" ).click( function( event ){
 		event.preventDefault();
-		$.PALM.popUpIframe.create( $(this).data("url") , { "popUpHeight":"88%", "popUpWidth" : "90%", "popUpMargin": "2% auto"}, $(this).attr("title") );
+		$.PALM.popUpIframe.create( $(this).data("url") , { "popUpHeight":"88%", "popUpWidth" : "94%", "popUpMargin": "2% auto"}, $(this).attr("title") );
 	});
 });
 </script>

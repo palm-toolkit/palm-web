@@ -96,7 +96,8 @@
 		});
 
 		<#-- icon search presed -->
-		$( "#publication_search_button" ).click( function(){
+		$( "#publication_search_button" ).click( function( e ){
+			e.preventDefault();
 			publicationSearch( $( "#publication_search_field" ).val() , "first");
 		});
 		
@@ -155,7 +156,7 @@
 							if( data.count > 0 ){
 							
 								<#-- build the publication table -->
-								$.each( data.publication, function( index, itemPublication ){
+								$.each( data.publications, function( index, itemPublication ){
 
 									var publicationItem = 
 										$('<div/>')
@@ -255,7 +256,7 @@
 									}
 								
 								});
-								var maxPage = Math.ceil(data.count/data.maxresult);
+								var maxPage = Math.ceil(data.totalCount/data.maxresult);
 								
 								<#-- set dropdown page -->
 								for( var i=1;i<=maxPage;i++){
@@ -267,8 +268,8 @@
 								$( widgetElem ).find( "span.total-page" ).html( maxPage );
 								var endRecord = (data.page + 1) * data.maxresult;
 								if( data.page == maxPage - 1 ) 
-								endRecord = data.count;
-								$( widgetElem ).find( "span.paging-info" ).html( "Displaying publications " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.count );
+								endRecord = data.totalCount;
+								$( widgetElem ).find( "span.paging-info" ).html( "Displaying publications " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.totalCount );
 							}
 							else{
 								$pageDropdown.append("<option value='0'>0</option>");

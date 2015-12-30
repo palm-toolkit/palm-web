@@ -385,6 +385,9 @@ div.d3-tooltip {
 /* End of pie chart style */
 
 /*  list style */
+.content-list{
+	overflow: scroll;
+}
 .content-list>.publication, 
 .content-list>.author{
 	margin-bottom: 10px;
@@ -508,8 +511,16 @@ div.d3-tooltip {
 	cursor:pointer;
     margin-left:0;
     float:left;
-    width:260px
+    width:260px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
+
+.content-list>.publication>.detail>.option,
+.content-list>.author>.detail.option{
+	height:20px;
+}
+
 .content-list>.author>.detail{
 	width:235px
 }
@@ -522,67 +533,7 @@ div.d3-tooltip {
 .eventvolume-list>.eventvolume>.detail {
 	width:190px
 }
-/*
-.palm_atr_ct{
-	height:16px;
-	line-height: 12px;
-	font-size: 12px;
-	padding:0 0 0 4px;
-}
-.palm_section{
-	margin-bottom: 5px;
-}
-.palm_label{
-	display: inline-block;
-  	width: 100%;
-  	margin-bottom: 3px;
-  	font-weight: 700;
-}
-.palm_content{
-	display: inline-block;
-  	width: 100%;
-  	margin-bottom: 3px;
-}
-.palm_pub_coauthor_blck{
-	width:100%;
-}
-.palm_pub_coauthor_ctr{
-	float:left;
-	width:100%;
-	margin-bottom:15px;
-}
-.palm_pub_atr{
-	max-width:300px;
-	max-height:52px;
-	float:left;
-	margin:0 0 2px 0;
-}
-.palm_pub_atr_photo{
-	height:50px;
-	padding:0 2px;
-	float:left;
-	font-size:50px;
-	overflow:hidden;
-	color:#73A2F8;
-}
-.palm_pub_atr_img{
-	height:50px;
-	position:relative;
-}
-.palm_option{
-	width:100%;
-	float:right
-}
-.palm_option_btn{
-	float:right;
-	width:auto;
-	margin:5px 5px;
-}
-.palm_pdf_dialog{
-	padding:0;
-	overflow:hidden;
-}
-*/
+
 .content-list>.publication>.detail>.title, .content-list>.eventgroup-item>.eventgroup>.detail>.title, 
 .content-list>.author>.detail>.name,
 .content-list>.author>.detail>.paper, 
@@ -765,4 +716,46 @@ div.d3-tooltip {
 
 .capitalize {
     text-transform: capitalize;
+}
+
+/* Circle style */
+.circle-input-container{
+	float:left;
+	clear:both;
+	border:1px solid #dedede;
+}
+
+.circle-input-column{
+	float:left;
+	width:50%;
+	min-width: 300px;
+	height:630px;
+	padding:0 5px;
+}
+
+@media (max-width: 690px) {
+	.circle-input-column{
+		width:100%;
+	}
+}
+
+
+.circle-input-right{
+	border-left: 1px solid #dedede;
+}
+
+/* End of circle style */
+.default-cursor{
+	cursor:default !important;
+}
+.height500px{
+	height: 500px !important;
+}
+.width100px{
+	display:block;
+	width:100px;
+}
+.width130px{
+	display:block;
+	width:130px;
 }

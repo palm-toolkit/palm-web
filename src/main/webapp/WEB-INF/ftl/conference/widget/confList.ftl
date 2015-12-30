@@ -244,7 +244,7 @@
 										<#-- remove active class -->
 										$( this ).parent().siblings().removeClass( "active" );
 										$( this ).parent().addClass( "active" );
-										getVenueGroupDetails( $( this ).parent().data( 'id' ));
+										getVenueGroupDetails( $( this ).parent().data( 'id' ) , eventGroup);
 									});
 									
 									eventListContainer.append( eventItem );
@@ -253,12 +253,12 @@
 									<#-- display first conference detail -->
 									if( itemEvent.isAdded ){
 										if( ( typeof eventObj.id == "undefined" || eventObj.id == "" ) && eventObj.id == itemEvent.id ){
-											getVenueGroupDetails( eventObj.id );
+											getVenueGroupDetails( eventObj.id , eventGroup );
 											eventObj.id = "";
 										}
 										else{
 											if( index == 0 )
-												getVenueGroupDetails( itemEvent.id );
+												getVenueGroupDetails( itemEvent.id , eventGroup );
 										}
 									} else {
 										if( data.count == 0 ){
@@ -396,8 +396,8 @@
 			});
 		}
 		
-		<#-- when author list clicked --> 
-		function getVenueGroupDetails( venueId ){
+		<#-- when venue group clicked --> 
+		function getVenueGroupDetails( venueId, eventGroup ){
 	
 			<#-- show pop up progress log -->
 			var uniquePid = $.PALM.utility.generateUniqueId();
@@ -415,6 +415,8 @@
 				var eventCurrentYear;
 				
 				var eventYearItem;
+				var eventYear;
+				
 				var eventVolumeList;
 				var eventArray = [];
 				
@@ -423,16 +425,19 @@
 				
 				$.each( data.events, function( index, itemEvent ){
 				
+					var eventYearTemp;
+				
 					if( eventCurrentYear != itemEvent.year ){
 					
 					
 						<#-- put previous content for volume here -->
 						if( typeof eventCurrentYear !== "undefined" ){
 							<#-- check array of event volume -->
-
 							if( eventArray.length === 0 ){
 								return;<#-- empty array just continue -->
-							} else if ( eventArray.length === 1 ){
+							} 
+							<#-- event group without volume -->
+							else if ( eventArray.length === 1 ){
 								<#-- add more properties such as number of paper -->
 								<#-- add clcik event -->
 								eventYearItem.attr({ "data-id": eventArray[0].id });
@@ -441,11 +446,15 @@
 									<#-- remove active class -->
 									$( this ).parent().parent().siblings().removeClass( "active" );
 									$( this ).parent().parent().addClass( "active" );
-									getVenueDetails( $( this ).parent().parent().data( 'id' ));
+									triggerGetVenueDetails( $( this ).parent().parent().data( 'id' ), "onclick", [ eventGroup, eventYearTemp ]);
 								});
 
-							} else {
-
+								<#-- check if this is target item -->
+								triggerGetVenueDetails( eventArray[0].id, "automatic", [ eventGroup, eventYearTemp ]);
+							}
+							<#-- event group with volume -->
+							else 
+							{
 
 								<#-- put into event year item -->
 									
@@ -488,7 +497,7 @@
 									eventVolumeItem.append( eventVolumeDetail );
 									
 									
-									<#-- event volume -->
+									<#-- event group volumes -->
 									if( typeof eventVolume.volume !== "undefined" )
 									{
 										var eventVolumeElement = $('<div/>')
@@ -507,7 +516,9 @@
 															.html( "Volume " + eventVolume.volume )
 														);
 										eventVolumeDetail.append( eventVolumeElement );
-									} else {
+									}
+									else 
+									{
 										var eventVolumeElement = $('<div/>')
 														.addClass( "info" )
 														.append(
@@ -553,15 +564,18 @@
 									});
 								
 			
-									<#-- add clcik event -->
+									<#-- add click event -->
 									eventVolumeDetail.on( "click", function(){
 										<#-- remove active class -->
 										$( this ).parent().siblings().removeClass( "active" );
 										$( this ).parent().addClass( "active" );
-										getVenueDetails( $( this ).parent().data( 'id' ));
+										triggerGetVenueDetails( $( this ).parent().data( 'id' ), "onclick", [ eventGroup, eventYearTemp, eventVolumeItem ]);
 									});
 									
-								});<#-- end of foreach staement -->
+									<#-- check if this is target item -->
+									triggerGetVenueDetails( eventVolume.id, "automatic", [ eventGroup, eventYearTemp, eventVolumeItem ] );
+									
+								});<#-- end of foreach statement -->
 								
 								<#-- append event volume list to eventyear -->
 								eventYearItem.append( eventVolumeList );
@@ -572,14 +586,12 @@
 						}
 					
 						if( typeof itemEvent.year !== "undefined"){
+							<#-- store previous itemYear -->
+							eventYearTemp = eventYear;
 					
 							eventYearItem =
 								$('<div/>')
 								.addClass( "eventyear-item" );
-								
-							if( !itemEvent.isAdded ){
-								eventYearItem.addClass( "text-gray" );
-							}
 								
 							<#-- append Event Year Item -->
 							containerList.append( eventYearItem );
@@ -588,6 +600,10 @@
 							eventYear =
 								$('<div/>')
 								.addClass( "eventyear" );
+								
+							if( !itemEvent.isAdded ){
+								eventYear.addClass( "text-gray" );
+							}
 								
 							<#-- append Event Year to Event Year Item -->
 							eventYearItem.append( eventYear );
@@ -727,6 +743,7 @@
 							}<#-- end of typeof eventItem.year !== "undefined" -->
 						<#-- store year changes -->
 						eventCurrentYear = itemEvent.year;
+						
 					}<#-- end of currentYear != tempYear --> 
 					
 					<#-- put item into array -->
@@ -745,6 +762,23 @@
 			}).fail(function() {
 	   	 		$.PALM.popUpMessage.remove( uniquePid );
 	  		});
+		}
+		
+		<#-- check if venue detail is a target -->
+		function triggerGetVenueDetails( eventId, triggerType, activeObjects ){
+			if( triggerType == "automatic" ){
+				if( typeof eventObj.eventId != "undefined" ){
+					if( eventObj.eventId == eventId ){
+						$.PALM.selected.record( "event", eventId, activeObjects );
+						<#-- get detail of event -->
+						getVenueDetails( eventId );
+					}
+				}
+			} else {
+				$.PALM.selected.record( "event", eventId, activeObjects );
+				<#-- get detail of event -->
+				getVenueDetails( eventId );
+			}
 		}
 	
 		<#-- when author list clciked --> 

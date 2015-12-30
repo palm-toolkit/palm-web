@@ -71,29 +71,29 @@
 
 				<#-- title -->
 				var pubTitle = 
-					$('<div/>')
+					$('<dl/>')
 					.addClass( "palm_section" )
 					.append(
-						$('<div/>')
+						$('<dt/>')
 						.addClass( "palm_label" )
 						.html( "Title :" )
 					).append(
-						$('<div/>')
+						$('<dd/>')
 						.addClass( "palm_content" )
 						.html( data.publication.title )
 					);
 
 				<#-- authors -->
 				var pubCoauthor = 
-					$('<div/>')
+					$('<dl/>')
 					.addClass( "palm_pub_coauthor_blck" );
 
 				var pubCoauthorHeader =
-					$('<div/>')
+					$('<dt/>')
 					.addClass( "palm_label" )
 					.html( "Coauthor :" );
 
-				var pubCoauthorContainer = $( '<div/>' )
+				var pubCoauthorContainer = $( '<dd/>' )
 											.addClass( "author-list" );
 
 				$.each( data.publication.coauthor, function( index, authorItem ){
@@ -133,14 +133,14 @@
 				<#-- keywords -->
 				if( typeof data.publication.keyword != 'undefined'){
 					var pubKeyword = 
-						$('<div/>')
+						$('<dl/>')
 						.addClass( "palm_section" )
 						.append(
-							$('<div/>')
+							$('<dt/>')
 							.addClass( "palm_label" )
 							.html( "Keywords :" )
 						).append(
-							$('<div/>')
+							$('<dd/>')
 							.addClass( "palm_content" )
 							.html( data.publication.keyword )
 						);
@@ -152,14 +152,14 @@
 				<#-- abstract -->
 				if( typeof data.publication.abstract != 'undefined'){
 					var pubAbstract = 
-						$('<div/>')
+						$('<dl/>')
 						.addClass( "palm_section" )
 						.append(
-							$('<div/>')
+							$('<dt/>')
 							.addClass( "palm_label" )
 							.html( "Abstract :" )
 						).append(
-							$('<div/>')
+							$('<dd/>')
 							.addClass( "palm_content" )
 							.html( data.publication.abstract )
 						);
@@ -171,14 +171,14 @@
 				<#-- content -->
 				if( typeof data.publication.content != 'undefined'){
 					var pubContent = 
-						$('<div/>')
+						$('<dl/>')
 						.addClass( "palm_section" )
 						.append(
-							$('<div/>')
+							$('<dt/>')
 							.addClass( "palm_label" )
 							.html( "Content :" )
 						).append(
-							$('<div/>')
+							$('<dd/>')
 							.addClass( "palm_content" )
 							.html( data.publication.content.replace(/(\t\n)+/g, '<br /><strong>').replace(/(\n\t)+/g, '</strong><br />').replace(/(\n)/g, '<br />') )
 						);
@@ -190,14 +190,14 @@
 				<#-- references -->
 				if( typeof data.publication.reference != 'undefined'){
 					var pubReference = 
-						$('<div/>')
+						$('<dl/>')
 						.addClass( "palm_section" )
 						.append(
-							$('<div/>')
+							$('<dt/>')
 							.addClass( "palm_label" )
 							.html( "Reference :" )
 						).append(
-							$('<div/>')
+							$('<dd/>')
 							.addClass( "palm_content" )
 							.html( data.publication.reference )
 						);

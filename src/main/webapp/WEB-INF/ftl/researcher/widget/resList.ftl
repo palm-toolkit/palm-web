@@ -136,7 +136,7 @@
 								<#-- $( "body .tooltip" ).remove(); -->
 
 								<#-- build the researcher list -->
-								$.each( data.researcher, function( index, item){
+								$.each( data.researchers, function( index, item){
 									var researcherDiv = 
 									$( '<div/>' )
 										.addClass( 'author' )
@@ -238,7 +238,8 @@
 									setTimeout(function() {
 										if( typeof item.photo != 'undefined'){
 											var imageAuthor = researcherDiv.find( "img:first" );
-											imageAuthor.css({ "left" : (52 - imageAuthor.width())/2 + "px" });
+											if( imageAuthor.width() > 30 )
+												imageAuthor.css({ "left" : (52 - imageAuthor.width())/2 + "px" });
 										}
 									}, 1000);
 									
