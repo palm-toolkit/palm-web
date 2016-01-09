@@ -4,7 +4,7 @@
   </div><#-- /.login-logo -->
   <div class="login-box-body">
     <#--<p class="login-box-msg">Sign in to start your session</p>-->
-    <form action="<@spring.url '/login' />" method="POST">
+    <form name="f" action="<@spring.url '/login' />" method="POST">
 		
 	<#if auth?? && auth=="fail">
 			<div class="alert alert-danger alert-dismissable">

@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ import de.rwth.i9.palm.persistence.UserDAO;
 
 public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler
 {
-	private static final Logger log = LoggerFactory.getLogger( LoginSuccessHandler.class );
+	private static final Logger log = LoggerFactory.getLogger( LogoutSuccessHandler.class );
 
 	@Autowired
 	private PersistenceStrategy persistenceStrategy;
@@ -31,6 +32,7 @@ public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler
 	}
 
 	@Override
+	@Transactional
 	public void onLogoutSuccess( final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication ) throws IOException, ServletException
 	{
 		UserDAO userDao = persistenceStrategy.getUserDAO();
@@ -38,7 +40,7 @@ public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler
 		User user = userDao.getByUsername( authentication.getName() );
 
 		if ( user == null )
-			log.warn( "John, I couldn't save the user's logout time, because.. somehow.. he is not there" );
+			log.warn( "user not found" );
 		else
 		{
 			Date now = DateTime.now().toDate();

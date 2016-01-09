@@ -11,9 +11,10 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.context.request.RequestContextListener;
 
-import de.rwth.i9.palm.security.LogoutSuccessHandler;
+import de.rwth.i9.palm.security.LoginSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -44,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
         return "SELECT u.username, r.name AS authority "
                 + "FROM user u, role r "
                 + "WHERE u.role_id = r.id "
-                + "AND username = ?";
+                + "AND u.username = ?";
     }
 	
 	@Override
@@ -67,8 +68,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
             			"/researcher/**", 
             			"/publication/**",
             			"/institution/**", 
-            			"/sparqlview/**",
-            			"/admin/**" 
+ "/sparqlview/**"// ,
+		// "/admin/**"
             			)
                 	.permitAll()
                 .anyRequest()
@@ -78,15 +79,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
         		.usernameParameter("j_username") // form-login@username-parameter
                 .passwordParameter("j_password") // form-login@password-parameter
 				.loginPage( "/login" ) // form-login@login-page
-				.defaultSuccessUrl( "/" )// form-login@default-target-url /form-login@always-use-default-target
+				//.defaultSuccessUrl( "/" )// form-login@default-target-url /form-login@always-use-default-target
 				.failureUrl( "/login?auth=fail" )
-				.permitAll()
-				// .successHandler( loginSuccessHandler() )
+				// .failureUrl( "/login" )
+				// .permitAll()
+				.successHandler( loginSuccessHandler() )
             .and()
         	.logout()
         		.logoutUrl( "/logout" )
-        		.invalidateHttpSession( true );
-		// .logoutSuccessHandler( logoutSuccessHandler() );
+.logoutSuccessHandler( logoutSuccessHandler() );
+		// .invalidateHttpSession( true );
 
     }
 
@@ -98,12 +100,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 	
 	@Bean
 	public AuthenticationSuccessHandler loginSuccessHandler(){
-		return new de.rwth.i9.palm.security.LoginSuccessHandler( "/home" );
+		return new LoginSuccessHandler( "/home" );
 	}
 	
 	@Bean
-	public LogoutSuccessHandler logoutSuccessHandler(){
-		return new LogoutSuccessHandler( "/home" );
+	public LogoutSuccessHandler logoutSuccessHandler()
+	{
+		return new de.rwth.i9.palm.security.LogoutSuccessHandler( "/home" );
 	}
 
 	/**
