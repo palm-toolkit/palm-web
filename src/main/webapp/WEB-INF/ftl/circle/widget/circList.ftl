@@ -1,40 +1,10 @@
 <div id="boxbody${wId}" class="box-body no-padding">
-	<#-- filters -->
-<#--
-	<div class="box-filter">
-		<div class="box-filter-option" style="display:none">
-
-		<div id="author_block">
-	    	<div class="input-group" id="author_search_block" style="width:100%">
-	      		<input type="text" id="author_search_field" name="author_search_field" class="form-control input-sm pull-right" 
-	      		placeholder="Search author on database"/>
-	      		<div id="publication_search_button" class="input-group-btn">
-	        		<button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
-	      		</div>
-	    	</div>
-
-			<div class="palm_pub_atr" id="selected_author" data_author_id="all">
-				<div class="palm_pub_atr_photo" style="font-size: 14px;">
-					<img src="https://scholar.google.com/citations?view_op=view_photo&amp;user=gyLI8FYAAAAJ&amp;citpid=1" class="palm_pub_atr_img">
-				</div>
-				<div class="palm_atr_name">mohamed amine chatti</div>
-				<div class="palm_atr_aff">rwth aachen university</div>
-			</div>
-        </div>
-
-		</div>
-		<button class="btn btn-block btn-default box-filter-button" onclick="$( this ).prev().slideToggle( 'slow' )">
-			<i class="fa fa-filter pull-left"></i>
-			<span>Something</span>
-		</button>
-	</div>
--->
 	<#--  search block -->
 	<div class="box-tools">
 		<div class="input-group" style="width: 100%;">
-	      <input type="text" id="publication_search_field" name="publication_search_field" class="form-control input-sm pull-right" 
-	      placeholder="Search publication on database" value="<#if targetTitle??>${targetTitle!''}</#if>"/>
-	      <div id="publication_search_button" class="input-group-btn">
+	      <input type="text" id="circle_search_field" name="circle_search_field" class="form-control input-sm pull-right" 
+	      placeholder="Search circle on database"/>
+	      <div id="circle_search_button" class="input-group-btn">
 	        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
 	      </div>
 	    </div>
@@ -47,7 +17,7 @@
 <div class="box-footer no-padding">
 	<div class="col-xs-12  no-padding alignCenter">
 		<div class="paging_simple_numbers">
-			<ul id="publicationPaging" class="pagination marginBottom0">
+			<ul id="circlePaging" class="pagination marginBottom0">
 				<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
 				<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
 				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">20</span></span></li>
@@ -55,7 +25,7 @@
 				<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
 			</ul>
 		</div>
-		<span class="paging-info">Displaying publications 1 - 50 of 462</span>
+		<span class="paging-info">Displaying circles 1 - 50 of 462</span>
 	</div>
 </div>
 
@@ -85,52 +55,52 @@
 		  });
 	    
 	    <#-- event for searching researcher -->
-	    $( "#publication_search_field" )
+	    $( "#circle_search_field" )
 	    .on( "keypress", function(e) {
 			  if ( e.keyCode == 0 || e.keyCode == 13 || e.keyCode == 32 )
-			    publicationSearch( $( this ).val() , "first");
+			    circleSearch( $( this ).val() , "first");
 		}).on( "keydown", function(e) {
 			  if( e.keyCode == 8 || e.keyCode == 46 )
-			    if( $( "#publication_search_field" ).val().length == 0 )
-			    	publicationSearch( $( this ).val() , "first");
+			    if( $( "#circle_search_field" ).val().length == 0 )
+			    	circleSearch( $( this ).val() , "first");
 		});
 
 		<#-- icon search presed -->
-		$( "#publication_search_button" ).click( function(){
-			publicationSearch( $( "#publication_search_field" ).val() , "first");
+		$( "#circle_search_button" ).click( function(){
+			circleSearch( $( "#circle_search_field" ).val() , "first");
 		});
 		
 		<#-- pagging next -->
 		$( "li.toNext" ).click( function(){
 			if( !$( this ).hasClass( "disabled" ) )
-				publicationSearch( $( "#publication_search_field" ).val() , "next");
+				circleSearch( $( "#circle_search_field" ).val() , "next");
 		});
 		
 		<#-- pagging prev -->
 		$( "li.toPrev" ).click( function(){
 			if( !$( this ).hasClass( "disabled" ) )
-				publicationSearch( $( "#publication_search_field" ).val() , "prev");
+				circleSearch( $( "#circle_search_field" ).val() , "prev");
 		});
 		
 		<#-- pagging to first -->
 		$( "li.toFirst" ).click( function(){
 			if( !$( this ).hasClass( "disabled" ) )
-				publicationSearch( $( "#publication_search_field" ).val() , "first");
+				circleSearch( $( "#circle_search_field" ).val() , "first");
 		});
 		
 		<#-- pagging to end -->
 		$( "li.toEnd" ).click( function(){
 			if( !$( this ).hasClass( "disabled" ) )
-				publicationSearch( $( "#publication_search_field" ).val() , "end");
+				circleSearch( $( "#circle_search_field" ).val() , "end");
 		});
 		
 		<#-- jump to specific page -->
 		$( "select.page-number" ).change( function(){
-			publicationSearch( $( "#publication_search_field" ).val() , $( this ).val() );
+			circleSearch( $( "#circle_search_field" ).val() , $( this ).val() );
 		});
 
 		<#-- button search loading -->
-		$( "#publication_search_button" ).find( "i" ).removeClass( "fa-search" ).addClass( "fa-refresh fa-spin" );
+		$( "#circle_search_button" ).find( "i" ).removeClass( "fa-search" ).addClass( "fa-refresh fa-spin" );
 		
 		<#-- unique options in each widget -->
 		var options ={
@@ -143,114 +113,118 @@
 						},
 			onRefreshDone: function(  widgetElem , data ){
 
-							var publicationListContainer = $( widgetElem ).find( ".content-list" );
+							var circleListContainer = $( widgetElem ).find( ".content-list" );
 							<#-- remove previous result -->
-							publicationListContainer.html( "" );
+							circleListContainer.html( "" );
 							<#-- button search loading -->
-							$( "#publication_search_button" ).find( "i" ).removeClass( "fa-refresh fa-spin" ).addClass( "fa-search" );
+							$( "#circle_search_button" ).find( "i" ).removeClass( "fa-refresh fa-spin" ).addClass( "fa-search" );
 
 							var $pageDropdown = $( widgetElem ).find( "select.page-number" );
 							$pageDropdown.find( "option" ).remove();
 							
 							if( data.count > 0 ){
 							
-								<#-- build the publication table -->
-								$.each( data.publication, function( index, itemPublication ){
+								<#-- build the circle table -->
+								$.each( data.circles, function( index, itemCircle ){
 
-									var publicationItem = 
+									var circleItem = 
 										$('<div/>')
-										.addClass( "publication" )
-										.attr({ "data-id": itemPublication.id });
+										.addClass( "circle" )
+										.attr({ "data-id": itemCircle.id });
 										
-									<#-- publication menu -->
-									var pubNav = $( '<div/>' )
+									<#-- circle menu -->
+									var circNav = $( '<div/>' )
 										.attr({'class':'nav'});
 						
-									<#-- publication icon -->
+									<#-- circle icon -->
+									<#--
 									var pubIcon = $('<i/>');
-									if( typeof itemPublication.type !== "undefined" ){
-										if( itemPublication.type == "Conference" )
+									if( typeof itemCircle.type !== "undefined" ){
+										if( itemCircle.type == "Conference" )
 											pubIcon.addClass( "fa fa-file-text-o bg-blue" ).attr({ "title":"Conference" });
-										else if( itemPublication.type == "Journal" )
+										else if( itemCircle.type == "Journal" )
 											pubIcon.addClass( "fa fa-files-o bg-red" ).attr({ "title":"Journal" });
-										else if( itemPublication.type == "Book" )
+										else if( itemCircle.type == "Book" )
 											pubIcon.addClass( "fa fa-book bg-green" ).attr({ "title":"Book" });
 									}else{
-										pubIcon.addClass( "fa fa-question bg-purple" ).attr({ "title":"Unknown publication type" });
+										pubIcon.addClass( "fa fa-question bg-purple" ).attr({ "title":"Unknown circle type" });
 									}
 									
-									pubNav.append( pubIcon );
-									
+									circNav.append( pubIcon );
+									-->
 									<#-- edit option -->
-									var pubEdit = $('<i/>')
+									var circEdit = $('<i/>')
 												.attr({
 													'class':'fa fa-edit', 
-													'title':'edit publication',
-													'data-url':'<@spring.url '/publication/edit' />' + '?id=' + itemPublication.id,
+													'title':'edit circle',
+													'data-url':'<@spring.url '/circle/edit' />' + '?id=' + itemCircle.id,
 													'style':'display:none'
 												});
 												
-									<#-- add click event to edit publication -->
-									pubEdit.click( function( event ){
+									<#-- add click event to edit circle -->
+									circEdit.click( function( event ){
 										event.preventDefault();
-										$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Publication");
+										$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Circle");
 									});
 									
 									<#-- append edit  -->
-									pubNav.append( pubEdit );
+									circNav.append( circEdit );
 									
-									publicationItem.append( pubNav );
+									circleItem.append( circNav );
 									
-									publicationItem.hover(function()
+									circleItem.hover(function()
 									{
-									     pubEdit.show();
+									     circEdit.show();
 									}, function()
 									{ 
-									     pubEdit.hide();
+									     circEdit.hide();
 									});
 
-									<#-- publication detail -->
-									var pubDetail = $('<div/>').addClass( "detail" );
+									<#-- circle detail -->
+									var circDetail = $('<div/>').addClass( "detail" );
 									<#-- title -->
-									var pubTitle = $('<div/>').addClass( "title" ).html( itemPublication.title );
+									var circName = $('<div/>').addClass( "title" ).html( itemCircle.name );
 
 									<#--author-->
-									var pubAuthor = $('<div/>').addClass( "author" );
-									$.each( itemPublication.authors , function( index, itemAuthor ){
+									<#--
+									var circCreator = $('<div/>').addClass( "author" );
+									$.each( itemCircle.authors , function( index, itemAuthor ){
 										if( index > 0)
-											pubAuthor.append(", ");
-										pubAuthor.append( itemAuthor.name );
+											circCreator.append(", ");
+										circCreator.append( itemAuthor.name );
 									});
+									-->
 
 									<#-- append detail -->
-									pubDetail.append( pubTitle );
-									pubDetail.append( pubAuthor );
+									circDetail.append( circName );
+									
+									<#--circDetail.append( circCreator );-->
 
 									<#-- append to item -->
-									publicationItem.append( pubDetail );
+									circleItem.append( circDetail );
 
 									<#-- add clcik event -->
-									pubDetail.on( "click", function(){
+									circDetail.on( "click", function(){
 										<#-- remove active class -->
 										$( this ).parent().siblings().removeClass( "active" );
 										$( this ).parent().addClass( "active" );
-										getPublicationDetails( $( this ).parent().data( 'id' ));
+										getCircleDetails( $( this ).parent().data( 'id' ));
 									});
 
-									publicationListContainer.append( publicationItem );
+									circleListContainer.append( circleItem );
 								
-									<#-- display first publication detail -->
+									<#-- display first circle detail -->
 									if( targetId == "" ){
 										if( index == 0 ){
-											pubDetail.parent().siblings().removeClass( "active" );
-											pubDetail.parent().addClass( "active" );
-											getPublicationDetails( itemPublication.id );
+											circDetail.parent().siblings().removeClass( "active" );
+											circDetail.parent().addClass( "active" );
+											getCircleDetails( itemCircle.id );
 										}
 									} else {
-										if( targetId == itemPublication.id ){
-											pubDetail.parent().siblings().removeClass( "active" );
-											pubDetail.parent().addClass( "active" );
-											getPublicationDetails( itemPublication.id );
+										if( targetId == itemCircle.id ){
+											circDetail.parent().siblings().removeClass( "active" );
+											circDetail.parent().addClass( "active" );
+											getCircleDetails( itemCircle.id );
 										}
 									}
 								
@@ -268,7 +242,7 @@
 								var endRecord = (data.page + 1) * data.maxresult;
 								if( data.page == maxPage - 1 ) 
 								endRecord = data.count;
-								$( widgetElem ).find( "span.paging-info" ).html( "Displaying publications " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.count );
+								$( widgetElem ).find( "span.paging-info" ).html( "Displaying circles " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.count );
 							}
 							else{
 								$pageDropdown.append("<option value='0'>0</option>");
@@ -290,9 +264,9 @@
 			"options": options
 		});
 		
-		<#--// first time on load, list 50 publications-->
+		<#--// first time on load, list 50 circles-->
 		//$.PALM.boxWidget.refresh( $( "#widget-${wId}" ) , options );
-		publicationSearch( $( "#publication_search_field" ).val()  , "first" );
+		circleSearch( $( "#circle_search_field" ).val()  , "first" );
 
 		<#-- autocomplete -->
 		$( "#author_search_block" ).autocomplete({
@@ -321,10 +295,10 @@
     	});
 	});
 	
-	function publicationSearch( query , jumpTo ){
+	function circleSearch( query , jumpTo ){
 		//find the element option
 		$.each( $.PALM.options.registeredWidget, function(index, obj){
-			if( obj.type === "PUBLICATION" && obj.group === "sidebar" ){
+			if( obj.type === "CIRCLE" && obj.group === "sidebar" ){
 				var maxPage = parseInt($( obj.element ).find( "span.total-page" ).html()) - 1;
 				if( jumpTo === "next")
 					obj.options.page = obj.options.page + 1;
@@ -359,13 +333,13 @@
 		});
 	}
 
-	<#-- when publication list clciked --> 
-	function getPublicationDetails( publicationId ){
+	<#-- when circle list clciked --> 
+	function getCircleDetails( circleId ){
 		<#-- put loading overlay -->
 		$.each( $.PALM.options.registeredWidget, function(index, obj){
 			if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
 				obj.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
-				obj.options.queryString = "?id=" + publicationId;
+				obj.options.queryString = "?id=" + circleId;
 				$.PALM.boxWidget.refresh( obj.element , obj.options );
 			}
 		});

@@ -38,6 +38,7 @@ import de.rwth.i9.palm.feature.publication.PublicationFeatureImpl;
 import de.rwth.i9.palm.feature.researcher.ResearcherFeature;
 import de.rwth.i9.palm.feature.researcher.ResearcherFeatureImpl;
 import de.rwth.i9.palm.service.ApplicationService;
+import de.rwth.i9.palm.service.SecurityService;
 
 //import de.rwth.i9.palm.analytics.api.PalmAnalyticsImpl;
 
@@ -241,5 +242,12 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 	public ApplicationService applicationService()
 	{
 		return new ApplicationService();
+	}
+
+	@Bean( name = "securityService" )
+	@DependsOn( { "sessionFactory" } )
+	public SecurityService securityService()
+	{
+		return new SecurityService();
 	}
 }

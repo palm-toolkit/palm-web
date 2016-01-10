@@ -5,7 +5,7 @@
 
   <div class="register-box-body">
     <#--<p class="login-box-msg">Register a new membership</p>-->
-    <form action="https://almsaeedstudio.com/themes/AdminLTE-dev/index.html" method="post">
+    <form action="<@spring.url '/register' />" method="post">
       <div class="form-group has-feedback">
         <input type="text" class="form-control" placeholder="Full name"/>
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
@@ -45,7 +45,7 @@
     </div>
 	-->
 	
-    <a href="login.html" class="text-center">I already have a membership</a>
+    <a href="#" onclick="$.PALM.popUpAjaxModal.load( 'login?form=true' )" class="text-center">I've already registered</a>
   </div><!-- /.form-box -->
 </div><!-- /.register-box -->
 

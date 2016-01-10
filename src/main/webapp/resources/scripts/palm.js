@@ -1024,6 +1024,110 @@ $.PALM.popUpIframe = {
 	}
 };
 
+/**
+ * PopUp Ajax Modal
+ * =============
+ * Plugin for handling pop up ajax content as modal dialog
+ */
+
+$.PALM.popUpAjaxModal = {
+	load: function( urlPart ){
+		var _this = this;
+		var jqxhr = $.get( baseUrl + "/" +  urlPart, function( html ) {
+			// removing query string
+			var formType = urlPart.split( "?" );
+			_this.open( formType[0], html );
+		})
+	    .done(function() {
+	    	// nothing to do
+		})
+		.fail(function() {
+			// nothing to do
+		})
+		.always(function() {
+			// nothing to do
+		});
+	},
+	open: function( popUpType, html ){
+		// remove existing popup if exist
+		this.remove();
+		
+		/* add blur */
+		$( ".wrapper" ).addClass( "blur2px" );
+		
+		// create new pop up
+		this.activePopUpModal = 
+			$( "<div/>" )
+			.addClass( "popup-form-container" )
+			.append(
+					$( "<div/>" )
+					.addClass( "dialog-overlay" )
+					)
+			.append(
+					$( "<div/>" )
+					.addClass( popUpType + "-container" )
+					.html( html )
+					)
+			.appendTo( "body" );
+	},
+	remove: function(){
+		if( typeof this.activePopUpModal !== "undefined" ){
+			$( this.activePopUpModal ).remove();
+			$( ".wrapper" ).removeClass( "blur2px" );
+		} else {
+			if( window.location.href.indexOf( "login" ) > -1 )
+				window.location = baseUrl;
+		}
+	}
+}
+
+/**
+ * get form via ajax
+ */
+function getFormViaAjax( url , alwaysCallback){
+	var jqxhr = $.get( baseUrl + "/" +  url, function( html ) {
+		// removing query string
+		var formType = url.split( "?" );
+		getPopUpForm( formType[0], html );
+	})
+    .done(function() {
+    	// nothing to do
+	})
+	.fail(function() {
+		// nothing to do
+	})
+	.always(function() {
+		if( typeof alwaysCallback !== "undefined" )
+			alwaysCallback
+	});
+}
+/**
+ * Get popup form and display it
+ */
+function getPopUpForm( popUpType, html ){
+	// remove existing popup if exist
+	$( ".popup-form-container" ).remove();
+	/* add blur */
+	$( ".wrapper" ).addClass( "blur2px" );
+	
+	// create new one
+	var $popUpElem = 
+		$( "<div/>" )
+		.addClass( "popup-form-container" )
+		.append(
+				$( "<div/>" )
+				.addClass( "dialog-overlay" )
+				)
+		.append(
+				$( "<div/>" )
+				.addClass( popUpType + "-container" )
+				.html( html )
+				)
+		.appendTo( "body" );
+}
+
+
+
 $.PALM.utility = {
 	generateUniqueId: function(){
 		var aplhaNumeric = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -1257,70 +1361,17 @@ function postFormAndReloadPageViaAjax( $form , message){
 
 
 
-
-
-
-
-
-
-
-
-
-/* global variables */
-
 /* document ready */
 $(function(){
+	/*
 	$( "#signin_button" ).click( function( event ){
 		event.preventDefault();
 		// get login form
 		getFormViaAjax( "login?form=true" );
 	});
+	*/
 });
 
-/**
- * get form via ajax
- */
-function getFormViaAjax( url , alwaysCallback){
-	var jqxhr = $.get( baseUrl + "/" +  url, function( html ) {
-		// removing query string
-		var formType = url.split( "?" );
-		getPopUpForm( formType[0], html );
-	})
-    .done(function() {
-    	// nothing to do
-	})
-	.fail(function() {
-		// nothing to do
-	})
-	.always(function() {
-		if( typeof alwaysCallback !== "undefined" )
-			alwaysCallback
-	});
-}
-/**
- * Get popup form and display it
- */
-function getPopUpForm( popUpType, html ){
-	// remove existing popup if exist
-	$( ".popup-form-container" ).remove();
-	/* add blur */
-	$( ".wrapper" ).addClass( "blur2px" );
-	
-	// create new one
-	var $popUpElem = 
-		$( "<div/>" )
-		.addClass( "popup-form-container" )
-		.append(
-				$( "<div/>" )
-				.addClass( "dialog-overlay" )
-				)
-		.append(
-				$( "<div/>" )
-				.addClass( popUpType + "-container" )
-				.html( html )
-				)
-		.appendTo( "body" );
-}
 
 /**
  * Get popup form and display it
