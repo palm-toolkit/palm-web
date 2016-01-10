@@ -1,19 +1,43 @@
 li, li a, p {
     color: #555;
 }
-
+.navbar{
+	min-height:40px !important;
+}
+.main-header .logo {
+	height: 40px;
+    line-height: 40px;
+}
+.main-header .sidebar-toggle, .navbar-brand{
+	height:40px;
+	padding:10px 15px;
+}
+.main-sidebar, .left-side {
+	padding-top: 40px;
+}
 .navbar-header .title{
 	font-size:20px;
 	margin:0 !important
 }
 .navbar-header .subtitle{
-	padding:17px 0 0 0;
+	padding:11px 0 0 0;
 	font-size:14px;
 	margin:0 !important
 }
 .center-content{
 	margin:auto;
 	text-align:center;
+}
+
+.navbar-nav .fa{
+	font-size:22px;
+}
+.navbar-nav strong{
+	margin-left:4px;
+}
+
+.navbar-nav>li>a{
+	padding:8px 10px !important;
 }
 
 .box-home{

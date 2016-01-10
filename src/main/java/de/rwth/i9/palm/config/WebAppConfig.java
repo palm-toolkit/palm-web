@@ -108,7 +108,8 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 				"/WEB-INF/ftl/template",
 				"/WEB-INF/ftl/template/form",
 				"/WEB-INF/ftl/template/layout",
-				"/WEB-INF/ftl/template/widget"
+				"/WEB-INF/ftl/template/widget",
+ "/WEB-INF/ftl/user", "/WEB-INF/ftl/user/profile", "/WEB-INF/ftl/user/publcation", "/WEB-INF/ftl/user/conference"
 			);
 
 		Properties prop = new Properties();

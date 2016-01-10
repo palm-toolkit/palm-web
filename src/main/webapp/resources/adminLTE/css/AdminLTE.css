@@ -371,7 +371,7 @@ a:focus {
     }
     .main-sidebar,
     .left-side {
-        padding-top: 100px!important
+        padding-top: 80px!important
     }
 }
 @media (max-width: 970px) {
@@ -1186,6 +1186,24 @@ a:focus {
         width: 52px;
     	text-align: center;
     	padding:0 2px;
+    }
+    .navbar-custom-menu>.navbar-nav>li>.dropdown-menu {
+        position: absolute;
+        right: 5%;
+        left: auto;
+        border: 1px solid #ddd;
+        background: #fff
+    }
+}
+@media (max-width: 768px) {
+    .navbar-custom-menu>.navbar-nav {
+        float: right
+    }
+    .navbar-custom-menu>.navbar-nav>li {
+        position: static;
+        width: 44px;
+    	text-align: center;
+    	padding:0;
     }
     .navbar-custom-menu>.navbar-nav>li>.dropdown-menu {
         position: absolute;
