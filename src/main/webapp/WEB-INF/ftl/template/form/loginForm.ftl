@@ -14,6 +14,13 @@
 				Invalid Username or Password
 			</div>
     </#if>
+	<#if info?? && info="success-register">
+			<div class="alert alert-success alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				<h4><i class="icon fa fa-check"></i>You've successfully registered</h4>
+				Now please login to complete your profile.
+			</div>
+	</#if>
 
       <div class="form-group has-feedback">
         <input type="text" name="j_username" class="form-control" placeholder="Email"/>

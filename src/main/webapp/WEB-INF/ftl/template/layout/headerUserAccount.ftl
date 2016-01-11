@@ -1,16 +1,24 @@
 
   	<@security.authorize access="isAuthenticated()">
 	<li>
-		<a href="user" id="user_button" title="User profile"><i class="fa fa-user"></i><strong>Profile</strong></a>
+		<a href="user" id="user_button" title="User profile">
+			<i class="fa fa-user"></i>
+			<strong>Dashboard</strong>
+		</a>
 	</li>
 	<li>
-		<a href="logout" id="signout_button" title="Logout"><i class="fa fa-sign-out"></i></a>
+		<a href="logout" id="signout_button" title="Sign Out">
+			<i class="fa fa-sign-out"></i>
+		</a>
 	</li>
   	</@security.authorize>
 
 	<@security.authorize access="isAnonymous()">
 	<li>	
-		<a href="#" id="signin_button" onclick="$.PALM.popUpAjaxModal.load( 'login?form=true' )"><i class="fa fa-sign-in"></i><strong> Sign in</strong></a>
+		<a href="#" id="signin_button" title="Sign In" onclick="$.PALM.popUpAjaxModal.load( 'login?form=true' )">
+		<i class="fa fa-sign-in"></i>
+		<strong>Sign in</strong>
+	</a>
 	</li>
 	</@security.authorize>
   
