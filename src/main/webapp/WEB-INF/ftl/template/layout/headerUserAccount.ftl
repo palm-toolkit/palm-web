@@ -1,6 +1,6 @@
 
   	<@security.authorize access="isAuthenticated()">
-	<li>
+	<li<#if link?? && link == "user"> class="open"</#if>>
 		<a href="user" id="user_button" title="User profile">
 			<i class="fa fa-user"></i>
 			<strong>Dashboard</strong>

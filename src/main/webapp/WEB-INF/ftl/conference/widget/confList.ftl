@@ -502,16 +502,20 @@
 									{
 										var eventVolumeElement = $('<div/>')
 														.addClass( "info" )
+														.attr({
+																'title':eventVolume.name
+														})
 														.append(
 															$('<i/>')
 															.attr({
 																'class':'fa fa-check icon font-xs',
+																'style':'margin: 0 -10px;'
 															})
 														)
 														.append(
 															$('<span/>')
 															.attr({
-																'class':'volume',
+																'class':'volume'
 															})
 															.html( "Volume " + eventVolume.volume )
 														);
@@ -521,18 +525,22 @@
 									{
 										var eventVolumeElement = $('<div/>')
 														.addClass( "info" )
+														.attr({
+																'title':eventVolume.name
+														})
 														.append(
 															$('<i/>')
 															.attr({
 																'class':'fa fa-check icon font-xs',
+																'style':'margin: 0 -10px;'
 															})
 														)
 														.append(
 															$('<span/>')
 															.attr({
-																'class':'volume',
+																'class':'volume'
 															})
-															.html( "Selected papers" )
+															.html( $.PALM.utility.cutStringWithoutCutWord( eventVolume.name, 50 ) + "..." )
 														);
 										eventVolumeDetail.append( eventVolumeElement );
 									}

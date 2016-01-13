@@ -144,6 +144,12 @@
 												.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name})
 												.html( authorItem.name );
 												
+							<#-- check whether author is added -->
+							if( !authorItem.isAdded ){
+								eachAuthorName.addClass( "text-gray" );
+								eachAuthorName.attr( "title" , "add " + authorItem.name + " to PALM" );
+							}
+												
 							if( index > 0 )
 								eachAuthor.append( ", " );
 							eachAuthor.append( eachAuthorName );

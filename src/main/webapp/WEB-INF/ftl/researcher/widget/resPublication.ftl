@@ -46,6 +46,7 @@
 				var noOfWorkshopYearly;
 				var noOfJournalYearly;
 				var noOfBookYearly;
+				var noOfUnknownYearly;
 				<#-- timeline group -->
 				var liTimeGroup;
 				
@@ -56,7 +57,9 @@
 					<#-- timeline group -->
 					if( typeof item.date !== 'undefined' ){
 						if( timeLineGroupYear !== item.date.substring(0, 4) ){
+						
 							if( typeof liTimeGroup !== "undefined" ){
+							
 								if( noOfConferenceYearly > 0 || noOfWorkshopYearly > 0){
 									var noOfPublicationInfo = "";
 									if( noOfConferenceYearly == 1 )
@@ -109,13 +112,14 @@
 								}
 								
 								var firstTimelineSpan = $( liTimeGroup) .find( "span:first" );
-								firstTimelineSpan.html( (noOfConferenceYearly + noOfWorkshopYearly + noOfJournalYearly + noOfBookYearly) + " " + firstTimelineSpan.html() );
+								firstTimelineSpan.html( (noOfConferenceYearly + noOfWorkshopYearly + noOfJournalYearly + noOfBookYearly + noOfUnknownYearly ) + " " + firstTimelineSpan.html() );
 							}
 							
 							noOfConferenceYearly = 0;
 							noOfWorkshopYearly = 0;
 							noOfJournalYearly = 0;
 							noOfBookYearly = 0;
+							noOfUnknownYearly = 0;
 							
 							
 							if( item.date != "endpublication" ){
@@ -131,15 +135,16 @@
 						}
 						timeLineGroupYear = item.date.substring(0, 4);
 					} else {
+						
 						if( timeLineGroupYear != null ){
-							liTimeGroup = $( '<li/>' )
+							var liTimeGroup2 = $( '<li/>' )
 											.addClass( "time-label" )
 											.append( 
 												$( '<span/>' )
 												.addClass( "bg-green" )
 												.html( "Unknown publications date" )
 											);
-							timeLineContainer.append( liTimeGroup );
+							timeLineContainer.append( liTimeGroup2 );
 
 							 timeLineGroupYear = null;
 						}
@@ -174,7 +179,8 @@
 							}
 						}else{
 							timelineDot.addClass( "fa fa-question bg-purple" );
-								timelineDot.attr({ "title" : "Unknown" });
+							timelineDot.attr({ "title" : "Unknown" });
+							noOfUnknownYearly++;
 						}
 	
 						publicationItem.append( timelineDot );
@@ -184,12 +190,17 @@
 							
 						<#-- timeline time -->
 						var timelineTime = 
-							$( '<span/>' ).addClass( "time" )
-								.append( $( '<i/>' ).addClass( "fa fa-clock-o" ) );
+							$( '<span/>' ).addClass( "time" ).css({ "width":"114px","padding":"0 0 0 10px" });
 								
-						if( typeof item.date !== 'undefined' ){
-							timelineTime.append( item.date );
-						}
+						if( typeof item.date !== 'undefined' )
+							timelineTime.append( "Published: " + $.PALM.utility.parseDateType1( item.date ));
+						
+						if( typeof item.date !== 'undefined' && typeof item.cited !== 'undefined' && item.cited > 0)
+							timelineTime.append( "<br>");
+							
+						if( typeof item.cited !== 'undefined' && item.cited > 0)
+							timelineTime.append( "Cited by: " + item.cited);
+						
 						timelineItem.append( timelineTime );
 						
 						<#-- clean non alpha numeric from title -->
@@ -234,6 +245,7 @@
 								<#-- check whether author is added -->
 								if( !authorItem.isAdded ){
 									eachAuthorName.addClass( "text-gray" );
+									eachAuthorName.attr( "title" , "add " + authorItem.name + " to PALM" );
 								}
 													
 								if( index > 0 )
@@ -276,7 +288,7 @@
 							
 							<#-- pages -->
 							if( typeof item.pages !== 'undefined' ){
-								eventElem.append( " : " + item.pages );
+								eventElem.append( " pp. " + item.pages );
 							}
 		
 							timelineBody.append( eventElem );			
@@ -304,7 +316,7 @@
 							
 							<#-- pages -->
 							if( typeof item.pages !== 'undefined' ){
-								eventElem.append( " : " + item.pages );
+								eventElem.append( " pp. " + item.pages );
 							}
 		
 							timelineBody.append( eventElem );

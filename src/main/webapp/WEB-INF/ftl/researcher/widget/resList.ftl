@@ -246,10 +246,15 @@
 									<#-- display first author detail -->
 									if( item.isAdded ){
 										if( targetId == "" ){
-											if( index == 0 )
+											if( index == 0 ){
+												<#-- add active class -->
+												researcherDiv.addClass( "active" );
 												getAuthorDetails( item.id );
+											}
 										}
 										if( targetId == item.id ){
+											<#-- add active class -->
+											researcherDiv.addClass( "active" );
 											getAuthorDetails( item.id );
 											targetId = "";
 										}
@@ -351,7 +356,7 @@
 		<#-- show pop up progress log -->
 		var uniquePid = $.PALM.utility.generateUniqueId();
 		$.PALM.popUpMessage.create( "Collecting author publications...", { uniqueId:uniquePid, popUpHeight:150, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
-		<#-- chack and fetch pzblication from academic network if necessary -->
+		<#-- check and fetch publication from academic network if necessary -->
 		$.getJSON( "<@spring.url '/researcher/fetch?id=' />" + authorId + "&pid=" + uniquePid + "&force=false", function( data ){
 			<#-- remove  pop up progress log -->
 			$.PALM.popUpMessage.remove( uniquePid );

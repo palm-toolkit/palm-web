@@ -541,6 +541,11 @@ div.d3-tooltip {
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 
+.eventvolume-list>.eventvolume>.detail {
+	-webkit-box-shadow:none;
+	 box-shadow:none;
+}
+
 .content-list>.publication>.detail>.option,
 .content-list>.author>.detail.option{
 	height:20px;

@@ -11,6 +11,12 @@ html,
 body {
     min-height: 100%
 }
+hr{
+	height: 0;
+	border: 0;
+    border-top: 1px solid #eee;
+    box-sizing: content-box;
+}
 .layout-boxed html,
 .layout-boxed body {
     height: 100%
@@ -140,8 +146,24 @@ h6,
 .h4,
 .h5,
 .h6 {
-    font-family: 'Source Sans Pro', sans-serif
+    /*font-family: "Open Sans",Arial,Helvetica,Sans-Serif;*/
 }
+h1,
+h2,
+h3,
+h4{
+	font-weight: 300;
+}
+
+h1 {
+    font-size: 28px;
+    line-height: 35px;
+}
+h1 {
+    letter-spacing: -1px;
+    margin:0;
+}
+
 a {
     color: #3c8dbc
 }
@@ -472,7 +494,7 @@ a:focus {
 .user-panel>.info>a>.glyphicon {
     margin-right: 3px
 }
-.sidebar-menu {
+.sidebar-menu, .no-style {
     list-style: none;
     margin: 0;
     padding: 0

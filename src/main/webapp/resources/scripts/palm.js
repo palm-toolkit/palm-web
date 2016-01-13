@@ -678,6 +678,7 @@ $.PALM.tree = function (menu) {
     }
     else{
     	e.preventDefault();
+    	$this.parent("li").siblings().removeClass( "active" );
     	$this.parent("li").addClass("active");
     	// get content via ajax
     	var url = $this.attr( "href" );
@@ -1145,6 +1146,41 @@ $.PALM.utility = {
 		var div = document.createElement("div");
 		div.innerHTML = inputText;
 		return div.textContent || div.innerText || "";
+	},
+	// date format YYYY-mm-dd
+	parseDateType1: function( inputDate ){
+		var splitDate = inputDate.split( "-" );
+		if( splitDate.length != 3 )
+			return "";
+		
+		var outputDate = "";
+		if( splitDate[1] == "01" ) 		outputDate += "Jan";
+		else if( splitDate[1] == "02" ) 	outputDate += "Feb";
+		else if( splitDate[1] == "03" ) 	outputDate += "Mar";
+		else if( splitDate[1] == "04" ) 	outputDate += "Apr";
+		else if( splitDate[1] == "05" ) 	outputDate += "May";
+		else if( splitDate[1] == "06" ) 	outputDate += "Jun";
+		else if( splitDate[1] == "07" ) 	outputDate += "Jul";
+		else if( splitDate[1] == "08" ) 	outputDate += "Aug";
+		else if( splitDate[1] == "09" ) 	outputDate += "Sep";
+		else if( splitDate[1] == "10" ) 	outputDate += "Oct";
+		else if( splitDate[1] == "11" ) 	outputDate += "Nov";
+		else if( splitDate[1] == "12" ) 	outputDate += "Des";
+		
+		return outputDate + " " + splitDate[0];
+	},
+	cutStringWithoutCutWord: function( inputText , maxLength ){
+
+		if( inputText.length > maxLength ){
+			//trim the string to the maximum length
+			var trimmedString = inputText.substr(0, maxLength);
+	
+			//re-trim if we are in the middle of a word
+			trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")));
+			
+			return trimmedString;
+		} else
+			return inputText;
 	}
 };
  

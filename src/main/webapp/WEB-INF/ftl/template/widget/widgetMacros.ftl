@@ -2,6 +2,8 @@
 	<#-- local variables -->
 	<#-- widget container class -->
 	<#local wClassContainer = "">
+	<#local wClassStyle = "">
+	<#local headerVisible = true>
 	
 	<#-- widget box class -->
 	<#local wClassBox = "box">
@@ -34,10 +36,15 @@
 		<#local wClassBox = wClassBox + " border0" >
 	</#if>
 
-	<#local headerVisible = true>
-
 	<#if wParams["wHeaderVisible"]?? && wParams["wHeaderVisible"] == "false">
 		<#local headerVisible = false>
+	</#if>
+
+	<#if wParams["wHeight"]?? && wParams["wHeight"] != "">
+		<#local wClassStyle = "height:" + wParams["wHeight"]>
+		<#if wParams["wHeaderVisible"]?? && wParams["wHeaderVisible"] == "false">
+			<#local wClassStyle = wClassStyle + " background-color:#fff">
+		</#if>
 	</#if>
 
 	<#-- The widget -->
@@ -95,7 +102,7 @@
         <#if wSource == "INCLUDE">
     		<#include wParams["wSourcePath"] />
 		<#else>
-			<div class="box-body">
+			<div class="box-body" style="${wClassStyle}">
 	            <#-- ajax content goes here -->
 	            <#-- if external source, load from iframe -->
 	            <#if wSource == "EXTERNAL">
