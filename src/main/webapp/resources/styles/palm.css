@@ -414,7 +414,8 @@ div.d3-tooltip {
 	overflow: scroll;
 }
 .content-list>.publication, 
-.content-list>.author{
+.content-list>.author,
+.content-list>.circle{
 	margin-bottom: 10px;
 	border-left:3px solid transparent;
 	float:left;
@@ -454,6 +455,11 @@ div.d3-tooltip {
 .content-list>.author{
 	min-height:95px;
 }
+
+.content-list>.circle{
+	min-height:60px;
+	width:100%;
+}
 .content-list>.eventgroup-item,
 .eventyear-list>.eventyear-item{
 	float:left;
@@ -462,6 +468,7 @@ div.d3-tooltip {
 .content-list>.publication.active, .content-list>.publication:hover, 
 .content-list>.eventgroup-item>.eventgroup.active, .content-list>.eventgroup-item>.eventgroup:hover,
 .content-list>.author.active, .content-list>.author:hover,
+.content-list>.circle.active, .content-list>.circle:hover,
 .eventyear-list>.eventyear-item>.eventyear.active,
 .eventyear-list>.eventyear-item>.eventyear:hover,
 .eventvolume-list>.eventvolume.active,
@@ -469,14 +476,15 @@ div.d3-tooltip {
 	background-color: #EBEBEB;
 }
 .content-list>.publication.active,
-.content-list>.author.active, 
+.content-list>.author.active,
+.content-list>.circle.active,
 .content-list>.eventgroup-item>.eventgroup.active,
 .eventyear-list>.eventyear-item>.eventyear.active,
 .eventvolume-list>.eventvolume.active{
 	border-left-color: #3c8dbc;
 }
 .content-list>.publication>.nav, .content-list>.eventgroup-item>.eventgroup>.nav,
-.content-list>.author>.nav, .eventyear-list>.eventyear-item>.eventyear>.nav,
+.content-list>.author>.nav, .content-list>.circle>.nav, .eventyear-list>.eventyear-item>.eventyear>.nav,
 .eventvolume-list>.eventvolume>.nav{
     width:35px;
     float:left;
@@ -511,7 +519,7 @@ div.d3-tooltip {
 .content-list>.author>.nav{
 	width:60px;
 }
-.content-list>.publication>.nav>.fa, .content-list>.eventgroup-item>.eventgroup>.nav>.fa, 
+.content-list>.publication>.nav>.fa, .content-list>.circle>.nav>.fa, .content-list>.eventgroup-item>.eventgroup>.nav>.fa, 
 .eventyear-list>.eventyear-item>.eventyear>.nav>.fa, .eventvolume-list>.eventvolume>.nav>.fa{
 	margin-left: 2px;
 	margin-bottom: 2px;

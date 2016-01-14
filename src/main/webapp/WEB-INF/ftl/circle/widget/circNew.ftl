@@ -196,9 +196,9 @@
 				if( data.status == "ok" ){
 					<#-- reload main page with target author -->
 					if( inIframe() ){
-						window.top.location = "<@spring.url '/circle' />?id=" + data.author.id + "&name=" + data.author.name
+						window.top.location = "<@spring.url '/circle' />?id=" + data.circle.id;
 					} else {
-						window.location = "<@spring.url '/circle' />?id=" + data.author.id  + "&name=" + data.author.name
+						window.location = "<@spring.url '/circle' />?id=" + data.circle.id;
 					}
 				}
 			});
@@ -213,6 +213,19 @@
 		$( "#publication_search_button" ).click( function( e ){
 			e.preventDefault();
 			publicationSearch( $( "#publication_search_field" ).val() , "first");
+		});
+		
+		   <#-- event for searching researcher -->
+	    $( "#publication_search_field" )
+	    .on( "keypress", function(e) {
+	    	e.preventDefault();
+			  if ( e.keyCode == 0 || e.keyCode == 13 || e.keyCode == 32 )
+			    publicationSearch( $( this ).val() , "first");
+		}).on( "keydown", function(e) {
+			e.preventDefault();
+			  if( e.keyCode == 8 || e.keyCode == 46 )
+			    if( $( "#publication_search_field" ).val().length == 0 )
+			    	publicationSearch( $( this ).val() , "first");
 		});
 
 		function publicationSearch( query , jumpTo ){

@@ -31,7 +31,7 @@
 
 <script>
 	$( function(){
-		<#-- set target author id -->
+		<#-- set target circle id -->
 		<#if targetId??>
 			var targetId = "${targetId!''}";
 		<#else>
@@ -137,8 +137,9 @@
 										.attr({'class':'nav'});
 						
 									<#-- circle icon -->
-									<#--
 									var pubIcon = $('<i/>');
+									<#--
+									
 									if( typeof itemCircle.type !== "undefined" ){
 										if( itemCircle.type == "Conference" )
 											pubIcon.addClass( "fa fa-file-text-o bg-blue" ).attr({ "title":"Conference" });
@@ -150,8 +151,11 @@
 										pubIcon.addClass( "fa fa-question bg-purple" ).attr({ "title":"Unknown circle type" });
 									}
 									
-									circNav.append( pubIcon );
+									
 									-->
+									
+									pubIcon.addClass( "fa fa-circle-o" ).attr({ "title":"Circle Readonly" });
+									circNav.append( pubIcon );
 									<#-- edit option -->
 									var circEdit = $('<i/>')
 												.attr({
@@ -185,13 +189,13 @@
 									<#-- title -->
 									var circName = $('<div/>').addClass( "title" ).html( itemCircle.name );
 
-									<#--author-->
+									<#--circle-->
 									<#--
-									var circCreator = $('<div/>').addClass( "author" );
-									$.each( itemCircle.authors , function( index, itemAuthor ){
+									var circCreator = $('<div/>').addClass( "circle" );
+									$.each( itemCircle.circles , function( index, itemcircle ){
 										if( index > 0)
 											circCreator.append(", ");
-										circCreator.append( itemAuthor.name );
+										circCreator.append( itemcircle.name );
 									});
 									-->
 
@@ -269,7 +273,7 @@
 		circleSearch( $( "#circle_search_field" ).val()  , "first" );
 
 		<#-- autocomplete -->
-		$( "#author_search_block" ).autocomplete({
+		$( "#circle_search_block" ).autocomplete({
       			source: function( request, response ) {
         			$.ajax({
           			url: "http://gd.geobytes.com/AutoCompleteCity",
