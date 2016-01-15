@@ -128,11 +128,9 @@ body {
 }
 .content {
     min-height: 250px;
-    padding: 15px;
+    padding: 8px 10px 8px 8px;
     margin-right: auto;
     margin-left: auto;
-    padding-left: 15px;
-    padding-right: 15px
 }
 h1,
 h2,
@@ -1067,7 +1065,7 @@ a:focus {
     border-bottom-left-radius: 4px
 }
 .navbar-nav>.user-menu>.dropdown-menu>li.user-header {
-    height: 175px;
+    height: 180px;
     padding: 10px;
     text-align: center
 }
@@ -1084,7 +1082,7 @@ a:focus {
     color: #fff;
     color: rgba(255, 255, 255, 0.8);
     font-size: 17px;
-    margin-top: 10px
+    margin-top: 5px
 }
 .navbar-nav>.user-menu>.dropdown-menu>li.user-header>p>small {
     display: block;
@@ -1132,14 +1130,14 @@ a:focus {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    margin-right: 10px;
+    margin-right: 2px;
     margin-top: -2px
 }
 @media (max-width: 767px) {
     .navbar-nav>.user-menu .user-image {
         float: none;
         margin-right: 0;
-        margin-top: -8px;
+        /*margin-top: -8px;*/
         line-height: 10px
     }
 }
@@ -1495,7 +1493,7 @@ a:focus {
     border-radius: 3px;
     background: #ffffff;
     border-top: 3px solid #d2d6de;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     width: 100%;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1)
 }
@@ -1693,9 +1691,11 @@ a:focus {
 .box-header>.ion,
 .box-header .box-title {
     display: inline-block;
-    font-size: 18px;
+    font-size: 15px;
     margin: 0;
-    line-height: 1
+    line-height: 1;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 700;
 }
 .box-header>.fa,
 .box-header>.glyphicon,

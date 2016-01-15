@@ -263,7 +263,7 @@
 									}
 
 								});
-								var maxPage = Math.ceil(data.count/data.maxresult);
+								var maxPage = Math.ceil(data.totalCount/data.maxresult);
 								var $pageDropdown = $( widgetElem ).find( "select.page-number" );
 								<#-- set dropdown page -->
 								for( var i=1;i<=maxPage;i++){
@@ -277,8 +277,8 @@
 								$( widgetElem ).find( "span.total-page" ).html( maxPage );
 								var endRecord = (data.page + 1) * data.maxresult;
 								if( data.page == maxPage - 1 ) 
-								endRecord = data.count;
-								$( widgetElem ).find( "span.paging-info" ).html( "Displaying researchers " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.count );
+								endRecord = data.totalCount;
+								$( widgetElem ).find( "span.paging-info" ).html( "Displaying researchers " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.totalCount );
 							
 								
 							}

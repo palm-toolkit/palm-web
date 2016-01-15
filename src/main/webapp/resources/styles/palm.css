@@ -751,7 +751,9 @@ div.d3-tooltip {
 .font-lg{font-size:160%!important}
 .font-xl{font-size:200%!important}
 .font-400{font-size:400%!important}
-
+.col-md-4,.col-md-8,.col-md-12{
+	/*padding:8px;*/
+}
 .capitalize {
     text-transform: capitalize;
 }

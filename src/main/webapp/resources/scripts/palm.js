@@ -194,10 +194,12 @@ $(function () {
     // for small screen
     if ($(window).width() <= $.PALM.options.screenSizes.md ) {
         $( o.sidebarToggleSelector ).click();
-        $( o.navMenuSelector ).find( "strong" ).hide();
         // add bootstrap tooltip
         $.each( $( o.navMenuSelector ).find( "a" ), function( index, elem ){
-        	$( elem ).attr({ "data-toggle":"tooltip", "data-placement":"bottom", "data-original-title": $( elem ).attr( "title" )});
+        	$( elem ).find( "strong" ).hide();
+        	if( typeof $( elem ).attr( "title") != "undefined")
+        		$( elem )
+        			.attr({ "data-toggle":"tooltip", "data-placement":"bottom", "data-original-title": $( elem ).attr( "title" )});
         });
     }
     	

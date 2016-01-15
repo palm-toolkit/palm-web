@@ -23,13 +23,3 @@
 		<strong> Circles</strong>
 	</a>
 </li>
-<@security.authorize access="isAuthenticated()">
-	<#if securityService.isAuthorizedForRole( 'ADMIN' )>
-		<li<#if link?? && link == "administration"> class="open"</#if>>
-			<a href="<@spring.url '/admin' />" title="Administration">
-				<i class="fa fa-lock"></i>
-				<strong> Admin</strong>
-			</a>
-		</li>
-	</#if>
-</@security.authorize>

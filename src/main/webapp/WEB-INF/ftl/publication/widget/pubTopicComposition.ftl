@@ -40,9 +40,10 @@ tabContentContainer.html( "" );
 if( data.status != "ok" )
 	alertCallOutWarning( "An error occurred", "Failed to show publication topic composition" );
 	
-if( typeof data.topics === "undefined" || data.topics.length == 0)
+if( typeof data.topics === "undefined" || data.topics.length == 0){
 	alertCallOutWarning( "Publication contain no topics", "Topics mining only performed on complete publication with abstract" );
-
+	return false;
+}
 <#-- show tab -->
 tabContainer.show();
 
