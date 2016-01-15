@@ -35,26 +35,29 @@ public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler
 	@Transactional
 	public void onLogoutSuccess( final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication ) throws IOException, ServletException
 	{
-		UserDAO userDao = persistenceStrategy.getUserDAO();
-
-		User user = userDao.getByUsername( authentication.getName() );
-
-		if ( user == null )
-			log.warn( "user not found" );
-		else
+		if ( authentication != null )
 		{
-			Date now = DateTime.now().toDate();
+			UserDAO userDao = persistenceStrategy.getUserDAO();
 
-			log.info( "USER_LOGOUT | {} | {}", user.getUsername(), user.getSessionId() );
-			log.debug( "USER_LOGOUT_TIME | {} | {} | {}", user.getUsername(), user.getSessionId(), now );
+			User user = userDao.getByUsername( authentication.getName() );
 
-			user.setLastLogout( now );
-			user.setSessionId( null );
+			if ( user == null )
+				log.warn( "user not found" );
+			else
+			{
+				Date now = DateTime.now().toDate();
 
-			userDao.persist( user );
+				log.info( "USER_LOGOUT | {} | {}", user.getUsername(), user.getSessionId() );
+				log.debug( "USER_LOGOUT_TIME | {} | {} | {}", user.getUsername(), user.getSessionId(), now );
+
+				user.setLastLogout( now );
+				user.setSessionId( null );
+
+				userDao.persist( user );
+			}
+
+			super.onLogoutSuccess( request, response, authentication );
 		}
-
-		super.onLogoutSuccess( request, response, authentication );
 	}
 }
 
