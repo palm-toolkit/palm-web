@@ -101,6 +101,7 @@
 										researcherDetail.append(
 											$( '<div/>' )
 											.addClass( 'affiliation' )
+											.css({ "clear" : "both"})
 											.append( 
 												$( '<i/>' )
 												.addClass( 'fa fa-share-alt icon font-xs' )
