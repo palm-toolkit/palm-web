@@ -41,15 +41,24 @@
 <script src="<@spring.url '/resources/plugins/slimscroll/jquery.slimscroll.min.js' />" type="text/javascript"></script>
 
 <#-- used for load D3 visualization library -->
-<script src="<@spring.url '/resources/scripts/d3.min.js' />"></script>
+<script src="<@spring.url '/resources/scripts/d3.min.js' />" type="text/javascript"></script>
+<#-- extended d3 library for reuse usege -->
+<script src="<@spring.url '/resources/plugins/nv3d/nv.d3.min.js' />" type="text/javascript"></script>
+<#-- d3 layout for text cloud -->
 <script src="<@spring.url '/resources/scripts/visualization/d3.layout.cloud.js' />" type="text/javascript"></script>
-<#--<script src="<@spring.url '/resources/scripts/visualization/d3.v3.min.js' />" type="text/javascript"></script>-->
+
+<#-- d3 layout for maps - currently unused -->
+<#--
 <script src="<@spring.url '/resources/scripts/visualization/d3.geo.projection.v0.min.js' />" type="text/javascript"></script>
 <script src="<@spring.url '/resources/scripts/visualization/datamaps.world.min.js' />" type="text/javascript"></script>
 <script src="<@spring.url '/resources/scripts/visualization/jit-yc.js' />" type="text/javascript"></script>
-<script src="<@spring.url '/resources/scripts/visualization/jquery.simplemodal.js' />" type="text/javascript"></script>
 <script src="<@spring.url '/resources/scripts/visualization/topojson.v1.min.js' />" type="text/javascript"></script>
+-->
 
+<#-- extended modal for jquery modal dialog -- unused -->
+<#--
+<script src="<@spring.url '/resources/scripts/visualization/jquery.simplemodal.js' />" type="text/javascript"></script>
+-->
 <#-- used for uploading file via ajax, etc-->
 <#--<script src="<@spring.url '/resources/scripts/jquery.fileupload.js' />"></script>-->
 
