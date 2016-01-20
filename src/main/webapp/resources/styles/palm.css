@@ -410,7 +410,7 @@ div.d3-tooltip {
 /* End of pie chart style */
 
 /*  list style */
-.content-list, .coauthor-list{
+.content-list{
 	overflow: scroll;
 }
 .content-list>.publication, 
@@ -522,14 +522,16 @@ div.d3-tooltip {
 	color:#73A2F8;
 }
 .coauthor-list>.author>.nav>.photo{
-	border-radius: 50%;
-    width: 52px;
-    height: 52px;
+	width: 52px;
     padding:0 2px;
 	float:left;
 	font-size:60px;
 	overflow:hidden;
 	color:#73A2F8;
+}
+.coauthor-list>.author>.nav>.photo.round{
+	border-radius: 50%;
+    height: 52px;
 }
 
 .content-list>.author>.nav>.photo>img, .palm_atr_photo>img{
@@ -879,4 +881,9 @@ div.d3-tooltip {
 	line-height: 26px;
 	white-space:nowrap;
 	overflow:hidden;
+}
+
+/* svg */
+#pubBasicSvg svg {
+  height: 180px;
 }

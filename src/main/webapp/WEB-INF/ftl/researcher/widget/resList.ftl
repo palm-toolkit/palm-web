@@ -193,12 +193,16 @@
 												.html( item.aff )
 											)
 										);
-									if( typeof item.citedBy != 'undefined')
+									if( typeof item.publicationsNumber != 'undefined'){
+										var citedBy = 0;
+										if( typeof item.citedBy !== "undefined" )
+											citedBy = item.citedBy;
 										researcherDetail.append(
 											$( '<div/>' )
 											.addClass( 'paper font-xs' )
-											.html( "Publications: " + item.publicationsNumber + " || Cited by: " + item.citedBy)
+											.html( "Publications: " + item.publicationsNumber + " || Cited by: " + citedBy )
 										);
+									}
 										
 									if( typeof item.photo != 'undefined'){
 										researcherNav

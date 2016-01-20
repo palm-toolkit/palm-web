@@ -11,9 +11,9 @@
 			height: "400px",
 	        size: "6px",
 			allowPageScroll: true,
-   			touchScrollStep: 50,
-   			railVisible: true,
-    		alwaysVisible: true
+   			touchScrollStep: 50//,
+   			//railVisible: true,
+    		//alwaysVisible: true
 	    });
 		
 		<#-- unique options in each widget -->
@@ -32,9 +32,6 @@
 							var targetContainer = $( widgetElem ).find( ".coauthor-list" );
 							<#-- remove previous list -->
 							targetContainer.html( "" );
-							
-							var $pageDropdown = $( widgetElem ).find( "select.page-number" );
-							$pageDropdown.find( "option" ).remove();
 							
 							if( data.count > 0 ){
 								<#-- remove any remaing tooltip -->
@@ -106,7 +103,7 @@
 											.addClass( 'affiliation' )
 											.append( 
 												$( '<i/>' )
-												.addClass( 'fa fa-institution icon font-xs' )
+												.addClass( 'fa fa-share-alt icon font-xs' )
 											).append( 
 												$( '<span/>' )
 												.addClass( 'info font-xs' )
@@ -126,7 +123,7 @@
 										researcherNav
 											.append(
 											$( '<div/>' )
-												.addClass( 'photo' )
+												.addClass( 'photo round' )
 												.css({ 'font-size':'14px'})
 												.append(
 													$( '<img/>' )

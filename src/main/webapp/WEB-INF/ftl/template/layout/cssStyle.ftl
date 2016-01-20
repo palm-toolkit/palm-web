@@ -20,7 +20,7 @@
 <link href="<@spring.url '/resources/plugins/icheck/square/blue.css' />" rel="stylesheet" type="text/css" />
 
 <#--icheck style -->
-<link href="<@spring.url '/resources/plugins/nv3d/nv.d3.min.css' />" rel="stylesheet" type="text/css" />
+<link href="<@spring.url '/resources/plugins/nv3d/nv.d3.css' />" rel="stylesheet" type="text/css" />
 
 <#-- gridster style -->
 <#--

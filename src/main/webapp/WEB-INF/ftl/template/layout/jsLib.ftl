@@ -43,7 +43,7 @@
 <#-- used for load D3 visualization library -->
 <script src="<@spring.url '/resources/scripts/d3.min.js' />" type="text/javascript"></script>
 <#-- extended d3 library for reuse usege -->
-<script src="<@spring.url '/resources/plugins/nv3d/nv.d3.min.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/plugins/nv3d/nv.d3.js' />" type="text/javascript"></script>
 <#-- d3 layout for text cloud -->
 <script src="<@spring.url '/resources/scripts/visualization/d3.layout.cloud.js' />" type="text/javascript"></script>
 
