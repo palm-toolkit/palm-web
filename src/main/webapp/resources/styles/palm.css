@@ -757,6 +757,13 @@ div.d3-tooltip {
 .capitalize {
     text-transform: capitalize;
 }
+.btn .caret {
+    margin-left: 5px;
+}
+
+.min-w-75{
+	min-width:75px;
+}
 
 /* Circle style */
 .circle-input-container{
@@ -798,4 +805,36 @@ div.d3-tooltip {
 .width130px{
 	display:block;
 	width:130px;
+}
+
+/* manage widget style */
+.palm-table{
+	width:100%;
+	min-width:370px;
+}
+.palm-table>.table-header{
+	display:block;
+	width:100%;
+	float:left;
+	height:30px;
+}
+.palm-table>.table-header>span{
+	display:block;
+	float:left;
+	font-weight:600;
+}
+.palm-table>.table-body>.table-row{
+	display:block;
+	width:100%;
+	float:left;
+	height: 34px;
+}
+.palm-table>.table-body>.table-row>span{
+	display:block;
+	float:left;
+}
+.palm-table>.table-body>.table-row>span.title{
+	line-height: 26px;
+	white-space:nowrap;
+	overflow:hidden;
 }

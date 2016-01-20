@@ -50,12 +50,28 @@
 	        <div class="col-xs-12 text-center">
 	          <a href="user" class="btn btn-default btn-flat" style="width:100%;height:100%"><i class="fa fa-tachometer" style="margin-right:5px"></i><span style="font-weight:600;font-size:16px">My Dashboard</span></a>
 	        </div>
+	        <#if link?? && ( link == "researcher" || link == "publication" || link == "venue" || link == "circle" )>
+	        	<#assign linkLabel = link>
+	        	<#if link == "venue">
+	        		<#assign linkLabel = "Conference">
+	        	</#if>
+		        <div class="pull-left col-xs-12 text-center">
+		          <a href="javascript:void(0)" id="manage-widget" class="btn btn-default btn-flat" style="width:100%;height:100%;margin-top:8px" 
+		          data-url="<@spring.url '/widget' />/${link}" data-title="Manage ${linkLabel?capitalize} Widgets"><i class="fa fa-th" style="margin-right:5px"></i><span style="font-weight:600;font-size:16px">${linkLabel?capitalize} Widgets</span></a>
+		        </div>
+		        
+<script>
+$(function(){
+	$( "#manage-widget" ).click( function( event ){
+		event.preventDefault();
+		$.PALM.popUpIframe.create( $(this).data("url") , { "popUpWidth":"90%", "popUpHeight":"80%"}, $(this).data("title") );
+	});
+});
+</script>
+	        </#if>
 	      </li>
 	      <!-- Menu Footer-->
 	      <li class="user-footer">
-	        <div class="pull-left">
-	          <a href="javascript:void(0)" class="btn btn-default btn-flat"><i class="fa fa-th" style="margin-right:5px"></i><span>Widgets</span></a>
-	        </div>
 	        <div class="pull-right">
 	          <a href="logout" class="btn btn-default btn-flat"><span>Sign out</span><i class="fa fa-sign-out" style="margin-left:5px"></i></a>
 	        </div>
@@ -73,56 +89,12 @@
 	</li>
 </@security.authorize>
 
-	<@security.authorize access="isAuthenticated()">
-		<#if securityService.isAuthorizedForRole( 'ADMIN' )>
-			<li<#if link?? && link == "administration"> class="open"</#if>>
-				<a href="<@spring.url '/admin' />" title="Administration">
-					<i class="fa fa fa-gears"></i>
-				</a>
-			</li>
-		</#if>
-	</@security.authorize>
-  
-  
-  <#-- if already login -->
-  <#--
-  <li class="dropdown user user-menu">
-    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
-      <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image"/>
-      <span class="hidden-xs">Alexander Pierce</span>
-    </a>
-    <ul class="dropdown-menu">
-      <li class="user-header">
-        <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image" />
-        <p>
-          Alexander Pierce - Web Developer
-          <small>Member since Nov. 2012</small>
-        </p>
-      </li>
-      <!-- Menu Body -->
-      <#--
-      <li class="user-body">
-        <div class="col-xs-4 text-center">
-          <a href="javascript:void(0)">Followers</a>
-        </div>
-        <div class="col-xs-4 text-center">
-          <a href="javascript:void(0)">Sales</a>
-        </div>
-        <div class="col-xs-4 text-center">
-          <a href="javascript:void(0)">Friends</a>
-        </div>
-      </li>
-      -->
-      <!-- Menu Footer-->
-      <#--
-      <li class="user-footer">
-        <div class="pull-left">
-          <a href="javascript:void(0)" class="btn btn-default btn-flat">Profile</a>
-        </div>
-        <div class="pull-right">
-          <a href="javascript:void(0)" class="btn btn-default btn-flat">Sign out</a>
-        </div>
-      </li>
-    </ul>
-  </li>
-  -->
+<@security.authorize access="isAuthenticated()">
+	<#if securityService.isAuthorizedForRole( 'ADMIN' )>
+		<li<#if link?? && link == "administration"> class="open"</#if>>
+			<a href="<@spring.url '/admin' />" title="Administration">
+				<i class="fa fa fa-gears"></i>
+			</a>
+		</li>
+	</#if>
+</@security.authorize>

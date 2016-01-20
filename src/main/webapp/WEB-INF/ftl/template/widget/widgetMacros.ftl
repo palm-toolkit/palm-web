@@ -68,6 +68,7 @@
           <div class="box-tools pull-right">
           	
           	<#-- widget other option dropdown -->
+			<#--
           	<#if wParams["wResizeEnabled"]== "true" || wParams["wColorEnabled"] == "true">
 	          	<div class="btn-group">
 	              <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-wrench"></i></button>
@@ -80,7 +81,8 @@
 	              </ul>
 	            </div>
 	        </#if>
-	         
+	         -->
+
           	<#-- widget help button -->
           	<#if wParams["wInformation"]?? && wParams["wInformation"] != "">
             	<button class="btn btn-box-tool" data-toggle="tooltip" data-placement="bottom" data-html="true" data-original-title="${wParams["wInformation"]}"><i class="fa fa-question"></i></button>
