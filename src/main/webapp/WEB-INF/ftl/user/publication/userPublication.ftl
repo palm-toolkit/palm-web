@@ -1,4 +1,4 @@
-<div id="boxbody${wId}" class="box-body">
+<div id="boxbody${wUniqueName}" class="box-body">
 	<div class="box-content">
 	</div>
 </div>
@@ -11,7 +11,7 @@
 		
 
 		<#-- add slimscroll to widget body -->
-		$("#boxbody${wId} .box-content").slimscroll({
+		$("#boxbody${wUniqueName} .box-content").slimscroll({
 			height: "600px",
 	        size: "6px",
 			allowPageScroll: true,
@@ -342,7 +342,7 @@
 				});
 
 				<#-- append everything to  -->
-				$("#widget-${wId} .box-content").html( timeLineContainer );
+				$("#widget-${wUniqueName} .box-content").html( timeLineContainer );
 			}
 		};
 		
@@ -355,16 +355,16 @@
 			"type":"${wType}",
 			"group": "${wGroup}",
 			"source": "${wSource}",
-			"selector": "#widget-${wId}",
-			"element": $( "#widget-${wId}" ),
+			"selector": "#widget-${wUniqueName}",
+			"element": $( "#widget-${wUniqueName}" ),
 			"options": options
 		});
 		
 		<#-- user.author.id exist, triger ajax call -->
 		<#if user.author??>
-			$.PALM.boxWidget.refresh( $( "#widget-${wId}" ) , options );
+			$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) , options );
 		<#else>
-			$("#boxbody${wId} .box-content").html( "No publication found. Please link yourself to a researcher on PALM" );
+			$("#boxbody${wUniqueName} .box-content").html( "No publication found. Please link yourself to a researcher on PALM" );
 		</#if>
 
 	});<#-- end document ready -->

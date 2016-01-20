@@ -348,13 +348,13 @@
 			"type":"${wType}",
 			"group": "${wGroup}",
 			"source": "${wSource}",
-			"selector": "#widget-${wId}",
-			"element": $( "#widget-${wId}" ),
+			"selector": "#widget-${wUniqueName}",
+			"element": $( "#widget-${wUniqueName}" ),
 			"options": options
 		});
 		
 		<#--// first time on load, list 50 conferences-->
-		//$.PALM.boxWidget.refresh( $( "#widget-${wId}" ) , options );
+		//$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) , options );
 		conferenceSearch( $( "#conference_search_field" ).val().trim() , "first");
 	
 	

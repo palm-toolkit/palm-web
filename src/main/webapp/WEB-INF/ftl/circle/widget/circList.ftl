@@ -1,4 +1,4 @@
-<div id="boxbody${wId}" class="box-body no-padding">
+<div id="boxbody${wUniqueName}" class="box-body no-padding">
 	<#--  search block -->
 	<div class="box-tools">
 		<div class="input-group" style="width: 100%;">
@@ -263,13 +263,13 @@
 			"type":"${wType}",
 			"group": "${wGroup}",
 			"source": "${wSource}",
-			"selector": "#widget-${wId}",
-			"element": $( "#widget-${wId}" ),
+			"selector": "#widget-${wUniqueName}",
+			"element": $( "#widget-${wUniqueName}" ),
 			"options": options
 		});
 		
 		<#--// first time on load, list 50 circles-->
-		//$.PALM.boxWidget.refresh( $( "#widget-${wId}" ) , options );
+		//$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) , options );
 		circleSearch( $( "#circle_search_field" ).val()  , "first" );
 
 		<#-- autocomplete -->

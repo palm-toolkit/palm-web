@@ -1,4 +1,4 @@
-<div id="boxbody<#--${wId}-->" class="box-body">
+<div id="boxbody<#--${wUniqueName}-->" class="box-body">
 
 		<table style="width:100%">
 	        <tr style="background:transparent">

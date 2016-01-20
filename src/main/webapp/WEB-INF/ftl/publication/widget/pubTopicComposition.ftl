@@ -1,4 +1,4 @@
-<div id="boxbody${wId}" class="box-body" style="overflow:hidden">
+<div id="boxbody${wUniqueName}" class="box-body" style="overflow:hidden">
 	
 	<div class="callout callout-warning" style="display:none">
 	    <h4></h4>
@@ -26,8 +26,8 @@
 						},
 			onRefreshDone: function(  widgetElem , data ){
 
-var calloutWarning = $( widgetElem ).find( "#boxbody${wId}" ).find( ".callout-warning" );
-var tabContainer = $( widgetElem ).find( "#boxbody${wId}" ).find( ".nav-tabs-custom" );
+var calloutWarning = $( widgetElem ).find( "#boxbody${wUniqueName}" ).find( ".callout-warning" );
+var tabContainer = $( widgetElem ).find( "#boxbody${wUniqueName}" ).find( ".nav-tabs-custom" );
 var tabHeaderContainer = tabContainer.find( ".nav" ).first();
 var tabContentContainer = tabContainer.find( ".tab-content" ).first();
 
@@ -104,7 +104,7 @@ function visualizeTermValue( termValueMap, svgContainer )
 	var widgetHeight = w * 2 / 3;
 	if( widgetHeight < 300)
 		widgetHeight = 300;
-	$("#boxbody${wId}").css( "max-height" , widgetHeight + "px" );
+	$("#boxbody${wUniqueName}").css( "max-height" , widgetHeight + "px" );
 	
 	<#-- OBJECTS TO BE POPULATED WITH DATA LATER -->
 	var lines, valueLabels, nameLabels;
@@ -417,8 +417,8 @@ function visualizeTermValue( termValueMap, svgContainer )
 			"type":"${wType}",
 			"group": "${wGroup}",
 			"source": "${wSource}",
-			"selector": "#widget-${wId}",
-			"element": $( "#widget-${wId}" ),
+			"selector": "#widget-${wUniqueName}",
+			"element": $( "#widget-${wUniqueName}" ),
 			"options": options
 		});
 	    

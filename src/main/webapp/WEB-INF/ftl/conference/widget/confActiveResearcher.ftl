@@ -1,26 +1,26 @@
 <style>
-#widget-${wId} .box-body svg {
+#widget-${wUniqueName} .box-body svg {
   font-family: Abel,"Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 15px;
 }
-#widget-${wId} .box-body .episode > rect {
+#widget-${wUniqueName} .box-body .episode > rect {
   stroke: #fff;
   stroke-width: 1.5px;
 }
 
-#widget-${wId} .box-body path {
+#widget-${wUniqueName} .box-body path {
   fill: none;
 }
 
-#widget-${wId} .box-body .episode, #widget-${wId} .box-body .node, #widget-${wId} .box-body .detail text, #widget-${wId} .box-body .all-episodes {
+#widget-${wUniqueName} .box-body .episode, #widget-${wUniqueName} .box-body .node, #widget-${wUniqueName} .box-body .detail text, #widget-${wUniqueName} .box-body .all-episodes {
   cursor: pointer;
 }
 
-#widget-${wId} .box-body .all-episodes {
+#widget-${wUniqueName} .box-body .all-episodes {
   fill: #aaa;
 }
 
-#widget-${wId} .box-body .detail a text:hover, #widget-${wId} .box-body text .all-episodes:hover {
+#widget-${wUniqueName} .box-body .detail a text:hover, #widget-${wUniqueName} .box-body text .all-episodes:hover {
   text-decoration: underline;
 }
 </style>
@@ -67,7 +67,7 @@ var activeResearcherOperator =
 					return X[1];
 				}).interpolate("bundle").tension(0.5);
 				
-		var graphSVG = d3.select("#widget-${wId} .box-body").append("svg").attr("width", width)
+		var graphSVG = d3.select("#widget-${wUniqueName} .box-body").append("svg").attr("width", width)
 				.attr("height", height).append("g").attr("transform",
 						"translate(" + width / 2 + "," + height / 2 + ")");
 						

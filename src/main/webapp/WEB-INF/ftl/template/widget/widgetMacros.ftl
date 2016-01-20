@@ -1,4 +1,4 @@
-<#macro widget wId="" wTitle="" wType="" wGroup="" wSource="BLANK" wWidth="SMALL" wParams...>
+<#macro widget wId="" wUniqueName="" wTitle="" wType="" wGroup="" wSource="BLANK" wWidth="SMALL" wParams...>
 	<#-- local variables -->
 	<#-- widget container class -->
 	<#local wClassContainer = "">
@@ -48,7 +48,7 @@
 	</#if>
 
 	<#-- The widget -->
-	<div id="widget-${wId}" class="${wClassContainer}">
+	<div id="widget-${wUniqueName}" class="${wClassContainer}">
       <div class="${wClassBox}" <#if !headerVisible>style="border:none;margin:0"</#if>>
 		
 	<#if headerVisible>

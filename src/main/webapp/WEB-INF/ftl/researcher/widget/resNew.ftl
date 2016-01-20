@@ -1,4 +1,4 @@
-<div id="boxbody<#--${wId}-->" class="box-body">
+<div id="boxbody<#--${wUniqueName}-->" class="box-body">
 
 	 <form role="form" id="addResearcher" action="<@spring.url '/researcher/add' />" method="post">
 		

@@ -1,4 +1,4 @@
-<div id="boxbody${wId}" class="box-body no-padding">
+<div id="boxbody${wUniqueName}" class="box-body no-padding">
 	<#-- filters -->
 <#--
 	<div class="box-filter">
@@ -286,13 +286,13 @@
 			"type":"${wType}",
 			"group": "${wGroup}",
 			"source": "${wSource}",
-			"selector": "#widget-${wId}",
-			"element": $( "#widget-${wId}" ),
+			"selector": "#widget-${wUniqueName}",
+			"element": $( "#widget-${wUniqueName}" ),
 			"options": options
 		});
 		
 		<#--// first time on load, list 50 publications-->
-		//$.PALM.boxWidget.refresh( $( "#widget-${wId}" ) , options );
+		//$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) , options );
 		publicationSearch( $( "#publication_search_field" ).val()  , "first" );
 
 		<#-- autocomplete -->

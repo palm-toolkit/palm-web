@@ -1,4 +1,4 @@
-<div id="boxbody${wId}" class="box-body">
+<div id="boxbody${wUniqueName}" class="box-body">
 	<div id="tab_publication_detail" class="nav-tabs-custom" style="display:none">
         <ul class="nav nav-tabs">
 			<li id="header_publicationresult" class="active">
@@ -33,7 +33,7 @@
 <script>
 	$( function(){
 		<#-- add slimscroll to widget body -->
-		$("#boxbody${wId} #tab_publication_detail").slimscroll({
+		$("#boxbody${wUniqueName} #tab_publication_detail").slimscroll({
 			height: "550px",
 	        size: "3px",
 			allowPageScroll: true,
@@ -385,8 +385,8 @@
 			"type":"${wType}",
 			"group": "${wGroup}",
 			"source": "${wSource}",
-			"selector": "#widget-${wId}",
-			"element": $( "#widget-${wId}" ),
+			"selector": "#widget-${wUniqueName}",
+			"element": $( "#widget-${wUniqueName}" ),
 			"options": options
 		}
 		

@@ -4,6 +4,7 @@
 		<#if w.widgetGroup == "sidebar">
 			<@widget.widget 
 			wId="${w.id}"
+			wUniqueName="${w.uniqueName}"
 			wTitle="${w.title}"
 			wType="${w.widgetType}"
 			wGroup="${w.widgetGroup}"

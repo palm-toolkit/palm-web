@@ -1,4 +1,4 @@
-<div id="boxbody${wId}" class="box-body" style="height:300px;overflow:hidden">
+<div id="boxbody${wUniqueName}" class="box-body" style="height:300px;overflow:hidden">
 	researcher interest evolution
 </div>
 
@@ -8,7 +8,7 @@
 <script>
 	$( function(){
 		<#-- add slimscroll to widget body -->
-//		$("#boxbody${wId}").slimscroll({
+//		$("#boxbody${wUniqueName}").slimscroll({
 //			height: "300px",
 //	        size: "3px"
 //	    });
@@ -22,7 +22,7 @@
 						},
 			onRefreshDone: function(  widgetElem , data ){
 
-var targetContainer = $( widgetElem ).find( "#boxbody${wId}" );
+var targetContainer = $( widgetElem ).find( "#boxbody${wUniqueName}" );
 
 <#-- clean target container -->
 targetContainer.html( "" );
@@ -168,7 +168,7 @@ function getYearFromLanguage( languageIndex ){
 <#-- forgot the source url though...  -->
 function visualizeInterest( yearIndex , yearType ){
 
-	var mainContainer = $("#widget-${wId}").find( ".box-body" );
+	var mainContainer = $("#widget-${wUniqueName}").find( ".box-body" );
 	<#-- remove previous svg if exist -->
 	mainContainer.find( ".svg-container").remove();
 	
@@ -249,7 +249,7 @@ var fill = d3.scale.category20();
 //    .attr("class", "d3-tooltip")				
 //    .style("opacity", 0);
 
-var tooltip = d3.select("#widget-${wId} .box-body")
+var tooltip = d3.select("#widget-${wUniqueName} .box-body")
     .append("div")
     .attr("class", "remove")
     .style("position", "absolute")
@@ -304,7 +304,7 @@ margin = {top: 20, right: 20, bottom: 20, left: 30};
         .y1(function(d) { return y(d.y0 + d.y); });
 
     svg = d3
-    .select("#widget-${wId} .box-body")
+    .select("#widget-${wUniqueName} .box-body")
      .append("div")
       .classed("svg-container", true) //container class to make it responsive
       .append("svg")
@@ -407,7 +407,7 @@ margin = {top: 20, right: 20, bottom: 20, left: 30};
 
 	/*
 	<#-- remove previous svg if exist -->
-	$("#widget-${wId} .box-body").find( "#streamChart").remove();
+	$("#widget-${wUniqueName} .box-body").find( "#streamChart").remove();
 	<#-- the visualization -->
 		var format = d3.time.format("%Y");
 		
@@ -449,7 +449,7 @@ margin = {top: 20, right: 20, bottom: 20, left: 30};
 		    .y1(function(d) { return y(d.y0 + d.y); });
 		
 		var svg = d3
-			.select("#widget-${wId} .box-body")
+			.select("#widget-${wUniqueName} .box-body")
 			.append("svg")
 		    .attr("width", width + margin.left + margin.right)
 		    .attr("height", height + margin.top + margin.bottom)
@@ -546,8 +546,8 @@ margin = {top: 20, right: 20, bottom: 20, left: 30};
 			"type":"${wType}",
 			"group": "${wGroup}",
 			"source": "${wSource}",
-			"selector": "#widget-${wId}",
-			"element": $( "#widget-${wId}" ),
+			"selector": "#widget-${wUniqueName}",
+			"element": $( "#widget-${wUniqueName}" ),
 			"options": options
 		});
 	    

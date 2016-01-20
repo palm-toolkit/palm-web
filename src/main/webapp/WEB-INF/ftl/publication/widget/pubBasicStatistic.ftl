@@ -1,4 +1,4 @@
-<div id="boxbody${wId}" class="box-body">
+<div id="boxbody${wUniqueName}" class="box-body">
 	<form role="form" action="<@spring.url '/publication' />" method="post">
 	</form>
 </div>
@@ -9,7 +9,7 @@
 <script>
 	$( function(){
 		<#-- add slimscroll to widget body -->
-		$("#boxbody${wId} form").slimscroll({
+		$("#boxbody${wUniqueName} form").slimscroll({
 			height: "250px",
 	        size: "3px",
 			allowPageScroll: true,
@@ -122,8 +122,8 @@
 			"type":"${wType}",
 			"group": "${wGroup}",
 			"source": "${wSource}",
-			"selector": "#widget-${wId}",
-			"element": $( "#widget-${wId}" ),
+			"selector": "#widget-${wUniqueName}",
+			"element": $( "#widget-${wUniqueName}" ),
 			"options": options
 		});
 	    

@@ -1,4 +1,4 @@
-<div id="boxbody${wId}" class="box-body">
+<div id="boxbody${wUniqueName}" class="box-body">
 	<div style="display:none" class="box-filter">
 		<div class="box-filter-option" style="display:none"></div>
 		<button class="btn btn-block btn-default box-filter-button" onclick="$( this ).prev().slideToggle( 'slow' )">
@@ -14,7 +14,7 @@
 	$( function(){
 		<#-- add slimscroll to widget body -->
 <#--
-		$("#boxbody${wId}").slimscroll({
+		$("#boxbody${wUniqueName}").slimscroll({
 			height: "300px",
 	        size: "3px"
 	    });
@@ -36,8 +36,8 @@
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniquePidInterestCloud );
 
-var targetContainerContent = $( widgetElem ).find( "#boxbody${wId}" ).find( ".box-content" );
-var targetContainerFilter = $( widgetElem ).find( "#boxbody${wId}" ).find( ".box-filter" );
+var targetContainerContent = $( widgetElem ).find( "#boxbody${wUniqueName}" ).find( ".box-content" );
+var targetContainerFilter = $( widgetElem ).find( "#boxbody${wUniqueName}" ).find( ".box-filter" );
 
 <#-- clean target container -->
 targetContainerContent.html( "" );
@@ -273,7 +273,7 @@ function compareTermWord( a, b){
 
 <#-- visualize text cloud -->				
 function visualizeTextCloud( words ){
-	var mainContainer = $("#widget-${wId}").find( ".box-content" );
+	var mainContainer = $("#widget-${wUniqueName}").find( ".box-content" );
 	<#-- remove previous svg if exist -->
 	mainContainer.find( ".svg-container").remove();
 	<#-- the visualization -->
@@ -301,7 +301,7 @@ function visualizeTextCloud( words ){
   .start();
 
 	function draw(words) {
-    d3.select("#widget-${wId} .box-content" )
+    d3.select("#widget-${wUniqueName} .box-content" )
 	  .append("div")
       .classed("svg-container", true) //container class to make it responsive
       .append("svg")
@@ -342,8 +342,8 @@ function visualizeTextCloud( words ){
 			"type":"${wType}",
 			"group": "${wGroup}",
 			"source": "${wSource}",
-			"selector": "#widget-${wId}",
-			"element": $( "#widget-${wId}" ),
+			"selector": "#widget-${wUniqueName}",
+			"element": $( "#widget-${wUniqueName}" ),
 			"options": options
 		});
 	    
