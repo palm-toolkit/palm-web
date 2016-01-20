@@ -1,5 +1,5 @@
 <div id="boxbody-${wUniqueName}" class="box-body no-padding">
-  	<div class="content-list">
+  	<div class="coauthor-list">
     </div>
 </div>
 
@@ -7,8 +7,8 @@
 	$( function(){
 
 		<#-- add slim scroll -->
-       $("#boxbody-${wUniqueName}.content-list").slimscroll({
-			height: "600px",
+       $("#boxbody-${wUniqueName}>.coauthor-list").slimscroll({
+			height: "400px",
 	        size: "6px",
 			allowPageScroll: true,
    			touchScrollStep: 50,
@@ -29,7 +29,7 @@
 						},
 			onRefreshDone: function(  widgetElem , data ){
 
-							var targetContainer = $( widgetElem ).find( ".content-list" );
+							var targetContainer = $( widgetElem ).find( ".coauthor-list" );
 							<#-- remove previous list -->
 							targetContainer.html( "" );
 							
@@ -56,7 +56,7 @@
 										.addClass( 'detail' )
 										.append(
 											$( '<div/>' )
-												.addClass( 'name' )
+												.addClass( 'name capitalize' )
 												.html( item.name )
 										);
 										
@@ -68,8 +68,7 @@
 										);
 										
 									if( !item.isAdded ){
-										researcherDiv.css("display","none");
-										data.count--;
+										researcherDetail.addClass( "text-gray" );
 									}
 									<#--
 									if( typeof item.status != 'undefined')
@@ -100,6 +99,21 @@
 												.html( item.affiliation )
 											)
 										);
+										
+									if( typeof item.coautorTimes != 'undefined')
+										researcherDetail.append(
+											$( '<div/>' )
+											.addClass( 'affiliation' )
+											.append( 
+												$( '<i/>' )
+												.addClass( 'fa fa-institution icon font-xs' )
+											).append( 
+												$( '<span/>' )
+												.addClass( 'info font-xs' )
+												.html( item.coautorTimes + " times co-authorship" )
+											)
+										);
+										
 									<#--
 									if( typeof item.citedBy != 'undefined')
 										researcherDetail.append(
@@ -130,7 +144,7 @@
 									researcherDetail
 										.on( "click", function(){
 											if( item.isAdded ){
-												getAuthorDetails( item.id );
+												window.location = "<@spring.url '/researcher' />?id=" + item.id + "&name=" + item.name;
 											} else {
 												$.PALM.popUpIframe.create( "<@spring.url '/researcher/add' />?id=" + item.id + "&name=" + item.name , {popUpHeight:"416px"}, "Add " + item.name + " to PALM");
 											}
@@ -140,15 +154,6 @@
 										.append( 
 											researcherDiv
 										);
-									<#-- put image position in center -->
-									setTimeout(function() {
-										if( typeof item.photo != 'undefined'){
-											var imageAuthor = researcherDiv.find( "img:first" );
-											if( imageAuthor.width() > 30 )
-												imageAuthor.css({ "left" : (52 - imageAuthor.width())/2 + "px" });
-										}
-									}, 1000);
-									
 								});						
 								
 							}

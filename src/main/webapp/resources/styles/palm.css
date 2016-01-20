@@ -410,15 +410,24 @@ div.d3-tooltip {
 /* End of pie chart style */
 
 /*  list style */
-.content-list{
+.content-list, .coauthor-list{
 	overflow: scroll;
 }
 .content-list>.publication, 
 .content-list>.author,
-.content-list>.circle{
+.content-list>.circle,
+.coauthor-list>.author{
 	margin-bottom: 10px;
 	border-left:3px solid transparent;
 	float:left;
+}
+
+.coauthor-list>.author{
+	border-left:none;
+	float:left;
+	min-height:60px;
+	min-width:150px;
+	width:100%;
 }
 
 .content-list>.eventgroup-item{
@@ -472,7 +481,8 @@ div.d3-tooltip {
 .eventyear-list>.eventyear-item>.eventyear.active,
 .eventyear-list>.eventyear-item>.eventyear:hover,
 .eventvolume-list>.eventvolume.active,
-.eventvolume-list>.eventvolume:hover{
+.eventvolume-list>.eventvolume:hover,
+.coauthor-list>.author:hover{
 	background-color: #EBEBEB;
 }
 .content-list>.publication.active,
@@ -485,7 +495,8 @@ div.d3-tooltip {
 }
 .content-list>.publication>.nav, .content-list>.eventgroup-item>.eventgroup>.nav,
 .content-list>.author>.nav, .content-list>.circle>.nav, .eventyear-list>.eventyear-item>.eventyear>.nav,
-.eventvolume-list>.eventvolume>.nav{
+.eventvolume-list>.eventvolume>.nav,
+.coauthor-list>.author>.nav{
     width:35px;
     float:left;
     height:100%;
@@ -510,15 +521,31 @@ div.d3-tooltip {
 	overflow:hidden;
 	color:#73A2F8;
 }
+.coauthor-list>.author>.nav>.photo{
+	border-radius: 50%;
+    width: 52px;
+    height: 52px;
+    padding:0 2px;
+	float:left;
+	font-size:60px;
+	overflow:hidden;
+	color:#73A2F8;
+}
 
 .content-list>.author>.nav>.photo>img, .palm_atr_photo>img{
 	height:70px;
 	position:relative;
 }
 
-.content-list>.author>.nav{
+.coauthor-list>.author>.nav>.photo>img{
+	width: 52px;
+	position:relative;
+}
+
+.content-list>.author>.nav,.coauthor-list>.author>.nav{
 	width:60px;
 }
+
 .content-list>.publication>.nav>.fa, .content-list>.circle>.nav>.fa, .content-list>.eventgroup-item>.eventgroup>.nav>.fa, 
 .eventyear-list>.eventyear-item>.eventyear>.nav>.fa, .eventvolume-list>.eventvolume>.nav>.fa{
 	margin-left: 2px;
@@ -540,13 +567,21 @@ div.d3-tooltip {
 }
 .content-list>.publication>.detail, .content-list>.eventgroup-item>.eventgroup>.detail, 
 .content-list>.author>.detail, .eventyear-list>.eventyear-item>.detail,
-.eventvolume-list>.eventvolume>.detail {
+.eventvolume-list>.eventvolume>.detail,
+.coauthor-list>.author>.detail {
 	cursor:pointer;
     margin-left:0;
     float:left;
     width:260px;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+.coauthor-list>.author>.detail {
+	overflow:auto;
+	float:none;
+	width:auto;
+	-webkit-box-shadow:none;
+	box-shadow:none;
 }
 
 .eventvolume-list>.eventvolume>.detail {
@@ -575,7 +610,8 @@ div.d3-tooltip {
 .content-list>.publication>.detail>.title, .content-list>.eventgroup-item>.eventgroup>.detail>.title, 
 .content-list>.author>.detail>.name,
 .content-list>.author>.detail>.paper, 
-.eventyear-list>.eventyear-item .title {
+.eventyear-list>.eventyear-item .title,
+.coauthor-list>.author>.detail>.name{
     display: block;
     font-weight: 600;
   	color: inherit;
@@ -591,7 +627,8 @@ div.d3-tooltip {
 }
 .content-list>.author>.detail .icon,
 .eventyear-item>.eventyear>.detail .icon,
-.eventvolume-list>.eventvolume>.detail .icon
+.eventvolume-list>.eventvolume>.detail .icon,
+.coauthor-list>.author>.detail .icon
 {
 	float: left;
     line-height: 20px;
@@ -603,6 +640,11 @@ div.d3-tooltip {
 .eventvolume-list>.eventvolume>.detail .volume{
 	margin-left: 5px;
     float: left;
+}
+.coauthor-list>.author>.detail .info {
+	margin-left: 5px;
+	overflow:auto;
+	float:none;
 }
 .content-list>.author>.detail .info{
     width: 216px;
