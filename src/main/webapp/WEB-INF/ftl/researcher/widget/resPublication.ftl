@@ -190,7 +190,7 @@
 							
 						<#-- timeline time -->
 						var timelineTime = 
-							$( '<span/>' ).addClass( "time" ).css({ "width":"114px","padding":"0 0 0 10px" });
+							$( '<span/>' ).addClass( "time" ).css({ "width":"128px","padding":"0 0 0 10px" });
 								
 						if( typeof item.date !== 'undefined' )
 							timelineTime.append( "Published: " + $.PALM.utility.parseDateType1( item.date ));

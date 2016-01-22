@@ -1151,25 +1151,30 @@ $.PALM.utility = {
 	},
 	// date format YYYY-mm-dd
 	parseDateType1: function( inputDate ){
-		var splitDate = inputDate.split( "-" );
-		if( splitDate.length != 3 )
+		var splitDate = inputDate.split( "/" );
+		if( splitDate.length == 0 )
 			return "";
+		if( splitDate.length == 1 )
+			return inputDate;
 		
 		var outputDate = "";
-		if( splitDate[1] == "01" ) 		outputDate += "Jan";
-		else if( splitDate[1] == "02" ) 	outputDate += "Feb";
-		else if( splitDate[1] == "03" ) 	outputDate += "Mar";
-		else if( splitDate[1] == "04" ) 	outputDate += "Apr";
-		else if( splitDate[1] == "05" ) 	outputDate += "May";
-		else if( splitDate[1] == "06" ) 	outputDate += "Jun";
-		else if( splitDate[1] == "07" ) 	outputDate += "Jul";
-		else if( splitDate[1] == "08" ) 	outputDate += "Aug";
-		else if( splitDate[1] == "09" ) 	outputDate += "Sep";
+		if( splitDate[1] == "1" ) 		outputDate += "Jan";
+		else if( splitDate[1] == "2" ) 	outputDate += "Feb";
+		else if( splitDate[1] == "3" ) 	outputDate += "Mar";
+		else if( splitDate[1] == "4" ) 	outputDate += "Apr";
+		else if( splitDate[1] == "5" ) 	outputDate += "May";
+		else if( splitDate[1] == "6" ) 	outputDate += "Jun";
+		else if( splitDate[1] == "7" ) 	outputDate += "Jul";
+		else if( splitDate[1] == "8" ) 	outputDate += "Aug";
+		else if( splitDate[1] == "9" ) 	outputDate += "Sep";
 		else if( splitDate[1] == "10" ) 	outputDate += "Oct";
 		else if( splitDate[1] == "11" ) 	outputDate += "Nov";
 		else if( splitDate[1] == "12" ) 	outputDate += "Des";
 		
-		return outputDate + " " + splitDate[0];
+		if( splitDate.length == 3 )
+			return splitDate[2] + " " + outputDate + " " + splitDate[0];
+		else
+			return outputDate + " " + splitDate[0];
 	},
 	cutStringWithoutCutWord: function( inputText , maxLength ){
 
