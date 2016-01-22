@@ -1,5 +1,5 @@
 <div id="boxbody-${wUniqueName}" class="box-body no-padding">
-  	<div id="tree-container" class="tree-container">
+  	<div id="tree-container" class="tree-container" style="height:360px">
     </div>
 </div>
 
@@ -32,11 +32,22 @@
 							var targetContainer = $( widgetElem ).find( ".tree-container" );
 							<#-- remove previous list -->
 							targetContainer.html( "" );
-							
+				
+				<#-- check and destroy first if exist -->
+				try {
+					$("#tree-container").fancytree("destroy");
+				}catch(err) {}
+				
+				<#-- create tree -->
 				$("#tree-container").fancytree({
-				  source: data.evenTree,
-				  
-				)};			
+					extensions: ["childcounter"],
+				  	source: data.evenTree,
+					childcounter: {
+				        deep: false,
+				        hideZeros: true,
+				        hideExpanded: true
+				    },
+				});			
 							
 							
 						}<#-- end of on refresh done -->
