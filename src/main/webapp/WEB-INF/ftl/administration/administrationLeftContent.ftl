@@ -4,18 +4,18 @@
     <li class="header"><strong>ADMINISTRATION</strong></li>
     
     <#-- Widgets menu -->
-    <li class="treeview" data-link="datacollections">
+    <li class="treeview" data-link="config">
       <a href="#">
         <i class="fa fa-tasks"></i>
         <span>Data Collections</span>
 		<i class="fa fa-angle-left pull-right"></i>
       </a>
       <ul class="treeview-menu">
-        <li data-link="researcher"><a href="<@spring.url '/admin/datacollection/researcher' />"><i class="fa fa-users"></i>Researcher Collections</a></li>
-        <li data-link="publication"><a href="<@spring.url '/admin/datacollection/publication' />"><i class="fa fa-file-text-o"></i>Publication Collections</a></li>
-        <li data-link="event"><a href="<@spring.url '/admin/datacollection/event' />"><i class="fa fa-globe"></i>Conferences Collections</a></li>
-        <li data-link="html"><a href="<@spring.url '/admin/datacollection/html' />"><i class="fa fa-code"></i>HTML extraction</a></li>
-        <li data-link="pdf"><a href="<@spring.url '/admin/datacollection/pdf' />"><i class="fa fa-file-pdf-o"></i>PDF extraction</a></li>
+        <li data-link="researcher"><a href="<@spring.url '/admin/config/researcher' />"><i class="fa fa-users"></i>Researcher Collections</a></li>
+        <li data-link="publication"><a href="<@spring.url '/admin/config/publication' />"><i class="fa fa-file-text-o"></i>Publication Collections</a></li>
+        <li data-link="event"><a href="<@spring.url '/admin/config/event' />"><i class="fa fa-globe"></i>Conferences Collections</a></li>
+        <li data-link="html"><a href="<@spring.url '/admin/config/html' />"><i class="fa fa-code"></i>HTML extraction</a></li>
+        <li data-link="pdf"><a href="<@spring.url '/admin/config/pdf' />"><i class="fa fa-file-pdf-o"></i>PDF extraction</a></li>
       </ul>
     </li>
     

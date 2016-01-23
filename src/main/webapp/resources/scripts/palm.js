@@ -1195,7 +1195,7 @@ $.PALM.postForm = {
 	viaAjax:function( $form, resultContainerSelector ){
 		
 	},
-	viaAjaxAndReload: function( $form , message ){
+	viaAjaxAndReload: function( $form , message , reloadurl){
 		// pop up message
 		var popUpId = $.PALM.popUpMessage.create( message, {popupType:"loading", directlyRemove:false} );
 		// sent form content via ajax POST
@@ -1208,7 +1208,10 @@ $.PALM.postForm = {
 						var targetElement = $.PALM.popUpMessage.getPopUpObject( popUpId );
 						// reload page afteranimation complete
 						$( targetElement ).promise().done(function(){
-							window.location.reload( false );
+							if( typeof reloadurl !== "undefined" )
+								window.location.href = reloadurl;
+							else
+								window.location.reload( false );
 						});
 					} else 
 						$.PALM.popUpMessage.create( "Sorry, saving process failed please try again", {popupType:"error"} );
