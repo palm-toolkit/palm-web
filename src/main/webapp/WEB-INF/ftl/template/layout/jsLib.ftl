@@ -85,8 +85,10 @@
 			<#if x_index == 0>
 				var $menu = $( "section.sidebar li[data-link='${x}']" );
 				$menu.addClass( "active" );
+				<#if activeMenu?split("-")?size == 1>
 				<#-- load content -->
 				getContentViaAjax( $menu.find( "a" ).attr( "href" ), "section.content .row");
+				</#if>
 			<#else>
 				var $subMenu =$menu.find( "li[data-link='${x}']" );
 				$subMenu.addClass( "active" );

@@ -24,6 +24,9 @@
 					</#list>
 				<#elseif configProperty.fieldType == "text">
 					<input type="text" name="configProperties[${configProperty_index}].value" value="${configProperty.value}">
+					
+				<#elseif configProperty.fieldType == "textarea">
+					<textarea name="configProperties[${configProperty_index}].value" rows="4" cols="50">${configProperty.value}</textarea>
 				</#if>
 				</span>
 	    	</div>
@@ -34,8 +37,8 @@
   
 </div><#-- ./box-body -->
 <div class="box-footer">
-  	<button type="submit" class="btn btn-primary" onclick="$.PALM.postForm.viaAjaxAndReload( $( 'form#manageConfig' ), 'Saving changes on ${header?capitalize} Configuration and refresh page...' ,'<@spring.url '/admin' />?page=publication')">Save Changes</button>
-  	<button type="submit" class="btn btn-primary pull-right" onclick="$( 'form#manageConfig' ).append( '<input type=\'hidden\' name=\'resetDafault\' value=\'reset\'>' );$.PALM.postForm.viaAjaxAndReload( $( 'form#manageConfig' ), 'Saving changes on ${header?capitalize} Set configuration to default and refresh page...' ,'<@spring.url '/admin' />?page=publication')">Reset Default</button>
+  	<button type="submit" class="btn btn-primary" onclick="$.PALM.postForm.viaAjaxAndReload( $( 'form#manageConfig' ), 'Saving changes on ${header?capitalize} Configuration and refresh page...' ,'<@spring.url '/admin' />?page=config-${header}')">Save Changes</button>
+  	<button type="submit" class="btn btn-primary pull-right" onclick="$( 'form#manageConfig' ).append( '<input type=\'hidden\' name=\'resetDafault\' value=\'reset\'>' );$.PALM.postForm.viaAjaxAndReload( $( 'form#manageConfig' ), 'Saving changes on ${header?capitalize} Set configuration to default and refresh page...' ,'<@spring.url '/admin' />?page=config-${header}')">Reset Default</button>
 </div><#-- /.box-footer -->
 
 <script>

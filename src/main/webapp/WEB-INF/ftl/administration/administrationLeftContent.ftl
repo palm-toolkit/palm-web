@@ -13,7 +13,7 @@
       <ul class="treeview-menu">
         <li data-link="researcher"><a href="<@spring.url '/admin/config/researcher' />"><i class="fa fa-users"></i>Researcher Collections</a></li>
         <li data-link="publication"><a href="<@spring.url '/admin/config/publication' />"><i class="fa fa-file-text-o"></i>Publication Collections</a></li>
-        <li data-link="event"><a href="<@spring.url '/admin/config/event' />"><i class="fa fa-globe"></i>Conferences Collections</a></li>
+        <li data-link="event"><a href="<@spring.url '/admin/config/conference' />"><i class="fa fa-globe"></i>Conferences Collections</a></li>
         <li data-link="html"><a href="<@spring.url '/admin/config/html' />"><i class="fa fa-code"></i>HTML extraction</a></li>
         <li data-link="pdf"><a href="<@spring.url '/admin/config/pdf' />"><i class="fa fa-file-pdf-o"></i>PDF extraction</a></li>
       </ul>
