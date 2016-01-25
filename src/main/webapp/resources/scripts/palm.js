@@ -255,24 +255,42 @@ $(function () {
 $.PALM.selected = {
 	record: function( typeSelected, selectedObject, activeObjects ){
 		var _this = this;
-		_this.reset();
-		if( typeSelected == "researcher" ){
-			_this.researcher = selectedObject;
-		} else if ( typeSelected == "publication" ){
-			_this.publication = selectedObject;
-		} else if ( typeSelected == "event" ){
-			_this.event = selectedObject;
-		} else if ( typeSelected == "circle" ){
-			_this.circle = selectedObject;
+		// check whether object already selected
+		if( !_this.isSimilarWithCurrentObject( typeSelected, selectedObject) ){
+			_this.reset();
+			if( typeSelected == "researcher" ){
+				_this.researcher = selectedObject;
+			} else if ( typeSelected == "publication" ){
+				_this.publication = selectedObject;
+			} else if ( typeSelected == "event" ){
+				_this.event = selectedObject;
+			} else if ( typeSelected == "circle" ){
+				_this.circle = selectedObject;
+			}
+			if( typeof activeObjects !== "undefined" && activeObjects.length > 0 ){
+				$.each( activeObjects , function( index, item){
+					$( item ).removeClass( "text-gray" );
+					$( item ).addClass( "active" );  
+				});
+			}
+			// record active objects
+			_this.activeObjects = activeObjects;
+			return true;
+		} else
+			return false;
+	},
+	isSimilarWithCurrentObject: function( typeSelected, selectedObject){
+		var _this = this;
+		if( typeSelected == "researcher" && typeof _this.researcher != "undefined" && _this.researcher == selectedObject ){
+			return true;
+		} else if ( typeSelected == "publication" && typeof _this.publication != "undefined" && _this.publication == selectedObject ){
+			return true;
+		} else if ( typeSelected == "event" && typeof _this.event != "undefined" && _this.event == selectedObject ){
+			return true;
+		} else if ( typeSelected == "circle" && typeof _this.circle != "undefined" && _this.circle == selectedObject ){
+			return true;
 		}
-		if( typeof activeObjects !== "undefined" && activeObjects.length > 0 ){
-			$.each( activeObjects , function( index, item){
-				$( item ).removeClass( "text-gray" );
-				$( item ).addClass( "active" );  
-			});
-		}
-		// record active objects
-		_this.activeObjects = activeObjects;
+		return false;
 	},
 	reset: function(){
 		var _this = this;

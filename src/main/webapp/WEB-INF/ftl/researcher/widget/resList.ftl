@@ -225,10 +225,12 @@
 									<#-- add clcik event -->
 									researcherDetail
 										.on( "click", function(){
-											$( this ).parent().siblings().removeClass( "active" );
-											$( this ).parent().addClass( "active" );
+											//$( this ).parent().siblings().removeClass( "active" );
+											//$( this ).parent().addClass( "active" );
 											if( item.isAdded ){
-												getAuthorDetails( item.id );
+												if( $.PALM.selected.record( "researcher", item.id, $( this ).parent() )){
+													getAuthorDetails( item.id );
+												}
 											} else {
 												$.PALM.popUpIframe.create( "<@spring.url '/researcher/add' />?id=" + item.id + "&name=" + item.name , {popUpHeight:"416px"}, "Add " + item.name + " to PALM");
 											}
@@ -251,16 +253,20 @@
 									if( item.isAdded ){
 										if( targetId == "" ){
 											if( index == 0 ){
-												<#-- add active class -->
-												researcherDiv.addClass( "active" );
-												getAuthorDetails( item.id );
+												<#-- record selection -->
+												if( $.PALM.selected.record( "researcher", item.id, researcherDiv ) ){
+													<#-- add active class -->
+													//researcherDiv.addClass( "active" );
+													getAuthorDetails( item.id );
+												}
 											}
 										}
 										if( targetId == item.id ){
 											<#-- add active class -->
-											researcherDiv.addClass( "active" );
-											getAuthorDetails( item.id );
-											targetId = "";
+											if( $.PALM.selected.record( "researcher", item.id, researcherDiv )){
+												getAuthorDetails( item.id );
+												targetId = "";
+											}
 										}
 									} else {
 										$.PALM.popUpIframe.create( "<@spring.url '/researcher/add' />?id=" + item.id + "&name=" + item.name , {popUpHeight:"416px"}, "Add " + item.name + " to PALM");

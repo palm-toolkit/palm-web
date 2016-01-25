@@ -233,9 +233,8 @@
 									<#-- add clcik event -->
 									pubDetail.on( "click", function(){
 										<#-- remove active class -->
-										$( this ).parent().siblings().removeClass( "active" );
-										$( this ).parent().addClass( "active" );
-										getPublicationDetails( $( this ).parent().data( 'id' ));
+										if( $.PALM.selected.record( "publication", $( this ).parent().data( 'id' ), pubDetail.parent() ))
+											getPublicationDetails( $( this ).parent().data( 'id' ));
 									});
 
 									publicationListContainer.append( publicationItem );
@@ -243,15 +242,15 @@
 									<#-- display first publication detail -->
 									if( targetId == "" ){
 										if( index == 0 ){
-											pubDetail.parent().siblings().removeClass( "active" );
-											pubDetail.parent().addClass( "active" );
-											getPublicationDetails( itemPublication.id );
+											if( $.PALM.selected.record( "publication", itemPublication.id, pubDetail.parent() ))
+												getPublicationDetails( itemPublication.id );
 										}
 									} else {
 										if( targetId == itemPublication.id ){
-											pubDetail.parent().siblings().removeClass( "active" );
-											pubDetail.parent().addClass( "active" );
-											getPublicationDetails( itemPublication.id );
+											if( $.PALM.selected.record( "publication", itemPublication.id, pubDetail.parent() )){
+												getPublicationDetails( itemPublication.id );
+												targetId == "";
+											}
 										}
 									}
 								

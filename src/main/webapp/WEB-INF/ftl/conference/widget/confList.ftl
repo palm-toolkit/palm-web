@@ -257,8 +257,8 @@
 											eventObj.id = "";
 										}
 										else{
-											if( index == 0 )
-												getVenueGroupDetails( itemEvent.id , eventGroup );
+											//if( index == 0 )
+												//getVenueGroupDetails( itemEvent.id , eventGroup );
 										}
 									} else {
 										if( data.count == 0 ){
@@ -777,15 +777,13 @@
 			if( triggerType == "automatic" ){
 				if( typeof eventObj.eventId != "undefined" ){
 					if( eventObj.eventId == eventId ){
-						$.PALM.selected.record( "event", eventId, activeObjects );
-						<#-- get detail of event -->
-						getVenueDetails( eventId );
+						if( $.PALM.selected.record(  "event", eventId, activeObjects ))
+							getVenueDetails( eventId );
 					}
 				}
 			} else {
-				$.PALM.selected.record( "event", eventId, activeObjects );
-				<#-- get detail of event -->
-				getVenueDetails( eventId );
+				if( $.PALM.selected.record( "event", eventId, activeObjects ))
+					getVenueDetails( eventId );
 			}
 		}
 	
