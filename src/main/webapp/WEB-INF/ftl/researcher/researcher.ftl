@@ -18,6 +18,7 @@
 		</section>
  	</@content.contentWrapper>
 
+<@security.authorize access="isAuthenticated()">
 	<#-- add new researcher -->
 	<div id="new-author-circle" class="new-circle" title="Add a Researcher" data-url="<@spring.url '/researcher/add' />">
 		<span class="fa-stack fa-lg bg-red">
@@ -34,5 +35,6 @@ $(function(){
 	});
 });
 </script>
- 	
+</@security.authorize>
+
 </@layout.global>

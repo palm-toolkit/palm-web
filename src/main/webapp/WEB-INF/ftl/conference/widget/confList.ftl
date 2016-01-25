@@ -130,7 +130,7 @@
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
 						<#-- show pop up progress log -->
-						$.PALM.popUpMessage.create( "loading venues...", { uniqueId:uniquePidVenueWidget, popUpHeight:40, directlyRemove:false});
+						$.PALM.popUpMessage.create( "loading Conferences...", { uniqueId:uniquePidVenueWidget, popUpHeight:40, directlyRemove:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){
 							<#-- remove  pop up progress log -->

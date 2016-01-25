@@ -18,6 +18,7 @@
 		</section>
  	</@content.contentWrapper>
 
+<@security.authorize access="isAuthenticated()">
 	<#-- add new publication -->
 	<div id="new-publication-circle" class="new-circle" title="Add new publication" data-url="<@spring.url '/publication/add' />">
 		<span class="fa-stack fa-lg bg-red">
@@ -34,5 +35,6 @@ $(function(){
 	});
 });
 </script>
- 	
+ </@security.authorize>
+
 </@layout.global>

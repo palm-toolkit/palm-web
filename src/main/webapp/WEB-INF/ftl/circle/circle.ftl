@@ -17,7 +17,7 @@
 			</div>
 		</section>
  	</@content.contentWrapper>
-
+<@security.authorize access="isAuthenticated()">
 	<#-- add new event -->
 	<div id="new-circle" class="new-circle" title="Add New Circle" data-url="<@spring.url '/circle/add' />">
 		<span class="fa-stack fa-lg bg-red">
@@ -34,5 +34,6 @@ $(function(){
 	});
 });
 </script>
- 	
+</@security.authorize>
+
 </@layout.global>

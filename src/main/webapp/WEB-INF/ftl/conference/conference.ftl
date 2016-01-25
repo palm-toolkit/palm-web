@@ -18,6 +18,7 @@
 		</section>
  	</@content.contentWrapper>
 
+<@security.authorize access="isAuthenticated()">
 	<#-- add new event -->
 	<div id="new-event-circle" class="new-circle" title="Add Conference/Journal" data-url="<@spring.url '/venue/add' />">
 		<span class="fa-stack fa-lg bg-red">
@@ -34,5 +35,6 @@ $(function(){
 	});
 });
 </script>
- 	
+ </@security.authorize>
+
 </@layout.global>
