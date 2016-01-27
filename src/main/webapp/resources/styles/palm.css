@@ -256,6 +256,15 @@ iframe.externalContent{
 .fright{ float:right }
 .minwidth150Px{min-width:150px}
 .height50px{height:50px}
+.nowarp{white-space:nowrap}
+.urlstyle{
+	color:#555;
+	cursor:pointer;
+}
+.w80px{width:80px}
+.urlstyle:hover{
+	color:#337ab7;
+}
 
 .table-container{
 	padding:0 6px 0 0;

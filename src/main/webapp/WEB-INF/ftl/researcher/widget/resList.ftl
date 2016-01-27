@@ -36,6 +36,11 @@
 		<#else>
 			var targetId = "";
 		</#if>
+		<#if targetAdd??>
+			var targetAdd = "${targetAdd!''}";
+		<#else>
+			var targetAdd = "";
+		</#if>
 
 			<#-- add slim scroll -->
 	      $(".content-list").slimscroll({
@@ -44,7 +49,7 @@
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50
 		  });
-		  
+		  <#--
 		   $(".content-wrapper>.content").slimscroll({
 				height: "100%",
 		        size: "8px",
@@ -53,56 +58,56 @@
 	   			railVisible: true,
     			alwaysVisible: true
 		  });
-	    
+	    -->
 	    <#-- event for searching researcher -->
 		var tempInput = $( "#researcher_search_field" ).val();
 	    $( "#researcher_search_field" )
 	    .on( "keypress", function(e) {
 			  if ( e.keyCode == 0 || e.keyCode == 13 /* || e.keyCode == 32*/ )
-			    researcherSearch( $( this ).val().trim() , "first");
+			    researcherSearch( $( this ).val().trim() , "first", "&addedAuthor=yes");
 			 tempInput = $( this ).val().trim();
 		})
 		<#-- when pressing backspace until -->
 		.on( "keydown", function(e) {
 			  if( e.keyCode == 8 || e.keyCode == 46 )
 			    if( $( "#researcher_search_field" ).val().length == 0 && tempInput != $( this ).val().trim())
-			    	researcherSearch( $( this ).val().trim() , "first");
+			    	researcherSearch( $( this ).val().trim() , "first", "&addedAuthor=yes");
 			  tempInput = $( this ).val().trim();
 		});
 		
 
 		<#-- icon search presed -->
 		$( "#researcher_search_button" ).click( function(){
-			researcherSearch( $( "#researcher_search_field" ).val().trim() , "first");
+			researcherSearch( $( "#researcher_search_field" ).val().trim() , "first", "&addedAuthor=yes");
 		});
 		
 		<#-- pagging next -->
 		$( "li.toNext" ).click( function(){
 			if( !$( this ).hasClass( "disabled" ) )
-				researcherSearch( $( "#researcher_search_field" ).val().trim() , "next");
+				researcherSearch( $( "#researcher_search_field" ).val().trim() , "next", "&addedAuthor=yes");
 		});
 		
 		<#-- pagging prev -->
 		$( "li.toPrev" ).click( function(){
 			if( !$( this ).hasClass( "disabled" ) )
-				researcherSearch( $( "#researcher_search_field" ).val().trim() , "prev");
+				researcherSearch( $( "#researcher_search_field" ).val().trim() , "prev", "&addedAuthor=yes");
 		});
 		
 		<#-- pagging to first -->
 		$( "li.toFirst" ).click( function(){
 			if( !$( this ).hasClass( "disabled" ) )
-				researcherSearch( $( "#researcher_search_field" ).val().trim() , "first");
+				researcherSearch( $( "#researcher_search_field" ).val().trim() , "first", "&addedAuthor=yes");
 		});
 		
 		<#-- pagging to end -->
 		$( "li.toEnd" ).click( function(){
 			if( !$( this ).hasClass( "disabled" ) )
-				researcherSearch( $( "#researcher_search_field" ).val().trim() , "end");
+				researcherSearch( $( "#researcher_search_field" ).val().trim() , "end", "&addedAuthor=yes");
 		});
 		
 		<#-- jump to specific page -->
 		$( "select.page-number" ).change( function(){
-			researcherSearch( $( "#researcher_search_field" ).val() , $( this ).val() );
+			researcherSearch( $( "#researcher_search_field" ).val() , $( this ).val() , "&addedAuthor=yes");
 		});
 
 		<#-- generate unique id for progress log -->
@@ -273,6 +278,9 @@
 									}
 
 								});
+								if( targetAdd == "yes" )
+									data.totalCount = data.count;
+									
 								var maxPage = Math.ceil(data.totalCount/data.maxresult);
 								var $pageDropdown = $( widgetElem ).find( "select.page-number" );
 								<#-- set dropdown page -->
@@ -283,6 +291,7 @@
 								<#-- $( widgetElem ).find( "[data-toggle='tooltip']" ).tooltip(); -->
 								
 								<#--// set page number-->
+								
 								$pageDropdown.val( data.page + 1 );
 								$( widgetElem ).find( "span.total-page" ).html( maxPage );
 								var endRecord = (data.page + 1) * data.maxresult;
@@ -314,10 +323,15 @@
 		
 		<#--// first time on load, list 50 researchers-->
 		//$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) , options );
-		researcherSearch( $( "#researcher_search_field" ).val().trim() , "first");
+		if( targetAdd == "yes" )
+			researcherSearch( $( "#researcher_search_field" ).val().trim() , "first");
+		else
+			researcherSearch( $( "#researcher_search_field" ).val().trim() , "first", "&addedAuthor=yes");
 	});
 	
-	function researcherSearch( query , jumpTo ){
+	function researcherSearch( query , jumpTo , additionalQueryString){
+		if( typeof additionalQueryString === "undefined" )
+			additionalQueryString = "";
 		<#--//find the element option-->
 		$.each( $.PALM.options.registeredWidget, function(index, obj){
 			if( obj.type === "RESEARCHER" && obj.group === "sidebar" ){
@@ -346,9 +360,9 @@
 				}
 				
 				if( jumpTo === "first") // if new searching performed
-					obj.options.source = "<@spring.url '/researcher/search?query=' />" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
+					obj.options.source = "<@spring.url '/researcher/search?query=' />" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult + additionalQueryString;
 				else
-					obj.options.source = "<@spring.url '/researcher/search?query=' />" + obj.options.query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
+					obj.options.source = "<@spring.url '/researcher/search?query=' />" + obj.options.query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult + additionalQueryString;
 				$.PALM.boxWidget.refresh( obj.element , obj.options );
 			}
 		});
@@ -374,6 +388,9 @@
 			$.each( $.PALM.options.registeredWidget, function(index, obj){
 				if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
 					obj.options.queryString = "?id=" + authorId;
+					<#-- special for publication list, set only query recent 10 publication -->
+					if( obj.selector === "#widget-researcher_publication" )
+						obj.options.queryString += "&maxresult=10"
 					$.PALM.boxWidget.refresh( obj.element , obj.options );
 				}
 			});

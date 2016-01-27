@@ -64,7 +64,7 @@
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50
 		  });
-		  
+		  <#--
 		   $(".content-wrapper>.content").slimscroll({
 				height: "100%",
 		        size: "8px",
@@ -73,7 +73,7 @@
 	   			railVisible: true,
     			alwaysVisible: true
 		  });
-	  
+	  		-->
 	    <#-- event for searching conference -->
 	    $( "#conference_search_field" )
 	    .on( "keypress", function(e) {

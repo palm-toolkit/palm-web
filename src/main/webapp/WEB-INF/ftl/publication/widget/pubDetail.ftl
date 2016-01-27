@@ -91,7 +91,7 @@
 				var pubCoauthorHeader =
 					$('<dt/>')
 					.addClass( "palm_label" )
-					.html( "Coauthor :" );
+					.html( "Authors :" );
 
 				var pubCoauthorContainer = $( '<dd/>' )
 											.addClass( "author-list" );
@@ -284,6 +284,7 @@
 					<#-- content detail -->
 					var contentDetail = $( '<dl/>' )
 										.addClass( "dl-horizontal" )
+										.css( "clean","both" )
 										.append(
 											$( '<dt/>' ).html( "Obtained from : " )
 										)
@@ -312,16 +313,18 @@
 					<#-- content navigation -->
 					var contentNavigation = 
 					$('<div/>')
-					.addClass( "palm_option" )
+					.css({ "height":"40px"})
 					.append(
 						$('<button/>')
-						.addClass( "btn btn-block btn-default palm_option_btn" )
+						.addClass( "btn btn-block btn-default btn-sm pull-left" )
+						.css({ "width":"40%"})
 						.attr({ "title":  "open " + tabHeaderText} )
 						.html( "Open " + htmlpdf_item.type + " in new small window" )
 						.click( function( event ){ event.preventDefault();window.open( htmlpdf_item.url , tabHeaderText ,'scrollbars=yes,width=650,height=500')})
 					).append(
 						$('<button/>')
-						.addClass( "btn btn-block btn-default palm_option_btn" )
+						.addClass( "btn btn-block btn-default btn-sm pull-right" )
+						.css({ "width":"40%"})
 						.html( "Extract " + htmlpdf_item.type )
 						.click( function( event ){ event.preventDefault();extractHtmlOrPublication( htmlpdf_item.url , htmlpdf_item.type , contentExtractedResult );})
 					);
@@ -351,7 +354,7 @@
 						if( k == "source" )
 							return;
 						descriptionList.append(
-											$( '<dt/>' ).html( k )
+											$( '<dt/>' ).addClass( "capitalize" ).html( k )
 										)
 										.append(
 											$( '<dd/>' ).html( v )

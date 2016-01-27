@@ -48,12 +48,12 @@
 </div>
 
 <script>
-	function setAuthorPicture( pictureUrl ){
+	function setAuthorPicture( photoUrl ){
 		var imageDiv = $( "#picture-container" ).find( ".palm_atr_photo" );
-		if( typeof pictureUrl != "undefined" ){
-			if( pictureUrl.indexOf('http') == 0 ){
+		if( typeof photoUrl != "undefined" ){
+			if( photoUrl.indexOf('http') == 0 ){
 				imageDiv.removeClass( "fa-user" );
-				imageDiv.find( "img" ).attr( "src", pictureUrl );
+				imageDiv.find( "img" ).attr( "src", photoUrl );
 			} else {
 				imageDiv.addClass( "fa-user" );
 				imageDiv.find( "img" ).attr( "src", "" );
@@ -92,10 +92,10 @@
 		});
 		
 		<#-- related with author picture -->
-		$( "#pictureUrl" ).on( "paste blur focusout", function( e ){
+		$( "#photoUrl" ).on( "paste blur focusout", function( e ){
 			setTimeout(function () {
-				var pictureUrl = $( e.target ).val();
-				setAuthorPicture( pictureUrl );
+				var photoUrl = $( e.target ).val();
+				setAuthorPicture( photoUrl );
 			}, 100);
 		});
 		

@@ -820,7 +820,15 @@ $.PALM.boxWidget = {
     var box = element.parents(".box").first();
     box.slideUp();
   },
-  options: $.PALM.options.boxWidgetOptions
+  options: $.PALM.options.boxWidgetOptions,
+  getByUniqueName: function( uniqueName ){
+	  var targetWidget;
+	  $.each( $.PALM.options.registeredWidget, function(index, obj){
+		  if( obj.selector === "#widget-" + uniqueName )
+			  targetWidget = obj;
+	  });
+	  return targetWidget;
+  }
 };
 
 /*

@@ -131,6 +131,8 @@ body {
     padding: 8px 10px 8px 8px;
     margin-right: auto;
     margin-left: auto;
+    overflow: auto;
+    height: 95%;
 }
 h1,
 h2,
@@ -163,7 +165,8 @@ h1 {
 }
 
 a {
-    color: #3c8dbc
+    /*color: #3c8dbc*/
+    color:#555;
 }
 a:hover,
 a:active,
@@ -1986,7 +1989,8 @@ a:focus {
     position: relative;
     margin: 0 0 30px 0;
     padding: 0;
-    list-style: none
+    list-style: none;
+    clear: both;
 }
 .notatimeline:before{
 	content:none !important;

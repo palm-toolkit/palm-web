@@ -75,6 +75,7 @@
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50
 		  });
+		  <#--
 		   $(".content-wrapper>.content").slimscroll({
 				height: "100%",
 		        size: "8px",
@@ -83,7 +84,7 @@
 	   			railVisible: true,
     			alwaysVisible: true
 		  });
-	    
+	    -->
 	    <#-- event for searching researcher -->
 	    $( "#publication_search_field" )
 	    .on( "keypress", function(e) {
@@ -226,7 +227,69 @@
 									<#-- append detail -->
 									pubDetail.append( pubTitle );
 									pubDetail.append( pubAuthor );
-
+									
+									
+									if( typeof itemPublication.event !== 'undefined' ){
+										var eventElem = $( '<div/>' )
+														.addClass( 'event-detail font-xs' );
+										
+															
+										var venueText = itemPublication.event.name;
+										//var venueHref = "<@spring.url '/venue' />?eventId=" + itemPublication.event.id + "&type=" + itemPublication.type.toLowerCase() + "&name=" + itemPublication.event.name.toLowerCase().replace(/[^\w\s]/gi, '');
+										
+										if( typeof itemPublication.volume != 'undefined' ){
+											venueText += " (" + itemPublication.volume + ")";
+											//venueHref += "&volume=" + itemPublication.volume;
+										}
+										if( typeof itemPublication.date != 'undefined' ){
+											venueText += " " + itemPublication.date.substring(0, 4);
+											//venueHref += "&year=" + itemPublication.date.substring(0, 4);
+										}
+										
+										var eventPart = $( '<span/>' )
+																.html( venueText );
+										eventElem.append( eventPart );
+										
+										if( itemPublication.event.isAdded ){
+											eventPart.removeClass( "text-gray" );
+										}
+										
+										<#-- pages -->
+										if( typeof itemPublication.pages !== 'undefined' ){
+											eventElem.append( " pp. " + itemPublication.pages );
+										}
+					
+										pubDetail.append( eventElem );			
+									} else if( typeof itemPublication.venue !== 'undefined'){
+										var eventElem = $( '<div/>' )
+														.addClass( 'event-detail font-xs' );
+																	
+										var venueText = itemPublication.venue;
+										//var venueHref = "<@spring.url '/venue' />?type=" + itemPublication.type.toLowerCase() + "&name=" + itemPublication.venue.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + itemPublication.id ;
+										
+										if( typeof itemPublication.volume != 'undefined' ){
+											venueText += " (" + itemPublication.volume + ")";
+											//venueHref += "&volume=" + itemPublication.volume;
+										}
+										if( typeof itemPublication.date != 'undefined' ){
+											venueText += " " + itemPublication.date.substring(0, 4);
+											//venueHref += "&year=" + itemPublication.date.substring(0, 4);
+										}
+										
+										var eventPart = $( '<span/>' )
+																//.attr({ "href" : venueHref })
+																//.addClass( "text-gray" )
+																.html( venueText );
+										eventElem.append( eventPart );
+										
+										<#-- pages -->
+										if( typeof itemPublication.pages !== 'undefined' ){
+											eventElem.append( " pp. " + itemPublication.pages );
+										}
+					
+										pubDetail.append( eventElem );
+									}
+									
 									<#-- append to item -->
 									publicationItem.append( pubDetail );
 

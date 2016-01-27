@@ -170,11 +170,21 @@ nv.addGraph(function() {
     .transition().duration(500)
     .call(chart)
     ;
+    
+  chart.bars.dispatch.on("elementClick", function(e) {
+    console.log(e);
+  });
 
   nv.utils.windowResize(chart.update);
 
   return chart;
-});
+}//,function( d ){
+ //     d3.selectAll("rect").on('click',
+//           function(){
+//                 console.log( data.d3data[0].values[d] );
+ //      });
+//}
+);
 
 						<#-- end of publication visualization -->
 

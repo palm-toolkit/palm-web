@@ -27,12 +27,112 @@
 			onRefreshStart: function( widgetElem ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
+				<#--remove everything -->
+				$("#widget-${wUniqueName} .box-content").html( "" );
+				
+				<#--
 				if( data.status != "ok"){
 					alert( "error on publication list" );
 					return false;
 				}
+				-->
+				<#--
 				if ( typeof data.publications === 'undefined') {
 					alert( "error, no publication found" );
+					return false;
+				}
+				-->
+				var filterContainer = $( '<div/>' )
+										.css({'width':'100%','margin':'0 10px 15px 0'})
+										.addClass( "pull-left" )
+										
+				var filterSearch = $( '<div/>' )
+									.addClass( "input-group" )
+									.css({'width':'100%'})
+									.append(
+										$( '<input/>' )
+										.attr({'type':'text', 'id':'publist-search', 'class':'form-control input-sm pull-right'})
+									)
+									.append(
+										$( '<div/>' )
+										.attr({'id':'publist-search-button-cont', 'class':'input-group-btn', 'title':'Will automatically search for all ' + data.author.name + '\'s publications'})
+										.append(
+											$( '<button/>' )
+											.attr({'id':'publist-search-button', 'class':'btn btn-sm btn-default'})
+											.append(
+												$( '<i/>' )
+												.attr({'class':'fa fa-search'})
+											)
+										)
+										.on( "click", function(){
+											var thisWidget = $.PALM.boxWidget.getByUniqueName( '${wUniqueName}' ); 
+					
+											<#-- find keyword if any -->
+											var keywordText = filterSearch.find( "#publist-search" ).val();
+											if( typeof keywordText !== "undefined" && keywordText !== "")
+											thisWidget.options.queryString = "?id=" + data.author.id + "&year=all&query=" + keywordText;
+											
+											$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
+										} )
+									)
+				
+				var filterYear = $( '<div/>' ).attr({'class':'btn-group','data-toggle':'buttons'});
+				filterYear.append( $( "<label/>" )
+									.attr({ "class":"btn btn-xs btn-default" })
+									.append(
+										$( "<input/>" )
+										.attr({ "type":"radio", "id":"year-all", "name":"filteryear", "value":"all", "data-link": "?id=" + data.author.id + "&year=all"})
+									).append( "all" )
+						 )
+						 .append( $( "<label/>" )
+									.attr({ "class":"btn btn-default btn-xs" })
+									.append(
+										$( "<input/>" )
+										.attr({ "type":"radio", "id":"maxresult-10", "name":"filteryear", "value":"maxresult10", "data-link": "?id=" + data.author.id + "&maxresult=10"})
+									).append( "recent 10" )
+						 )
+				$.each( data.years, function( index, item ){
+					filterYear.append( $( "<label/>" )
+									.attr({ "class":"btn btn-default btn-xs" })
+									.append(
+										$( "<input/>" )
+										.attr({ "type":"radio", "id":"year-" + item, "name":"filteryear", "value":item , "data-link": "?id=" + data.author.id + "&year=" + item})
+									).append( item )
+						 )
+				});
+				
+				<#-- find active option -->
+				var currentQueryArray = this.queryString.split( "&" );
+				$.each( currentQueryArray , function( index, partQuery){
+					if( partQuery.lastIndexOf( 'year', 0) === 0 )
+						filterYear.find( "#" + partQuery.replace( "=","-") ).prop("checked", true).parent().addClass( "active" );
+					else if( partQuery.lastIndexOf( 'maxresult', 0) === 0 )
+						filterYear.find( "#" + partQuery.replace( "=","-") ).prop("checked", true).parent().addClass( "active" );
+					else if( partQuery.lastIndexOf( 'query', 0) === 0 )
+						filterSearch.find( "#publist-search" ).val( partQuery.substring(6, partQuery.length) );
+						
+				});
+				<#-- assign click functionality to year filter -->
+				filterYear.on( "change", "input", function(e){
+					var thisWidget = $.PALM.boxWidget.getByUniqueName( '${wUniqueName}' ); 
+					
+					thisWidget.options.queryString = $( this ).data( "link" );
+					<#-- find keyword if any -->
+					var keywordText = filterSearch.find( "#publist-search" ).val();
+					if( typeof keywordText !== "undefined" && keywordText !== "")
+					thisWidget.options.queryString += "&query=" + keywordText;
+					
+					$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
+				});
+				<#-- append filter -->
+				filterContainer.append( filterSearch );
+				filterContainer.append( filterYear );
+				$("#widget-${wUniqueName} .box-content").append( filterContainer );
+				<#-- end of filter -->
+
+				<#-- no publication found -->
+				if ( typeof data.publications === 'undefined') {
+					$("#widget-${wUniqueName} .box-content").append( "<strong>error, no publication found/match</strong>" );
 					return false;
 				}
 
@@ -238,10 +338,15 @@
 								eachAuthor.append( eachAuthorImage );
 								-->
 								<#-- name -->
+								
 								var eachAuthorName = $( '<a/>' )
 													.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name})
 													.html( authorItem.name );
-													
+								if( authorItem.isAdded ){
+									eachAuthorName.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name})
+								} else{
+									eachAuthorName.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name + "&add=yes"})
+								}	
 								<#-- check whether author is added -->
 								if( !authorItem.isAdded ){
 									eachAuthorName.addClass( "text-gray" );
@@ -342,7 +447,7 @@
 				});
 
 				<#-- append everything to  -->
-				$("#widget-${wUniqueName} .box-content").html( timeLineContainer );
+				$("#widget-${wUniqueName} .box-content").append( timeLineContainer );
 			}
 		};
 		
