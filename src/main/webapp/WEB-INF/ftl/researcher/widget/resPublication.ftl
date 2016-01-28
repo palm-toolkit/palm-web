@@ -69,7 +69,7 @@
 					
 											<#-- find keyword if any -->
 											var keywordText = filterSearch.find( "#publist-search" ).val();
-											if( typeof keywordText !== "undefined" && keywordText !== "")
+											//if( typeof keywordText !== "undefined" && keywordText !== "")
 											thisWidget.options.queryString = "?id=" + data.author.id + "&year=all&query=" + keywordText;
 											
 											$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
@@ -82,14 +82,14 @@
 									.append(
 										$( "<input/>" )
 										.attr({ "type":"radio", "id":"year-all", "name":"filteryear", "value":"all", "data-link": "?id=" + data.author.id + "&year=all"})
-									).append( "all" )
+									).append( "all (" + data.totalPublication + ")" )
 						 )
 						 .append( $( "<label/>" )
 									.attr({ "class":"btn btn-default btn-xs" })
 									.append(
 										$( "<input/>" )
 										.attr({ "type":"radio", "id":"maxresult-10", "name":"filteryear", "value":"maxresult10", "data-link": "?id=" + data.author.id + "&maxresult=10"})
-									).append( "recent 10" )
+									).append( "recent (10)" )
 						 )
 				$.each( data.years, function( index, item ){
 					filterYear.append( $( "<label/>" )
