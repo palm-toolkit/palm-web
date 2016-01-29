@@ -594,6 +594,12 @@ div.d3-tooltip {
 	-webkit-box-shadow:none;
 	box-shadow:none;
 }
+.detail.static{
+	cursor:auto !important;
+}
+.author.static:hover,.detail.static:hover{
+	background-color:#fff;
+}
 
 .eventvolume-list>.eventvolume>.detail {
 	-webkit-box-shadow:none;

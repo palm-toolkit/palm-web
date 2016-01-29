@@ -2,10 +2,12 @@
   	<div class="coauthor-list">
     </div>
     
-    <div id="pubBasicSvg" class="pubBasicSvg" style="width:100%;height:100%">
+    <div id="authBasicSvg" class="authBasicSvg" style="width:100%;height:100%">
     <svg>
     </svg>
     </div>
+    
+    <div id="autOtherInfo" style="width:100%;overflow:hidden"></div>
 </div>
 
 <script>
@@ -38,7 +40,7 @@
 
 							var researcherDiv = 
 							$( '<div/>' )
-								.addClass( 'author' )
+								.addClass( 'author static' )
 								.attr({ 'id' : data.author.id });
 								
 							var researcherNav =
@@ -47,7 +49,7 @@
 								
 							var researcherDetail =
 							$( '<div/>' )
-								.addClass( 'detail' )
+								.addClass( 'detail static' )
 								.append(
 									$( '<div/>' )
 										.addClass( 'name capitalize' )
@@ -126,16 +128,6 @@
 									.addClass( 'photo fa fa-user' )
 								);
 							}
-							<#-- add clcik event -->
-							researcherDetail
-								.on( "click", function(){
-									if( data.author.isAdded ){
-										window.location = "<@spring.url '/researcher' />?id=" + data.author.id + "&name=" + data.author.name;
-									} else {
-										$.PALM.popUpIframe.create( "<@spring.url '/researcher/add' />?id=" + data.author.id + "&name=" + data.author.name , {popUpHeight:"416px"}, "Add " + data2.author.name + " to PALM");
-									}
-								} );
-							
 							targetContainer
 								.append( 
 									researcherDiv
@@ -165,7 +157,7 @@ nv.addGraph(function() {
 
   chart.bars.forceY([0]);
 
-  d3.select('#pubBasicSvg svg')
+  d3.select('#authBasicSvg svg')
     .datum( data.d3data )
     .transition().duration(500)
     .call(chart)
@@ -178,15 +170,29 @@ nv.addGraph(function() {
   nv.utils.windowResize(chart.update);
 
   return chart;
-}//,function( d ){
- //     d3.selectAll("rect").on('click',
-//           function(){
-//                 console.log( data.d3data[0].values[d] );
- //      });
-//}
-);
+});
 
 						<#-- end of publication visualization -->
+			
+			<#-- other information -->
+			<#-- Academic Networks -->
+					if( typeof data.sources!= "undefined"){
+						var onAcademicNetwork = $( '<dd/>' );
+						$.each( data.sources , function( index, sourceItem ){							
+							onAcademicNetwork.append( 
+								$( '<div/>' )
+									.addClass( "nowarp urlstyle" )
+									.attr( "title", sourceItem.source + " - " + sourceItem.url)
+									.html( "<i class='fa fa-globe'></i> " + sourceItem.source + " - " + sourceItem.url)
+									.click( function( event ){ event.preventDefault();window.open( sourceItem.url, sourceItem.source ,'scrollbars=yes,width=650,height=500')})
+							);
+						});
+						
+						$( "#autOtherInfo" ).html( "" )
+							.append( $( '<dt/>' ).html( "On Academic Networks:" ).css("margin-top","15px") )
+							.append( onAcademicNetwork);
+						
+					}
 
 								
 						}
