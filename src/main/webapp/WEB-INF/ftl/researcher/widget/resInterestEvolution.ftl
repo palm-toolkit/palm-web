@@ -260,7 +260,7 @@ var tooltip = d3.select("#widget-${wUniqueName} .box-body")
     .style("font-weight", "bold");
 	
 margin = {top: 20, right: 20, bottom: 20, left: 30};
-    width = 550 - margin.left - margin.right;
+    width = $("#widget-${wUniqueName} .box-body").width() - margin.left - margin.right - 30;
     height = 250 - margin.top - margin.bottom;
 
     colorrange = ["#B30000", "#E34A33", "#FC8D59", "#FDBB84", "#FDD49E", "#FEF0D9"];
