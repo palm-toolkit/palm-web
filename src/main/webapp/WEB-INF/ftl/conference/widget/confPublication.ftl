@@ -49,7 +49,7 @@
 											.append( 
 												$( '<span/>' )
 												.addClass( "bg-green" )
-												.html( "Publications in " + item.date.substring(0, 4) )
+												.html( data.title + "  " + item.date.substring(0, 4) )
 											);
 							timeLineContainer.append( liTimeGroup );
 						}

@@ -157,6 +157,7 @@ $.PALM.options = {
     lg: 1200
   },
   registeredWidget:[],
+  xhrPool:[],
   // main nav menu selector
   navMenuSelector : ".navbar-custom-menu"
 };
@@ -256,7 +257,7 @@ $.PALM.selected = {
 	record: function( typeSelected, selectedObject, activeObjects ){
 		var _this = this;
 		// check whether object already selected
-		if( !_this.isSimilarWithCurrentObject( typeSelected, selectedObject) ){
+		if( !_this.isSimilarWithCurrentObject( typeSelected, selectedObject, activeObjects) ){
 			_this.reset();
 			if( typeSelected == "researcher" ){
 				_this.researcher = selectedObject;
@@ -264,6 +265,8 @@ $.PALM.selected = {
 				_this.publication = selectedObject;
 			} else if ( typeSelected == "event" ){
 				_this.event = selectedObject;
+			} else if ( typeSelected == "eventGroup" ){
+				_this.eventGroup = selectedObject;
 			} else if ( typeSelected == "circle" ){
 				_this.circle = selectedObject;
 			}
@@ -279,7 +282,7 @@ $.PALM.selected = {
 		} else
 			return false;
 	},
-	isSimilarWithCurrentObject: function( typeSelected, selectedObject){
+	isSimilarWithCurrentObject: function( typeSelected, selectedObject, activeObjects){
 		var _this = this;
 		if( typeSelected == "researcher" && typeof _this.researcher != "undefined" && _this.researcher == selectedObject ){
 			return true;
@@ -287,9 +290,32 @@ $.PALM.selected = {
 			return true;
 		} else if ( typeSelected == "event" && typeof _this.event != "undefined" && _this.event == selectedObject ){
 			return true;
+		} else if ( typeSelected == "eventGroup" && typeof _this.eventGroup != "undefined" && _this.eventGroup == selectedObject ){
+			if( typeof activeObjects.next() !== "undefined" ){
+				if( activeObjects.next().is( ":visible" ) )
+					activeObjects.next().hide();
+				else
+					activeObjects.next().show();
+			}
+			return true;
 		} else if ( typeSelected == "circle" && typeof _this.circle != "undefined" && _this.circle == selectedObject ){
 			return true;
 		}
+		// show fetched event group 
+		if ( typeSelected == "eventGroup" )
+			activeObjects.next().show();
+		// remove and abort any ajax request
+		$.each( $.PALM.options.xhrPool, function(index, jqXHR){
+			jqXHR.abort();
+		});
+		//reset ajax pool
+		$.PALM.options.xhrPool = [];
+		// remove any popup message
+		$.each( $.PALM.options.popUpMessageOptions.popUpElement, function( index, item ){
+			item.element.remove();
+		});
+		//reset popup messages
+		$.PALM.options.popUpMessageOptions.popUpElement = [];
 		return false;
 	},
 	reset: function(){
@@ -767,12 +793,15 @@ $.PALM.boxWidget = {
     var additionalQueryString = "";
     if( typeof settings.queryString != "undefined" )
     	additionalQueryString = settings.queryString;
-    $.getJSON( settings.source + additionalQueryString, function( data ){
-    	settings.onRefreshDone( $widgetElement , data);
-    	// remove overlay and loading 
-    	$widgetElement.find( ".overlay" ).remove();
-    });
     
+    // store ajax requerst into palm object
+    var jqXHR =	$.getJSON( settings.source + additionalQueryString, function( data ){
+	    	settings.onRefreshDone( $widgetElement , data);
+	    	// remove overlay and loading 
+	    	$widgetElement.find( ".overlay" ).remove();
+	    });
+    // push into ajaxPool
+    $.PALM.options.xhrPool.push( jqXHR );
     
   },
   moveable: function ( handleSelector ) {

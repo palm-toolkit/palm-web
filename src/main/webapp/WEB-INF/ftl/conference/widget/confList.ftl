@@ -206,8 +206,8 @@
 												});
 												
 									<#-- add click event to edit event -->
-									eventEdit.click( function( event ){
-										event.preventDefault();
+									eventEdit.click( function( e ){
+										e.preventDefault();
 										$.PALM.popUpIframe.create( $(this).data("url") , { "popUpHeight":"430px"}, "Edit Event");
 									});
 									
@@ -242,9 +242,11 @@
 									<#-- add click event -->
 									eventDetail.on( "click", function( e){
 										<#-- remove active class -->
-										$( this ).parent().siblings().removeClass( "active" );
-										$( this ).parent().addClass( "active" );
-										getVenueGroupDetails( $( this ).parent().data( 'id' ) , eventGroup);
+										if( $.PALM.selected.record(  "eventGroup", $( this ).parent().data( 'id' ) , $( this ).parent() )){
+											//$( this ).parent().siblings().removeClass( "active" );
+											//$( this ).parent().addClass( "active" );
+											getVenueGroupDetails( $( this ).parent().data( 'id' ) , eventGroup);
+										}
 									});
 									
 									eventListContainer.append( eventItem );
@@ -256,10 +258,10 @@
 											getVenueGroupDetails( eventObj.id , eventGroup );
 											eventObj.id = "";
 										}
-										else{
-											//if( index == 0 )
-												//getVenueGroupDetails( itemEvent.id , eventGroup );
-										}
+										<#--else{
+											if( index == 0 )
+												getVenueGroupDetails( itemEvent.id , eventGroup );
+										}-->
 									} else {
 										if( data.count == 0 ){
 											var eventUrl = "<@spring.url '/venue/add' />";
@@ -291,7 +293,7 @@
 									}
 									
 								});
-								var maxPage = Math.ceil(data.count/data.maxresult);
+								var maxPage = Math.ceil(data.totalCount/data.maxresult);
 						
 								<#-- set dropdown page -->
 								for( var i=1;i<=maxPage;i++){
@@ -305,8 +307,8 @@
 								$( widgetElem ).find( "span.total-page" ).html( maxPage );
 								var endRecord = (data.page + 1) * data.maxresult;
 								if( data.page == maxPage - 1 ) 
-								endRecord = data.count;
-								$( widgetElem ).find( "span.paging-info" ).html( "Displaying conferences " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.count );
+								endRecord = data.totalCount;
+								$( widgetElem ).find( "span.paging-info" ).html( "Displaying conferences " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.totalCount );
 							}
 							else{
 								$pageDropdown.append("<option value='0'>0</option>");
@@ -401,7 +403,7 @@
 	
 			<#-- show pop up progress log -->
 			var uniquePid = $.PALM.utility.generateUniqueId();
-			$.PALM.popUpMessage.create( "Fetch venue group details...", { uniqueId:uniquePid, popUpHeight:150, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
+			$.PALM.popUpMessage.create( "Fetch venue group details...", { uniqueId:uniquePid, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
 			<#-- chack and fetch publication from academic network if necessary -->
 			$.getJSON( "<@spring.url '/venue/fetchGroup?id=' />" + venueId + "&pid=" + uniquePid + "&force=false", function( data ){
 				<#-- remove  pop up progress log -->
@@ -444,8 +446,8 @@
 												
 								eventYearItem.find( ".detail:first" ).on( "click", function(){
 									<#-- remove active class -->
-									$( this ).parent().parent().siblings().removeClass( "active" );
-									$( this ).parent().parent().addClass( "active" );
+									//$( this ).parent().parent().siblings().removeClass( "active" );
+									//$( this ).parent().parent().addClass( "active" );
 									triggerGetVenueDetails( $( this ).parent().parent().data( 'id' ), "onclick", [ eventGroup, eventYearTemp ]);
 								});
 
@@ -575,8 +577,8 @@
 									<#-- add click event -->
 									eventVolumeDetail.on( "click", function(){
 										<#-- remove active class -->
-										$( this ).parent().siblings().removeClass( "active" );
-										$( this ).parent().addClass( "active" );
+										//$( this ).parent().siblings().removeClass( "active" );
+										//$( this ).parent().addClass( "active" );
 										triggerGetVenueDetails( $( this ).parent().data( 'id' ), "onclick", [ eventGroup, eventYearTemp, eventVolumeItem ]);
 									});
 									
@@ -767,6 +769,13 @@
 					scrollTo : scrollTo_val
 				});
 				
+				<#-- trigger conference group basic statistic -->
+				$.each( $.PALM.options.registeredWidget, function(index, obj){
+					if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE" && obj.selector === "#widget-conference_basic_information"){
+						obj.options.queryString = "?id=" + venueId + "&type=eventGroup"
+						$.PALM.boxWidget.refresh( obj.element , obj.options );
+					}
+				});
 			}).fail(function() {
 	   	 		$.PALM.popUpMessage.remove( uniquePid );
 	  		});
@@ -807,6 +816,7 @@
 				$.each( $.PALM.options.registeredWidget, function(index, obj){
 					if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
 						obj.options.queryString = "?id=" + venueId;
+						
 						$.PALM.boxWidget.refresh( obj.element , obj.options );
 					}
 				});

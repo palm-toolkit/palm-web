@@ -1,4 +1,4 @@
-<div id="boxbody${wUniqueName}" class="box-body" style="height:300px;overflow:hidden">
+<div id="boxbody${wUniqueName}" class="box-body" style="height:320px;overflow:hidden">
 	researcher interest evolution
 </div>
 

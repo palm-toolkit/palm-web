@@ -1,7 +1,7 @@
 <div id="boxbody${wUniqueName}" class="box-body">
 	<div style="display:none" class="box-filter">
 		<div class="box-filter-option" style="display:none"></div>
-		<button class="btn btn-block btn-default box-filter-button" onclick="$( this ).prev().slideToggle( 'slow' )">
+		<button class="btn btn-block btn-default box-filter-button btn-xs" onclick="$( this ).prev().slideToggle( 'slow' )">
 			<i class="fa fa-filter pull-left"></i>
 			<span>Something</span>
 		</button>
