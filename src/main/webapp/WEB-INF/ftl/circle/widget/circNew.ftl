@@ -4,7 +4,7 @@
 		
 		<#-- name -->
 		<div class="form-group">
-	      <label>TItle *</label>
+	      <label>Title *</label>
 	      <input type="text" id="name" name="name" value="" class="form-control" placeholder="researcher name" />
 	    </div>
 
@@ -47,7 +47,7 @@
 							<ul id="researcherPaging" class="pagination marginBottom0">
 								<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
 								<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
-								<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">20</span></span></li>
+								<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>
 								<li class="paginate_button toNext"><a href="#"><i class="fa fa-caret-right"></i></a></li>
 								<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
 							</ul>
@@ -96,7 +96,7 @@
 							<ul id="publicationPaging" class="pagination marginBottom0">
 								<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
 								<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
-								<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">20</span></span></li>
+								<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>
 								<li class="paginate_button toNext"><a href="#"><i class="fa fa-caret-right"></i></a></li>
 								<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
 							</ul>
@@ -207,7 +207,7 @@
 		<#-- related to publication -->
 		
 		<#-- get publication list -->
-		publicationSearch( "" , "first" );
+		<#-- publicationSearch( "" , "first" ); -->
 		
 		<#-- icon search presed -->
 		$( "#publication_search_button" ).click( function( e ){
@@ -217,19 +217,23 @@
 		
 		   <#-- event for searching researcher -->
 	    $( "#publication_search_field" )
+	    <#--
 	    .on( "keypress", function(e) {
-	    	e.preventDefault();
-			  if ( e.keyCode == 0 || e.keyCode == 13 || e.keyCode == 32 )
+	    	//e.preventDefault();
+			  if ( e.keyCode == 0 || e.keyCode == 13/* || e.keyCode == 32*/ )
 			    publicationSearch( $( this ).val() , "first");
-		}).on( "keydown", function(e) {
-			e.preventDefault();
-			  if( e.keyCode == 8 || e.keyCode == 46 )
+		})-->
+		.on( "keydown", function(e) {
+			//e.preventDefault();
+			  if( e.keyCode == 8 || e.keyCode == 46 ){
 			    if( $( "#publication_search_field" ).val().length == 0 )
-			    	publicationSearch( $( this ).val() , "first");
+			    	<#--publicationSearch( $( this ).val() , "first");-->
+					$( "#inputPub" ).find( ".content-list" );
+			   }
 		});
 
 		function publicationSearch( query , jumpTo ){
-			<#--
+		
 				var maxPage = parseInt($( obj.element ).find( "span.total-page" ).html()) - 1;
 				if( jumpTo === "next")
 					obj.options.page = obj.options.page + 1;
@@ -245,8 +249,7 @@
 				$( obj.element ).find( ".paginate_button" ).each(function(){
 					$( this ).removeClass( "disabled" );
 				});
-		-->
-		<#--	
+
 				if( obj.options.page === 0 ){
 					$( obj.element ).find( "li.toFirst" ).addClass( "disabled" );
 					$( obj.element ).find( "li.toPrev" ).addClass( "disabled" );
@@ -254,13 +257,13 @@
 					$( obj.element ).find( "li.toNext" ).addClass( "disabled" );
 					$( obj.element ).find( "li.toEnd" ).addClass( "disabled" );
 				}
-		-->		
-				<#--if( jumpTo === "first") // if new searching performed -->
+		
+				( jumpTo === "first") // if new searching performed -->
 					var url = "<@spring.url '/publication/search?query=' />" + query + "&publicationType=conference-journal";<#-- + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult; -->
-				<#--
+				
 				else
 					obj.options.source = "<@spring.url '/publication/search?query=' />" + obj.options.query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
-				-->
+				
 			getPublicationList( url );
 		}
 		
@@ -368,13 +371,11 @@
 					-->
 				}
 				else{
-				<#--
 					$pageDropdown.append("<option value='0'>0</option>");
 					$( "#inputAuth" ).find( "span.total-page" ).html( 0 );
 					$( "#inputAuth" ).find( "span.paging-info" ).html( "Displaying researchers 0 - 0 of 0" );
 					$( "#inputAuth" ).find( "li.toNext" ).addClass( "disabled" );
 					$( "#inputAuth" ).find( "li.toEnd" ).addClass( "disabled" );
-					-->
 				}
 			});
   		}
@@ -389,17 +390,19 @@
 		researcherSearch( "" , "first" );
 
 		<#-- event for searching researcher -->
+		
 		var tempInput = $( "#researcher_search_field" ).val();
 	    $( "#researcher_search_field" )
+	    <#--
 	    .on( "keypress", function(e) {
-	    	e.preventDefault();
+	    	//e.preventDefault();
 			if ( e.keyCode == 0 || e.keyCode == 13 /* || e.keyCode == 32*/ )
 				researcherSearch( $( this ).val().trim() , "first");
 			tempInput = $( this ).val().trim();
 		})
-		<#-- when pressing backspace until -->
+		-->
 		.on( "keydown", function(e) {
-			e.preventDefault();
+			//e.preventDefault();
 		  	if( e.keyCode == 8 || e.keyCode == 46 )
 		    	if( $( "#researcher_search_field" ).val().length == 0 && tempInput != $( this ).val().trim())
 		    		researcherSearch( $( this ).val().trim() , "first");
@@ -408,7 +411,8 @@
 		
 
 		<#-- icon search presed -->
-		$( "#researcher_search_button" ).click( function(){
+		$( "#researcher_search_button" ).click( function( e ){
+			e.preventDefault();
 			researcherSearch( $( "#researcher_search_field" ).val().trim() , "first");
 		});
 		

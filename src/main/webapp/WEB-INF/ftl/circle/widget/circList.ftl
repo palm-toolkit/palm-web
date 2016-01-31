@@ -134,7 +134,7 @@
 										.attr({ "data-id": itemCircle.id });
 										
 									<#-- circle menu -->
-									var circNav = $( '<div/>' )
+									var circleNav = $( '<div/>' )
 										.attr({'class':'nav'});
 						
 									<#-- circle icon -->
@@ -155,9 +155,13 @@
 									
 									-->
 									
-									pubIcon.addClass( "fa fa-circle-o" ).attr({ "title":"Circle Readonly" });
-									circNav.append( pubIcon );
+									pubIcon
+										.addClass( "fa fa-circle-o" )
+										.attr({ "title":"Circle Readonly" })
+										.css({"color":"#0073b7","font-size":"22px"});
+									circleNav.append( pubIcon );
 									<#-- edit option -->
+<#--
 									var circEdit = $('<i/>')
 												.attr({
 													'class':'fa fa-edit', 
@@ -165,18 +169,20 @@
 													'data-url':'<@spring.url '/circle/edit' />' + '?id=' + itemCircle.id,
 													'style':'display:none'
 												});
-												
+												-->
 									<#-- add click event to edit circle -->
+<#--
 									circEdit.click( function( event ){
 										event.preventDefault();
 										$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Circle");
 									});
-									
+									-->
 									<#-- append edit  -->
-									circNav.append( circEdit );
+									<#--circleNav.append( circEdit );-->
 									
-									circleItem.append( circNav );
+									circleItem.append( circleNav );
 									
+									<#--
 									circleItem.hover(function()
 									{
 									     circEdit.show();
@@ -184,32 +190,47 @@
 									{ 
 									     circEdit.hide();
 									});
-
-									<#-- circle detail -->
-									var circDetail = $('<div/>').addClass( "detail" );
-									<#-- title -->
-									var circName = $('<div/>').addClass( "title" ).html( itemCircle.name );
-
-									<#--circle-->
-									<#--
-									var circCreator = $('<div/>').addClass( "circle" );
-									$.each( itemCircle.circles , function( index, itemcircle ){
-										if( index > 0)
-											circCreator.append(", ");
-										circCreator.append( itemcircle.name );
-									});
 									-->
+									<#-- circle detail -->
+									var circleDetail = $('<div/>').addClass( "detail" );
+									<#-- title -->
+									var circleName = $('<div/>').addClass( "title" ).html( itemCircle.name );
 
 									<#-- append detail -->
-									circDetail.append( circName );
+									circleDetail.append( circleName );
 									
-									<#--circDetail.append( circCreator );-->
+									circleDetail.append(
+										$( '<div/>' )
+										.addClass( 'prop' )
+										.append( 
+											$( '<i/>' )
+											.addClass( 'fa fa-archive icon font-xs' )
+										).append( 
+											$( '<span/>' )
+											.addClass( 'info font-xs' )
+											.html( itemCircle.numberAuthors + " researchers, " + itemCircle.numberPublications + " publications")
+										)
+									);
+									
+									if( typeof itemCircle.description !== "undefined")
+										circleDetail.append(
+											$( '<div/>' )
+											.addClass( 'prop' )
+											.append( 
+												$( '<i/>' )
+												.addClass( 'fa fa-info  icon font-xs' )
+											).append( 
+												$( '<span/>' )
+												.addClass( 'info font-xs' )
+												.html( itemCircle.description )
+											)
+										);
 
 									<#-- append to item -->
-									circleItem.append( circDetail );
+									circleItem.append( circleDetail );
 
 									<#-- add clcik event -->
-									circDetail.on( "click", function(){
+									circleDetail.on( "click", function(){
 										<#-- remove active class -->
 										$( this ).parent().siblings().removeClass( "active" );
 										$( this ).parent().addClass( "active" );
@@ -221,14 +242,14 @@
 									<#-- display first circle detail -->
 									if( targetId == "" ){
 										if( index == 0 ){
-											circDetail.parent().siblings().removeClass( "active" );
-											circDetail.parent().addClass( "active" );
+											circleDetail.parent().siblings().removeClass( "active" );
+											circleDetail.parent().addClass( "active" );
 											getCircleDetails( itemCircle.id );
 										}
 									} else {
 										if( targetId == itemCircle.id ){
-											circDetail.parent().siblings().removeClass( "active" );
-											circDetail.parent().addClass( "active" );
+											circleDetail.parent().siblings().removeClass( "active" );
+											circleDetail.parent().addClass( "active" );
 											getCircleDetails( itemCircle.id );
 										}
 									}

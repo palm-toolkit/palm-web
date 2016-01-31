@@ -579,7 +579,8 @@ div.d3-tooltip {
 .content-list>.publication>.detail, .content-list>.eventgroup-item>.eventgroup>.detail, 
 .content-list>.author>.detail, .eventyear-list>.eventyear-item>.detail,
 .eventvolume-list>.eventvolume>.detail,
-.coauthor-list>.author>.detail {
+.coauthor-list>.author>.detail,
+.content-list>.circle>.detail {
 	cursor:pointer;
     margin-left:0;
     float:left;
@@ -623,12 +624,16 @@ div.d3-tooltip {
 .eventvolume-list>.eventvolume>.detail {
 	width:190px
 }
+.content-list>.circle>.detail{
+	width:235px
+}
 
 .content-list>.publication>.detail>.title, .content-list>.eventgroup-item>.eventgroup>.detail>.title, 
 .content-list>.author>.detail>.name,
 .content-list>.author>.detail>.paper, 
 .eventyear-list>.eventyear-item .title,
-.coauthor-list>.author>.detail>.name{
+.coauthor-list>.author>.detail>.name,
+.content-list>.circle>.detail>.title{
     display: block;
     font-weight: 600;
   	color: inherit;
@@ -639,13 +644,15 @@ div.d3-tooltip {
 	line-height:20px;
 }
 .detail>.status,
-.detail>.affiliation{
+.detail>.affiliation,
+.detail>.prop{
 	float: left;
 }
 .content-list>.author>.detail .icon,
 .eventyear-item>.eventyear>.detail .icon,
 .eventvolume-list>.eventvolume>.detail .icon,
-.coauthor-list>.author>.detail .icon
+.coauthor-list>.author>.detail .icon,
+.content-list>.circle>.detail .icon
 {
 	float: left;
     line-height: 20px;
@@ -654,7 +661,8 @@ div.d3-tooltip {
 .eventyear-item>.eventyear>.detail .number,
 .eventyear-item>.eventyear>.detail .date,
 .eventyear-item>.eventyear>.detail .location,
-.eventvolume-list>.eventvolume>.detail .volume{
+.eventvolume-list>.eventvolume>.detail .volume,
+.content-list>.circle>.detail .info{
 	margin-left: 5px;
     float: left;
 }
@@ -663,7 +671,8 @@ div.d3-tooltip {
 	overflow:auto;
 	float:none;
 }
-.content-list>.author>.detail .info{
+.content-list>.author>.detail .info,
+.content-list>.circle>.detail .info{
     width: 216px;
 }
 .eventyear-item>.eventyear>.detail .number,

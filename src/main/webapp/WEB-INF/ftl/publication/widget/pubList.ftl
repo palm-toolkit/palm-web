@@ -295,11 +295,12 @@
 
 									<#-- add clcik event -->
 									pubDetail.on( "click", function(){
-										<#-- push history -->
-										history.pushState( null, "Publication " + itemPublication.title, "<@spring.url '/publication' />?id=" + itemPublication.id + "&title=" + itemPublication.title);
 										<#-- remove active class -->
-										if( $.PALM.selected.record( "publication", itemPublication.id, pubDetail.parent() ))
+										if( $.PALM.selected.record( "publication", itemPublication.id, pubDetail.parent() )){
+											<#-- push history -->
+											history.pushState( null, "Publication " + itemPublication.title, "<@spring.url '/publication' />?id=" + itemPublication.id + "&title=" + itemPublication.title);
 											getPublicationDetails( itemPublication.id);
+										}
 									});
 
 									publicationListContainer.append( publicationItem );
@@ -343,7 +344,7 @@
 							else{
 								$pageDropdown.append("<option value='0'>0</option>");
 								$( widgetElem ).find( "span.total-page" ).html( 0 );
-								$( widgetElem ).find( "span.paging-info" ).html( "Displaying researchers 0 - 0 of 0" );
+								$( widgetElem ).find( "span.paging-info" ).html( "Displaying publications 0 - 0 of 0" );
 								$( widgetElem ).find( "li.toNext" ).addClass( "disabled" );
 								$( widgetElem ).find( "li.toEnd" ).addClass( "disabled" );
 							}

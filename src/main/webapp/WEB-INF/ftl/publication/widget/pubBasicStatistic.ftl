@@ -19,7 +19,7 @@
 		-->
 		<#-- set widget unique options -->
 		var options ={
-			source : "<@spring.url '/publication/basicstatistic' />",
+			source : "<@spring.url '/publication/basicInformation' />",
 			queryString : "",
 			id: "",
 			onRefreshStart: function( widgetElem ){
@@ -35,7 +35,7 @@
 											$( '<dt/>' ).html( "Title:" )
 										)
 										.append(
-											$( '<dd/>' ).html( $.PALM.utility.parseDateType1( data.publication.title ) )
+											$( '<dd/>' ).html( data.publication.title )
 										);
 				
 				

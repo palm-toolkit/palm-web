@@ -459,7 +459,7 @@ $.PALM.circle = {
 				_this.currentCleanResearcherData.splice(index,1);
 				return false;
 			}
-		});
+		});		
 		
 		// change button for remove researcher div
 		$( triggerElement )
