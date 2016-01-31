@@ -24,6 +24,8 @@ import de.rwth.i9.palm.model.AuthorAlias;
 import de.rwth.i9.palm.model.AuthorInterest;
 import de.rwth.i9.palm.model.AuthorInterestProfile;
 import de.rwth.i9.palm.model.Circle;
+import de.rwth.i9.palm.model.CircleInterest;
+import de.rwth.i9.palm.model.CircleInterestProfile;
 import de.rwth.i9.palm.model.CircleWidget;
 import de.rwth.i9.palm.model.Config;
 import de.rwth.i9.palm.model.ConfigProperty;
@@ -148,6 +150,8 @@ public class DatabaseConfig
 				AuthorInterest.class,
 				AuthorInterestProfile.class,
 				Circle.class,
+				CircleInterest.class,
+				CircleInterestProfile.class,
 				CircleWidget.class,
 				Country.class,
 				Config.class,
