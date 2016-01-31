@@ -370,7 +370,16 @@
 							
 												
 							var venueText = item.event.name;
-							var venueHref = "<@spring.url '/venue' />?eventId=" + item.event.id + "&type=" + item.type.toLowerCase() + "&name=" + item.event.name.toLowerCase().replace(/[^\w\s]/gi, '');
+							var venueHref = "<@spring.url '/venue' />?eventId=" + item.event.id + "&type=" + item.type.toLowerCase();
+							if( typeof item.event.abbr !== "undefined" ){
+								venueText += " - " + item.event.abbr;
+								venueHref += "&abbr=" + item.event.abbr;
+							}
+							venueHref += "&name=" + item.event.name.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id ;
+							
+							<#-- the implementation logic is other way around, but this worked, then just leave it-->
+							if( typeof item.event.isGroupAdded !== "undefined" && item.event.isGroupAdded )
+								venueHref += "&add=yes";
 							
 							if( typeof item.volume != 'undefined' ){
 								venueText += " (" + item.volume + ")";
@@ -402,7 +411,7 @@
 											.addClass( 'event-detail font-xs' );
 														
 							var venueText = item.venue;
-							var venueHref = "<@spring.url '/venue' />?type=" + item.type.toLowerCase() + "&name=" + item.venue.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id ;
+							var venueHref = "<@spring.url '/venue' />?type=" + item.type.toLowerCase() + "&name=" + item.venue.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id + "&add=yes";
 							
 							if( typeof item.volume != 'undefined' ){
 								venueText += " (" + item.volume + ")";

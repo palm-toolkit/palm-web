@@ -43,6 +43,9 @@
 		<#if targetName??>
 			eventObj.name = "${targetName!''}";
 		</#if>
+		<#if targetNotation??>
+			eventObj.notation = "${targetNotation!''}";
+		</#if>
 		<#if targetType??>
 			eventObj.type = "${targetType!''}";
 		</#if>
@@ -51,6 +54,9 @@
 		</#if>
 		<#if targetVolume??>
 			eventObj.volume = "${targetVolume!''}";
+		</#if>
+		<#if targetAdd??>
+			eventObj.add = "${targetAdd!''}";
 		</#if>
 		<#if publicationId??>
 			eventObj.publicationId = "${publicationId!''}";
@@ -208,7 +214,7 @@
 									<#-- add click event to edit event -->
 									eventEdit.click( function( e ){
 										e.preventDefault();
-										$.PALM.popUpIframe.create( $(this).data("url") , { "popUpHeight":"430px"}, "Edit Event");
+										$.PALM.popUpIframe.create( $(this).data("url") , { "popUpHeight":"460px"}, "Edit Event");
 									});
 									
 									<#-- append edit  -->
@@ -254,14 +260,14 @@
 									
 									<#-- display first conference detail -->
 									if( itemEvent.isAdded ){
-										if( ( typeof eventObj.id == "undefined" || eventObj.id == "" ) && eventObj.id == itemEvent.id ){
+										if( typeof eventObj.id != "undefined" && eventObj.id != "" && eventObj.id == itemEvent.id ){
 											getVenueGroupDetails( eventObj.id , eventGroup );
 											eventObj.id = "";
 										}
-										<#--else{
-											if( index == 0 )
-												getVenueGroupDetails( itemEvent.id , eventGroup );
-										}-->
+										else{
+											//if( index == 0 )
+											//	getVenueGroupDetails( itemEvent.id , eventGroup );
+										}
 									} else {
 										if( data.count == 0 ){
 											var eventUrl = "<@spring.url '/venue/add' />";
@@ -274,6 +280,9 @@
 											}
 											if( typeof eventObj.name !== "undefined" ){
 												eventUrlQuery += "&name=" + eventObj.name;
+											}
+											if( typeof eventObj.notation !== "undefined" ){
+												eventUrlQuery += " " + eventObj.notation;
 											}
 											if( typeof eventObj.volume !== "undefined" ){
 												eventUrlQuery += "&volume=" + eventObj.volume;
@@ -288,11 +297,14 @@
 											if( eventUrlQuery != "" ){
 												eventUrl += "?" + eventUrlQuery.substring( 1, eventUrlQuery.length );
 											}
-											$.PALM.popUpIframe.create( eventUrl, { "popUpHeight":"430px"} , "Add New Conference/Journal to PALM");
+											$.PALM.popUpIframe.create( eventUrl, { "popUpHeight":"460px"} , "Add New Conference/Journal to PALM");
 										}
 									}
 									
 								});
+								if( typeof eventObj.add !== "undefined" && eventObj.add == "yes" )
+									data.totalCount = data.count;
+									
 								var maxPage = Math.ceil(data.totalCount/data.maxresult);
 						
 								<#-- set dropdown page -->
@@ -303,12 +315,12 @@
 								$( widgetElem ).find( "[data-toggle='tooltip']" ).tooltip();
 								
 								<#-- set page number -->
-								$pageDropdown.val( data.page + 1 );
+								$pageDropdown.val( data.startPage + 1 );
 								$( widgetElem ).find( "span.total-page" ).html( maxPage );
-								var endRecord = (data.page + 1) * data.maxresult;
-								if( data.page == maxPage - 1 ) 
+								var endRecord = (data.startPage + 1) * data.maxresult;
+								if( data.startPage == maxPage - 1 ) 
 								endRecord = data.totalCount;
-								$( widgetElem ).find( "span.paging-info" ).html( "Displaying conferences " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.totalCount );
+								$( widgetElem ).find( "span.paging-info" ).html( "Displaying conferences " + ((data.startPage * data.maxresult) + 1) + " - " + endRecord + " of " + data.totalCount );
 							}
 							else{
 								$pageDropdown.append("<option value='0'>0</option>");
@@ -338,7 +350,7 @@
 									eventUrl += "publicationId=" + eventObj.publicationId;
 								}
 								if( typeof eventObj.name !== "undefined" && eventObj.name != "" ){
-									$.PALM.popUpIframe.create( eventUrl, {popUpHeight:"430px"}, "Add New Conference/Journal to PALM");
+									$.PALM.popUpIframe.create( eventUrl, {popUpHeight:"460px"}, "Add New Conference/Journal to PALM");
 									eventObj.name = "";
 								}
 							}
@@ -356,9 +368,12 @@
 		});
 		
 		<#--// first time on load, list 50 conferences-->
-		//$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) , options );
-		conferenceSearch( $( "#conference_search_field" ).val().trim() , "first");
-	
+		<#--$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) , options );-->
+		<#-- There is a small bug here, but I forgot what -->
+		if( typeof eventObj.add !== "undefined" && eventObj.add == "yes" )
+			conferenceSearch( $( "#conference_search_field" ).val().trim() , "first");
+		else
+			conferenceSearch( $( "#conference_search_field" ).val().trim() , "first");
 	
 		function conferenceSearch( query , jumpTo ){
 			//find the element option
@@ -448,11 +463,11 @@
 									<#-- remove active class -->
 									//$( this ).parent().parent().siblings().removeClass( "active" );
 									//$( this ).parent().parent().addClass( "active" );
-									triggerGetVenueDetails( $( this ).parent().parent().data( 'id' ), "onclick", [ eventGroup, eventYearTemp ]);
+									triggerGetVenueDetails( $( this ).parent().parent().data( 'id' ), "onclick", [ eventGroup, eventYear ]);
 								});
 
 								<#-- check if this is target item -->
-								triggerGetVenueDetails( eventArray[0].id, "automatic", [ eventGroup, eventYearTemp ]);
+								triggerGetVenueDetails( eventArray[0].id, "automatic", [ eventGroup, eventYear ]);
 							}
 							<#-- event group with volume -->
 							else 
@@ -764,7 +779,7 @@
 				
 				<#-- changed scroll position -->
 				var scrollTo_val = containerList.parent()[0].offsetTop + 'px';
-				console.log( "scroll : " + scrollTo_val );
+				//console.log( "scroll : " + scrollTo_val );
 				$(".content-list").slimscroll({
 					scrollTo : scrollTo_val
 				});
@@ -773,6 +788,7 @@
 				$.each( $.PALM.options.registeredWidget, function(index, obj){
 					if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE" && obj.selector === "#widget-conference_basic_information"){
 						obj.options.queryString = "?id=" + venueId + "&type=eventGroup"
+						
 						$.PALM.boxWidget.refresh( obj.element , obj.options );
 					}
 				});
@@ -816,7 +832,11 @@
 				$.each( $.PALM.options.registeredWidget, function(index, obj){
 					if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
 						obj.options.queryString = "?id=" + venueId;
-						
+						<#-- add additional query string for conference publication -->
+						if( typeof eventObj.publicationId !== "undefined" ){
+							if( obj.selector === "#widget-conference_publication" )
+								obj.options.queryString += "&publicationId=" + eventObj.publicationId;
+						}
 						$.PALM.boxWidget.refresh( obj.element , obj.options );
 					}
 				});

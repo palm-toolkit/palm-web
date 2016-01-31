@@ -230,14 +230,14 @@
 									<#-- add clcik event -->
 									researcherDetail
 										.on( "click", function(){
-											//$( this ).parent().siblings().removeClass( "active" );
-											//$( this ).parent().addClass( "active" );
 											if( item.isAdded ){
 												if( $.PALM.selected.record( "researcher", item.id, $( this ).parent() )){
+													<#-- push history -->
+													history.pushState(null, "Researcher " + item.name, "<@spring.url '/researcher' />?id=" + item.id + "&name=" + item.name );
 													getAuthorDetails( item.id );
 												}
 											} else {
-												$.PALM.popUpIframe.create( "<@spring.url '/researcher/add' />?id=" + item.id + "&name=" + item.name , {popUpHeight:"416px"}, "Add " + item.name + " to PALM");
+												$.PALM.popUpIframe.create( "<@spring.url '/researcher/add' />?id=" + item.id + "&name=" + item.name , {popUpHeight:"456px"}, "Add " + item.name + " to PALM");
 											}
 										} );
 									
@@ -260,8 +260,9 @@
 											if( index == 0 ){
 												<#-- record selection -->
 												if( $.PALM.selected.record( "researcher", item.id, researcherDiv ) ){
+													<#-- push history -->
+													history.pushState(null, "Researcher " + item.name, "<@spring.url '/researcher' />?id=" + item.id + "&name=" + item.name );
 													<#-- add active class -->
-													//researcherDiv.addClass( "active" );
 													getAuthorDetails( item.id );
 												}
 											}
@@ -269,12 +270,14 @@
 										if( targetId == item.id ){
 											<#-- add active class -->
 											if( $.PALM.selected.record( "researcher", item.id, researcherDiv )){
+												<#-- push history -->
+												history.pushState(null, "Researcher " + item.name, "<@spring.url '/researcher' />?id=" + item.id + "&name=" + item.name );
 												getAuthorDetails( item.id );
 												targetId = "";
 											}
 										}
 									} else {
-										$.PALM.popUpIframe.create( "<@spring.url '/researcher/add' />?id=" + item.id + "&name=" + item.name , {popUpHeight:"416px"}, "Add " + item.name + " to PALM");
+										$.PALM.popUpIframe.create( "<@spring.url '/researcher/add' />?id=" + item.id + "&name=" + item.name , {popUpHeight:"456px"}, "Add " + item.name + " to PALM");
 									}
 
 								});

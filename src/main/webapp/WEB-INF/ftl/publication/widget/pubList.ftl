@@ -295,9 +295,11 @@
 
 									<#-- add clcik event -->
 									pubDetail.on( "click", function(){
+										<#-- push history -->
+										history.pushState( null, "Publication " + itemPublication.title, "<@spring.url '/publication' />?id=" + itemPublication.id + "&title=" + itemPublication.title);
 										<#-- remove active class -->
-										if( $.PALM.selected.record( "publication", $( this ).parent().data( 'id' ), pubDetail.parent() ))
-											getPublicationDetails( $( this ).parent().data( 'id' ));
+										if( $.PALM.selected.record( "publication", itemPublication.id, pubDetail.parent() ))
+											getPublicationDetails( itemPublication.id);
 									});
 
 									publicationListContainer.append( publicationItem );
@@ -305,12 +307,17 @@
 									<#-- display first publication detail -->
 									if( targetId == "" ){
 										if( index == 0 ){
-											if( $.PALM.selected.record( "publication", itemPublication.id, pubDetail.parent() ))
+											if( $.PALM.selected.record( "publication", itemPublication.id, pubDetail.parent() )){
+												<#-- push history -->
+												history.pushState( null, "Publication " + itemPublication.title, "<@spring.url '/publication' />?id=" + itemPublication.id + "&title=" + itemPublication.title);
 												getPublicationDetails( itemPublication.id );
+											}
 										}
 									} else {
 										if( targetId == itemPublication.id ){
 											if( $.PALM.selected.record( "publication", itemPublication.id, pubDetail.parent() )){
+												<#-- push history -->
+												history.pushState( null, "Publication " + itemPublication.title, "<@spring.url '/publication' />?id=" + itemPublication.id + "&title=" + itemPublication.title);
 												getPublicationDetails( itemPublication.id );
 												targetId == "";
 											}

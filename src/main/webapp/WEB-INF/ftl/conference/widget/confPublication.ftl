@@ -70,7 +70,7 @@
 					}
 
 					
-					var publicationItem = $( '<li/>' );
+					var publicationItem = $( '<li/>' ).attr({ "id":"p" + item.id });
 
 					<#-- timeline mark -->
 					var timelineDot = $( '<i/>' );
@@ -237,6 +237,18 @@
 
 				<#-- append everything to  -->
 				$("#widget-${wUniqueName} .box-content").html( timeLineContainer );
+				
+				<#-- changed scroll position -->
+				if( typeof data.publicationId !== "undefined" ){
+					var publicationTarget = $("#boxbody${wUniqueName} .box-content").find( "#p" + data.publicationId );
+					var scrollTo_val = publicationTarget[0].offsetTop + 'px';
+					//console.log( "scroll : " + scrollTo_val );
+					$("#boxbody${wUniqueName} .box-content").slimscroll({
+						scrollTo : scrollTo_val
+					});
+					// add highlight effect
+					$( publicationTarget ).effect("highlight", {}, 3000);
+				}
 			}
 		};
 		

@@ -286,6 +286,9 @@
 			var textToShow = $('#name').find(":selected").text();
    			$('#name').parent().find("span").find("input").val(textToShow);
 		</#if>
+
+		<#-- add additional css -->
+		
 	});
 
 </script>

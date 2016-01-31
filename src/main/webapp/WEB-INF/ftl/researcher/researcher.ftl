@@ -31,7 +31,7 @@
 $(function(){
 	$( "#new-author-circle" ).click( function( event ){
 		event.preventDefault();
-		$.PALM.popUpIframe.create( $(this).data("url") , {popUpHeight:"416px"}, $(this).attr("title") );
+		$.PALM.popUpIframe.create( $(this).data("url") , {popUpHeight:"456px"}, $(this).attr("title") );
 	});
 });
 </script>

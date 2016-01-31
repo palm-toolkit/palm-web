@@ -114,9 +114,16 @@
 
 					<#-- name -->
 					var eachAuthorName = $( '<a/>' )
-										.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name})
 										.css({"padding" : "0 15px 0 5px"})
 										.html( authorItem.name );
+					
+					if( authorItem.isAdded )			
+						eachAuthorName.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name});
+					else
+						eachAuthorName
+							.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name + "&add=yes"})
+							.addClass( "text-gray" );
+					
 					eachAuthor.append( eachAuthorName );
 					
 					pubCoauthorContainer.append( eachAuthor );
