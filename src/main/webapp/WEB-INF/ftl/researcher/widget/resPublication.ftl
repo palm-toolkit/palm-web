@@ -1,3 +1,6 @@
+<@security.authorize access="isAuthenticated()">
+	<#assign currentUser = securityService.getUser() >
+</@security.authorize>
 <div id="boxbody${wUniqueName}" class="box-body">
 	<div class="box-content">
 	</div>
@@ -342,19 +345,24 @@
 								-->
 								<#-- name -->
 								
-								var eachAuthorName = $( '<a/>' )
-													.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name})
-													.html( authorItem.name );
+								var eachAuthorName;
 								if( authorItem.isAdded ){
-									eachAuthorName.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name})
+									eachAuthorName = $( '<a/>' ).html( authorItem.name )
+										.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name})
 								} else{
-									eachAuthorName.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name + "&add=yes"})
+									<#if currentUser??>
+										eachAuthorName = $( '<a/>' ).html( authorItem.name )
+											.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name + "&add=yes"})
+											.addClass( "text-gray" )
+											.attr( "title" , "add " + authorItem.name + " to PALM" );
+									<#else>
+										eachAuthorName = $( '<span/>' ).html( authorItem.name )
+											.addClass( "text-gray" )
+											.attr( "title" , "Please log in to add " + authorItem.name + " to PALM" );
+									</#if>
+									
 								}	
-								<#-- check whether author is added -->
-								if( !authorItem.isAdded ){
-									eachAuthorName.addClass( "text-gray" );
-									eachAuthorName.attr( "title" , "add " + authorItem.name + " to PALM" );
-								}
+
 													
 								if( index > 0 )
 									eachAuthor.append( ", " );
@@ -393,15 +401,34 @@
 								venueHref += "&year=" + item.date.substring(0, 4);
 							}
 							
-							var eventPart = $( '<a/>' )
+							var eventPart;
+							<#if currentUser??>
+								if( item.event.isAdded ){
+									eventPart = $( '<a/>' )
+													.attr({ "href" : venueHref })
+													.html( venueText );
+								} else {
+									eventPart = $( '<a/>' )
 													.attr({ "href" : venueHref })
 													.addClass( "text-gray" )
 													.html( venueText );
+								}
+							<#else>
+								if( item.event.isAdded ){
+									eventPart = $( '<a/>' )
+													.attr({ "href" : venueHref })
+													.html( venueText );
+								} else {
+									eventPart = $( '<span/>' )
+													.attr({ "title" : "Please log in to add " + venueText + "to PALM" })
+													.addClass( "text-gray" )
+													.html( venueText );
+								}
+							</#if>
+						
 							eventElem.append( eventPart );
 							
-							if( item.event.isAdded ){
-								eventPart.removeClass( "text-gray" );
-							}
+							
 							
 							<#-- pages -->
 							if( typeof item.pages !== 'undefined' ){

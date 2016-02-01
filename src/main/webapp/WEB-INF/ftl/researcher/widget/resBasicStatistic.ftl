@@ -1,3 +1,6 @@
+<@security.authorize access="isAuthenticated()">
+	<#assign currentUser = securityService.getUser() >
+</@security.authorize>
 <div id="boxbody-${wUniqueName}" class="box-body no-padding">
   	<div class="coauthor-list">
     </div>
@@ -45,7 +48,7 @@
 								
 							var researcherNav =
 							$( '<div/>' )
-								.addClass( 'nav' );
+								.addClass( 'nav medium' );
 								
 							var researcherDetail =
 							$( '<div/>' )
@@ -114,7 +117,7 @@
 								researcherNav
 									.append(
 									$( '<div/>' )
-										.addClass( 'photo' )
+										.addClass( 'photo medium' )
 										.css({ 'font-size':'14px'})
 										.append(
 											$( '<img/>' )
@@ -125,9 +128,26 @@
 								researcherNav
 								.append(
 									$( '<div/>' )
-									.addClass( 'photo fa fa-user' )
+									.addClass( 'photo medium fa fa-user' )
 								);
 							}
+							<#if currentUser??>
+							<#-- add edit button -->
+							researcherNav
+								.append(
+									$( '<div/>' )
+									.addClass( 'btn btn-default btn-xs pull-left' )
+									.attr({ "data-url":"<@spring.url '/researcher/edit' />?id=" + data.author.id, "title":"Update " + data.author.name + " Profile"})
+									.append(
+										$( '<i/>' )
+											.addClass( 'fa fa-edit' )
+									).append( "Update" )
+									.on( "click", function(e){
+										e.preventDefault;
+										$.PALM.popUpIframe.create( $(this).data("url") , {popUpHeight:"456px"}, $(this).attr("title") );
+									})
+								);
+							</#if>
 							targetContainer
 								.append( 
 									researcherDiv

@@ -521,6 +521,10 @@ div.d3-tooltip {
 	height:100%
 }
 
+.coauthor-list>.author>.nav.medium{
+	width:65px !important;
+}
+
 .content-list>.author>.nav>.photo, .palm_atr_photo{
 	width:52px;
 	height:70px;
@@ -538,6 +542,9 @@ div.d3-tooltip {
 	overflow:hidden;
 	color:#73A2F8;
 }
+.coauthor-list>.author>.nav>.photo.medium{
+	width:60px !important;
+}
 .coauthor-list>.author>.nav>.photo.round{
 	border-radius: 50%;
     height: 52px;
@@ -551,6 +558,9 @@ div.d3-tooltip {
 .coauthor-list>.author>.nav>.photo>img{
 	width: 52px;
 	position:relative;
+}
+.coauthor-list>.author>.nav>.photo.medium>img{
+	width:60px !important;
 }
 
 .content-list>.author>.nav,.coauthor-list>.author>.nav{

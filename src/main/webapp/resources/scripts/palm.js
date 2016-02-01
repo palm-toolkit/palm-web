@@ -1070,10 +1070,14 @@ $.PALM.popUpIframe = {
     	    	.append(
 	    	    		popUpContainer
 				)
+				.on( "click", function( e ){ _this.remove( o ) })
 			);
 			
 		// put popup into body
 		$( "body" ).append( popUpModal );
+		
+		/* add blur */
+		$( ".wrapper" ).addClass( "blur2px" );
 		
 		// put into PALM object
 		o.popUpIframe.push( popUpModal );
@@ -1083,6 +1087,9 @@ $.PALM.popUpIframe = {
 			options.popUpIframe[0].remove();
 			// clear array
 			options.popUpIframe = [];
+			// remove blur
+			/* add blur */
+			$( ".wrapper" ).removeClass( "blur2px" );
 		}
 	}
 };
