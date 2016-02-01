@@ -259,8 +259,8 @@ var tooltip = d3.select("#widget-${wUniqueName} .box-body")
     .style("left", "80px")
     .style("font-weight", "bold");
 	
-margin = {top: 20, right: 20, bottom: 20, left: 30};
-    width = $("#widget-${wUniqueName} .box-body").width() - margin.left - margin.right - 30;
+margin = {top: 20, right: 20, bottom: 20, left: 10};
+    width = $("#widget-${wUniqueName} .box-body").width() - margin.left - margin.right;
     height = 250 - margin.top - margin.bottom;
 
     colorrange = ["#B30000", "#E34A33", "#FC8D59", "#FDBB84", "#FDD49E", "#FEF0D9"];
@@ -384,6 +384,7 @@ margin = {top: 20, right: 20, bottom: 20, left: 30};
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
 
+<#--
     svg.append("g")
           .attr("class", "y axis")
           .attr("transform", "translate(" + width + ", 0)")
@@ -393,7 +394,7 @@ margin = {top: 20, right: 20, bottom: 20, left: 30};
           .attr("class", "y axis")
           .attr("transform", "translate(30, 0)")
           .call(yAxis.orient("left"));
-
+-->
 
     svg.selectAll(".layer")
             .attr("opacity", 1)
@@ -405,10 +406,9 @@ margin = {top: 20, right: 20, bottom: 20, left: 30};
                         })
                 });
 
-	/*
 	<#-- remove previous svg if exist -->
+<#--
 	$("#widget-${wUniqueName} .box-body").find( "#streamChart").remove();
-	<#-- the visualization -->
 		var format = d3.time.format("%Y");
 		
 		var margin = {top: 20, right: 25, bottom: 60, left: 25},
@@ -535,7 +535,7 @@ margin = {top: 20, right: 20, bottom: 20, left: 30};
 		      .attr("class", "y axis")
 		      .call(yAxis)
 		      .data(layers);
-*/
+-->
 	}
 							
 			} <#-- end on refresh done -->

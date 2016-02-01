@@ -71,7 +71,8 @@
 											var keywordText = filterSearch.find( "#publist-search" ).val();
 											//if( typeof keywordText !== "undefined" && keywordText !== "")
 											thisWidget.options.queryString = "?id=" + data.author.id + "&year=all&query=" + keywordText;
-											
+											<#-- add overlay -->
+											thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 											$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
 										} )
 									)
@@ -121,6 +122,8 @@
 					var keywordText = filterSearch.find( "#publist-search" ).val();
 					if( typeof keywordText !== "undefined" && keywordText !== "")
 					thisWidget.options.queryString += "&query=" + keywordText;
+					<#-- add overlay -->
+					thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 					
 					$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
 				});
