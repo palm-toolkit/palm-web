@@ -1,5 +1,5 @@
 <div class="box-body">
-	  <form role="form" id="manageExtractionService" action="<@spring.url '/admin/extractionService' />" method="post">
+	  <form role="form" id="manageExtractionService" action="<@spring.url '/admin/termextraction' />" method="post">
 	    <#-- text input widget title -->
 		<#list extractionServiceListWrapper.extractionServices as extractionService>
 			<#if extractionService_index gt 0>

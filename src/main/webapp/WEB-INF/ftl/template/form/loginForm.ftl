@@ -1,10 +1,11 @@
 <div class="login-box shadow-dialog">
   <div class="login-logo">
-    <a href="../../index2.html"><strong>PALM</strong> log in</a>
+  	<div class="dialog-close-container"><i class="dialog-close-button fa fa-times" onclick="$.PALM.popUpAjaxModal.remove()"></i></div>
+    <a href="../../index2.html"><strong>PALM</strong> sign in</a>
   </div><#-- /.login-logo -->
   <div class="login-box-body">
     <#--<p class="login-box-msg">Sign in to start your session</p>-->
-    <form action="<@spring.url '/login' />" method="POST">
+    <form name="f" action="<@spring.url '/login' />" method="POST">
 		
 	<#if auth?? && auth=="fail">
 			<div class="alert alert-danger alert-dismissable">
@@ -13,6 +14,13 @@
 				Invalid Username or Password
 			</div>
     </#if>
+	<#if info?? && info="success-register">
+			<div class="alert alert-success alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				<h4><i class="icon fa fa-check"></i>You've successfully registered</h4>
+				Now please login to complete your profile.
+			</div>
+	</#if>
 
       <div class="form-group has-feedback">
         <input type="text" name="j_username" class="form-control" placeholder="Email"/>
@@ -23,6 +31,7 @@
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="row">
+      	<#--
         <div class="col-xs-8">    
           <div class="checkbox icheck">
             <label>
@@ -44,9 +53,11 @@
       <a href="#" class="btn btn-block btn-social btn-google-plus btn-flat"><i class="fa fa-google-plus"></i> Sign in using Google+</a>
     </div>
 	-->
-	
-    <a href="#">I forgot my password</a><br>
-    <a id="register_link" href="#" class="text-center">Register a new membership</a>
+	<#--
+    <a href="#">I forgot my password</a>
+    -->
+    <br>
+    <a id="register_link" href="#"  onclick="$.PALM.popUpAjaxModal.load( 'register' )" class="text-center">Register a new membership</a>
 
   </div><#-- /.login-box-body -->
 </div><#-- /.login-box -->
@@ -58,11 +69,5 @@
       radioClass: 'iradio_square-blue',
       increaseArea: '20%' // optional
     });
-    
-    $( "#register_link" ).click( function( event ){
-		event.preventDefault();
-		// get login form
-		getFormViaAjax( "register" );
-	});
   });
 </script>

@@ -1,7 +1,9 @@
-<#macro widget wId="" wTitle="" wType="" wGroup="" wSource="BLANK" wWidth="SMALL" wParams...>
+<#macro widget wId="" wUniqueName="" wTitle="" wType="" wGroup="" wSource="BLANK" wWidth="SMALL" wParams...>
 	<#-- local variables -->
 	<#-- widget container class -->
 	<#local wClassContainer = "">
+	<#local wClassStyle = "">
+	<#local headerVisible = true>
 	
 	<#-- widget box class -->
 	<#local wClassBox = "box">
@@ -33,10 +35,23 @@
 		<#local wClassContainer = wClassContainer + " padding0">
 		<#local wClassBox = wClassBox + " border0" >
 	</#if>
-	
+
+	<#if wParams["wHeaderVisible"]?? && wParams["wHeaderVisible"] == "false">
+		<#local headerVisible = false>
+	</#if>
+
+	<#if wParams["wHeight"]?? && wParams["wHeight"] != "">
+		<#local wClassStyle = "height:" + wParams["wHeight"]>
+		<#if wParams["wHeaderVisible"]?? && wParams["wHeaderVisible"] == "false">
+			<#local wClassStyle = wClassStyle + " background-color:#fff">
+		</#if>
+	</#if>
+
 	<#-- The widget -->
-	<div id="widget-${wId}" class="${wClassContainer}">
-      <div class="${wClassBox}">
+	<div id="widget-${wUniqueName}" class="${wClassContainer}">
+      <div class="${wClassBox}" <#if !headerVisible>style="border:none;margin:0"</#if>>
+		
+	<#if headerVisible>
         <div class="box-header with-border">
         
           <#-- widget handle moveable button -->
@@ -53,6 +68,7 @@
           <div class="box-tools pull-right">
           	
           	<#-- widget other option dropdown -->
+			<#--
           	<#if wParams["wResizeEnabled"]== "true" || wParams["wColorEnabled"] == "true">
 	          	<div class="btn-group">
 	              <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-wrench"></i></button>
@@ -65,7 +81,8 @@
 	              </ul>
 	            </div>
 	        </#if>
-	         
+	         -->
+
           	<#-- widget help button -->
           	<#if wParams["wInformation"]?? && wParams["wInformation"] != "">
             	<button class="btn btn-box-tool" data-toggle="tooltip" data-placement="bottom" data-html="true" data-original-title="${wParams["wInformation"]}"><i class="fa fa-question"></i></button>
@@ -82,11 +99,12 @@
         	</#if>
           </div>
         </div><#-- /.box-header -->
-        
+    </#if>
+
         <#if wSource == "INCLUDE">
     		<#include wParams["wSourcePath"] />
 		<#else>
-			<div class="box-body">
+			<div class="box-body" style="${wClassStyle}">
 	            <#-- ajax content goes here -->
 	            <#-- if external source, load from iframe -->
 	            <#if wSource == "EXTERNAL">

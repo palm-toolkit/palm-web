@@ -29,11 +29,16 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
 import de.rwth.i9.palm.analytics.api.PalmAnalyticsImpl;
+import de.rwth.i9.palm.feature.academicevent.AcademicEventFeature;
+import de.rwth.i9.palm.feature.academicevent.AcademicEventFeatureImpl;
+import de.rwth.i9.palm.feature.circle.CircleFeature;
+import de.rwth.i9.palm.feature.circle.CircleFeatureImpl;
 import de.rwth.i9.palm.feature.publication.PublicationFeature;
 import de.rwth.i9.palm.feature.publication.PublicationFeatureImpl;
 import de.rwth.i9.palm.feature.researcher.ResearcherFeature;
 import de.rwth.i9.palm.feature.researcher.ResearcherFeatureImpl;
 import de.rwth.i9.palm.service.ApplicationService;
+import de.rwth.i9.palm.service.SecurityService;
 
 //import de.rwth.i9.palm.analytics.api.PalmAnalyticsImpl;
 
@@ -78,6 +83,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 				"/WEB-INF/ftl/",
 				"/WEB-INF/ftl/administration",
 				"/WEB-INF/ftl/administration/conference",
+				"/WEB-INF/ftl/administration/config",
 				"/WEB-INF/ftl/administration/dataset",
 				"/WEB-INF/ftl/administration/publication",
 				"/WEB-INF/ftl/administration/researcher",
@@ -88,12 +94,15 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 				"/WEB-INF/ftl/administration/termweighting",
 				"/WEB-INF/ftl/administration/user",
 				"/WEB-INF/ftl/administration/widget",
+				"/WEB-INF/ftl/circle",
+				"/WEB-INF/ftl/circle/widget",
 				"/WEB-INF/ftl/conference",
-				"/WEB-INF/ftl/conference/visualization",
+				"/WEB-INF/ftl/conference/widget",
+				"/WEB-INF/ftl/error",
 				"/WEB-INF/ftl/publication",
-				"/WEB-INF/ftl/publication/visualization",
+				"/WEB-INF/ftl/publication/widget",
 				"/WEB-INF/ftl/researcher",
-				"/WEB-INF/ftl/researcher/visualization",
+				"/WEB-INF/ftl/researcher/widget",
 				"/WEB-INF/ftl/dataset", 
 				"/WEB-INF/ftl/sparqlview", 
 				"/WEB-INF/ftl/dialog", 
@@ -101,7 +110,14 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 				"/WEB-INF/ftl/template",
 				"/WEB-INF/ftl/template/form",
 				"/WEB-INF/ftl/template/layout",
-				"/WEB-INF/ftl/template/widget"
+				"/WEB-INF/ftl/template/widget",
+				"/WEB-INF/ftl/user", 
+				"/WEB-INF/ftl/user/profile",
+				"/WEB-INF/ftl/user/research", 
+				"/WEB-INF/ftl/user/publcation", 
+				"/WEB-INF/ftl/user/conference",
+				"/WEB-INF/ftl/user/circle",
+				"/WEB-INF/ftl/user/widget"
 			);
 
 		Properties prop = new Properties();
@@ -178,6 +194,14 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 		return new PalmAnalyticsImpl();
 	}
 	
+	/* palm academic event feature */
+	@Bean
+	@Scope( "singleton" )
+	public AcademicEventFeature academicEventFeature()
+	{
+		return new AcademicEventFeatureImpl();
+	}
+
 	/* palm researcher feature */
 	@Bean
 	@Scope( "singleton" )
@@ -192,6 +216,14 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 	public PublicationFeature publicationFeature()
 	{
 		return new PublicationFeatureImpl();
+	}
+
+	/* palm publication feature */
+	@Bean
+	@Scope( "singleton" )
+	public CircleFeature CircleFeature()
+	{
+		return new CircleFeatureImpl();
 	}
 
 	/* Scheduling and ThreadPool */
@@ -219,5 +251,12 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 	public ApplicationService applicationService()
 	{
 		return new ApplicationService();
+	}
+
+	@Bean( name = "securityService" )
+	@DependsOn( { "sessionFactory" } )
+	public SecurityService securityService()
+	{
+		return new SecurityService();
 	}
 }

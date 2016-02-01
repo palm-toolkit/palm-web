@@ -1,5 +1,5 @@
 <div class="box-body">
-	  <form role="form" id="manageInterestProfile" action="<@spring.url '/admin/interestProfile' />" method="post">
+	  <form role="form" id="manageInterestProfile" action="<@spring.url '/admin/termweighting' />" method="post">
 	    <#-- text input widget title -->
 		<#list interestProfileListWrapper.interestProfiles as interestProfile>
 			<#if interestProfile_index gt 0>

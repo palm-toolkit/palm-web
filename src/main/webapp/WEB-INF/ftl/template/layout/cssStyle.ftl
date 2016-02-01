@@ -4,12 +4,10 @@
 <link href="<@spring.url '/resources/bootstrap/css/bootstrap-select.min.css' />" rel="stylesheet" type="text/css" />
 
 <#--Font Awesome Icons -->
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<#--<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />-->
 
-<#--Ionicons -->
-<#--
-<link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />
--->
+<#-- Local font awesome -->
+<link href="<@spring.url '/resources/font/font-awesome/4.5.0/css/font-awesome.min.css' />" rel="stylesheet" type="text/css" />
 
 <#--Theme style -->
 <link href="<@spring.url '/resources/adminLTE/css/AdminLTE.css' />" rel="stylesheet" type="text/css" />
@@ -20,6 +18,17 @@
 
 <#--icheck style -->
 <link href="<@spring.url '/resources/plugins/icheck/square/blue.css' />" rel="stylesheet" type="text/css" />
+
+<#--icheck style -->
+<link href="<@spring.url '/resources/plugins/nv3d/nv.d3.css' />" rel="stylesheet" type="text/css" />
+
+<#-- gridster style -->
+<#--
+<link href="<@spring.url '/resources/plugins/gridster/jquery.gridster.css' />" rel="stylesheet" type="text/css" />
+-->
+
+<#-- fancytree style -->
+<link href="<@spring.url '/resources/plugins/fancytree/skin-win8/ui.fancytree.css' />" rel="stylesheet" type="text/css" />
 
 <#-- jQUeryUi -->
 <link href="<@spring.url '/resources/plugins/jQueryUI/jquery-ui.min.css' />" rel="stylesheet" type="text/css" />

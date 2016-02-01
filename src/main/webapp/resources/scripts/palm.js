@@ -81,11 +81,12 @@ $.PALM.options = {
     }
   },
   popUpMessageOptions:{
-	  defaultHeight:35,
-	  defaultDuration:2000,
-	  defaultPopUpType:'normal',
+	  directlyRemove:true,
+  	  popUpHeight:35,
+  	  showDuration:2000,
+  	  popupType:'normal',
 	  popUpElement:[],
-	  popUpType:{
+	  popUpTypeClasses:{
 		  loading: 'bg-aqua',
 		  normal: 'bg-aqua',
 		  success: 'bg-green',
@@ -98,7 +99,27 @@ $.PALM.options = {
 		  success: 'fa fa-check',
 		  warn: 'fa fa-exclamation-triangle',
 		  error: 'fa fa-frown-o'
-	  }
+	  },
+	  polling:false,
+	  pollingUrl: "",
+	  pollingTime: 2000
+  },
+  popUpIframeOptions:{
+	  popUpWidth:"60%",
+	  popUpHeight:"80%",
+	  popUpMargin:"4% auto",
+	  popUpMaxWidth:"1000px",
+	  popUpCloseSelector:"dialog-close",
+	  popUpIframeClasses:{
+		  modalContainer : "dialog-modal-container",
+		  modalOverlay: "dialog-overlay",
+		  dialogContainer: "dialog-container",
+		  dialogHeader: "dialog-header",
+		  dialogContent: "dialog-content",
+		  dialogCloseContainer: "dialog-close-container",
+		  dialogCloseButton: "dialog-close-button fa fa-times"
+	  },
+	  popUpIframe:[]
   },
   //Direct Chat plugin options
   directChat: {
@@ -132,13 +153,15 @@ $.PALM.options = {
   screenSizes: {
     xs: 480,
     sm: 768,
-    md: 992,
+    md: 970,
     lg: 1200
   },
   registeredWidget:[],
+  xhrPool:[],
   // main nav menu selector
   navMenuSelector : ".navbar-custom-menu"
 };
+
 
 /* ------------------
  * - Implementation -
@@ -170,10 +193,17 @@ $(function () {
   if (o.sidebarPushMenu) {
     $.PALM.pushMenu(o.sidebarToggleSelector);
     // for small screen
-    if ($(window).width() < ($.PALM.options.screenSizes.sm - 1)) {
+    if ($(window).width() <= $.PALM.options.screenSizes.md ) {
         $( o.sidebarToggleSelector ).click();
-        $( o.navMenuSelector ).find( "strong" ).hide();
+        // add bootstrap tooltip
+        $.each( $( o.navMenuSelector ).find( "a" ), function( index, elem ){
+        	$( elem ).find( "strong" ).hide();
+        	if( typeof $( elem ).attr( "title") != "undefined")
+        		$( elem )
+        			.attr({ "data-toggle":"tooltip", "data-placement":"bottom", "data-original-title": $( elem ).attr( "title" )});
+        });
     }
+    	
   }
 
   //Activate Bootstrap tooltip
@@ -220,6 +250,306 @@ $(function () {
  * All PALM functions are implemented below.
  */
 
+/*
+ * Global object, pointer to selected item
+ */
+$.PALM.selected = {
+	record: function( typeSelected, selectedObject, activeObjects ){
+		var _this = this;
+		// check whether object already selected
+		if( !_this.isSimilarWithCurrentObject( typeSelected, selectedObject, activeObjects) ){
+			_this.reset();
+			if( typeSelected == "researcher" ){
+				_this.researcher = selectedObject;
+			} else if ( typeSelected == "publication" ){
+				_this.publication = selectedObject;
+			} else if ( typeSelected == "event" ){
+				_this.event = selectedObject;
+			} else if ( typeSelected == "eventGroup" ){
+				_this.eventGroup = selectedObject;
+			} else if ( typeSelected == "circle" ){
+				_this.circle = selectedObject;
+			}
+			if( typeof activeObjects !== "undefined" && activeObjects.length > 0 ){
+				$.each( activeObjects , function( index, item){
+					$( item ).removeClass( "text-gray" );
+					$( item ).addClass( "active" );  
+				});
+			}
+			// record active objects
+			_this.activeObjects = activeObjects;
+			return true;
+		} else
+			return false;
+	},
+	isSimilarWithCurrentObject: function( typeSelected, selectedObject, activeObjects){
+		var _this = this;
+		if( typeSelected == "researcher" && typeof _this.researcher != "undefined" && _this.researcher == selectedObject ){
+			return true;
+		} else if ( typeSelected == "publication" && typeof _this.publication != "undefined" && _this.publication == selectedObject ){
+			return true;
+		} else if ( typeSelected == "event" && typeof _this.event != "undefined" && _this.event == selectedObject ){
+			return true;
+		} else if ( typeSelected == "eventGroup" && typeof _this.eventGroup != "undefined" && _this.eventGroup == selectedObject ){
+			if( typeof activeObjects.next() !== "undefined" ){
+				if( activeObjects.next().is( ":visible" ) )
+					activeObjects.next().hide();
+				else
+					activeObjects.next().show();
+			}
+			return true;
+		} else if ( typeSelected == "circle" && typeof _this.circle != "undefined" && _this.circle == selectedObject ){
+			return true;
+		}
+		// show fetched event group 
+		if ( typeSelected == "eventGroup" )
+			activeObjects.next().show();
+		// remove and abort any ajax request
+		$.each( $.PALM.options.xhrPool, function(index, jqXHR){
+			jqXHR.abort();
+		});
+		//reset ajax pool
+		$.PALM.options.xhrPool = [];
+		// remove any popup message
+		$.each( $.PALM.options.popUpMessageOptions.popUpElement, function( index, item ){
+			item.element.remove();
+		});
+		//reset popup messages
+		$.PALM.options.popUpMessageOptions.popUpElement = [];
+		return false;
+	},
+	reset: function(){
+		var _this = this;
+		if( typeof _this.activeObjects !== "undefined" && _this.activeObjects.length > 0 ){
+			$.each( _this.activeObjects , function( index, item){
+				$( item ).removeClass( "active" );  
+			});
+			// make array empty
+			_this.activeObjects = [];
+		}
+	}
+};
+
+/* PALM circle
+ * =============
+ * This relevant to circle object
+ * 
+ * Variables:
+ * _this = $.PALM.circle
+ * 
+ * // contain current researcher / publication list from AJAX paging
+ * _this.currentResearcherData
+ * _this.currentPublicationData
+ * 
+ * // contain clean (minus researcher/publication already on circle) current
+ * // researcher / publication list from AJAX paging
+ * _this.currentCleanResearcherData
+ * _this.currentCleanPublicationData
+ * 
+ * // contain list of researcher / publication objects on circle
+ * _this.reseacherOnCircle
+ * 
+ * 
+ */
+$.PALM.circle = {
+	circleResearcher:[],
+	circlePublication:[],
+	currentCleanResearcherData:[],
+	currentCleanPublicationData:[],
+	/**
+	 * state where the circle is loaded
+	 * either new or edit
+	 */
+	load: function ( loadType , circleId){
+		
+	},
+	/**
+	 * Every time data is loaded via AJAX, replace current data
+	 * check whether researcher objects already on circle 
+	 */
+	setCurrentResearcherData: function ( currentResearcherData ){
+		var _this = this;
+		// put researcher data into PALM variable
+		_this.currentResearcherData = currentResearcherData;
+		
+		// clean / check with researcher on publication
+		_this.cleanCurrentResearcherData();
+	},
+	/**
+	 * Check if researcher already on circle
+	 * fill currentCleanResearcherData with currentResearcherData not on circle
+	 */
+	cleanCurrentResearcherData: function(){
+		var _this = this;
+		// reset
+		_this.currentCleanResearcherData = [];
+		// check for availability
+		if( _this.circleResearcher.length > 0 && _this.currentResearcherData.length > 0){
+			// check for duplication between current and circle
+			$.each( _this.circleResearcher , function( indexCircle, itemCircle ){
+				var isExistOnCircle = false;
+				$.each( _this.currentResearcherData , function( indexResearcher, itemResearcher ){ 
+					if( itemCircle.id == itemResearcher.id ){
+						isExistOnCircle = true;
+						return;
+					}
+				});
+				
+				if( !isExistOnCircle )
+					currentCleanResearcherData.push( itemResearcher );
+			});
+			
+		} else {
+			_this.currentCleanResearcherData = _this.currentResearcherData;
+		}
+	},
+	getCleanResearcherData: function(){
+		return this.currentCleanResearcherData;
+	},
+	
+	/**
+	 * Every time data is loaded via AJAX, replace current data
+	 * check whether publication objects already on circle 
+	 */
+	setCurrentPublicationData: function ( currentPublicationData ){
+		var _this = this;
+		// put researcher data into PALM variable
+		_this.currentPublicationData = currentPublicationData;
+		
+		// clean / check with researcher on publication
+		_this.cleanCurrentPublicationData();
+	},
+	cleanCurrentPublicationData: function(){
+		var _this = this;
+		// reset
+		_this.currentCleanPublicationData = [];
+		// check for availability
+		if( _this.circlePublication.length > 0 && _this.currentPublicationData.length > 0){
+			// check for duplication between current and circle
+			$.each( _this.circlePublication , function( indexCircle, itemCircle ){
+				var isExistOnCircle = false;
+				$.each( _this.currentPublicationData , function( indexPublication, itemPublication ){ 
+					if( itemCircle.id == itemPublication.id ){
+						isExistOnCircle = true;
+						return;
+					}
+				});
+				
+				if( !isExistOnCircle )
+					currentCleanPublicationData.push( itemPublication );
+			});
+			
+		} else {
+			_this.currentCleanPublicationData = _this.currentPublicationData;
+		}
+	},
+	getCleanPublicationData: function(){
+		return this.currentCleanPublicationData;
+	},
+	
+	
+	addResearcher: function ( researcherId , triggerElement ){
+		var _this = this;
+		// get researcher div
+		var researcherElement = $( triggerElement ).parent().parent().parent();
+		// assumes that input is already clean (no publication/researcher on circle duplicated on input)
+		$.each( _this.currentCleanResearcherData , function( index, item ){
+			if( item.id == researcherId ){
+				_this.circleResearcher.push( item );
+				_this.currentCleanResearcherData.splice(index,1);
+				return false;
+			}
+		});		
+		
+		// change button for remove researcher div
+		$( triggerElement )
+			.html( "- remove from circle" )
+			.removeClass( "btn-success" )
+			.addClass( "btn-danger" )
+			// clear old events bind to element
+			.unbind()
+			// bind new event
+			.on( "click", function(){
+				// remove researcher div
+				researcherElement.remove();
+				// update circle object
+				_this.removeResearcher( researcherId );
+			});
+		
+		researcherElement.appendTo( _this.researcherCircleList );
+	},
+	removeResearcher: function ( researcherId ){
+		var _this = this;
+		$.each( _this.circleResearcher , function( index, item ){
+			if( item.id == researcherId ){
+				_this.currentCleanResearcherData.push( item );
+				_this.circleResearcher.splice(index,1);
+				return false;
+			}
+		});
+	},
+	
+	
+	addPublication: function( publicationId , triggerElement ){
+		var _this = this;
+		// get publication div
+		var publicationElement = $( triggerElement ).parent().parent().parent();
+
+		// assumes that input is already clean (no publication/researcher on circle duplicated on input)
+		$.each( _this.currentCleanPublicationData , function( index, item ){
+			if( item.id == publicationId ){
+				_this.circlePublication.push( item );
+				_this.currentCleanPublicationData.splice(index,1);
+				return false;
+			}
+		});
+		
+		$( triggerElement )
+			.html( "- remove from circle" )
+			.removeClass( "btn-success" )
+			.addClass( "btn-danger" )
+			// clear old events bind to element
+			.unbind()
+			// bind new event
+			.on( "click", function(){
+				// remove researcher div
+				
+				publicationElement.remove();
+				// update circle object
+				_this.removePublication( publicationId );
+			});
+		
+		publicationElement.appendTo( _this.publicationCircleList );
+	},
+	removePublication: function( publicationId ){
+		var _this = this;
+		$.each( _this.circlePublication , function( index, item ){
+			if( item.id == publicationId ){
+				_this.currentCleanPublicationData.push( item );
+				_this.circlePublication.splice(index,1);
+				return false;
+			}
+		});
+	},
+	
+	
+	setResearchersCircle: function( researchersCircleData){
+		
+	},
+	getResearchersCircle: function(){
+		return this.circleResearcher;
+	},
+	
+	
+	setPublicationCircle: function( researchersCircleData){
+		
+	},
+	getPublicationCircle: function(){
+		return this.circlePublication;
+	}
+	
+}
+
 /* prepareLayout
  * =============
  * Fixes the layout height in case min-height fails.
@@ -239,6 +569,15 @@ $.PALM.layout = {
       _this.fix();
       _this.fixSidebar( o );
     });
+    _this.fixContentScroll();
+    // for the window resize
+	$(window).resize(function() {
+	    var bodyheight = $(window).height();
+	    var listHeightOffset = 192;
+	    if ( $(window).width() < $.PALM.options.screenSizes.sm )
+	    	listHeightOffset += 50;
+	    $(".content-list").height( bodyheight - listHeightOffset );
+	});
   },
   fix: function () {
     //Get window height and the wrapper height
@@ -248,12 +587,12 @@ $.PALM.layout = {
     //Set the min-height of the content and sidebar based on the
     //the height of the document.
     if ($("body").hasClass("fixed")) {
-      $(".content-wrapper, .right-side").css('min-height', window_height - $('.main-footer').outerHeight());
+      //$(".content-wrapper, .right-side").css('min-height', window_height - $('.main-footer').outerHeight());
     } else {
       if (window_height >= sidebar_height) {
-        $(".content-wrapper, .right-side").css('min-height', window_height - neg);
+        //$(".content-wrapper, .right-side").css('min-height', window_height - neg);
       } else {
-        $(".content-wrapper, .right-side").css('min-height', sidebar_height);
+        //$(".content-wrapper, .right-side").css('min-height', sidebar_height);
       }
     }
   },
@@ -280,9 +619,18 @@ $.PALM.layout = {
         });
       }
     }
+  },
+  fixContentScroll: function(){
+	  var bodyheight = $(window).height();
+	  var listHeightOffset = 192;
+	  if ( $(window).width() < $.PALM.options.screenSizes.sm )
+	      listHeightOffset += 50;
+	  $(".content-list").height( bodyheight - listHeightOffset );
+      $(".content-wrapper").height(bodyheight);
   }
+  
 };
-
+ 
 /* PushMenu()
  * ==========
  * Adds the push menu functionality to the sidebar.
@@ -299,7 +647,7 @@ $.PALM.pushMenu = function (toggleBtn) {
     e.preventDefault();
 
     //Enable sidebar push menu
-    if ($(window).width() > (screenSizes.sm - 1)) {
+    if ($(window).width() > screenSizes.md ) {
       $("body").toggleClass('sidebar-collapse');
     }
     //Handle sidebar push menu for small screens
@@ -315,7 +663,7 @@ $.PALM.pushMenu = function (toggleBtn) {
 
   $(".content-wrapper").click(function () {
     //Enable hide menu when clicking on the content-wrapper on small screens
-    if ($(window).width() <= (screenSizes.sm - 1) && $("body").hasClass("sidebar-open")) {
+    if ($(window).width() <= screenSizes.md && $("body").hasClass("sidebar-open")) {
       $("body").removeClass('sidebar-open');
     }
   });
@@ -376,6 +724,7 @@ $.PALM.tree = function (menu) {
     }
     else{
     	e.preventDefault();
+    	$this.parent("li").siblings().removeClass( "active" );
     	$this.parent("li").addClass("active");
     	// get content via ajax
     	var url = $this.attr( "href" );
@@ -444,16 +793,27 @@ $.PALM.boxWidget = {
     var additionalQueryString = "";
     if( typeof settings.queryString != "undefined" )
     	additionalQueryString = settings.queryString;
-    $.getJSON( settings.source + additionalQueryString, function( data ){
-    	settings.onRefreshDone( $widgetElement , data);
-    	// remove overlay and loading 
-    	$widgetElement.find( ".overlay" ).remove();
-    });
     
+    // store ajax requerst into palm object
+    var jqXHR =	$.getJSON( settings.source + additionalQueryString, function( data ){
+	    	settings.onRefreshDone( $widgetElement , data);
+	    	// remove overlay and loading 
+	    	$widgetElement.find( ".overlay" ).remove();
+	    });
+    // push into ajaxPool
+    $.PALM.options.xhrPool.push( jqXHR );
     
   },
   moveable: function ( handleSelector ) {
-	 $( "section.content .row" ).sortable({
+	 // $.PALM.gridster = $("section.content>.row").gridster({
+     //     widget_base_dimensions: [200, 200],
+     //     widget_margins: [5, 5],
+          //draggable: {
+          //  handle: handleSelector
+          //}
+     //   }).data('gridster');
+	  
+	  $.PALM.boxWidget.sortable = $( "section.content .row" ).sortable({
 	   connectWith: "section.content .row",
 	   handle: handleSelector,
 	   cursor: "move",
@@ -463,6 +823,7 @@ $.PALM.boxWidget = {
            ui.placeholder.width(ui.helper.outerWidth() - 30);
        }
 	  });
+	  
   },
   collapse: function (element) {
     //Find the box parent
@@ -488,7 +849,15 @@ $.PALM.boxWidget = {
     var box = element.parents(".box").first();
     box.slideUp();
   },
-  options: $.PALM.options.boxWidgetOptions
+  options: $.PALM.options.boxWidgetOptions,
+  getByUniqueName: function( uniqueName ){
+	  var targetWidget;
+	  $.each( $.PALM.options.registeredWidget, function(index, obj){
+		  if( obj.selector === "#widget-" + uniqueName )
+			  targetWidget = obj;
+	  });
+	  return targetWidget;
+  }
 };
 
 /*
@@ -497,27 +866,26 @@ $.PALM.boxWidget = {
  * Plugin for handing notification, message and progress
  */
 $.PALM.popUpMessage = {
-	create: function( popUpMessage, popupType, directlyRemove, popUpHeight, showDuration){
+	create: function( popUpMessage, popUpOptions ){
 		if( typeof popUpMessage === 'undefined' )
 			return false;
 		
 		var o = $.PALM.options.popUpMessageOptions;
 		var _this = this;
 		
-		// set default variable if missing
-		directlyRemove = typeof directlyRemove !== 'undefined' ? directlyRemove : true;
-		popUpHeight = typeof popUpHeight !== 'undefined' ? popUpHeight : o.defaultHeight;
-		showDuration = typeof showDuration !== 'undefined' ? showDuration : o.defaultDuration;
-		popupType = typeof popupType !== 'undefined' ? popupType : o.defaultPopUpType;
-		// get new unique id
-		var uniqueId = _this.generateId();
+		if( typeof popUpOptions != "undefined" )
+			o = $.extend( $.PALM.options.popUpMessageOptions, popUpOptions );
+		
+		if(  typeof uniqueId != "undefined" )
+			o.uniqueId = $.PALM.utility.generateUniqueId();
+		
 		// calculate element top position
 		var windowHeight = $( window ).height();
-		var popUpTop = windowHeight - popUpHeight - 10;
+		var popUpTop = windowHeight - o.popUpHeight - 10;
 		// update other popup element if exist
 		if( o.popUpElement.length > 0 ){
 			$.each( o.popUpElement, function( index, item ){
-				item.top -= ( popUpHeight + 10 );
+				item.top -= ( o.popUpHeight + 10 );
 				$( item.element ).css({ "top" : item.top + "px"});
 			});
 		}
@@ -528,20 +896,21 @@ $.PALM.popUpMessage = {
 			popUpWidth = windowWidth - 20;
 		
 		// get popupType style
-		var popUpClass = o.popUpType[ popupType ];
-		var popUpIcon = o.popUpIcons[ popupType ];
+		var popUpClass = o.popUpTypeClasses[ o.popupType ];
+		var popUpIcon = o.popUpIcons[ o.popupType ];
 		
 		// create new popup 
 		var popUpObject = {
-			id:uniqueId,
+			id: o.uniqueId,
 			status:"active",
-			height: popUpHeight,
+			height: o.popUpHeight,
 			top: popUpTop,
+			polling: o.polling,
 			element:
 				$( '<div/>' )
 		    	.attr({ 'data-type':'normal' })
 		    	.addClass( "palm_message_popup col-lg-3 col-xs-6 " + popUpClass )
-		    	.css({ "width": popUpWidth + "px" , "height": popUpHeight + "px" , "top": popUpTop + "px"})
+		    	.css({ "width": popUpWidth + "px" , "height": o.popUpHeight + "px" , "top": popUpTop + "px"})
 		    	.append(
 		    			$( '<div/>' )
 		    	    	.addClass( "icon" )
@@ -554,6 +923,11 @@ $.PALM.popUpMessage = {
 				)
 				.hide()
 		}
+		// for polling message
+		if( o.polling ){
+			popUpObject.pollingObject = setInterval( function(){ _this.polling( o.uniqueId, o.pollingUrl , _this); }, o.pollingTime);
+		}
+		
 		// put element into body
 		$( "body" ).append( popUpObject.element );
 		
@@ -563,44 +937,55 @@ $.PALM.popUpMessage = {
 		// display element with animation
 		$( popUpObject.element ).fadeIn( "fast" );
 		 
-    	if( directlyRemove ){
+    	if( o.directlyRemove ){
     		// when animation done
     		$( popUpObject.element ).promise().done(function(){
     		    // remove object after duration end
     			setTimeout(
 				  function() 
 				  {
-					  _this.remove( uniqueId );
-				  }, showDuration);
+					  _this.remove( o.uniqueId );
+				  }, o.showDuration);
     			
     		});
     		
     	}else{
     		// return object id
     		$( popUpObject.element ).delay( 1500 );
-    		return uniqueId;
+    		return o.uniqueId;
     	}
 		
 	},
-	update: function( objectId , newPopUpMessage){
-		var o = $.PALM.options.popUpMessageOptions;
-		// calculate where pop up take place
-		
+	polling: function( objectId , pollingUrl , _this){
+		$.get( pollingUrl , function( data ) {
+			_this.update( objectId, data , _this);
+		});
+	},
+	update: function( objectId , newPopUpMessage, _this){
+		var targetObject = _this.getPopUpObject( objectId );
+		var logMessageContainer = $( targetObject.element ).find( ".inner" )
+		logMessageContainer.html( newPopUpMessage );
+		// scroll to bottom
+		logMessageContainer.scrollTop(logMessageContainer.prop("scrollHeight"));
 	},
 	remove: function( objectId ){
 		// get the object and remove from document
-		var targetElement = this.getPopUpObject( objectId );
+		var targetElement = $.PALM.popUpMessage.getPopUpObject( objectId );
 		
 		// not found return false
 		if( targetElement == null )
 			return false;
 		
 		// update with fading efect
-		$( targetElement ).fadeOut( "fast" );
+		$( targetElement.element ).fadeOut( "fast" );
+		
+		// if target element is polling, stop polling
+		if( targetElement.polling )
+			clearInterval( targetElement.pollingObject );
 		
 		// remove from list
-		$( targetElement ).promise().done(function(){
-			$( targetElement ).remove();
+		$( targetElement.element ).promise().done(function(){
+			$( targetElement.element ).remove();
 			$.grep( $.PALM.options.popUpMessageOptions.popUpElement, function( e ){
 				if( e.id === objectId ) // remove when object id match
 					return false;
@@ -613,28 +998,261 @@ $.PALM.popUpMessage = {
 		var targetElement = null;
 		$.each( $.PALM.options.popUpMessageOptions.popUpElement, function( index, item ){
 			if( item.id === objectId ){
-				targetElement = item.element;
+				targetElement = item;
 			}
 		});
 		
 		return targetElement;
+	}
+};
+
+/**
+ * PopUp Iframe
+ * =============
+ * Plugin for handling pop up iframe
+ */
+
+$.PALM.popUpIframe = {
+	create: function( iframeUrl, popUpOptions, iframeTitle){
+		if( typeof iframeUrl === 'undefined' )
+			return false;
+		
+		var o = $.PALM.options.popUpIframeOptions;
+		var _this = this;
+		
+		// remove previous popup iframe if exist
+		_this.remove( o );
+		
+		// combine options
+		if( typeof popUpOptions != "undefined" )
+			o = $.extend( o, popUpOptions );
+				
+		// get popUp content
+		var iframeObject = $( '<iframe/>' )
+							.attr({ "width":"1", "height":"1", "width":"1", "scrolling": "yes",
+								"frameborder" : "no", "marginheight":"0", "marginwidth":"0", "border":"0", "src":iframeUrl})
+							.addClass( "externalContent" );
+							
+		var popUpContainer = 
+			$( '<div/>' )
+	    	.addClass( o.popUpIframeClasses.dialogContent )
+	    	.css({width:o.popUpWidth, height:o.popUpHeight, margin:o.popUpMargin})
+	    	.append(
+	    		$( '<div/>' )
+	    	    .addClass( o.popUpIframeClasses.dialogCloseContainer )
+	    	    .append(
+	    			$( '<i/>' )
+	    			.addClass( o.popUpIframeClasses.dialogCloseButton )
+	    			.click( function(){ _this.remove( o ) })
+	    		)
+	    	);
+		
+		if( typeof iframeTitle !== "undefined" ){
+			popUpContainer.append(
+				$( '<div/>' )
+		    	.addClass( o.popUpIframeClasses.dialogHeader )
+		    	.html( iframeTitle )
+			);
+		}
+	    	
+	    popUpContainer.append( iframeObject )
+		
+		// create new popUp
+		var popUpModal = $( '<div/>' )
+	    	.addClass( o.popUpIframeClasses.modalContainer )
+	    	.append(
+    			$( '<div/>' )
+    	    	.addClass( o.popUpIframeClasses.modalOverlay )
+			)
+	    	.append(
+    			$( '<div/>' )
+    	    	.addClass( o.popUpIframeClasses.dialogContainer )
+    	    	.append(
+	    	    		popUpContainer
+				)
+			);
+			
+		// put popup into body
+		$( "body" ).append( popUpModal );
+		
+		// put into PALM object
+		o.popUpIframe.push( popUpModal );
+	}, remove: function( options ){
+		if( options.popUpIframe.length > 0 ){
+			// remove element from DOM
+			options.popUpIframe[0].remove();
+			// clear array
+			options.popUpIframe = [];
+		}
+	}
+};
+
+/**
+ * PopUp Ajax Modal
+ * =============
+ * Plugin for handling pop up ajax content as modal dialog
+ */
+
+$.PALM.popUpAjaxModal = {
+	load: function( urlPart ){
+		var _this = this;
+		var jqxhr = $.get( baseUrl + "/" +  urlPart, function( html ) {
+			// removing query string
+			var formType = urlPart.split( "?" );
+			_this.open( formType[0], html );
+		})
+	    .done(function() {
+	    	// nothing to do
+		})
+		.fail(function() {
+			// nothing to do
+		})
+		.always(function() {
+			// nothing to do
+		});
 	},
-	generateId: function(){
+	open: function( popUpType, html ){
+		// remove existing popup if exist
+		this.remove();
+		
+		/* add blur */
+		$( ".wrapper" ).addClass( "blur2px" );
+		
+		// create new pop up
+		this.activePopUpModal = 
+			$( "<div/>" )
+			.addClass( "popup-form-container" )
+			.append(
+					$( "<div/>" )
+					.addClass( "dialog-overlay" )
+					)
+			.append(
+					$( "<div/>" )
+					.addClass( popUpType + "-container" )
+					.html( html )
+					)
+			.appendTo( "body" );
+	},
+	remove: function(){
+		if( typeof this.activePopUpModal !== "undefined" ){
+			$( this.activePopUpModal ).remove();
+			$( ".wrapper" ).removeClass( "blur2px" );
+		} else {
+			if( window.location.href.indexOf( "login" ) > -1 )
+				window.location = baseUrl;
+		}
+	}
+}
+
+/**
+ * get form via ajax
+ */
+function getFormViaAjax( url , alwaysCallback){
+	var jqxhr = $.get( baseUrl + "/" +  url, function( html ) {
+		// removing query string
+		var formType = url.split( "?" );
+		getPopUpForm( formType[0], html );
+	})
+    .done(function() {
+    	// nothing to do
+	})
+	.fail(function() {
+		// nothing to do
+	})
+	.always(function() {
+		if( typeof alwaysCallback !== "undefined" )
+			alwaysCallback
+	});
+}
+/**
+ * Get popup form and display it
+ */
+function getPopUpForm( popUpType, html ){
+	// remove existing popup if exist
+	$( ".popup-form-container" ).remove();
+	/* add blur */
+	$( ".wrapper" ).addClass( "blur2px" );
+	
+	// create new one
+	var $popUpElem = 
+		$( "<div/>" )
+		.addClass( "popup-form-container" )
+		.append(
+				$( "<div/>" )
+				.addClass( "dialog-overlay" )
+				)
+		.append(
+				$( "<div/>" )
+				.addClass( popUpType + "-container" )
+				.html( html )
+				)
+		.appendTo( "body" );
+}
+
+
+
+$.PALM.utility = {
+	generateUniqueId: function(){
 		var aplhaNumeric = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		var randomAlphanumeric = "";
 		for (var i = 10; i > 0; --i) 
 			randomAlphanumeric += aplhaNumeric[Math.round(Math.random() * (aplhaNumeric.length - 1))];
 		return randomAlphanumeric;
+	},
+	stripHtmlTag: function( inputText ){
+		var div = document.createElement("div");
+		div.innerHTML = inputText;
+		return div.textContent || div.innerText || "";
+	},
+	// date format YYYY-mm-dd
+	parseDateType1: function( inputDate ){
+		var splitDate = inputDate.split( "/" );
+		if( splitDate.length == 0 )
+			return "";
+		if( splitDate.length == 1 )
+			return inputDate;
+		
+		var outputDate = "";
+		if( splitDate[1] == "1" ) 		outputDate += "Jan";
+		else if( splitDate[1] == "2" ) 	outputDate += "Feb";
+		else if( splitDate[1] == "3" ) 	outputDate += "Mar";
+		else if( splitDate[1] == "4" ) 	outputDate += "Apr";
+		else if( splitDate[1] == "5" ) 	outputDate += "May";
+		else if( splitDate[1] == "6" ) 	outputDate += "Jun";
+		else if( splitDate[1] == "7" ) 	outputDate += "Jul";
+		else if( splitDate[1] == "8" ) 	outputDate += "Aug";
+		else if( splitDate[1] == "9" ) 	outputDate += "Sep";
+		else if( splitDate[1] == "10" ) 	outputDate += "Oct";
+		else if( splitDate[1] == "11" ) 	outputDate += "Nov";
+		else if( splitDate[1] == "12" ) 	outputDate += "Des";
+		
+		if( splitDate.length == 3 )
+			return splitDate[2] + " " + outputDate + " " + splitDate[0];
+		else
+			return outputDate + " " + splitDate[0];
+	},
+	cutStringWithoutCutWord: function( inputText , maxLength ){
+
+		if( inputText.length > maxLength ){
+			//trim the string to the maximum length
+			var trimmedString = inputText.substr(0, maxLength);
+	
+			//re-trim if we are in the middle of a word
+			trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")));
+			
+			return trimmedString;
+		} else
+			return inputText;
 	}
 };
-
+ 
 $.PALM.postForm = {
 	viaAjax:function( $form, resultContainerSelector ){
 		
 	},
-	viaAjaxAndReload: function( $form , message ){
+	viaAjaxAndReload: function( $form , message , reloadurl){
 		// pop up message
-		var popUpId = $.PALM.popUpMessage.create( message, "loading", false );
+		var popUpId = $.PALM.popUpMessage.create( message, {popupType:"loading", directlyRemove:false} );
 		// sent form content via ajax POST
 		$.post( $form.attr( "action" ), $form.serialize() )
 			.done( function ( jsonData ){
@@ -645,17 +1263,20 @@ $.PALM.postForm = {
 						var targetElement = $.PALM.popUpMessage.getPopUpObject( popUpId );
 						// reload page afteranimation complete
 						$( targetElement ).promise().done(function(){
-							window.location.reload( false );
+							if( typeof reloadurl !== "undefined" )
+								window.location.href = reloadurl;
+							else
+								window.location.reload( false );
 						});
 					} else 
-						$.PALM.popUpMessage.create( "Sorry, saving process failed please try again", "error" );
+						$.PALM.popUpMessage.create( "Sorry, saving process failed please try again", {popupType:"error"} );
 				} else{
-					$.PALM.popUpMessage.create( "Sorry, saving process failed please try again", "error" );
+					$.PALM.popUpMessage.create( "Sorry, saving process failed please try again", {popupType:"error"} );
 				}
 			})
 			.fail( function(xhr, textStatus, errorThrown ) {
 				$.PALM.popUpMessage.remove( popUpId );
-				$.PALM.popUpMessage.create( "Sorry, saving process failed please try again", "error" );
+				$.PALM.popUpMessage.create( "Sorry, saving process failed please try again", {popupType:"error"} );
 			});
 	}
 };
@@ -846,51 +1467,22 @@ function postFormAndReloadPageViaAjax( $form , message){
 
 
 
-
-
-
-
-
-
-
-
-
-/* global variables */
-
 /* document ready */
 $(function(){
+	/*
 	$( "#signin_button" ).click( function( event ){
 		event.preventDefault();
 		// get login form
 		getFormViaAjax( "login?form=true" );
 	});
-	
+	*/
 });
 
-/**
- * get form via ajax
- */
-function getFormViaAjax( url , alwaysCallback){
-	var jqxhr = $.get( baseUrl + "/" +  url, function( html ) {
-		// removing query string
-		var formType = url.split( "?" );
-		getPopUpForm( formType[0], html );
-	})
-    .done(function() {
-    	// nothing to do
-	})
-	.fail(function() {
-		// nothing to do
-	})
-	.always(function() {
-		if( typeof alwaysCallback !== "undefined" )
-			alwaysCallback
-	});
-}
+
 /**
  * Get popup form and display it
  */
-function getPopUpForm( popUpType, html ){
+function getPopUpIframe( url ){
 	// remove existing popup if exist
 	$( ".popup-form-container" ).remove();
 	/* add blur */
@@ -906,8 +1498,12 @@ function getPopUpForm( popUpType, html ){
 				)
 		.append(
 				$( "<div/>" )
-				.addClass( popUpType + "-container" )
-				.html( html )
+				.addClass( "iframe-center-container" )
+				.append(
+							$( "<div/>" )
+							.addClass( "iframe-container" )
+							.append( '<iframe class="externalContent" alt="external source" width="1" height="1" scrolling="yes" frameborder="no" marginheight="0" marginwidth="0" border="0" src="' + url + '"></iframe>' )
+						)
 				)
 		.appendTo( "body" );
 }
@@ -988,7 +1584,12 @@ function convertToAjaxMultipleFileUpload( $inputFile, $progressBar , $resultCont
         dataType: 'json',
  
         done: function (e, data) {
-        	printUploadedArticles( $container, data.result , []);
+        	$container.find( "#title" ).val( data.result.title );
+        	$container.find( "#author" ).val( data.result.author );
+        	$container.find( "#abstractText" ).val( data.result.abstract );
+        	$container.find( "#keywords" ).val( data.result.keyword );
+        	$container.find( "#contentText" ).val( data.result.content );
+        	$container.find( "#referenceText" ).val( data.result.reference );
         },
  
         progressall: function (e, data) {
@@ -1012,7 +1613,7 @@ function printUploadedArticles( $containerSelector, data , addedOptions){
 	if( $container.find( "textarea" ).length == 0){
 		$container
 			.append( $('<textarea/>')
-					.css({'width': '99%', 'height' : "410px", 'resize' : ' none'})
+					.css({'width': '99%', 'height' : "410px", 'resize' : 'none'})
 					)
 			.css({'width': '100%', 'height' : "450px"})
 			.resizable({

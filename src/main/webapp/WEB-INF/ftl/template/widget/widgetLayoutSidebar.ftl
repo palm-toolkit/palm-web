@@ -4,6 +4,7 @@
 		<#if w.widgetGroup == "sidebar">
 			<@widget.widget 
 			wId="${w.id}"
+			wUniqueName="${w.uniqueName}"
 			wTitle="${w.title}"
 			wType="${w.widgetType}"
 			wGroup="${w.widgetGroup}"
@@ -17,6 +18,7 @@
 			wMoveableEnabled="${w.moveableEnabled?c}"
 			wColorEnabled="${w.colorEnabled?c}"
 			wColor="${w.color}"
+			wHeight="${w.widgetHeight!''}"
 			/>
 		</#if>
 	</#list>

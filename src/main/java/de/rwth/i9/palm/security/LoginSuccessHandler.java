@@ -14,6 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import de.rwth.i9.palm.helper.RequestContextHelper;
 import de.rwth.i9.palm.model.SessionDataSet;
@@ -36,21 +38,23 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler
 	@Transactional
 	public void onAuthenticationSuccess( final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication ) throws IOException, ServletException
 	{
-		String test = authentication.getName();
+		/* Set RequestContextHolder manually */
+		RequestContextHolder.setRequestAttributes( new ServletRequestAttributes( request ) );
+
 		User user = persistenceStrategy.getUserDAO().getByUsername( authentication.getName() );
 
 		if ( user == null )
-			log.warn( "John, I couldn't save the user's login time, because.. somehow.. he is not there" );
+			log.warn( "User not found" );
 		else
 		{
 			// ERROR
-//			String sessionId = RequestContextHelper.getSessionId();
-//			user.setSessionId( sessionId );
-//
-//			log.info( "USER_LOGIN | {} | {}", user.getUsername(), user.getSessionId() );
-//			log.debug( "USER_LOGIN_TIME | {} | {} | {}", user.getUsername(), user.getSessionId(), DateTime.now().toDate() );
-//
-//			persistenceStrategy.getUserDAO().touch( user );
+			String sessionId = RequestContextHelper.getSessionId();
+			user.setSessionId( sessionId );
+
+			log.info( "USER_LOGIN | {} | {}", user.getUsername(), user.getSessionId() );
+			log.debug( "USER_LOGIN_TIME | {} | {} | {}", user.getUsername(), user.getSessionId(), DateTime.now().toDate() );
+
+			persistenceStrategy.getUserDAO().touch( user );
 		}
 
 		initializeSessionAttributes( request );
@@ -63,8 +67,6 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler
 	 */
 	private void initializeSessionAttributes( final HttpServletRequest request )
 	{
-		// TODO in future load from database?
-
 		RequestContextHelper.setSessionAttribute( "sessionDataSet", new SessionDataSet() );
 	}
 

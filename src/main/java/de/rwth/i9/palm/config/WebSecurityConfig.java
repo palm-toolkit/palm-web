@@ -10,10 +10,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.context.request.RequestContextListener;
 
-import de.rwth.i9.palm.security.LogoutSuccessHandler;
+import de.rwth.i9.palm.security.LoginSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -28,6 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
         auth
             .jdbcAuthentication()
             	.dataSource( dataSource )
+            	.passwordEncoder(passwordEncoder())
             	.usersByUsernameQuery( getUserQuery() )
             	.authoritiesByUsernameQuery( getAuthoritiesQuery() );
         //.inMemoryAuthentication()
@@ -44,26 +48,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
         return "SELECT u.username, r.name AS authority "
                 + "FROM user u, role r "
                 + "WHERE u.role_id = r.id "
-                + "AND username = ?";
+                + "AND u.username = ?";
     }
 	
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
+		http.headers().frameOptions().sameOrigin();
         http
     		.csrf()
     			.disable()
             .authorizeRequests()
             	.antMatchers( 
             			"/", 
+            			"/circle/**", 
+            			"/data/**", 
             			"/home", 
             			"/login", 
             			"/logout", 
+            			"/log/**", 
             			"/register", 
-            			"/conference/**", 
+            			"/venue/**", 
             			"/researcher/**", 
-            			"/publication/**", 
-            			"/sparqlview/**",
-            			"/admin/**" 
+            			"/publication/**",
+            			"/institution/**", 
+            			"/sparqlview/**"// ,
             			)
                 	.permitAll()
                 .anyRequest()
@@ -75,13 +83,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 				.loginPage( "/login" ) // form-login@login-page
 				.defaultSuccessUrl( "/" )// form-login@default-target-url /form-login@always-use-default-target
 				.failureUrl( "/login?auth=fail" )
-				.permitAll()
-				// .successHandler( loginSuccessHandler() )
+				.successHandler( loginSuccessHandler() )
             .and()
         	.logout()
         		.logoutUrl( "/logout" )
+        		.logoutSuccessHandler( logoutSuccessHandler() )
         		.invalidateHttpSession( true );
-		// .logoutSuccessHandler( logoutSuccessHandler() );
+
     }
 
 	@Override
@@ -92,12 +100,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 	
 	@Bean
 	public AuthenticationSuccessHandler loginSuccessHandler(){
-		return new de.rwth.i9.palm.security.LoginSuccessHandler( "/home" );
+		return new LoginSuccessHandler( "/home" );
 	}
 	
 	@Bean
-	public LogoutSuccessHandler logoutSuccessHandler(){
-		return new LogoutSuccessHandler( "/home" );
+	public LogoutSuccessHandler logoutSuccessHandler()
+	{
+		return new de.rwth.i9.palm.security.LogoutSuccessHandler( "/home" );
+	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder(){
+		PasswordEncoder encoder = new BCryptPasswordEncoder();
+		return encoder;
 	}
 
 	/**

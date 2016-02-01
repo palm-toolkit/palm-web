@@ -20,6 +20,18 @@
  			</div>
 		</section>
 		
+		<script>
+		<#-- add slim scroll -->
+		$(function(){
+	      $(".content-list, .content-wrapper>.content").slimscroll({
+				height: "100%",
+		        size: "3px",
+	        	allowPageScroll: true,
+	   			touchScrollStep: 50
+		  });
+		});
+		</script>
+		
  	</@content.contentWrapper>
  	
 </@layout.global>

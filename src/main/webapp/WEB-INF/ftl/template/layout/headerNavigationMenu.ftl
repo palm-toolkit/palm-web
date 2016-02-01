@@ -1,12 +1,25 @@
-<li<#if link == "conference"> class="open"</#if>>
-	<a href="<@spring.url '/conference' />"><i class="fa fa-globe"></i><strong> Conferences</strong></a>
+<#assign security=JspTaglibs["http://www.springframework.org/security/tags"] />
+<li<#if link?? && link == "researcher"> class="open"</#if>>
+	<a href="<@spring.url '/researcher' />" title="Researchers">
+		<i class="fa fa-users"></i>
+		<strong> Researchers</strong>
+	</a>
 </li>
-<li<#if link == "researcher"> class="open"</#if>>
-	<a href="<@spring.url '/researcher' />"><i class="fa fa-users"></i><strong> Researchers</strong></a>
+<li<#if link?? && link == "publication"> class="open"</#if>>
+	<a href="<@spring.url '/publication' />" title="Publications">
+		<i class="fa fa-file-text-o"></i>
+		<strong> Publications</strong>
+	</a>
 </li>
-<li<#if link == "publication"> class="open"</#if>>
-	<a href="<@spring.url '/publication' />"><i class="fa fa-file-text-o"></i><strong> Publications</strong></a>
+<li<#if link?? && link == "venue"> class="open"</#if>>
+	<a href="<@spring.url '/venue' />" title="Conferences">
+		<i class="fa fa-globe"></i>
+		<strong> Conferences</strong>
+	</a>
 </li>
-<li<#if link == "administration"> class="open"</#if>>
-	<a href="<@spring.url '/admin' />"><i class="fa fa-lock"></i><strong> Administration</strong></a>
+<li<#if link?? && link == "circle"> class="open"</#if>>
+	<a href="<@spring.url '/circle' />" title="Circles">
+		<i class="fa fa-circle-o"></i>
+		<strong> Circles</strong>
+	</a>
 </li>
