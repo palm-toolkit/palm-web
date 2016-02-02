@@ -229,7 +229,7 @@ function visualizeInterest( yearIndex , yearType ){
 		previousTerm = d.key;
 	});
 
-	visualizeStreamChart( streamChartDataComplete );
+	visualizeStreamChart( streamChartDataComplete , data.author);
 }
 
 function compareTermWord( a, b){
@@ -240,7 +240,7 @@ function compareTermWord( a, b){
   	return 0;
 }
 					
-function visualizeStreamChart( data ){
+function visualizeStreamChart( data, author ){
 
 var fill = d3.scale.category20();
 
@@ -370,15 +370,26 @@ margin = {top: 20, right: 20, bottom: 20, left: 10};
       
     })
     .on("mouseout", function(d, i) {
-     svg.selectAll(".layer")
-      .transition()
-      .duration(250)
-      .attr("opacity", "1");
-      d3.select(this)
-      .classed("hover", false)
-      .attr("stroke-width", "0px"), tooltip.html( "<p>" + d.key + "</p>" ).style("visibility", "hidden");
-  })
-
+     	svg.selectAll(".layer")
+      		.transition()
+      		.duration(250)
+      		.attr("opacity", "1");
+      	d3.select(this)
+      		.classed("hover", false)
+      	.attr("stroke-width", "0px"), tooltip.html( "<p>" + d.key + "</p>" ).style("visibility", "hidden");
+  	})
+	.on("click", function (d, i){
+         	var publicationTimeLineWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_publication' ); 
+			if( typeof publicationTimeLineWidget !== "undefined" ){
+				publicationTimeLineWidget.options.queryString = "?id=" + author.id + "&year=all&query=" + d.key;
+			<#-- add overlay -->
+				publicationTimeLineWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+				$.PALM.boxWidget.refresh( publicationTimeLineWidget.element , publicationTimeLineWidget.options );
+			} 
+			else
+				alert( "Publication Timeline widget missing, please enable it from Researcher Widget Management" );
+     });
+      
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
