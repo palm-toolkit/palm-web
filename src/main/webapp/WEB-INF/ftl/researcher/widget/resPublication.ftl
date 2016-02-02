@@ -104,11 +104,20 @@
 									).append( item )
 						 )
 				});
+				if( typeof data.query !== "undefined" ){
+					filterYear.append( $( "<label/>" )
+									.attr({ "class":"btn btn-default btn-xs active" })
+									.append(
+										$( "<input/>" )
+										.attr({ "type":"radio", "id":"year-query", "name":"filteryear", "value":data.query , "data-link": "?id=" + data.author.id + "query=" + data.query, "checked": true})
+									).append( data.query + "(" + data.count + ")" )
+						 )
+				}
 				
 				<#-- find active option -->
 				var currentQueryArray = this.queryString.split( "&" );
 				$.each( currentQueryArray , function( index, partQuery){
-					if( partQuery.lastIndexOf( 'year', 0) === 0 )
+					if( partQuery.lastIndexOf( 'year', 0) === 0 && typeof data.query === "undefined" )
 						filterYear.find( "#" + partQuery.replace( "=","-") ).prop("checked", true).parent().addClass( "active" );
 					else if( partQuery.lastIndexOf( 'maxresult', 0) === 0 )
 						filterYear.find( "#" + partQuery.replace( "=","-") ).prop("checked", true).parent().addClass( "active" );
@@ -122,9 +131,9 @@
 					
 					thisWidget.options.queryString = $( this ).data( "link" );
 					<#-- find keyword if any -->
-					var keywordText = filterSearch.find( "#publist-search" ).val();
-					if( typeof keywordText !== "undefined" && keywordText !== "")
-					thisWidget.options.queryString += "&query=" + keywordText;
+					//var keywordText = filterSearch.find( "#publist-search" ).val();
+					//if( typeof keywordText !== "undefined" && keywordText !== "")
+					//	thisWidget.options.queryString += "&query=" + keywordText;
 					<#-- add overlay -->
 					thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 					
@@ -420,7 +429,7 @@
 													.html( venueText );
 								} else {
 									eventPart = $( '<span/>' )
-													.attr({ "title" : "Please log in to add " + venueText + "to PALM" })
+													.attr({ "title" : "Please log in to add " + venueText + " to PALM" })
 													.addClass( "text-gray" )
 													.html( venueText );
 								}
