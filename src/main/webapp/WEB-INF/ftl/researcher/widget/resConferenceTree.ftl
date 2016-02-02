@@ -46,7 +46,13 @@
 				        deep: false,
 				        hideZeros: true,
 				        hideExpanded: true
-				    },
+				    },activate: function(event, data){ // allow re-loads
+			            var node = data.node,
+			                orgEvent = data.originalEvent;
+			            if( node.data.href !== ""){
+			                window.location = "<@spring.url '/' />" + node.data.href;
+			            }
+			        }
 				});			
 							
 							
