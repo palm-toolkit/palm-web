@@ -101,6 +101,40 @@
 									)
 								);
 								
+							<#-- email -->
+							if( typeof data.author.email != 'undefined')
+								researcherDetail.append(
+									$( '<div/>' )
+									.addClass( 'affiliation' )
+									.css({ "clear" : "both"})
+									.attr({ "title": data.author.name + " email" })
+									.append( 
+										$( '<i/>' )
+										.addClass( 'fa fa-envelope icon font-xs' )
+									).append( 
+										$( '<span/>' )
+										.addClass( 'info font-xs' )
+										.html( data.author.email )
+									)
+								);
+								
+							<#-- homepage -->
+							if( typeof data.author.homepage != 'undefined')
+								researcherDetail.append(
+									$( '<div/>' )
+									.addClass( 'affiliation urlstyle' )
+									.css({ "clear" : "both"})
+									.attr({ "title": data.author.name + " homepage" })
+									.append( 
+										$( '<i/>' )
+										.addClass( 'fa fa-globe icon font-xs' )
+									).append( 
+										$( '<span/>' )
+										.addClass( 'info font-xs' )
+										.html( data.author.homepage )
+									).click( function( event ){ event.preventDefault();window.open( data.author.homepage, data.author.name + " homepage" ,'scrollbars=yes,width=650,height=500')})
+								);
+								
 							if( typeof data.author.publicationsNumber != 'undefined'){
 									var citedBy = 0;
 									if( typeof data.author.citedBy !== "undefined" )
