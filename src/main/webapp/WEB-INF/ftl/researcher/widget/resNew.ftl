@@ -152,7 +152,7 @@
 				<#-- aff -->
 				if( typeof ui.item.aff !== "undefined" ){
 					$( '#affiliation' ).val( ui.item.aff )
-					.attr( "readonly" , true);
+					//.attr( "readonly" , true);
 				}
 				<#-- picture -->
 				if( typeof ui.item.photo !== "undefined" ){
