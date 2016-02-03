@@ -21,6 +21,14 @@
 			onRefreshStart: function( widgetElem ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
+			
+			
+				<#-- check for interest cloud widget -->
+				var interestCloudWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_interest_cloud' ); 
+				if( typeof interestCloudWidget !== "undefined" && !interestCloudWidget.executed){
+					$.PALM.boxWidget.refresh( interestCloudWidget.element , interestCloudWidget.options );
+				}
+				
 
 var targetContainer = $( widgetElem ).find( "#boxbody${wUniqueName}" );
 

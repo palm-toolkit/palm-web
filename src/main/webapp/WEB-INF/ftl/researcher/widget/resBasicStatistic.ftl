@@ -1,5 +1,5 @@
 <@security.authorize access="isAuthenticated()">
-	<#assign currentUser = securityService.getUser() >
+	<#assign loggedUser = securityService.getUser() >
 </@security.authorize>
 <div id="boxbody-${wUniqueName}" class="box-body no-padding">
   	<div class="coauthor-list">
@@ -165,7 +165,7 @@
 									.addClass( 'photo medium fa fa-user' )
 								);
 							}
-							<#if currentUser??>
+							<#if loggedUser??>
 							<#-- add edit button -->
 							researcherNav
 								.append(

@@ -32,6 +32,13 @@
 				$.PALM.popUpMessage.create( "Extracting author interest", { uniqueId:uniquePidInterestCloud, popUpHeight:40, directlyRemove:false , polling:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){
+			
+				<#-- check for interest evolution widget -->
+				var interestEvolutionWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_interest_evolution' ); 
+				if( typeof interestEvolutionWidget !== "undefined" && !interestEvolutionWidget.executed){
+					$.PALM.boxWidget.refresh( interestEvolutionWidget.element , interestEvolutionWidget.options );
+				}
+			
 
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniquePidInterestCloud );

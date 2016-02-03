@@ -201,33 +201,6 @@
 									}
 									
 									eventNav.append( eventIcon );
-									
-									<#-- edit option -->
-									var eventEdit = $('<i/>')
-												.attr({
-													'class':'fa fa-edit', 
-													'title':'edit event',
-													'data-url':'<@spring.url '/event/edit' />' + '?id=' + itemEvent.id,
-													'style':'display:none'
-												});
-												
-									<#-- add click event to edit event -->
-									eventEdit.click( function( e ){
-										e.preventDefault();
-										$.PALM.popUpIframe.create( $(this).data("url") , { "popUpHeight":"460px"}, "Edit Event");
-									});
-									
-									<#-- append edit  -->
-									eventNav.append( eventEdit );
-									
-									
-									eventItem.hover(function()
-									{
-									     eventEdit.show();
-									}, function()
-									{ 
-									     eventEdit.hide();
-									});
 
 									
 									<#-- title -->
@@ -461,9 +434,7 @@
 												
 								eventYearItem.find( ".detail:first" ).on( "click", function(){
 									<#-- remove active class -->
-									//$( this ).parent().parent().siblings().removeClass( "active" );
-									//$( this ).parent().parent().addClass( "active" );
-									triggerGetVenueDetails( $( this ).parent().parent().data( 'id' ), "onclick", [ eventGroup, eventYear ]);
+									triggerGetVenueDetails( $( this ).parent().parent().data( 'id' ), "onclick", [ eventGroup, eventYearTemp ]);
 								});
 
 								<#-- check if this is target item -->
@@ -561,39 +532,9 @@
 														);
 										eventVolumeDetail.append( eventVolumeElement );
 									}
-									
-									<#-- edit option -->
-									var eventVolumeEdit = $('<i/>')
-												.attr({
-													'class':'fa fa-edit', 
-													'title':'edit event',
-													'data-url':'<@spring.url '/event/edit' />' + '?id=' + eventVolume.id,
-													'style':'display:none'
-												});
-												
-									<#-- add click event to edit event -->
-									eventVolumeEdit.click( function( event ){
-										event.preventDefault();
-										$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Event");
-									});
-									
-									<#-- append edit  -->
-									eventVolumeNav.append( eventVolumeEdit );
-									
-									eventVolumeItem.hover(function()
-									{
-									     eventVolumeEdit.show();
-									}, function()
-									{ 
-									     eventVolumeEdit.hide();
-									});
-								
 			
 									<#-- add click event -->
 									eventVolumeDetail.on( "click", function(){
-										<#-- remove active class -->
-										//$( this ).parent().siblings().removeClass( "active" );
-										//$( this ).parent().addClass( "active" );
 										triggerGetVenueDetails( $( this ).parent().data( 'id' ), "onclick", [ eventGroup, eventYearTemp, eventVolumeItem ]);
 									});
 									
@@ -645,42 +586,12 @@
 							
 							<#-- add click event -->
 							eventYearDetail.on( "click", function(){
-								<#-- remove active class -->
-								<#--$( this ).parent().siblings().removeClass( "active" )-->
 								$( this ).parent().addClass( "active" );
 							});
 							
 							<#-- append Event Detail to Event Year -->
 							eventYear.append( eventYearDetail );
 							
-	
-							<#-- edit option -->
-							var eventYearEdit = $('<i/>')
-										.attr({
-											'class':'fa fa-edit', 
-											'title':'edit event',
-											'data-url':'<@spring.url '/event/edit' />' + '?id=' + itemEvent.id,
-											'style':'display:none'
-										});
-							
-							<#-- hide show edit button -->	
-							eventYearItem.hover(function()
-							{
-							     eventYearEdit.show();
-							}, function()
-							{ 
-							     eventYearEdit.hide();
-							});
-							
-										
-							<#-- add click event to edit event -->
-							eventYearEdit.click( function( event ){
-								event.preventDefault();
-								$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Event");
-							});
-							
-							<#-- append edit  -->
-							eventYearNav.append( eventYearEdit );
 							
 							<#-- event year detail content -->
 								<#-- event title -->
@@ -786,10 +697,14 @@
 				
 				<#-- trigger conference group basic statistic -->
 				$.each( $.PALM.options.registeredWidget, function(index, obj){
-					if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE" && obj.selector === "#widget-conference_basic_information"){
-						obj.options.queryString = "?id=" + venueId + "&type=eventGroup"
-						
-						$.PALM.boxWidget.refresh( obj.element , obj.options );
+					if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
+						if( obj.selector === "#widget-conference_basic_information" ){
+							obj.options.queryString = "?id=" + venueId + "&type=eventGroup"
+							$.PALM.boxWidget.refresh( obj.element , obj.options );
+						} else {
+						<#-- clear other widget -->
+							obj.element.find( ".box-content" ).html( "" );
+						}
 					}
 				});
 			}).fail(function() {
@@ -812,7 +727,7 @@
 			}
 		}
 	
-		<#-- when author list clciked --> 
+		<#-- when venue list clciked --> 
 		function getVenueDetails( venueId ){
 			<#-- put loading overlay -->
 	    	$.each( $.PALM.options.registeredWidget, function(index, obj){

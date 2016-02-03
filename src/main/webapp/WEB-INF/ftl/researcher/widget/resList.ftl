@@ -387,14 +387,34 @@
 		$.getJSON( "<@spring.url '/researcher/fetch?id=' />" + authorId + "&pid=" + uniquePid + "&force=false", function( data ){
 			<#-- remove  pop up progress log -->
 			$.PALM.popUpMessage.remove( uniquePid );
+			
+			<#-- widget researcher_interest_cloud and researcher_interest_evolution can not run simultaneusly together,
+			therefore put it in order -->
+			var isInterestCloudWidgetExecuted = false;
+			var isInterestEvolutionWidgetExecuted = false;
 			<#-- refresh registered widget -->
 			$.each( $.PALM.options.registeredWidget, function(index, obj){
 				if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
 					obj.options.queryString = "?id=" + authorId;
 					<#-- special for publication list, set only query recent 10 publication -->
 					if( obj.selector === "#widget-researcher_publication" )
-						obj.options.queryString += "&maxresult=10"
+						obj.options.queryString += "&maxresult=10";
+						
+					<#-- check for cloud and evolution widget -->
+					if( obj.selector === "#widget-researcher_interest_cloud" && isInterestEvolutionWidgetExecuted )
+						return;
+					else if( obj.selector === "#widget-researcher_interest_evolution" && isInterestCloudWidgetExecuted )
+						return;
+					
+					<#-- add new flag (has been executed once)  -->
+					obj.executed = true;
 					$.PALM.boxWidget.refresh( obj.element , obj.options );
+					
+					<#-- set flag for cloud and evolution widget -->
+					if( obj.selector === "#widget-researcher_interest_cloud" )
+						isInterestCloudWidgetExecuted = true;
+					else if( obj.selector === "#widget-researcher_interest_evolution" )
+						isInterestEvolutionWidgetExecuted = true;
 				}
 			});
 		
