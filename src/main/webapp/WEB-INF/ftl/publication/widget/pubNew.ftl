@@ -28,7 +28,8 @@
 	      <div id="authors" class="palm-tagsinput" tabindex="-1">
 	      		<input type="text" value="" placeholder="Author fullname, separated by comma" />
 	      </div>
-	      <input type="hidden" id="author-list" name="keyword-list" value="">
+	      <input type="hidden" id="author-list" name="author-list" value="">
+	      <input type="hidden" id="author-list-ids" name="author-list-ids" value="">
 	    </div>
 
 		<#-- publication-date -->
@@ -63,10 +64,6 @@
         
         <#-- Venue properties -->
 		<div class="form-group" style="width:100%;float:left">
-			<div id="venue-abbr-container" class="col-xs-2 minwidth150Px">
-				<label><span>Conference</span> Abbr.</label>
-				<input type="text" id="venue-abbr" name="venue-abbr" placeholder="e.g. EDM" class="form-control">
-			</div>
 			<div id="volume-container" class="col-xs-2 minwidth150Px" style="display:none">
 				<label>Volume</label>
 				<input type="text" id="volume" name="volume" class="form-control">
@@ -101,17 +98,19 @@
 	    </div>
 
 		<#-- content -->
+<#--
 		<div class="form-group">
 	      <label>Content</label>
 	      <textarea name="contentText" id="contentText" class="form-control" rows="3" placeholder="Publication body/content"></textarea>
 	    </div>
-
+-->
 		<#-- references -->
+<#--
 		<div class="form-group">
 	      <label>References</label>
 	      <textarea name="referenceText" id="referenceText" class="form-control" rows="3" placeholder="References"></textarea>
 	    </div>
-
+-->
 		<#-- conference/journal -->
 <#--		<div class="form-group">
 	      <label>Venue</label>
@@ -148,10 +147,10 @@
 		$( "#venue-type" ).change( function(){
 			var selectionValue = $(this).val();
 			if( selectionValue == "conference" ){
-				$( "#venue-title>label>span,#venue-abbr-container>label>span" ).html( "Conference" );
+				$( "#venue-title>label>span" ).html( "Conference" );
 				$( "#volume-container,#issue-container" ).hide();
 			} else if( selectionValue == "journal" ){
-				$( "#venue-title>label>span,#venue-abbr-container>label>span" ).html( "Journal" );
+				$( "#venue-title>label>span" ).html( "Journal" );
 				$( "#volume-container,#issue-container" ).show();
 			}
 		});
@@ -159,21 +158,34 @@
 		$("#venue").autocomplete({
 		    source: function (request, response) {
 		        $.ajax({
-		            url: "<@spring.url '/venue/autocomplete' />",
+		            url: "<@spring.url '/venue/search' />",
 		            dataType: "json",
 		            data: {
 						query: request.term
 					},
 		            success: function (data) {
-		                response($.map(data, function(v,i){
-		                    return {
-		                            label: v.name,
-		                            value: v.name,
-		                            labelShort: v.abbr,
-		                            url: v.url,
-		                            type: v.type
-		                           };
-		                }));
+		            	if( data.count == 0){
+		            		$('#venue').removeClass( "ui-autocomplete-loading" );
+		            		<#--return false;-->
+							var result = [{
+       									label: 'No matches Conference/Journal found, please add later on Conference page', 
+   										value: response.term
+										}];
+										
+       						response(result);
+		            	}
+		            	else{
+			                response($.map(data.eventGroups, function(v,i){
+			                    return {
+			                    		id: v.id,
+			                            label: v.name,
+			                            value: v.name,
+			                            labelShort: v.abbr,
+			                            url: v.url,
+			                            type: v.type
+			                           };
+			                }));
+		                }
 		            }
 		        });
 		    },
@@ -181,17 +193,27 @@
 			select: function( event, ui ) {
 				<#-- select appropriate vanue type -->
 				$( '#venue-type' ).val( ui.item.type ).change();
-				console.log( ui.item.labelShort );
-				$( '#venue-abbr' ).val( ui.item.labelShort );
 			},
 			open: function() {
 				$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
 			},
 			close: function() {
 				$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-			}
-		});
-
+			},
+			change: function(event,ui){
+		        if (ui.item == null) {
+		            $('#venue').val('').focus();
+	            }
+	        }
+		})
+		.autocomplete( "instance" )._renderItem = function( ul, item ) {
+			if( typeof item.id != "undefined" ){
+				var itemElem = createAutocompleteOutput( item );
+		      	return itemElem.appendTo( ul );
+	      	} else{
+	      		return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo( ul );
+	      	}
+	    };
 		<#-- focus in and out on tag style -->
 		$(".palm-tagsinput").on('focusin',function() {
 		  	$( this ).addClass( "palm-tagsinput-focus" );
@@ -253,7 +275,7 @@
 		}
   		
   		function isTagDuplicated( inputListSelector, newText){
-  			var keywordList = $( inputListSelector ).val().split(',');
+  			var keywordList = $( inputListSelector ).val().split('_#_');
   			if( $.inArray( newText , keywordList ) > -1 )
   				return true;
   			else
@@ -264,7 +286,7 @@
   			var keywordList = "";
 			$( tagContainerSelector ).find( "span" ).each(function(index, item){
 				if( index > 0)
-					keywordList += ",";
+					keywordList += "_#_";
 				keywordList += $( item ).text();
 			});
 			$( tagContainerSelector ).next( "input" ).val( keywordList );
@@ -272,50 +294,6 @@
   		
   		<#-- author -->
 		$('#authors input')
-		.on('focusout',function(){    
-			<#-- allowed characters -->
-    		var inputAuthor = this.value.replace(/[^a-zA-Z\s]/g,'');
-    		<#-- remove multiple spaces -->
-			inputAuthor = inputAuthor.replace(/ +(?= )/g,'').trim();
-			if( inputAuthor.length > 3 && !isTagDuplicated( '#author-list', inputAuthor )) {
-				var authorObj =  $( '<span/>' )
-      					.addClass( "tag-item" );
-      					
-      				authorObj
-      					.append(
-      						$( "<i/>" )
-	        						 .attr({ 'class':'fa fa-user bg-aqua'})
-	        			);
-	        			
-	        		var itemDesc = $( "<div/>" )
-        						 .attr({'class':'f-a-desc'})
-        						
-        						 
-        			itemDesc.append(
-				 		$( "<div/>" )
-    						 .attr({'class':'f-a-name'})
-    						 .html( inputAuthor )
-					 );
-					 
-					 authorObj.append( itemDesc );
-					 
-					 authorObj
-	        			.append( 
-      						$( '<i/>' )
-      						.addClass( "fa fa-times" )
-      						.click( function(){ 
-      							$(this).parent().remove()
-      							updateInputList( '#authors' )
-      						})
-      					);
-      					
-      			<#-- append -->
-      			$(this).before( authorObj);
-  				<#-- update stored value -->
-				updateInputList( '#authors' );
-    		}
-   			this.value="";   			
-  		})
   		.on('keyup',function( e ){
    			if(/(188|13)/.test(e.which)) 
    				$(this).focusout().focus();
@@ -326,62 +304,114 @@
     		else
     			return this.value.replace(/[^a-zA-Z\s]/g,'');
 		})
-		.on('paste', function () {
-			
-		})
 		.autocomplete({
 		    source: function (request, response) {
 		        $.ajax({
-		            url: "<@spring.url '/researcher/autocomplete' />",
+		            url: "<@spring.url '/researcher/search' />",
 		            dataType: "json",
 		            data: {
-						name: request.term
+						query: request.term,
+						addedAuthor:"yes"
 					},
 		            success: function (data) {
 		            	if( data.count == 0){
 		            		$('#authors input').removeClass( "ui-autocomplete-loading" );
-		            		return false;
+		            		var result = [{
+       									label: 'No matches researcher found, please add first on Researcher page', 
+   										value: response.term
+										}];
+										
+       						response(result);
 		            	}
-		            		
-		                response($.map(data.author , function(v,i){
-		                	var researcherMap = {
-		                		id: v.id,
-	                            label: v.name,
-	                            value: v.name,
-		                	};
-		                	
-		                	if( typeof v.photo !== "undefined" )
-		                		researcherMap['photo'] = v.photo;
-
-							if( typeof v.detail !== "undefined" )
-		                		researcherMap['detail'] = v.detail;
-		                		
-		                	if( typeof v.aff !== "undefined" )
-		                		researcherMap['aff'] = v.aff;
-		                		
-		                    return researcherMap;
-		                }));
+		            	else{
+		            		response($.map(data.researchers , function(v,i){
+			                	var researcherMap = {
+			                		id: v.id,
+		                            label: v.name,
+		                            value: v.name,
+			                	};
+			                	
+			                	if( typeof v.photo !== "undefined" )
+			                		researcherMap['photo'] = v.photo;
+	
+								if( typeof v.detail !== "undefined" )
+			                		researcherMap['detail'] = v.detail;
+			                		
+			                	if( typeof v.aff !== "undefined" )
+			                		researcherMap['aff'] = v.aff;
+			                		
+			                	if( typeof v.status !== "undefined" )
+			                		researcherMap['status'] = v.status;
+			                		
+			                    return researcherMap;
+			                }));
+		                }
 		            }
 		        });
 		    },
 			minLength: 3,
 			select: function( event, ui ) {
-				<#-- select appropriate vanue type -->
-				$( '#venue-type' ).val( ui.item.type ).change();
-				console.log( ui.item ?
-					"Selected: " + ui.item.label :
-					"Nothing selected, input was " + this.value);
+				if( !isTagDuplicated( '#author-list', ui.item.label )) {
+					<#-- append result --> 	
+					$('#authors input').before( createAutocompleteOutput( ui.item , "tagview") );
+					updateAuthorList( "#authors" );
+				}
+				<#-- clear input and focus -->
+				$('#authors input').val( '' ).focus();
+				return false;
 			},
 			open: function() {
 				$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
 			},
 			close: function() {
 				$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+			},
+			change: function( event, ui ) {
+			  	if ( ui.item == null ) {
+					<#-- clear input and focus -->
+					$('#authors input').val( '' ).focus();
+				}
 			}
 		})
 		.autocomplete( "instance" )._renderItem = function( ul, item ) {
-			var itemElem = $( "<li/>" )
+			if( typeof item.id != "undefined" ){
+				var itemElem = createAutocompleteOutput( item );
+		      	return itemElem.appendTo( ul );
+	      	} else{
+	      		return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo( ul );
+	      	}
+	    };
+	    
+	    function updateAuthorList( tagContainerSelector ){
+  			var authorList = "";
+  			var authorIdList = "";
+			$( tagContainerSelector ).find( "span" ).each(function(index, item){
+				var authorNameElem = $( item ).find(".f-a-name");
+				if( index > 0){
+					authorList += "_#_";
+					authorIdList += "_#_";
+				}
+				authorList += authorNameElem.text();
+				authorIdList += authorNameElem.data( "id" );
+			});
+			$( "#author-list" ).val( authorList );
+			$( "#author-list-ids" ).val( authorIdList );
+  		}
+		
+	    function createAutocompleteOutput( item , viewType){
+	    	var itemElem;
+	    	
+	    	if( typeof viewType === "undefined" ){
+	    		viewType = "optionview";
+	    	}
+	    	
+	    	if( viewType == "optionview" ){
+	    		itemElem = $( "<li/>" )
 							.addClass( "f-a-cont" );
+			} else {
+				itemElem = $( '<span/>' )
+      					.addClass( "tag-item" );
+			}
 			
 			if( typeof item.photo !== "undefined" ){
 	        	itemElem.append( $( "<img/>" )
@@ -396,53 +426,42 @@
         						 .attr({'class':'f-a-desc'})
         						
         						 
-        	itemDesc.append(
-				 		$( "<div/>" )
-    						 .attr({'class':'f-a-name'})
+        	var itemLabel = $( "<div/>" )
+    						 .attr({'class':'f-a-name' , 'data-id': item.id})
     						 .html( item.label )
-					 );
+    						 
+    		if( viewType !== "optionview" )
+    			itemLabel.addClass( "no-max-width" );
+    						 
+    		itemDesc.append( itemLabel );
 					 
         	if( typeof item.aff !== "undefined" ){
-        		itemDesc.append(
-				 		$( "<div/>" )
-    						 .attr({'class':'f-a-aff'})
-    						 .html( item.aff )
-					 );
+        		var itemAff = $( "<div/>" )
+								 .attr({'class':'f-a-aff'})
+								 .html( item.aff );
+								 
+				if( viewType !== "optionview" )
+    				itemAff.addClass( "no-max-width" );
+								 
+				itemDesc.append( itemAff );
         	}
         					 
 	        itemElem.append( itemDesc );
-	      	
-	      	return itemElem.appendTo( ul );
-	    };
-		
-		function addAuthor( inputElem ){
-			<#-- allowed characters -->
-    		var inputKeywords = inputElem.value.replace(/[^a-zA-Z0-9\+\-\.\#\s\,]/g,'');
-    		
-    		<#-- split by comma -->
-			$.each( inputKeywords.split(","), function(index, inputKeyword ){
-	    		<#-- remove multiple spaces -->
-				inputKeyword = inputKeyword.replace(/ +(?= )/g,'').trim();
-				if( inputKeyword.length > 2 && !isTagDuplicated( '#keyword-list', inputKeyword )) {
-	      			$( inputElem ).before(
-	      				$( '<span/>' )
-	      					.addClass( "tag-item" )
-	      					.html( inputKeyword )
-	      					.append(
-	      						$( '<i/>' )
-	      						.addClass( "fa fa-times" )
-	      						.click( function(){ 
-	      							$( this ).parent().remove()
-	      							updateInputList( '#keywords' )
-	      						})
-	      					)
-	  				);
-	  				<#-- update stored value -->
-					updateInputList( '#keywords' );
-	    		}
-    		});
-   			inputElem.value="";
-		}
+	        
+	        if( viewType !== "optionview" ){
+	        	 itemElem
+	        			.append( 
+      						$( '<i/>' )
+      						.addClass( "fa fa-times" )
+      						.click( function(){ 
+      							$(this).parent().remove()
+      							updateAuthorList( '#authors' )
+      						})
+      					);
+	        }
+	        
+	        return itemElem;
+	    }
 	});
 
 </script>

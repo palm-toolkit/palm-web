@@ -2,7 +2,7 @@
 	  <form role="form" id="profileForm" action="<@spring.url '/user/profile' />" method="post">
 		<#if author??><#-- if author not null -->
 			<h1>
-				${author.name}
+				${author.name!''}
 			</h1>
 			<hr style="margin-top:5px; margin-bottom:5px; margin-right:0 !important">
 			<div style="width:100%">
@@ -107,9 +107,9 @@
 		            success: function (data) {
 		            	if( data.count == 0){
 		            		$('#name').removeClass( "ui-autocomplete-loading" );
-		            		<#--return false;-->
+		            		<#--return info message -->
 							var result = [{
-       									label: 'No matches found', 
+       									label: 'No matches researcher found, please add first on Researcher page', 
    										value: response.term
 										}];
 										
