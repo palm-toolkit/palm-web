@@ -169,20 +169,22 @@ function visualizeTermValue( termValueMap, svgContainer )
 	  .attr("r", ir);
 	
 	<#-- "TOTAL" LABEL -->
+<#--
 	var totalLabel = center_group.append("svg:text")
 	  .attr("class", "label")
 	  .attr("dy", -5)
 	  .attr("text-anchor", "middle") // text-align: right
 	  .text("TOTAL");
-	
+-->
 	<#-- TOTAL TRAFFIC VALUE -->
+<#--
 	var totalValue = center_group.append("svg:text")
 	  .attr("class", "total")
 	  .attr("dy", 7)
 	  .attr("text-anchor", "middle") // text-align: right
 	  .text("No Data");
-	  
-	<#-- run the visualization -->
+-->
+	<#-- run the visualization, due to bug must run it twice -->
 	update();
 	update();
 	  
@@ -207,13 +209,13 @@ function visualizeTermValue( termValueMap, svgContainer )
 	
 	    <#-- REMOVE PLACEHOLDER CIRCLE -->
 	    arc_group.selectAll("circle").remove();
-	
+		<#--
 	    totalValue.text(function(){
 	      var kb = totalOctets;
 	      return kb.toFixed(2);
 	      //return bchart.label.abbreviated(totalOctets*8);
 	    });
-	
+		-->
 	    <#-- DRAW ARC PATHS -->
 	    paths = arc_group.selectAll("path").data(filteredPieData);
 	    paths.enter().append("svg:path")
