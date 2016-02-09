@@ -233,8 +233,8 @@
 					<#-- tab header -->
 					var tabHeaderText = capitalizeFirstLetter( source_item.source );
 					var tabHeaderTextShort = tabHeaderText;
-					if( tabHeaderText.length > 6 )
-						tabHeaderTextShort = tabHeaderText.substring(0,6);
+					//if( tabHeaderText.length === "googlescholar" )
+						//tabHeaderTextShort = tabHeaderText.substring(0,6);
 
 					var tabHeader = $( '<li/>' )
 						.append(
@@ -316,7 +316,7 @@
 													.attr({ "id" : "result" + tabHeaderTextShort })
 													.css({ "width" : "100%" });
 													
-					if( !data.publication.type == "BOOK" )
+					if( data.publication.type !== "BOOK" )
 						contentExtractedResult.html( 'Please press "Extract ' + htmlpdf_item.type + '" button to see the extracted result here'  );
 
 					<#-- content navigation -->
@@ -332,7 +332,7 @@
 						.click( function( event ){ event.preventDefault();window.open( htmlpdf_item.url , tabHeaderText ,'scrollbars=yes,width=650,height=500')})
 					)
 					
-					if( !data.publication.type == "BOOK" )
+					if( data.publication.type !== "BOOK" )
 						contentNavigation.append(
 							$('<button/>')
 							.addClass( "btn btn-default btn-sm pull-right" )

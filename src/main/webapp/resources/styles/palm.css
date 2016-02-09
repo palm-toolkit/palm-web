@@ -269,6 +269,18 @@ iframe.externalContent{
 .no-padding{padding:0}
 .no-border{border:none}
 .no-max-width{max-width:none !important}
+.info-box{
+	background-color:#fff;
+	overflow:hidden !important;
+	color:#555;
+	height:auto !important;
+}
+.width-auto{
+	width:auto !important;
+}
+.width-full{
+	width:100% !important;
+}
 
 .table-container{
 	padding:0 6px 0 0;
@@ -518,6 +530,31 @@ div.d3-tooltip {
 
 .eventyear-list>.eventyear-item>.eventyear>.nav{
     padding: 0;
+}
+
+.content-list>.author>.nav>.btn{
+	display:none;
+}
+.content-list>.author.active>.nav>.btn{
+	display:block;
+}
+
+.content-list>.publication>.nav>.fa-edit{
+	display:none;
+	cursor:auto;
+}
+.content-list>.publication.active>.nav>.fa-edit{
+	display:block;
+	cursor:pointer;
+}
+
+.content-list>.eventgroup-item>.eventgroup>.nav>.fa-edit{
+	display:none;
+	cursor:auto;
+}
+.content-list>.eventgroup-item>.eventgroup.active>.nav>.fa-edit{
+	display:block;
+	cursor:pointer;
 }
 
 .eventyear-list>.eventyear-item>.eventyear>.nav, .eventvolume-list>.eventvolume>.nav{
@@ -783,7 +820,8 @@ div.d3-tooltip {
   	border:0;
   	margin:0;
   	padding:5px 12px;
-  	width:260px;;
+  	width:260px;
+  	float:left;
 }
 .palm-tagsinput input:focus{
   	border: none;

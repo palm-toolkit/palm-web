@@ -10,6 +10,9 @@
 <#-- jQuery fileupload -->
 <script src="<@spring.url '/resources/scripts/jquery.fileupload.js' />" type="text/javascript"></script>
 
+<#-- Combodate - used to generate date combobox -->
+<script src="<@spring.url '/resources/scripts/combodate.js' />" type="text/javascript"></script>
+
 <#-- gridster -->
 <#--
 <script src="<@spring.url '/resources/plugins/gridster/jquery.gridster.js' />" type="text/javascript"></script>

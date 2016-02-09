@@ -1,4 +1,7 @@
-<div class="box-body no-padding">
+<@security.authorize access="isAuthenticated()">
+	<#assign loggedUser = securityService.getUser() >
+</@security.authorize>
+<div id="boxbody-${wUniqueName}" class="box-body no-padding">
 	<div class="box-tools">
 	    <div class="input-group" style="width: 100%;">
 	      <input type="text" id="researcher_search_field" name="researcher_search_field" class="form-control input-sm pull-right" 
@@ -227,6 +230,25 @@
 											.addClass( 'photo fa fa-user' )
 										);
 									}
+									<#-- add edit button -->
+									<#if loggedUser??>
+									<#-- add edit button -->
+									researcherNav
+										.append(
+											$( '<div/>' )
+											.addClass( 'btn btn-default btn-xs pull-left' )
+											.attr({ "data-url":"<@spring.url '/researcher/edit' />?id=" + item.id, "title":"Update " + item.name + " Profile"})
+											.append(
+												$( '<i/>' )
+													.addClass( 'fa fa-edit' )
+											).append( "Update" )
+											.on( "click", function(e){
+												e.preventDefault;
+												$.PALM.popUpIframe.create( $(this).data("url") , {popUpHeight:"456px"}, $(this).attr("title") );
+											})
+										);
+									</#if>
+
 									<#-- add clcik event -->
 									researcherDetail
 										.on( "click", function(){

@@ -241,13 +241,15 @@
 				<#-- changed scroll position -->
 				if( typeof data.publicationId !== "undefined" ){
 					var publicationTarget = $("#boxbody${wUniqueName} .box-content").find( "#p" + data.publicationId );
-					var scrollTo_val = publicationTarget[0].offsetTop + 'px';
-					//console.log( "scroll : " + scrollTo_val );
-					$("#boxbody${wUniqueName} .box-content").slimscroll({
-						scrollTo : scrollTo_val
-					});
-					// add highlight effect
-					$( publicationTarget ).effect("highlight", {}, 3000);
+					if( publicationTarget.length > 0 ){
+						var scrollTo_val = publicationTarget[0].offsetTop + 'px';
+						//console.log( "scroll : " + scrollTo_val );
+						$("#boxbody${wUniqueName} .box-content").slimscroll({
+							scrollTo : scrollTo_val
+						});
+						// add highlight effect
+						$( publicationTarget ).effect("highlight", {}, 3000);
+					}
 				}
 			}
 		};

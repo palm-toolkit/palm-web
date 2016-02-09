@@ -1,45 +1,87 @@
-<div id="boxbody<#--${wUniqueName}-->" class="box-body">
+<div id="boxbody${wUniqueName}" class="box-body">
 
-		<table style="width:100%">
-	        <tr style="background:transparent">
-	            <td style="width:70%;padding:0">
-	            	<span style="margin-top:5px;">Upload your publication (PDF format) : </span>
-	            	<input id="fileupload" style="width:60%;max-width:none" type="file" name="files[]" data-url="<@spring.url '/publication/upload' />" multiple />
-				</td>
-	            <td style="padding:0">
-	            	<div id="progress" class="progress" style="width:70%;display:none">
-				        <div class="bar" style="width: 0%;"></div>
-				    </div>
-				</td>
-	        </tr>
-	    </table>
+	<div class="col-md-6">
+		<div class="box box-default box-solid">
+			<div class="box-header">
+				<h3 class="box-title">Extract publication from PDF</h3>
+				<div class="box-tools pull-right">
+	            	<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+	            	<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+	           </div>
+			</div>
+			
+			<div class="box-body">
+				
+				<table style="width:100%">
+			        <tr style="background:transparent">
+			            <td style="width:70%;padding:0">
+			            	<span style="margin-top:5px;">Upload your publication (PDF format) : </span>
+			            	<input id="fileupload" style="width:60%;max-width:none" type="file" name="files[]" data-url="<@spring.url '/publication/upload' />" multiple />
+						</td>
+			            <td style="padding:0">
+			            	<div id="progress" class="progress" style="width:70%;display:none">
+						        <div class="bar" style="width: 0%;"></div>
+						    </div>
+						</td>
+			        </tr>
+			    </table>
+	    
+			</div>
+		</div>
+	</div>
+	
+	 <br/>
 
-	 <form role="form" id="addPublication" action="<@spring.url '/publication/add' />" method="post">
+	 <form role="form" id="addPublication" action="<@spring.url '/publication/add' />" method="post" style="clear:both">
 		
 		<#-- title -->
 		<div class="form-group">
 	      <label>Title</label>
 	      <input type="text" id="title" name="title" class="form-control" placeholder="Publication">
 	    </div>
+	    
+	    <div id="similar-publication-container" class="form-group" style="display:none">
+	    	<div class="callout callout-warning">
+	            <h4>Similar publication is found on PALM database!</h4>
+	            <div class="content-list info-box">
+	            </div>
+	        </div>
+	    </div>
 
 		<#-- author -->
 		<div class="form-group">
 	      <label>Author</label>
-	      <div id="authors" class="palm-tagsinput" tabindex="-1">
-	      		<input type="text" value="" placeholder="Author fullname, separated by comma" />
+	      <div id="authors-tag" class="palm-tagsinput" tabindex="-1">
+	      		<input type="text" value="" placeholder="Add an author from PALM database" />
 	      </div>
 	      <input type="hidden" id="author-list" name="author-list" value="">
 	      <input type="hidden" id="author-list-ids" name="author-list-ids" value="">
 	    </div>
+	    
+		<#-- abstract -->
+		<div class="form-group">
+	      <label>Abstract</label>
+	      <textarea name="abstractText" id="abstractText" class="form-control" rows="3" placeholder="Abstract"></textarea>
+	    </div>
+
+		<#-- keyword -->
+		<div class="form-group">
+	      <label>Keywords</label>
+	      <div id="keywords" class="palm-tagsinput" tabindex="-1">
+	      		<input type="text" value="" placeholder="Keywords, separated by comma" />
+	      </div>
+	      <input type="hidden" id="keyword-list" name="keyword-list" value="">
+	    </div>
+	    
 
 		<#-- publication-date -->
 		<div class="form-group">
 			<label>Publication Date</label>
-			<div class="input-group" style="width:120px">
+			<div class="input-group" style="width:140px">
 				<div class="input-group-addon">
 					<i class="fa fa-calendar"></i>
 				</div>
-	      		<input type="text" id="publication-date" name="publication-date" class="form-control" data-inputmask="'alias': 'mm/yyyy'" data-mask="">
+	      		<input type="text" id="publication-date" name="publication-date" class="form-control" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="">
 			</div>
 	    </div>
 
@@ -49,6 +91,7 @@
           <select id="venue-type" name="venue-type" class="form-control" style="width:120px">
             <option value="conference">Conference</option>
             <option value="journal">Journal</option>
+            <option value="book">Book</option>
           </select>
         </div>
         
@@ -58,6 +101,7 @@
           <div style="width:100%">
 	          <span style="display:block;overflow:hidden;padding:0 5px">
 	          	<input type="text" id="venue" name="venue" class="form-control" placeholder="e.g. Educational Data Mining">
+	          	<input type="hidden" id="venue-id" name="venue-id" value="">
 	          </span>
 	      </div>
         </div>
@@ -81,21 +125,6 @@
 				<input type="text" id="publisher" name="publisher" class="form-control">
 			</div>
 		</div>
-
-		<#-- abstract -->
-		<div class="form-group">
-	      <label>Abstract</label>
-	      <textarea name="abstractText" id="abstractText" class="form-control" rows="3" placeholder="Abstract"></textarea>
-	    </div>
-
-		<#-- keyword -->
-		<div class="form-group">
-	      <label>Keywords</label>
-	      <div id="keywords" class="palm-tagsinput" tabindex="-1">
-	      		<input type="text" value="" placeholder="Keywords, separated by comma" />
-	      </div>
-	      <input type="hidden" id="keyword-list" name="keyword-list" value="">
-	    </div>
 
 		<#-- content -->
 <#--
@@ -149,7 +178,7 @@
 			if( selectionValue == "conference" ){
 				$( "#venue-title>label>span" ).html( "Conference" );
 				$( "#volume-container,#issue-container" ).hide();
-			} else if( selectionValue == "journal" ){
+			} else if( selectionValue == "journal" || selectionValue == "book"){
 				$( "#venue-title>label>span" ).html( "Journal" );
 				$( "#volume-container,#issue-container" ).show();
 			}
@@ -292,8 +321,100 @@
 			$( tagContainerSelector ).next( "input" ).val( keywordList );
   		}
   		
+  		<#-- check against exisiting publication on PALM -->
+		$( "#title" ).on( "blur", function( e ){
+			$( "#similar-publication-container" ).hide();
+			checkForSimilarPublication( $( this ).val() );
+		});
+  		
+  		function checkForSimilarPublication( targetTitle ){
+  			<#-- clean non alpha numeric from title -->
+			var cleanTitle = targetTitle.replace(/[^\w\s]/gi, '');
+			var jqXHR =	$.getJSON( "<@spring.url '/publication/similar' />?title=" + cleanTitle, function( data ){
+				if( data.totalCount > 0){
+					<#-- unhide container -->
+					$( "#similar-publication-container" ).slideDown( "slow" );
+				  	var publicationListContainer = $( "#addPublication" ).find( ".content-list:first" );
+				  	publicationListContainer.html( "" );
+					<#-- build the publication table -->
+					$.each( data.publications, function( index, itemPublication ){
+
+						var publicationItem = 
+							$('<div/>')
+							.addClass( "publication width-full" )
+							.attr({ "data-id": itemPublication.id });
+							
+						<#-- publication menu -->
+						var pubNav = $( '<div/>' )
+							.attr({'class':'nav'});
+			
+						<#-- publication icon -->
+						var pubIcon = $('<i/>');
+						if( typeof itemPublication.type !== "undefined" ){
+							if( itemPublication.type == "Conference" )
+								pubIcon.addClass( "fa fa-file-text-o bg-blue" ).attr({ "title":"Conference" });
+							else if( itemPublication.type == "Journal" )
+								pubIcon.addClass( "fa fa-files-o bg-red" ).attr({ "title":"Journal" });
+							else if( itemPublication.type == "Book" )
+								pubIcon.addClass( "fa fa-book bg-green" ).attr({ "title":"Book" });
+						}else{
+							pubIcon.addClass( "fa fa-question bg-purple" ).attr({ "title":"Unknown publication type" });
+						}
+						
+						pubNav.append( pubIcon );
+						
+						publicationItem.append( pubNav );
+
+						<#-- publication detail -->
+						var pubDetail = $('<div/>').addClass( "detail default-cursor width-auto" );
+						
+						
+						
+						<#-- title -->
+						var pubTitle = $('<div/>').addClass( "title" ).html( itemPublication.title );
+
+						<#--author-->
+						var pubAuthor = $('<div/>').addClass( "author" );
+						$.each( itemPublication.authors , function( index, itemAuthor ){
+							if( index > 0)
+								pubAuthor.append(", ");
+							pubAuthor.append( itemAuthor.name );
+						});
+
+						<#-- append detail -->
+						pubDetail.append( pubTitle );
+						pubDetail.append( pubAuthor );
+						
+						<#-- publicationDetailOption -->
+						var pubDetailOption = $('<div/>').addClass( "option" );
+						<#-- fill pub detail option -->
+						var circleAddButton = $('<button/>')
+							.addClass( "btn btn-success width130px btn-xs pull-right" )
+							.html( "Use this publication" )
+							.on( "click", function( e ){
+								e.preventDefault();
+								$.PALM.circle.addPublication( itemPublication.id, e.target );
+							});
+						
+						pubDetailOption.append( circleAddButton );
+						
+						pubDetail.append( pubDetailOption );
+
+						<#-- append to item -->
+						publicationItem.append( pubDetail );
+						
+						publicationListContainer.append( publicationItem );
+					
+					});
+				}
+				//else{
+					//alert( "no similar publication found" );
+				//}
+			});
+  		}
+  		
   		<#-- author -->
-		$('#authors input')
+		$('#authors-tag input')
   		.on('keyup',function( e ){
    			if(/(188|13)/.test(e.which)) 
    				$(this).focusout().focus();
@@ -315,7 +436,7 @@
 					},
 		            success: function (data) {
 		            	if( data.count == 0){
-		            		$('#authors input').removeClass( "ui-autocomplete-loading" );
+		            		$('#authors-tag input').removeClass( "ui-autocomplete-loading" );
 		            		var result = [{
        									label: 'No matches researcher found, please add first on Researcher page', 
    										value: response.term
@@ -353,11 +474,11 @@
 			select: function( event, ui ) {
 				if( !isTagDuplicated( '#author-list', ui.item.label )) {
 					<#-- append result --> 	
-					$('#authors input').before( createAutocompleteOutput( ui.item , "tagview") );
-					updateAuthorList( "#authors" );
+					$('#authors-tag input').before( createAutocompleteOutput( ui.item , "tagview") );
+					updateAuthorList( "#authors-tag" );
 				}
 				<#-- clear input and focus -->
-				$('#authors input').val( '' ).focus();
+				$('#authors-tag input').val( '' ).focus();
 				return false;
 			},
 			open: function() {
@@ -369,7 +490,7 @@
 			change: function( event, ui ) {
 			  	if ( ui.item == null ) {
 					<#-- clear input and focus -->
-					$('#authors input').val( '' ).focus();
+					$('#authors-tag input').val( '' ).focus();
 				}
 			}
 		})
@@ -391,7 +512,7 @@
 					authorList += "_#_";
 					authorIdList += "_#_";
 				}
-				authorList += authorNameElem.text();
+				authorList += authorNameElem.text().trim();
 				authorIdList += authorNameElem.data( "id" );
 			});
 			$( "#author-list" ).val( authorList );
@@ -454,8 +575,8 @@
       						$( '<i/>' )
       						.addClass( "fa fa-times" )
       						.click( function(){ 
-      							$(this).parent().remove()
-      							updateAuthorList( '#authors' )
+      							$(this).parent().remove();
+      							updateAuthorList( '#authors-tag' );
       						})
       					);
 	        }

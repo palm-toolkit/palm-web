@@ -1,4 +1,7 @@
-<div class="box-body no-padding">
+<@security.authorize access="isAuthenticated()">
+	<#assign loggedUser = securityService.getUser() >
+</@security.authorize>
+<div id="boxbody${wUniqueName}" class="box-body no-padding">
 	<div class="box-tools">
 	    <div class="input-group" style="width: 100%;">
 	      <input type="text" id="conference_search_field" name="conference_search_field" 
@@ -202,7 +205,25 @@
 									
 									eventNav.append( eventIcon );
 
+								<#if loggedUser??>
+									<#-- edit option -->
+									var eventEdit = $('<i/>')
+												.attr({
+													'class':'fa fa-edit', 
+													'title':'edit event',
+													'data-url':'<@spring.url '/venue/eventGroup/edit' />' + '?id=' + itemEvent.id
+												});
+												
+									<#-- add click event to edit event -->
+									eventEdit.click( function( e ){
+										e.preventDefault();
+										$.PALM.popUpIframe.create( $(this).data("url") , { "popUpHeight":"430px"}, "Edit " + itemEvent.name);
+									});
 									
+									<#-- append edit  -->
+									eventNav.append( eventEdit );
+								</#if>
+
 									<#-- title -->
 									var eventName = $('<div/>').addClass( "title" ).html( typeof itemEvent.abbr != "undefined" ? itemEvent.name + " (" + itemEvent.abbr + ")" : itemEvent.name );
 

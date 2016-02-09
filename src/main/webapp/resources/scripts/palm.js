@@ -4,8 +4,8 @@
  * This file should be included in all pages. 
  * It controls some layout options and plugins.
  *
- * @Default Author  Almsaeed Studio
- * @Extended By  Sigit for PALM project
+ * @Original Author  Almsaeed Studio
+ * @Extended By  Anindita Sigit Nugraha for PALM project
  * @license MIT <http://opensource.org/licenses/MIT>
  */
 
@@ -1231,7 +1231,7 @@ $.PALM.utility = {
 		else if( splitDate[1] == "9" ) 	outputDate += "Sep";
 		else if( splitDate[1] == "10" ) 	outputDate += "Oct";
 		else if( splitDate[1] == "11" ) 	outputDate += "Nov";
-		else if( splitDate[1] == "12" ) 	outputDate += "Des";
+		else if( splitDate[1] == "12" ) 	outputDate += "Dec";
 		
 		if( splitDate.length == 3 )
 			return splitDate[2] + " " + outputDate + " " + splitDate[0];
@@ -1251,6 +1251,24 @@ $.PALM.utility = {
 		} else
 			return inputText;
 	}
+//	, generateDropDownDatePicker: function( containerSelector , additionalOptions ){
+//		var o = $.PALM.utility;
+//		o.options ={
+//			yearStart:1950,
+//			yearEnd:new Date().getFullYear(),
+//			monthEnd:[31, function(){ o.options.yearEnd % 4 == 0 ? 29:28}, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+//			monthLabel:["January","February","March","April","May","June","July","August","September","October","November","December"],
+//			inputClass:"form-control"
+//		}
+//		if( typeof additionalOptions !== "undefined" )
+//			o.options = $.extend( o.options, additionalOptions );
+//		
+//		o.dataElement = $('</div>');
+//		
+//		var dayElement = $('</select>').addClass( "day-list " + o.options.inputClass );
+//		$.each( o.options );
+		
+//	}
 };
  
 $.PALM.postForm = {

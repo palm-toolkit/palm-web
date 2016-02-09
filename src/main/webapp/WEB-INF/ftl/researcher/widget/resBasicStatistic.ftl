@@ -43,8 +43,7 @@
 
 							var researcherDiv = 
 							$( '<div/>' )
-								.addClass( 'author static' )
-								.attr({ 'id' : data.author.id });
+								.addClass( 'author static' );
 								
 							var researcherNav =
 							$( '<div/>' )
@@ -218,7 +217,13 @@ nv.addGraph(function() {
     ;
     
   chart.bars.dispatch.on("elementClick", function(e) {
-    console.log(e);
+    var researcherPublicationWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_publication' ); 
+					
+	researcherPublicationWidget.options.queryString = "?id=" + data.author.id + "&year=" + e.data[2];
+	<#-- add overlay -->
+	researcherPublicationWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+	
+	$.PALM.boxWidget.refresh( researcherPublicationWidget.element , researcherPublicationWidget.options );
   });
 
   nv.utils.windowResize(chart.update);
