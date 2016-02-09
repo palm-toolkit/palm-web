@@ -1023,6 +1023,11 @@ $.PALM.popUpIframe = {
 		// remove previous popup iframe if exist
 		_this.remove( o );
 		
+		var targetContainer = $( "body" );
+		if ( self !== top ) {
+			targetContainer = $( window.parent.document.body );
+		}
+		
 		// combine options
 		if( typeof popUpOptions != "undefined" )
 			o = $.extend( o, popUpOptions );
@@ -1074,22 +1079,28 @@ $.PALM.popUpIframe = {
 			);
 			
 		// put popup into body
-		$( "body" ).append( popUpModal );
+	    targetContainer.append( popUpModal );
 		
 		/* add blur */
-		$( ".wrapper" ).addClass( "blur2px" );
+		var blurBackground = targetContainer.find( ".wrapper" );
+		blurBackground.addClass( "blur2px" );
 		
 		// put into PALM object
 		o.popUpIframe.push( popUpModal );
+		o.blurBackground = blurBackground;
 	}, remove: function( options ){
+		// if on iframe
+		if ( self !== top ) {
+			options = parent.$.PALM.options.popUpIframeOptions;
+		}
 		if( options.popUpIframe.length > 0 ){
 			// remove element from DOM
 			options.popUpIframe[0].remove();
 			// clear array
 			options.popUpIframe = [];
 			// remove blur
-			/* add blur */
-			$( ".wrapper" ).removeClass( "blur2px" );
+			/* remove blur */
+			options.blurBackground.removeClass( "blur2px" );
 		}
 	}
 };

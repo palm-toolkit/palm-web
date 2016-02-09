@@ -391,9 +391,13 @@
 						var circleAddButton = $('<button/>')
 							.addClass( "btn btn-success width130px btn-xs pull-right" )
 							.html( "Use this publication" )
+							.attr({
+								'title':'Use publication ' + itemPublication.title,
+								'data-url':'<@spring.url '/publication/edit' />' + '?id=' + itemPublication.id
+							})
 							.on( "click", function( e ){
 								e.preventDefault();
-								$.PALM.circle.addPublication( itemPublication.id, e.target );
+								parent.$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Publication");
 							});
 						
 						pubDetailOption.append( circleAddButton );
