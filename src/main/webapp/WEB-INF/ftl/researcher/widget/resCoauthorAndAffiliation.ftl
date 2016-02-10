@@ -8,7 +8,7 @@
 
 		<#-- add slim scroll -->
        $("#boxbody-${wUniqueName}>.coauthor-list").slimscroll({
-			height: "310px",
+			height: "300px",
 	        size: "6px",
 			allowPageScroll: true,
    			touchScrollStep: 50//,

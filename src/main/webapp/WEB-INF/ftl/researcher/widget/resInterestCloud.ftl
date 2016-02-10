@@ -71,7 +71,7 @@ var algorithmProfileDropDown =
 $.each( data.interest, function(index, dataAlgorithmProfile){
 	algorithmProfileDropDown.append( $( '<option/>' )
 								.attr({ "value" : index })
-								.html( dataAlgorithmProfile.profile )
+								.html( (dataAlgorithmProfile.profile).replace( /\?/g,"∩") )
 							);
 });
 
@@ -229,7 +229,7 @@ function visualizeInterest( yearIndex , yearType ){
 		.find( ".box-filter-button" )
 		.find( "span" )
 		.html( 
-			data.interest[ dataPointer.dataProfileIndex ].profile + ", " +
+			(data.interest[ dataPointer.dataProfileIndex ].profile).replace( /\?/g,"∩") + ", " +
 			data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].language + ", " +
 			data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears[dataPointer.dataYearStart].year + "-" +
 			data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears[dataPointer.dataYearEnd].year

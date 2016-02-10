@@ -51,7 +51,7 @@ var algorithmProfileDropDown =
 $.each( data.interest, function(index, dataAlgorithmProfile){
 	algorithmProfileDropDown.append( $( '<option/>' )
 								.attr({ "value" : index , "title" : dataAlgorithmProfile.description })
-								.html( dataAlgorithmProfile.profile )
+								.html( (dataAlgorithmProfile.profile).replace( /\?/g,"∩") )
 							);
 });
 
