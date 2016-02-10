@@ -51,7 +51,7 @@
 		  	<configuration>
 		    	<!-- <webXml>src\main\webapp\WEB-INF\web.xml</webXml>-->
 		    	<warSourceDirectory>src/main/webapp</warSourceDirectory>  
-        		<warName>${project.name}<!-- ${project.name} --></warName>  
+        		<warName>${project.name}</warName>  
         		<failOnMissingWebXml>false</failOnMissingWebXml>
 		  	</configuration>
 		</plugin>
