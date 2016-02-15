@@ -1162,6 +1162,21 @@ $.PALM.popUpAjaxModal = {
 	}
 }
 
+
+/**
+ * Validation plugin or PALM input,
+ * just add validation attribute, such as
+ * data-validation="required,email,checkduplication"
+ * data-validationDuplicationUrl="/user/isUsernameExist"
+ * Note: checking based on order
+ */
+//$.PALM.validation = {
+//	activate: function ( containerSelector ){
+//		// find any input or textarea on the container
+//		$( containerSelector ).find( )
+//	}
+//}
+
 /**
  * get form via ajax
  */
@@ -1665,4 +1680,12 @@ function printUploadedArticles( $containerSelector, data , addedOptions){
 	
 	$container.find( "textarea" ).val( textareaVal + appendedVal );
 	
+}
+
+function inIframe () {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
 }

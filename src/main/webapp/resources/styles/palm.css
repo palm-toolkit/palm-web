@@ -963,3 +963,19 @@ div.d3-tooltip {
 #pubBasicSvg svg {
   height: 180px;
 }
+
+/* validation */
+input.error {
+    border: 1px dotted red;
+}
+
+label.error {
+    margin-left: 10px;
+    width: auto;
+    display: inline;
+}
+
+form.cmxform label.error, label.error {
+    color: red;
+    font-style: italic;
+}
