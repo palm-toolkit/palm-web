@@ -1,7 +1,8 @@
 <div id="boxbody${wUniqueName}" class="box-body">
 
-	 <form role="form" id="addPublication" action="<@spring.url '/publication/edit' />" method="post">
-		
+	 <form role="form" id="editPublication" action="<@spring.url '/publication/edit' />" method="post">
+		<#-- hidden publication id -->
+		<input type="hidden" name="publication-id" value="${publication.id}">
 		<#-- title -->
 		<div class="form-group">
 	      <label>Title</label>
@@ -23,7 +24,7 @@
 	    		</#if>
 	    		
 	    		<div class="f-a-desc">
-					<div class="f-a-name no-max-width" data-id="6c18b4ea-6ca3-44c3-8530-d4bb946e018f">
+					<div class="f-a-name no-max-width" data-id="${eachAuthor.id}">
 						${eachAuthor.name}
 					</div>
 					<div class="f-a-aff no-max-width">
@@ -61,8 +62,7 @@
 	      		<input type="text" value="${publication.keywordText!''}" placeholder="Keywords, separated by comma" />
 	      </div>
 	      <input type="hidden" id="keyword-list" name="keyword-list" value="">
-	    </div>
-	    
+	    </div>  
 
 		<#-- publication-date -->
 		<div class="form-group">
@@ -71,7 +71,7 @@
 				<div class="input-group-addon">
 					<i class="fa fa-calendar"></i>
 				</div>
-	      		<input type="text" id="publication-date" name="publication-date" class="form-control" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="">
+	      		<input type="text"<#if publication.publicationDate??> value="${publication.publicationDate?string["dd/MM/yyyy"]}"</#if> id="publication-date" name="publication-date" class="form-control" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="">
 			</div>
 	    </div>
 
@@ -79,9 +79,10 @@
 		<div class="form-group">
           <label>Publication Type</label>
           <select id="venue-type" name="venue-type" class="form-control" style="width:120px">
-            <option value="conference">Conference</option>
-            <option value="journal">Journal</option>
-            <option value="book">Book</option>
+            <option value="conference"<#if publication.publicationType??><#if publication.publicationType == "CONFERENCE"> selected</#if></#if>>Conference</option>
+            <option value="workshop"<#if publication.publicationType??><#if publication.publicationType == "WORKSHOP"> selected</#if></#if>>Workshop</option>
+            <option value="journal"<#if publication.publicationType??><#if publication.publicationType == "JOURNAL"> selected</#if></#if>>Journal</option>
+            <option value="book"<#if publication.publicationType??><#if publication.publicationType == "BOOK"> selected</#if></#if>>Book</option>
           </select>
         </div>
         
@@ -90,30 +91,34 @@
           <label><span>Conference</span> Name</label>
           <div style="width:100%">
 	          <span style="display:block;overflow:hidden;padding:0 5px">
-	          	<input type="text" id="venue" name="venue" class="form-control" placeholder="e.g. Educational Data Mining">
-	          	<input type="hidden" id="venue-id" name="venue-id" value="">
+	          	<input type="text" <#if publication.event??>value="${publication.event.eventGroup.getName()}"</#if> id="venue" name="venue" class="form-control" placeholder="e.g. Educational Data Mining">
+	          	<input type="hidden" id="venue-id" name="venue-id"<#if publication.event??> value="${publication.event.eventGroup.id}"</#if>>
 	          </span>
 	      </div>
         </div>
         
         <#-- Venue properties -->
 		<div class="form-group" style="width:100%;float:left">
-			<div id="volume-container" class="col-xs-2 minwidth150Px" style="display:none">
+			<div id="volume-container" class="col-xs-2 minwidth150Px"<#-- style="display:none"-->>
 				<label>Volume</label>
-				<input type="text" id="volume" name="volume" class="form-control">
+				<input type="text" id="volume" name="volume"<#if publication.event??><#if publication.event.volume??> value="${publication.event.volume}"</#if></#if> class="form-control">
 			</div>
+			<#--
 			<div id="issue-container" class="col-xs-2 minwidth150Px" style="display:none">
 				<label>Issue</label>
 				<input type="text" id="issue" name="issue" class="form-control">
 			</div>
+			-->
 			<div id="pages-container" class="col-xs-3 minwidth150Px">
 				<label>Pages</label>
-				<input type="text" id="pages" name="pages" class="form-control">
+				<input type="text" id="pages" name="pages"<#if publication.startPage gt 0> value="${publication.startPage} - ${publication.endPage}"</#if> class="form-control">
 			</div>
+			<#--
 			<div id="publisher-container" class="col-xs-3 minwidth150Px">
 				<label>Publisher</label>
 				<input type="text" id="publisher" name="publisher" class="form-control">
 			</div>
+			-->
 		</div>
 
 		<#-- content -->
@@ -154,23 +159,36 @@
 		  });
 
 		<#-- multiple file-upload -->
-    	convertToAjaxMultipleFileUpload( $( '#fileupload' ), $( '#progress' ) , $("#addPublication") );
+    	convertToAjaxMultipleFileUpload( $( '#fileupload' ), $( '#progress' ) , $("#editPublication") );
 
 		<#-- activate input mask-->
 		$( "[data-mask]" ).inputmask();
-
+		
 		$( "#submit" ).click( function(){
-			$("#addPublication").submit();
+			<#-- todo check input valid -->
+			$.post( $("#editPublication").attr( "action" ), $("#editPublication").serialize(), function( data ){
+				<#-- todo if error -->
+
+				<#-- if status ok -->
+				if( data.status == "ok" ){
+					<#-- reload main page with target author -->
+					if( inIframe() ){
+						window.top.location = "<@spring.url '/publication' />?id=" + data.publication.id + "&title=" + data.publication.title
+					} else {
+						window.location = "<@spring.url '/publication' />?id=" + data.publication.id  + "&title=" + data.publication.title
+					}
+				}
+			});
 		});
 		
 		$( "#venue-type" ).change( function(){
 			var selectionValue = $(this).val();
 			if( selectionValue == "conference" ){
 				$( "#venue-title>label>span" ).html( "Conference" );
-				$( "#volume-container,#issue-container" ).hide();
+				<#--$( "#volume-container,#issue-container" ).hide();-->
 			} else if( selectionValue == "journal" || selectionValue == "book"){
 				$( "#venue-title>label>span" ).html( "Journal" );
-				$( "#volume-container,#issue-container" ).show();
+				<#--$( "#volume-container,#issue-container" ).show();-->
 			}
 		});
 		
@@ -187,7 +205,7 @@
 		            		$('#venue').removeClass( "ui-autocomplete-loading" );
 		            		<#--return false;-->
 							var result = [{
-       									label: 'No matches Conference/Journal found, please add later on Conference page', 
+       									label: 'No matches Conference/Journal found, please add first on Conference page', 
    										value: response.term
 										}];
 										
@@ -212,6 +230,8 @@
 			select: function( event, ui ) {
 				<#-- select appropriate vanue type -->
 				$( '#venue-type' ).val( ui.item.type ).change();
+				<#-- store the conference id -->
+				$( '#venue-id' ).val( ui.item.id );
 			},
 			open: function() {
 				$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
@@ -227,8 +247,7 @@
 		})
 		.autocomplete( "instance" )._renderItem = function( ul, item ) {
 			if( typeof item.id != "undefined" ){
-				var itemElem = createAutocompleteOutput( item );
-		      	return itemElem.appendTo( ul );
+		      	return $( "<li>" + item.label + "</li>" ).appendTo( ul );
 	      	} else{
 	      		return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo( ul );
 	      	}
@@ -312,21 +331,23 @@
   		}
   		
   		<#-- check against exisiting publication on PALM -->
+		<#--
 		$( "#title" ).on( "blur", function( e ){
 			$( "#similar-publication-container" ).hide();
 			checkForSimilarPublication( $( this ).val() );
 		});
-  		
+  		-->
+		<#--
   		function checkForSimilarPublication( targetTitle ){
-  			<#-- clean non alpha numeric from title -->
+  			// clean non alpha numeric from title 
 			var cleanTitle = targetTitle.replace(/[^\w\s]/gi, '');
 			var jqXHR =	$.getJSON( "<@spring.url '/publication/similar' />?title=" + cleanTitle, function( data ){
 				if( data.totalCount > 0){
-					<#-- unhide container -->
+					// unhide container 
 					$( "#similar-publication-container" ).slideDown( "slow" );
-				  	var publicationListContainer = $( "#addPublication" ).find( ".content-list:first" );
+				  	var publicationListContainer = $( "#editPublication" ).find( ".content-list:first" );
 				  	publicationListContainer.html( "" );
-					<#-- build the publication table -->
+					// build the publication table
 					$.each( data.publications, function( index, itemPublication ){
 
 						var publicationItem = 
@@ -334,11 +355,11 @@
 							.addClass( "publication width-full" )
 							.attr({ "data-id": itemPublication.id });
 							
-						<#-- publication menu -->
+						// publication menu
 						var pubNav = $( '<div/>' )
 							.attr({'class':'nav'});
 			
-						<#-- publication icon -->
+						// publication icon 
 						var pubIcon = $('<i/>');
 						if( typeof itemPublication.type !== "undefined" ){
 							if( itemPublication.type == "Conference" )
@@ -355,15 +376,15 @@
 						
 						publicationItem.append( pubNav );
 
-						<#-- publication detail -->
+						// publication detail 
 						var pubDetail = $('<div/>').addClass( "detail default-cursor width-auto" );
 						
 						
 						
-						<#-- title -->
+						// title 
 						var pubTitle = $('<div/>').addClass( "title" ).html( itemPublication.title );
 
-						<#--author-->
+						// author
 						var pubAuthor = $('<div/>').addClass( "author" );
 						$.each( itemPublication.authors , function( index, itemAuthor ){
 							if( index > 0)
@@ -371,26 +392,26 @@
 							pubAuthor.append( itemAuthor.name );
 						});
 
-						<#-- append detail -->
+						// append detail 
 						pubDetail.append( pubTitle );
 						pubDetail.append( pubAuthor );
 						
-						<#-- publicationDetailOption -->
+						// publicationDetailOption 
 						var pubDetailOption = $('<div/>').addClass( "option" );
-						<#-- fill pub detail option -->
+						// fill pub detail option 
 						var circleAddButton = $('<button/>')
 							.addClass( "btn btn-success width130px btn-xs pull-right" )
 							.html( "Use this publication" )
 							.on( "click", function( e ){
 								e.preventDefault();
-								$.PALM.circle.addPublication( itemPublication.id, e.target );
+								$.PALM.circle.editPublication( itemPublication.id, e.target );
 							});
 						
 						pubDetailOption.append( circleAddButton );
 						
 						pubDetail.append( pubDetailOption );
 
-						<#-- append to item -->
+						// append to item 
 						publicationItem.append( pubDetail );
 						
 						publicationListContainer.append( publicationItem );
@@ -402,7 +423,7 @@
 				//}
 			});
   		}
-  		
+  		-->
   		<#-- author -->
 		$('#authors-tag input')
   		.on('keyup',function( e ){
