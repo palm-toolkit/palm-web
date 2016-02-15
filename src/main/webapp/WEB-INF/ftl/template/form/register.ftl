@@ -12,7 +12,7 @@
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="text" name="username" id="email"  class="form-control" placeholder="Email"/>
+        <input type="text" name="username" id="username" class="form-control" placeholder="Email"/>
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
@@ -52,22 +52,76 @@
 
 <script>
   $(function () {
+  		<#-- activate input mask-->
+		// validate signup form on keyup and submit
+		$("#register-form").validate({
+			rules: {
+				name: "required",
+				username: {
+					required: true,
+					email: true,
+					remote:{
+						url:"<@spring.url '/userapi/isUsernameNotExist' />",
+						type:"get",
+						data: {
+				          	username: function() {
+				            	return $( "#username" ).val();
+				          	}
+				        }
+					}
+				},
+				password: {
+					required: true,
+					minlength: 3
+				},
+				repassword: {
+					required: true,
+					minlength: 3,
+					equalTo: "#password"
+				}
+			},
+			messages: {
+				name: "Please enter your name",
+				username: {
+					required: "Please provide an email",
+					email: "Please enter a valid email address",
+					remote: "Email is already registered"
+				},
+				password: {
+					required: "Please provide a password",
+					minlength: "Your password must be at least 3 characters long"
+				},
+				repassword: {
+					required: "Please provide a password",
+					minlength: "Your password must be at least 3 characters long",
+					equalTo: "Please enter the same password as above"
+				}
+			}, submitHandler: function(form) {
+				<#-- send via ajax -->
+				$.post( $("#register-form").attr( "action" ), $("#register-form").serialize(), function( data ){
+					<#-- todo if error -->
+	
+					<#-- if status ok (regitered successfully )-->
+					if( data.status == "ok" ){
+						<#-- reload main page with target author -->
+						$.PALM.popUpAjaxModal.load( 'login?form=true&info=success-register' )
+					}
+				});
+			}
+		});
+
   		<#-- jquery post on button click -->
-		$( "#submit" ).click( function( e ){
-			e.preventDefault();
+		//$( "#submit" ).click( function( e ){
+			//e.preventDefault();
 			<#-- todo check input valid -->
 
-			<#-- send via ajax -->
-			$.post( $("#register-form").attr( "action" ), $("#register-form").serialize(), function( data ){
-				<#-- todo if error -->
-
-				<#-- if status ok (regitered successfully )-->
-				if( data.status == "ok" ){
-					<#-- reload main page with target author -->
-					$.PALM.popUpAjaxModal.load( 'login?form=true&info=success-register' )
-				}
-			});
-		});
+			
+		//});
+				
+		//function validateEmail(email) {
+		//    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		//    return re.test(email);
+		//}
 		
   	<#--
     $('input').iCheck({

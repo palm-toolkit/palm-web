@@ -5,7 +5,7 @@
   </div><#-- /.login-logo -->
   <div class="login-box-body">
     <#--<p class="login-box-msg">Sign in to start your session</p>-->
-    <form name="f" action="<@spring.url '/login' />" method="POST">
+    <form id="login-form" name="f" action="<@spring.url '/login' />" method="POST">
 		
 	<#if auth?? && auth=="fail">
 			<div class="alert alert-danger alert-dismissable">
@@ -23,11 +23,11 @@
 	</#if>
 
       <div class="form-group has-feedback">
-        <input type="text" name="j_username" class="form-control" placeholder="Email"/>
+        <input type="text" name="j_username" id="j_username" class="form-control" placeholder="Email"/>
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" name="j_password" class="form-control" placeholder="Password"/>
+        <input type="password" name="j_password" id="j_password" class="form-control" placeholder="Password"/>
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="row">
@@ -64,10 +64,30 @@
 	    
 <script>
   $(function () {
-    $('input').iCheck({
-      checkboxClass: 'icheckbox_square-blue',
-      radioClass: 'iradio_square-blue',
-      increaseArea: '20%' // optional
-    });
+	$('input').iCheck({
+      	checkboxClass: 'icheckbox_square-blue',
+      	radioClass: 'iradio_square-blue',
+      	increaseArea: '20%' // optional
+	});
+    
+      $("#login-form").validate({
+			rules: {
+				j_username: {
+					required: true,
+					email: true
+				},
+				j_password: {
+					required: true
+				}
+			},
+			messages: {
+				j_username: {
+					required: "Please provide an email",
+					email: "Please enter your valid email address"
+				},
+				j_password: {
+					required: "Please provide your password"				}
+			}
+		});
   });
 </script>

@@ -64,14 +64,6 @@
 		}
 	}
 	
-	function inIframe () {
-	    try {
-	        return window.self !== window.top;
-	    } catch (e) {
-	        return true;
-	    }
-	}
-	
 	$(function(){
 		<#-- jquery post on button click -->
 		$( "#submit" ).click( function(){
