@@ -314,8 +314,19 @@
 						if( typeof item.date !== 'undefined' && typeof item.cited !== 'undefined' && item.cited > 0)
 							timelineTime.append( "<br>");
 							
-						if( typeof item.cited !== 'undefined' && item.cited > 0)
-							timelineTime.append( "Cited by: " + item.cited);
+						if( typeof item.cited !== 'undefined' && item.cited > 0){
+							var citedByNumber = "Cited by: " + item.cited;
+							if( typeof item.citedUrl !== "undefined" )
+								citedByNumber = $( '<span/>' )
+												.append( "Cited by: " )
+												.append(
+													$( '<span/>' )
+													.addClass( "urlstyle" )
+													.html( item.cited )
+													.click( function( event ){ event.preventDefault();window.open( item.citedUrl, "link to citation list" ,'scrollbars=yes,width=650,height=500')})
+												)
+							timelineTime.append( citedByNumber );
+						}
 						
 						timelineItem.append( timelineTime );
 						
