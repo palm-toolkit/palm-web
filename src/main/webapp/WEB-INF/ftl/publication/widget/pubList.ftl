@@ -184,6 +184,8 @@
 									if( typeof itemPublication.type !== "undefined" ){
 										if( itemPublication.type == "Conference" )
 											pubIcon.addClass( "fa fa-file-text-o bg-blue" ).attr({ "title":"Conference" });
+										else if( itemPublication.type == "Workshop" )
+											pubIcon.addClass( "fa fa-file-text-o bg-blue-dark" ).attr({ "title":"Workshop" });
 										else if( itemPublication.type == "Journal" )
 											pubIcon.addClass( "fa fa-files-o bg-red" ).attr({ "title":"Journal" });
 										else if( itemPublication.type == "Book" )
