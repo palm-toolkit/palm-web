@@ -70,7 +70,7 @@ $.ui.fancytree._FancytreeNodeClass.prototype.updateCounters = function(){
 	var node = this,
 		$badge = $("span.fancytree-childcounter", node.span),
 		extOpts = node.tree.options.childcounter,
-		count = node.countChildren(extOpts.deep);
+		count = node.countChildren(extOpts.deep, extOpts.onlyCountLeafChild);
 
 	node.data.childCounter = count;
 	if( (count || !extOpts.hideZeros) && (!node.isExpanded() || !extOpts.hideExpanded) ) {
@@ -129,6 +129,7 @@ $.ui.fancytree.registerExtension({
 
 	options: {
 		deep: true,
+		onlyCountLeafChild:false,
 		hideZeros: true,
 		hideExpanded: false
 	},
@@ -183,7 +184,7 @@ $.ui.fancytree.registerExtension({
 	nodeRenderTitle: function(ctx, title) {
 		var node = ctx.node,
 			extOpts = ctx.options.childcounter,
-			count = (node.data.childCounter == null) ? node.countChildren(extOpts.deep) : +node.data.childCounter;
+			count = (node.data.childCounter == null) ? node.countChildren(extOpts.deep, extOpts.onlyCountLeafChild) : +node.data.childCounter;
 // Let the base implementation render the title
 		this._superApply(arguments);
 // Append a counter badge

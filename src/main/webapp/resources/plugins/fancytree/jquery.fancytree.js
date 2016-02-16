@@ -567,7 +567,9 @@ FancytreeNode.prototype = /** @lends FancytreeNode# */{
 	 * @param {boolean} [deep=true] pass 'false' to only count direct children
 	 * @returns {int} number of child nodes
 	 */
-	countChildren: function(deep) {
+	countChildren: function(deep, onlyCountLeafChild) {
+		if( typeof onlyCountLeafChild === "undefined" )
+			onlyCountLeafChild = false;
 		var cl = this.children, i, l, n;
 		if( !cl ){
 			return 0;
@@ -575,7 +577,13 @@ FancytreeNode.prototype = /** @lends FancytreeNode# */{
 		n = cl.length;
 		if(deep !== false){
 			for(i=0, l=n; i<l; i++){
-				n += cl[i].countChildren();
+				if( onlyCountLeafChild )
+					if( cl[i].hasChildren() )
+						n += cl[i].countChildren() - 1;
+					else
+						n += cl[i].countChildren();
+				else
+					n += cl[i].countChildren();
 			}
 		}
 		return n;
