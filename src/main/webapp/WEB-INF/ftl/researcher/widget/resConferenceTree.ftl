@@ -43,7 +43,8 @@
 					extensions: ["childcounter"],
 				  	source: data.evenTree,
 					childcounter: {
-				        deep: false,
+				        deep: true,
+				        onlyCountLeafChild:true,
 				        hideZeros: true,
 				        hideExpanded: true
 				    },activate: function(event, data){ // allow re-loads
