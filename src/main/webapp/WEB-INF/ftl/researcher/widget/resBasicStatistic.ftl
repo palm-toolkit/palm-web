@@ -252,8 +252,21 @@ nv.addGraph(function() {
 							.append( onAcademicNetwork);
 						
 					}
-
-								
+			
+			<#-- syncronize number of publication -->
+			var updatedPublicationNumber; 
+			if( typeof data.author.publicationsNumber != 'undefined'){
+				var citedBy = 0;
+				if( typeof data.author.citedBy !== "undefined" )
+					citedBy = data.author.citedBy;
+				
+				updatedPublicationNumber = "Publications: " + data.author.publicationsNumber + " || Cited by: " + citedBy;
+			}
+							
+			var researcherListWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_list' ); 
+			researcherListWidget.element.find( "#" + data.author.id ).find( ".paper" ).html( updatedPublicationNumber );
+					
+													
 						}
 		};
 		

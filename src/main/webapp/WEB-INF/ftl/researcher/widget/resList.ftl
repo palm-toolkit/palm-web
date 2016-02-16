@@ -410,6 +410,24 @@
 			<#-- remove  pop up progress log -->
 			$.PALM.popUpMessage.remove( uniquePid );
 			
+			<#-- update number of publication and citation if necessary -->
+			<#-- somehow the number of publication is not really correct -->
+			<#-- moving this code to author basic information -->
+<#--
+			if( data.fetchPerformed === "yes" ){
+					var updatedPublicationNumber; 
+					if( typeof data.author.publicationsNumber != 'undefined'){
+						var citedBy = 0;
+						if( typeof data.author.citedBy !== "undefined" )
+							citedBy = data.author.citedBy;
+						
+						updatedPublicationNumber = "Publications: " + data.author.publicationsNumber + " || Cited by: " + citedBy;
+					}
+									
+					var researcherListWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_list' ); 
+					researcherListWidget.element.find( "#" + authorId ).find( ".paper" ).html( updatedPublicationNumber );
+			}
+-->			
 			<#-- widget researcher_interest_cloud and researcher_interest_evolution can not run simultaneusly together,
 			therefore put it in order -->
 			var isInterestCloudWidgetExecuted = false;
