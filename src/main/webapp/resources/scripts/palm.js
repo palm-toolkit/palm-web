@@ -1162,6 +1162,23 @@ $.PALM.popUpAjaxModal = {
 	}
 }
 
+/**
+ * Generate callout information box
+ */
+$.PALM.callout = {
+	generate: function( containerElement, type, title, content ){
+		var calloutClass = "callout";
+		if( type == "warning" )
+			calloutClass += " callout-warning";
+		
+		var callOutBlock = $( '<div/>' ).addClass( calloutClass )
+							.append( $( '<h4/>' ).html( title ) )
+							.append( $( '<p/>' ).html( content ) );
+		
+		containerElement.append( callOutBlock );
+		
+	}
+}
 
 /**
  * Validation plugin or PALM input,
@@ -1170,6 +1187,7 @@ $.PALM.popUpAjaxModal = {
  * data-validationDuplicationUrl="/user/isUsernameExist"
  * Note: checking based on order
  */
+/* Validation plugin is subtituted by jquery.validation*/
 //$.PALM.validation = {
 //	activate: function ( containerSelector ){
 //		// find any input or textarea on the container
