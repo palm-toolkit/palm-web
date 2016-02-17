@@ -25,12 +25,16 @@
 			onRefreshStart: function( widgetElem ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
+				var mainContainer = $("#widget-${wUniqueName} .box-content");
+				mainContainer.html( "" ); 
 				if( data.status != "ok"){
-					alert( "error on publication list" );
+					<#--alert( "error on publication list" );-->
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Conference/Journal contain no publication" );
 					return false;
 				}
 				if ( typeof data.publications === 'undefined') {
-					alert( "error, no publication found" );
+					<#--alert( "error, no publication found" );-->
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Conference/Journal contain no publication" );
 					return false;
 				}
 
@@ -236,7 +240,7 @@
 				});
 
 				<#-- append everything to  -->
-				$("#widget-${wUniqueName} .box-content").html( timeLineContainer );
+				mainContainer.html( timeLineContainer );
 				
 				<#-- changed scroll position -->
 				if( typeof data.publicationId !== "undefined" ){
