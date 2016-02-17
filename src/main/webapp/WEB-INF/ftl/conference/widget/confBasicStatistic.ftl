@@ -1,6 +1,7 @@
-<div id="boxbody${wUniqueName}" class="box-body" style="overflow:hidden">
-	<form role="form" action="<@spring.url '/venue' />" method="post">
-	</form>
+<@security.authorize access="isAuthenticated()">
+	<#assign loggedUser = securityService.getUser() >
+</@security.authorize>
+<div id="boxbody${wUniqueName}" class="box-body no-margin no-padding" style="overflow:hidden">
 </div>
 
 <div class="box-footer">
@@ -25,13 +26,54 @@
 			onRefreshStart: function( widgetElem ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
-				var targetContainer = $( widgetElem ).find( "form:first" );
+				var targetContainer = $( widgetElem ).find( "#boxbody${wUniqueName}");
 
 				<#--remove previous content -->
 				targetContainer.html( "" );
 				
 				<#-- check data status -->
-				
+				var genaralBoxBody = $( '<div/>' )
+										.attr({'class':'box-body'})
+
+				<#-- create generalBox -->
+				var generalBox = $( '<div/>' )
+									.attr({'class':'col-md-12'})
+									.append(
+										$( '<div/>' )
+										.attr({'class':'box box-default box-solid no-border'})
+										.append(
+											$( '<div/>' )
+											.attr({'class':'box-header'})
+											.append(
+												$( '<h3/>' )
+												.attr({'class':'box-title'})
+												.html( "General" )
+											)
+											.append(
+												$( '<div/>' )
+												.attr({'class':'box-tools pull-right'})
+												<#if loggedUser??>
+												.append(
+													$( '<div/>' )
+													.attr({'class':'btn btn-default btn-xs','data-url': '<@spring.url '/venue/eventGroup/edit' />?id=' + data.eventGroup.id, 'title':'Update ' + data.eventGroup.name})
+													.css({'background-color':'#fff','margin-top':'5px'})
+													.append(
+														$( '<i/>' )
+														.attr({'class':'fa fa-edit'})
+													)
+													.append( "Update" )
+													.on( "click", function(e){
+														e.preventDefault;
+														$.PALM.popUpIframe.create( $(this).data("url") , {popUpHeight:"456px"}, $(this).attr("title") );
+													})
+												)
+												</#if>
+											)
+										)
+										.append(
+											genaralBoxBody
+										)
+									)
 				
 				<#-- find active option -->
 				var currentQueryArray = this.queryString.split( "&" );
@@ -46,7 +88,7 @@
 				<#-- Event Group Basic Statistic -->
 				if( informationType == "eventGroup" ){
 					if( typeof data.eventGroup !== "undefined" ){
-						targetContainer.append(
+						genaralBoxBody.append(
 							$( '<dt/>' ).addClass("capitalize").html( data.eventGroup.type )
 						)
 						.append(
@@ -54,7 +96,7 @@
 						);
 						
 						if( typeof data.eventGroup.abbreviation !== "undefined" ){
-							targetContainer.append(
+							genaralBoxBody.append(
 								$( '<dt/>' ).html( "Abbreviation" )
 							)
 							.append(
@@ -63,7 +105,7 @@
 						}
 						
 						if( typeof data.eventGroup.description !== "undefined" ){
-							targetContainer.append(
+							genaralBoxBody.append(
 								$( '<dt/>' ).html( "Description" )
 							)
 							.append(
@@ -84,19 +126,20 @@
 								);
 							});
 							
-							targetContainer
-								.append( $( '<dt/>' ).html( "Main <span class='capitalize'>" + data.eventGroup.type + "</span> on Academic Networks:" ) )
+							genaralBoxBody
+								.append( $( '<dt/>' ).html( "On Academic Networks" ) )
 								.append( onAcademicNetwork);
 							
 						}
 						
+						targetContainer.append( generalBox );
 					}
 				}
 				<#-- Event Basic Statistic -->
 				else{
 					<#-- event group -->
 					if( typeof data.eventGroup !== "undefined" ){
-						targetContainer.append(
+						genaralBoxBody.append(
 							$( '<dt/>' ).addClass("capitalize").html( data.eventGroup.type )
 						)
 						.append(
@@ -104,7 +147,7 @@
 						);
 						
 						if( typeof data.eventGroup.abbreviation !== "undefined" ){
-							targetContainer.append(
+							genaralBoxBody.append(
 								$( '<dt/>' ).html( "Abbreviation" )
 							)
 							.append(
@@ -113,7 +156,7 @@
 						}
 						
 						if( typeof data.eventGroup.description !== "undefined" ){
-							targetContainer.append(
+							genaralBoxBody.append(
 								$( '<dt/>' ).html( "Description" )
 							)
 							.append(
@@ -134,20 +177,66 @@
 								);
 							});
 							
-							targetContainer
-								.append( $( '<dt/>' ).html( "Main <span class='capitalize'>" + data.eventGroup.type + "</span> on Academic Networks:" ) )
+							genaralBoxBody
+								.append( $( '<dt/>' ).html( "On Academic Networks" ) )
 								.append( onAcademicNetwork);
 							
 						}
 						
+						targetContainer.append( generalBox );
+						
 					}
 					
 					<#-- event -->
-					if( typeof data.event !== "undefined" ){
+					if( typeof data.event !== "undefined"){
 					
-						
-						if( typeof data.event.name !== "undefined" ){
-							targetContainer
+						var boxHeaderTitle = data.eventGroup.name;
+						if( typeof data.eventGroup.abbreviation !== "undefined" )
+							boxHeaderTitle = data.eventGroup.abbreviation + " " + data.event.year;
+							
+						<#-- check data status -->
+						var specificBoxBody = $( '<div/>' )
+												.attr({'class':'box-body'})
+		
+						<#-- create generalBox -->
+						var specificBox = $( '<div/>' )
+											.attr({'class':'col-md-12'})
+											.append(
+												$( '<div/>' )
+												.attr({'class':'box box-default box-solid no-border'})
+												.append(
+													$( '<div/>' )
+													.attr({'class':'box-header'})
+													.append(
+														$( '<h3/>' )
+														.attr({'class':'box-title'})
+														.html( boxHeaderTitle )
+													)
+													<#if loggedUser??>
+													<#--
+													.append(
+														$( '<div/>' )
+														.attr({'class':'box-tools pull-right'})
+														.append(
+															$( '<div/>' )
+															.attr({'class':'btn btn-default btn-xs','data-url':'collapse'})
+															.css({'background-color':'#fff','margin-top':'5px'})
+															.append(
+																$( '<i/>' )
+																.attr({'class':'fa fa-edit'})
+															)
+															.append( "Update" )
+														)
+													)
+													-->
+													</#if>
+												)
+												.append(
+													specificBoxBody
+												)
+											)
+						if( typeof data.event.name !== "undefined" && data.eventGroup.type == "Conference" ){
+							specificBoxBody
 							.append(
 								$( '<dt/>' ).html( "Editorship" )
 							)
@@ -157,7 +246,7 @@
 						}
 						
 						if( typeof data.event.date !== "undefined" ){
-							targetContainer.append(
+							specificBoxBody.append(
 								$( '<dt/>' ).html( "Date" )
 							)
 							.append(
@@ -166,7 +255,7 @@
 						}
 						
 						if( typeof data.event.location !== "undefined" ){
-							targetContainer.append(
+							specificBoxBody.append(
 								$( '<dt/>' ).html( "Location" )
 							)
 							.append(
@@ -175,7 +264,7 @@
 						}
 						
 						if( typeof data.event.volume !== "undefined" ){
-							targetContainer.append(
+							specificBoxBody.append(
 								$( '<dt/>' ).html( "Volume" )
 							)
 							.append(
@@ -184,7 +273,7 @@
 						}
 						
 						if( typeof data.event.numberOfPaper !== "undefined" ){
-							targetContainer.append(
+							specificBoxBody.append(
 								$( '<dt/>' ).html( "Number of Publications" )
 							)
 							.append(
@@ -193,7 +282,7 @@
 						}
 						
 						if( typeof data.event.numberOfParticipant !== "undefined" ){
-							targetContainer.append(
+							specificBoxBody.append(
 								$( '<dt/>' ).html( "Number of Participants" )
 							)
 							.append(
@@ -214,12 +303,12 @@
 								);
 							});
 							
-							targetContainer
-								.append( $( '<dt/>' ).html( "<span class='capitalize'>" + data.eventGroup.type + "</span> in " + data.event.year + " on Academic Networks:" ) )
+							specificBoxBody
+								.append( $( '<dt/>' ).html( "On Academic Networks" ) )
 								.append( onAcademicNetwork);
-							
 						}
 						
+						targetContainer.append( specificBox );
 					}<#-- end of event details -->
 						
 				}

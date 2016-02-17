@@ -1,4 +1,6 @@
 <#macro widget wId="" wUniqueName="" wTitle="" wType="" wGroup="" wSource="BLANK" wWidth="SMALL" wParams...>
+	<#-- security -->
+	<#assign security=JspTaglibs["http://www.springframework.org/security/tags"] />
 	<#-- local variables -->
 	<#-- widget container class -->
 	<#local wClassContainer = "">

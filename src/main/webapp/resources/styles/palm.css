@@ -265,6 +265,22 @@ iframe.externalContent{
 .urlstyle:hover{
 	color:#337ab7;
 }
+.no-margin{margin:0}
+.no-padding{padding:0}
+.no-border{border:none}
+.no-max-width{max-width:none !important}
+.info-box{
+	background-color:#fff;
+	overflow:hidden !important;
+	color:#555;
+	height:auto !important;
+}
+.width-auto{
+	width:auto !important;
+}
+.width-full{
+	width:100% !important;
+}
 
 .table-container{
 	padding:0 6px 0 0;
@@ -516,9 +532,38 @@ div.d3-tooltip {
     padding: 0;
 }
 
+.content-list>.author>.nav>.btn{
+	display:none;
+}
+.content-list>.author.active>.nav>.btn{
+	display:block;
+}
+
+.content-list>.publication>.nav>.fa-edit{
+	display:none;
+	cursor:auto;
+}
+.content-list>.publication.active>.nav>.fa-edit{
+	display:block;
+	cursor:pointer;
+}
+
+.content-list>.eventgroup-item>.eventgroup>.nav>.fa-edit{
+	display:none;
+	cursor:auto;
+}
+.content-list>.eventgroup-item>.eventgroup.active>.nav>.fa-edit{
+	display:block;
+	cursor:pointer;
+}
+
 .eventyear-list>.eventyear-item>.eventyear>.nav, .eventvolume-list>.eventvolume>.nav{
 	min-height:36px;
 	height:100%
+}
+
+.coauthor-list>.author>.nav.medium{
+	width:65px !important;
 }
 
 .content-list>.author>.nav>.photo, .palm_atr_photo{
@@ -538,6 +583,9 @@ div.d3-tooltip {
 	overflow:hidden;
 	color:#73A2F8;
 }
+.coauthor-list>.author>.nav>.photo.medium{
+	width:60px !important;
+}
 .coauthor-list>.author>.nav>.photo.round{
 	border-radius: 50%;
     height: 52px;
@@ -551,6 +599,9 @@ div.d3-tooltip {
 .coauthor-list>.author>.nav>.photo>img{
 	width: 52px;
 	position:relative;
+}
+.coauthor-list>.author>.nav>.photo.medium>img{
+	width:60px !important;
 }
 
 .content-list>.author>.nav,.coauthor-list>.author>.nav{
@@ -769,7 +820,8 @@ div.d3-tooltip {
   	border:0;
   	margin:0;
   	padding:5px 12px;
-  	width:260px;;
+  	width:260px;
+  	float:left;
 }
 .palm-tagsinput input:focus{
   	border: none;
@@ -910,4 +962,20 @@ div.d3-tooltip {
 /* svg */
 #pubBasicSvg svg {
   height: 180px;
+}
+
+/* validation */
+input.error {
+    border: 1px dotted red;
+}
+
+label.error {
+    margin-left: 10px;
+    width: auto;
+    display: inline;
+}
+
+form.cmxform label.error, label.error {
+    color: red;
+    font-style: italic;
 }

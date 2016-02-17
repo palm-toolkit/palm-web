@@ -233,8 +233,8 @@
 					<#-- tab header -->
 					var tabHeaderText = capitalizeFirstLetter( source_item.source );
 					var tabHeaderTextShort = tabHeaderText;
-					if( tabHeaderText.length > 6 )
-						tabHeaderTextShort = tabHeaderText.substring(0,6);
+					//if( tabHeaderText.length === "googlescholar" )
+						//tabHeaderTextShort = tabHeaderText.substring(0,6);
 
 					var tabHeader = $( '<li/>' )
 						.append(
@@ -314,8 +314,10 @@
 					<#-- content extractedContent -->
 					var contentExtractedResult = $( '<div/>' )
 													.attr({ "id" : "result" + tabHeaderTextShort })
-													.css({ "width" : "100%" })
-													.html( 'Please press "Extract ' + htmlpdf_item.type + '" button to see the extracted result here'  );
+													.css({ "width" : "100%" });
+													
+					if( data.publication.type !== "BOOK" )
+						contentExtractedResult.html( 'Please press "Extract ' + htmlpdf_item.type + '" button to see the extracted result here'  );
 
 					<#-- content navigation -->
 					var contentNavigation = 
@@ -323,18 +325,21 @@
 					.css({ "height":"40px"})
 					.append(
 						$('<button/>')
-						.addClass( "btn btn-block btn-default btn-sm pull-left" )
+						.addClass( "btn btn-default btn-sm pull-left" )
 						.css({ "width":"40%"})
 						.attr({ "title":  "open " + tabHeaderText} )
 						.html( "Open " + htmlpdf_item.type + " in new small window" )
 						.click( function( event ){ event.preventDefault();window.open( htmlpdf_item.url , tabHeaderText ,'scrollbars=yes,width=650,height=500')})
-					).append(
-						$('<button/>')
-						.addClass( "btn btn-block btn-default btn-sm pull-right" )
-						.css({ "width":"40%"})
-						.html( "Extract " + htmlpdf_item.type )
-						.click( function( event ){ event.preventDefault();extractHtmlOrPublication( htmlpdf_item.url , htmlpdf_item.type , contentExtractedResult );})
-					);
+					)
+					
+					if( data.publication.type !== "BOOK" )
+						contentNavigation.append(
+							$('<button/>')
+							.addClass( "btn btn-default btn-sm pull-right" )
+							.css({ "width":"40%"})
+							.html( "Extract " + htmlpdf_item.type )
+							.click( function( event ){ event.preventDefault();extractHtmlOrPublication( htmlpdf_item.url , htmlpdf_item.type , contentExtractedResult );})
+						);
 		
 					<#-- tab content -->
 					var tabContent = $( '<div/>' )

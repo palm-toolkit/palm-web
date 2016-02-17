@@ -21,6 +21,14 @@
 			onRefreshStart: function( widgetElem ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
+			
+			
+				<#-- check for interest cloud widget -->
+				var interestCloudWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_interest_cloud' ); 
+				if( typeof interestCloudWidget !== "undefined" && !interestCloudWidget.executed){
+					$.PALM.boxWidget.refresh( interestCloudWidget.element , interestCloudWidget.options );
+				}
+				
 
 var targetContainer = $( widgetElem ).find( "#boxbody${wUniqueName}" );
 
@@ -43,7 +51,7 @@ var algorithmProfileDropDown =
 $.each( data.interest, function(index, dataAlgorithmProfile){
 	algorithmProfileDropDown.append( $( '<option/>' )
 								.attr({ "value" : index , "title" : dataAlgorithmProfile.description })
-								.html( dataAlgorithmProfile.profile )
+								.html( (dataAlgorithmProfile.profile).replace( /\?/g,"∩") )
 							);
 });
 
@@ -229,7 +237,7 @@ function visualizeInterest( yearIndex , yearType ){
 		previousTerm = d.key;
 	});
 
-	visualizeStreamChart( streamChartDataComplete );
+	visualizeStreamChart( streamChartDataComplete , data.author);
 }
 
 function compareTermWord( a, b){
@@ -240,7 +248,7 @@ function compareTermWord( a, b){
   	return 0;
 }
 					
-function visualizeStreamChart( data ){
+function visualizeStreamChart( data, author ){
 
 var fill = d3.scale.category20();
 
@@ -259,8 +267,8 @@ var tooltip = d3.select("#widget-${wUniqueName} .box-body")
     .style("left", "80px")
     .style("font-weight", "bold");
 	
-margin = {top: 20, right: 20, bottom: 20, left: 30};
-    width = $("#widget-${wUniqueName} .box-body").width() - margin.left - margin.right - 30;
+margin = {top: 20, right: 20, bottom: 20, left: 10};
+    width = $("#widget-${wUniqueName} .box-body").width() - margin.left - margin.right;
     height = 250 - margin.top - margin.bottom;
 
     colorrange = ["#B30000", "#E34A33", "#FC8D59", "#FDBB84", "#FDD49E", "#FEF0D9"];
@@ -370,20 +378,32 @@ margin = {top: 20, right: 20, bottom: 20, left: 30};
       
     })
     .on("mouseout", function(d, i) {
-     svg.selectAll(".layer")
-      .transition()
-      .duration(250)
-      .attr("opacity", "1");
-      d3.select(this)
-      .classed("hover", false)
-      .attr("stroke-width", "0px"), tooltip.html( "<p>" + d.key + "</p>" ).style("visibility", "hidden");
-  })
-
+     	svg.selectAll(".layer")
+      		.transition()
+      		.duration(250)
+      		.attr("opacity", "1");
+      	d3.select(this)
+      		.classed("hover", false)
+      	.attr("stroke-width", "0px"), tooltip.html( "<p>" + d.key + "</p>" ).style("visibility", "hidden");
+  	})
+	.on("click", function (d, i){
+         	var publicationTimeLineWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_publication' ); 
+			if( typeof publicationTimeLineWidget !== "undefined" ){
+				publicationTimeLineWidget.options.queryString = "?id=" + author.id + "&year=all&query=" + d.key;
+			<#-- add overlay -->
+				publicationTimeLineWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+				$.PALM.boxWidget.refresh( publicationTimeLineWidget.element , publicationTimeLineWidget.options );
+			} 
+			else
+				alert( "Publication Timeline widget missing, please enable it from Researcher Widget Management" );
+     });
+      
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
 
+<#--
     svg.append("g")
           .attr("class", "y axis")
           .attr("transform", "translate(" + width + ", 0)")
@@ -393,7 +413,7 @@ margin = {top: 20, right: 20, bottom: 20, left: 30};
           .attr("class", "y axis")
           .attr("transform", "translate(30, 0)")
           .call(yAxis.orient("left"));
-
+-->
 
     svg.selectAll(".layer")
             .attr("opacity", 1)
@@ -405,10 +425,9 @@ margin = {top: 20, right: 20, bottom: 20, left: 30};
                         })
                 });
 
-	/*
 	<#-- remove previous svg if exist -->
+<#--
 	$("#widget-${wUniqueName} .box-body").find( "#streamChart").remove();
-	<#-- the visualization -->
 		var format = d3.time.format("%Y");
 		
 		var margin = {top: 20, right: 25, bottom: 60, left: 25},
@@ -535,7 +554,7 @@ margin = {top: 20, right: 20, bottom: 20, left: 30};
 		      .attr("class", "y axis")
 		      .call(yAxis)
 		      .data(layers);
-*/
+-->
 	}
 							
 			} <#-- end on refresh done -->

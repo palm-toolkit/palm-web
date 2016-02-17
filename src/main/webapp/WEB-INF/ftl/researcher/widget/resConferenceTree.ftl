@@ -8,7 +8,7 @@
 
 		<#-- add slim scroll -->
        $("#boxbody-${wUniqueName}>.tree-container").slimscroll({
-			height: "400px",
+			height: "300px",
 	        size: "6px",
 			allowPageScroll: true,
    			touchScrollStep: 50//,
@@ -43,10 +43,17 @@
 					extensions: ["childcounter"],
 				  	source: data.evenTree,
 					childcounter: {
-				        deep: false,
+				        deep: true,
+				        onlyCountLeafChild:true,
 				        hideZeros: true,
 				        hideExpanded: true
-				    },
+				    },activate: function(event, data){ // allow re-loads
+			            var node = data.node,
+			                orgEvent = data.originalEvent;
+			            if( node.data.href !== ""){
+			                window.location = "<@spring.url '/' />" + node.data.href;
+			            }
+			        }
 				});			
 							
 							

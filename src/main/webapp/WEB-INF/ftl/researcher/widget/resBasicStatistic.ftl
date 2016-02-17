@@ -1,3 +1,6 @@
+<@security.authorize access="isAuthenticated()">
+	<#assign loggedUser = securityService.getUser() >
+</@security.authorize>
 <div id="boxbody-${wUniqueName}" class="box-body no-padding">
   	<div class="coauthor-list">
     </div>
@@ -40,12 +43,11 @@
 
 							var researcherDiv = 
 							$( '<div/>' )
-								.addClass( 'author static' )
-								.attr({ 'id' : data.author.id });
+								.addClass( 'author static' );
 								
 							var researcherNav =
 							$( '<div/>' )
-								.addClass( 'nav' );
+								.addClass( 'nav medium' );
 								
 							var researcherDetail =
 							$( '<div/>' )
@@ -98,6 +100,40 @@
 									)
 								);
 								
+							<#-- email -->
+							if( typeof data.author.email != 'undefined')
+								researcherDetail.append(
+									$( '<div/>' )
+									.addClass( 'affiliation' )
+									.css({ "clear" : "both"})
+									.attr({ "title": data.author.name + " email" })
+									.append( 
+										$( '<i/>' )
+										.addClass( 'fa fa-envelope icon font-xs' )
+									).append( 
+										$( '<span/>' )
+										.addClass( 'info font-xs' )
+										.html( data.author.email )
+									)
+								);
+								
+							<#-- homepage -->
+							if( typeof data.author.homepage != 'undefined')
+								researcherDetail.append(
+									$( '<div/>' )
+									.addClass( 'affiliation urlstyle' )
+									.css({ "clear" : "both"})
+									.attr({ "title": data.author.name + " homepage" })
+									.append( 
+										$( '<i/>' )
+										.addClass( 'fa fa-globe icon font-xs' )
+									).append( 
+										$( '<span/>' )
+										.addClass( 'info font-xs' )
+										.html( data.author.homepage )
+									).click( function( event ){ event.preventDefault();window.open( data.author.homepage, data.author.name + " homepage" ,'scrollbars=yes,width=650,height=500')})
+								);
+								
 							if( typeof data.author.publicationsNumber != 'undefined'){
 									var citedBy = 0;
 									if( typeof data.author.citedBy !== "undefined" )
@@ -114,7 +150,7 @@
 								researcherNav
 									.append(
 									$( '<div/>' )
-										.addClass( 'photo' )
+										.addClass( 'photo medium' )
 										.css({ 'font-size':'14px'})
 										.append(
 											$( '<img/>' )
@@ -125,9 +161,26 @@
 								researcherNav
 								.append(
 									$( '<div/>' )
-									.addClass( 'photo fa fa-user' )
+									.addClass( 'photo medium fa fa-user' )
 								);
 							}
+							<#if loggedUser??>
+							<#-- add edit button -->
+							researcherNav
+								.append(
+									$( '<div/>' )
+									.addClass( 'btn btn-default btn-xs pull-left' )
+									.attr({ "data-url":"<@spring.url '/researcher/edit' />?id=" + data.author.id, "title":"Update " + data.author.name + " Profile"})
+									.append(
+										$( '<i/>' )
+											.addClass( 'fa fa-edit' )
+									).append( "Update" )
+									.on( "click", function(e){
+										e.preventDefault;
+										$.PALM.popUpIframe.create( $(this).data("url") , {popUpHeight:"456px"}, $(this).attr("title") );
+									})
+								);
+							</#if>
 							targetContainer
 								.append( 
 									researcherDiv
@@ -164,7 +217,13 @@ nv.addGraph(function() {
     ;
     
   chart.bars.dispatch.on("elementClick", function(e) {
-    console.log(e);
+    var researcherPublicationWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_publication' ); 
+					
+	researcherPublicationWidget.options.queryString = "?id=" + data.author.id + "&year=" + e.data[2];
+	<#-- add overlay -->
+	researcherPublicationWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+	
+	$.PALM.boxWidget.refresh( researcherPublicationWidget.element , researcherPublicationWidget.options );
   });
 
   nv.utils.windowResize(chart.update);
@@ -193,8 +252,21 @@ nv.addGraph(function() {
 							.append( onAcademicNetwork);
 						
 					}
-
-								
+			
+			<#-- syncronize number of publication -->
+			var updatedPublicationNumber; 
+			if( typeof data.author.publicationsNumber != 'undefined'){
+				var citedBy = 0;
+				if( typeof data.author.citedBy !== "undefined" )
+					citedBy = data.author.citedBy;
+				
+				updatedPublicationNumber = "Publications: " + data.author.publicationsNumber + " || Cited by: " + citedBy;
+			}
+							
+			var researcherListWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_list' ); 
+			researcherListWidget.element.find( "#" + data.author.id ).find( ".paper" ).html( updatedPublicationNumber );
+					
+													
 						}
 		};
 		

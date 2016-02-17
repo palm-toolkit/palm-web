@@ -7,6 +7,12 @@
 	      <input type="text" id="widgetTitle" name="widgetTitle" class="form-control" placeholder="Widget Title">
 	    </div>
 	    
+	    <#-- text input widget unique name -->
+	    <div class="form-group">
+	      <label>Unique Identifier</label>
+	      <input type="text" id="widgetUniqueName" name="widgetUniqueName" class="form-control" placeholder="an_unique_identifier">
+	    </div>
+	    
 	    <#-- select Widget Type -->
 	    <div class="form-group marginTop40Px">
 	      <label>Type</label>

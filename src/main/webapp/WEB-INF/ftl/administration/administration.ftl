@@ -25,7 +25,7 @@
 		$(function(){
 	      $(".content-list, .content-wrapper>.content").slimscroll({
 				height: "100%",
-		        size: "3px",
+		        size: "6px",
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50
 		  });

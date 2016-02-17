@@ -1,3 +1,6 @@
+<@security.authorize access="isAuthenticated()">
+	<#assign loggedUser = securityService.getUser() >
+</@security.authorize>
 <div id="boxbody${wUniqueName}" class="box-body no-padding">
 	<#-- filters -->
 <#--
@@ -134,6 +137,9 @@
 		<#-- button search loading -->
 		$( "#publication_search_button" ).find( "i" ).removeClass( "fa-search" ).addClass( "fa-refresh fa-spin" );
 		
+		<#-- generate unique id for progress log -->
+		var uniquePidResearcherWidget = $.PALM.utility.generateUniqueId();
+		
 		<#-- unique options in each widget -->
 		var options ={
 			source : "<@spring.url '/publication/search' />",
@@ -142,8 +148,13 @@
 			page:0,
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
+				<#-- show pop up progress log -->
+				$.PALM.popUpMessage.create( "loading publications...", { uniqueId:uniquePidResearcherWidget, popUpHeight:40, directlyRemove:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){
+			
+							<#-- remove  pop up progress log -->
+							$.PALM.popUpMessage.remove( uniquePidResearcherWidget );
 
 							var publicationListContainer = $( widgetElem ).find( ".content-list" );
 							<#-- remove previous result -->
@@ -173,6 +184,8 @@
 									if( typeof itemPublication.type !== "undefined" ){
 										if( itemPublication.type == "Conference" )
 											pubIcon.addClass( "fa fa-file-text-o bg-blue" ).attr({ "title":"Conference" });
+										else if( itemPublication.type == "Workshop" )
+											pubIcon.addClass( "fa fa-file-text-o bg-blue-dark" ).attr({ "title":"Workshop" });
 										else if( itemPublication.type == "Journal" )
 											pubIcon.addClass( "fa fa-files-o bg-red" ).attr({ "title":"Journal" });
 										else if( itemPublication.type == "Book" )
@@ -183,13 +196,13 @@
 									
 									pubNav.append( pubIcon );
 									
+								<#if loggedUser??>
 									<#-- edit option -->
 									var pubEdit = $('<i/>')
 												.attr({
 													'class':'fa fa-edit', 
 													'title':'edit publication',
-													'data-url':'<@spring.url '/publication/edit' />' + '?id=' + itemPublication.id,
-													'style':'display:none'
+													'data-url':'<@spring.url '/publication/edit' />' + '?id=' + itemPublication.id
 												});
 												
 									<#-- add click event to edit publication -->
@@ -200,16 +213,9 @@
 									
 									<#-- append edit  -->
 									pubNav.append( pubEdit );
-									
+								</#if>
+
 									publicationItem.append( pubNav );
-									
-									publicationItem.hover(function()
-									{
-									     pubEdit.show();
-									}, function()
-									{ 
-									     pubEdit.hide();
-									});
 
 									<#-- publication detail -->
 									var pubDetail = $('<div/>').addClass( "detail" );

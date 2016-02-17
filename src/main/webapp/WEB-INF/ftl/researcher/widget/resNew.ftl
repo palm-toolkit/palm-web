@@ -64,14 +64,6 @@
 		}
 	}
 	
-	function inIframe () {
-	    try {
-	        return window.self !== window.top;
-	    } catch (e) {
-	        return true;
-	    }
-	}
-	
 	$(function(){
 		<#-- jquery post on button click -->
 		$( "#submit" ).click( function(){
@@ -152,7 +144,7 @@
 				<#-- aff -->
 				if( typeof ui.item.aff !== "undefined" ){
 					$( '#affiliation' ).val( ui.item.aff )
-					.attr( "readonly" , true);
+					//.attr( "readonly" , true);
 				}
 				<#-- picture -->
 				if( typeof ui.item.photo !== "undefined" ){

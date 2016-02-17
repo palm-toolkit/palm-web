@@ -4,8 +4,8 @@
  * This file should be included in all pages. 
  * It controls some layout options and plugins.
  *
- * @Default Author  Almsaeed Studio
- * @Extended By  Sigit for PALM project
+ * @Original Author  Almsaeed Studio
+ * @Extended By  Anindita Sigit Nugraha for PALM project
  * @license MIT <http://opensource.org/licenses/MIT>
  */
 
@@ -1023,6 +1023,11 @@ $.PALM.popUpIframe = {
 		// remove previous popup iframe if exist
 		_this.remove( o );
 		
+		var targetContainer = $( "body" );
+		if ( self !== top ) {
+			targetContainer = $( window.parent.document.body );
+		}
+		
 		// combine options
 		if( typeof popUpOptions != "undefined" )
 			o = $.extend( o, popUpOptions );
@@ -1070,19 +1075,32 @@ $.PALM.popUpIframe = {
     	    	.append(
 	    	    		popUpContainer
 				)
+				.on( "click", function( e ){ _this.remove( o ) })
 			);
 			
 		// put popup into body
-		$( "body" ).append( popUpModal );
+	    targetContainer.append( popUpModal );
+		
+		/* add blur */
+		var blurBackground = targetContainer.find( ".wrapper" );
+		blurBackground.addClass( "blur2px" );
 		
 		// put into PALM object
 		o.popUpIframe.push( popUpModal );
+		o.blurBackground = blurBackground;
 	}, remove: function( options ){
+		// if on iframe
+		if ( self !== top ) {
+			options = parent.$.PALM.options.popUpIframeOptions;
+		}
 		if( options.popUpIframe.length > 0 ){
 			// remove element from DOM
 			options.popUpIframe[0].remove();
 			// clear array
 			options.popUpIframe = [];
+			// remove blur
+			/* remove blur */
+			options.blurBackground.removeClass( "blur2px" );
 		}
 	}
 };
@@ -1143,6 +1161,39 @@ $.PALM.popUpAjaxModal = {
 		}
 	}
 }
+
+/**
+ * Generate callout information box
+ */
+$.PALM.callout = {
+	generate: function( containerElement, type, title, content ){
+		var calloutClass = "callout";
+		if( type == "warning" )
+			calloutClass += " callout-warning";
+		
+		var callOutBlock = $( '<div/>' ).addClass( calloutClass )
+							.append( $( '<h4/>' ).html( title ) )
+							.append( $( '<p/>' ).html( content ) );
+		
+		containerElement.append( callOutBlock );
+		
+	}
+}
+
+/**
+ * Validation plugin or PALM input,
+ * just add validation attribute, such as
+ * data-validation="required,email,checkduplication"
+ * data-validationDuplicationUrl="/user/isUsernameExist"
+ * Note: checking based on order
+ */
+/* Validation plugin is subtituted by jquery.validation*/
+//$.PALM.validation = {
+//	activate: function ( containerSelector ){
+//		// find any input or textarea on the container
+//		$( containerSelector ).find( )
+//	}
+//}
 
 /**
  * get form via ajax
@@ -1224,7 +1275,7 @@ $.PALM.utility = {
 		else if( splitDate[1] == "9" ) 	outputDate += "Sep";
 		else if( splitDate[1] == "10" ) 	outputDate += "Oct";
 		else if( splitDate[1] == "11" ) 	outputDate += "Nov";
-		else if( splitDate[1] == "12" ) 	outputDate += "Des";
+		else if( splitDate[1] == "12" ) 	outputDate += "Dec";
 		
 		if( splitDate.length == 3 )
 			return splitDate[2] + " " + outputDate + " " + splitDate[0];
@@ -1244,6 +1295,24 @@ $.PALM.utility = {
 		} else
 			return inputText;
 	}
+//	, generateDropDownDatePicker: function( containerSelector , additionalOptions ){
+//		var o = $.PALM.utility;
+//		o.options ={
+//			yearStart:1950,
+//			yearEnd:new Date().getFullYear(),
+//			monthEnd:[31, function(){ o.options.yearEnd % 4 == 0 ? 29:28}, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+//			monthLabel:["January","February","March","April","May","June","July","August","September","October","November","December"],
+//			inputClass:"form-control"
+//		}
+//		if( typeof additionalOptions !== "undefined" )
+//			o.options = $.extend( o.options, additionalOptions );
+//		
+//		o.dataElement = $('</div>');
+//		
+//		var dayElement = $('</select>').addClass( "day-list " + o.options.inputClass );
+//		$.each( o.options );
+		
+//	}
 };
  
 $.PALM.postForm = {
@@ -1629,4 +1698,12 @@ function printUploadedArticles( $containerSelector, data , addedOptions){
 	
 	$container.find( "textarea" ).val( textareaVal + appendedVal );
 	
+}
+
+function inIframe () {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
 }

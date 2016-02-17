@@ -258,7 +258,7 @@
 					$( obj.element ).find( "li.toEnd" ).addClass( "disabled" );
 				}
 		
-				( jumpTo === "first") // if new searching performed -->
+				if ( jumpTo === "first") // if new searching performed -->
 					var url = "<@spring.url '/publication/search?query=' />" + query + "&publicationType=conference-journal";<#-- + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult; -->
 				
 				else

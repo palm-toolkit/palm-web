@@ -32,6 +32,13 @@
 				$.PALM.popUpMessage.create( "Extracting author interest", { uniqueId:uniquePidInterestCloud, popUpHeight:40, directlyRemove:false , polling:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){
+			
+				<#-- check for interest evolution widget -->
+				var interestEvolutionWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_interest_evolution' ); 
+				if( typeof interestEvolutionWidget !== "undefined" && !interestEvolutionWidget.executed){
+					$.PALM.boxWidget.refresh( interestEvolutionWidget.element , interestEvolutionWidget.options );
+				}
+			
 
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniquePidInterestCloud );
@@ -64,7 +71,7 @@ var algorithmProfileDropDown =
 $.each( data.interest, function(index, dataAlgorithmProfile){
 	algorithmProfileDropDown.append( $( '<option/>' )
 								.attr({ "value" : index })
-								.html( dataAlgorithmProfile.profile )
+								.html( (dataAlgorithmProfile.profile).replace( /\?/g,"∩") )
 							);
 });
 
@@ -222,7 +229,7 @@ function visualizeInterest( yearIndex , yearType ){
 		.find( ".box-filter-button" )
 		.find( "span" )
 		.html( 
-			data.interest[ dataPointer.dataProfileIndex ].profile + ", " +
+			(data.interest[ dataPointer.dataProfileIndex ].profile).replace( /\?/g,"∩") + ", " +
 			data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].language + ", " +
 			data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears[dataPointer.dataYearStart].year + "-" +
 			data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears[dataPointer.dataYearEnd].year
@@ -329,7 +336,15 @@ function visualizeTextCloud( words ){
       })
       .text(function(d) { return d.text; })
       .on("click", function (d, i){
-          
+         	var publicationTimeLineWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_publication' ); 
+			
+			if( typeof publicationTimeLineWidget !== "undefined" ){
+				publicationTimeLineWidget.options.queryString = "?id=" + data.author.id + "&year=all&query=" + d.text;
+				<#-- add overlay -->
+				publicationTimeLineWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+				$.PALM.boxWidget.refresh( publicationTimeLineWidget.element , publicationTimeLineWidget.options );
+			} else
+				alert( "Publication Timeline widget missing, please enable it from Researcher Widget Management" );
       });
 	}
 }

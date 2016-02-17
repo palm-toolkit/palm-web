@@ -25,12 +25,16 @@
 			onRefreshStart: function( widgetElem ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
+				var mainContainer = $("#widget-${wUniqueName} .box-content");
+				mainContainer.html( "" ); 
 				if( data.status != "ok"){
-					alert( "error on publication list" );
+					<#--alert( "error on publication list" );-->
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Conference/Journal contain no publication" );
 					return false;
 				}
 				if ( typeof data.publications === 'undefined') {
-					alert( "error, no publication found" );
+					<#--alert( "error, no publication found" );-->
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Conference/Journal contain no publication" );
 					return false;
 				}
 
@@ -236,18 +240,20 @@
 				});
 
 				<#-- append everything to  -->
-				$("#widget-${wUniqueName} .box-content").html( timeLineContainer );
+				mainContainer.html( timeLineContainer );
 				
 				<#-- changed scroll position -->
 				if( typeof data.publicationId !== "undefined" ){
 					var publicationTarget = $("#boxbody${wUniqueName} .box-content").find( "#p" + data.publicationId );
-					var scrollTo_val = publicationTarget[0].offsetTop + 'px';
-					//console.log( "scroll : " + scrollTo_val );
-					$("#boxbody${wUniqueName} .box-content").slimscroll({
-						scrollTo : scrollTo_val
-					});
-					// add highlight effect
-					$( publicationTarget ).effect("highlight", {}, 3000);
+					if( publicationTarget.length > 0 ){
+						var scrollTo_val = publicationTarget[0].offsetTop + 'px';
+						//console.log( "scroll : " + scrollTo_val );
+						$("#boxbody${wUniqueName} .box-content").slimscroll({
+							scrollTo : scrollTo_val
+						});
+						// add highlight effect
+						$( publicationTarget ).effect("highlight", {}, 3000);
+					}
 				}
 			}
 		};

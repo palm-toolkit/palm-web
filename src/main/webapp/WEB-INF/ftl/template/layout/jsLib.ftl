@@ -4,11 +4,17 @@
 <script src="<@spring.url '/resources/scripts/jquery-ui-1.9.2.custom.js' />"></script>
 <#--<script src="<@spring.url '/resources/scripts/jquery.dialogextend.js' />"></script>-->
 
+<#-- jquery validation -->
+<script src="<@spring.url '/resources/scripts/jquery.validate.min.js' />"></script>
+
 <#-- jQuery 2.1.3 -->
 <#--<script src="<@spring.url '/resources/plugins/jQuery/jQuery-2.1.3.min.js' />" type="text/javascript"></script>-->
 
 <#-- jQuery fileupload -->
 <script src="<@spring.url '/resources/scripts/jquery.fileupload.js' />" type="text/javascript"></script>
+
+<#-- Combodate - used to generate date combobox -->
+<script src="<@spring.url '/resources/scripts/combodate.js' />" type="text/javascript"></script>
 
 <#-- gridster -->
 <#--

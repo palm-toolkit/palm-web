@@ -1,4 +1,7 @@
-<div class="box-body no-padding">
+<@security.authorize access="isAuthenticated()">
+	<#assign loggedUser = securityService.getUser() >
+</@security.authorize>
+<div id="boxbody-${wUniqueName}" class="box-body no-padding">
 	<div class="box-tools">
 	    <div class="input-group" style="width: 100%;">
 	      <input type="text" id="researcher_search_field" name="researcher_search_field" class="form-control input-sm pull-right" 
@@ -227,6 +230,25 @@
 											.addClass( 'photo fa fa-user' )
 										);
 									}
+									<#-- add edit button -->
+									<#if loggedUser??>
+									<#-- add edit button -->
+									researcherNav
+										.append(
+											$( '<div/>' )
+											.addClass( 'btn btn-default btn-xs pull-left' )
+											.attr({ "data-url":"<@spring.url '/researcher/edit' />?id=" + item.id, "title":"Update " + item.name + " Profile"})
+											.append(
+												$( '<i/>' )
+													.addClass( 'fa fa-edit' )
+											).append( "Update" )
+											.on( "click", function(e){
+												e.preventDefault;
+												$.PALM.popUpIframe.create( $(this).data("url") , {popUpHeight:"456px"}, $(this).attr("title") );
+											})
+										);
+									</#if>
+
 									<#-- add clcik event -->
 									researcherDetail
 										.on( "click", function(){
@@ -387,14 +409,52 @@
 		$.getJSON( "<@spring.url '/researcher/fetch?id=' />" + authorId + "&pid=" + uniquePid + "&force=false", function( data ){
 			<#-- remove  pop up progress log -->
 			$.PALM.popUpMessage.remove( uniquePid );
+			
+			<#-- update number of publication and citation if necessary -->
+			<#-- somehow the number of publication is not really correct -->
+			<#-- moving this code to author basic information -->
+<#--
+			if( data.fetchPerformed === "yes" ){
+					var updatedPublicationNumber; 
+					if( typeof data.author.publicationsNumber != 'undefined'){
+						var citedBy = 0;
+						if( typeof data.author.citedBy !== "undefined" )
+							citedBy = data.author.citedBy;
+						
+						updatedPublicationNumber = "Publications: " + data.author.publicationsNumber + " || Cited by: " + citedBy;
+					}
+									
+					var researcherListWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_list' ); 
+					researcherListWidget.element.find( "#" + authorId ).find( ".paper" ).html( updatedPublicationNumber );
+			}
+-->			
+			<#-- widget researcher_interest_cloud and researcher_interest_evolution can not run simultaneusly together,
+			therefore put it in order -->
+			var isInterestCloudWidgetExecuted = false;
+			var isInterestEvolutionWidgetExecuted = false;
 			<#-- refresh registered widget -->
 			$.each( $.PALM.options.registeredWidget, function(index, obj){
 				if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
 					obj.options.queryString = "?id=" + authorId;
 					<#-- special for publication list, set only query recent 10 publication -->
 					if( obj.selector === "#widget-researcher_publication" )
-						obj.options.queryString += "&maxresult=10"
+						obj.options.queryString += "&maxresult=10";
+						
+					<#-- check for cloud and evolution widget -->
+					if( obj.selector === "#widget-researcher_interest_cloud" && isInterestEvolutionWidgetExecuted )
+						return;
+					else if( obj.selector === "#widget-researcher_interest_evolution" && isInterestCloudWidgetExecuted )
+						return;
+					
+					<#-- add new flag (has been executed once)  -->
+					obj.executed = true;
 					$.PALM.boxWidget.refresh( obj.element , obj.options );
+					
+					<#-- set flag for cloud and evolution widget -->
+					if( obj.selector === "#widget-researcher_interest_cloud" )
+						isInterestCloudWidgetExecuted = true;
+					else if( obj.selector === "#widget-researcher_interest_evolution" )
+						isInterestEvolutionWidgetExecuted = true;
 				}
 			});
 		

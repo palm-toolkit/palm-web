@@ -3,7 +3,7 @@
 		
 		<#-- Venue -->
 		<div class="form-group">
-          <label>Publication Type *</label>
+          <label>Conference Type *</label>
           <select id="type" name="type" class="form-control" style="width:120px">
             <option value="conference">Conference / Workshop</option>
             <option value="journal"<#if targetType?? && targetType == "journal"> selected</#if>>Journal</option>
@@ -23,7 +23,7 @@
         <#-- Venue properties -->
 		<div class="form-group" style="width:100%;float:left">
 			<div id="venue-abbr-container" class="col-xs-2 minwidth150Px">
-				<label><span>Conference</span> Abbr.</label>
+				<label>Abbreviation</label>
 				<input type="text" id="notation" name="notation" placeholder="e.g. EDM" class="form-control">
 			</div>
 		</div>
