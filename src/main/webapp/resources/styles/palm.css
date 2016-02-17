@@ -918,6 +918,12 @@ div.d3-tooltip {
 .height500px{
 	height: 500px !important;
 }
+.height580px{
+	height: 580px !important;
+}
+.height610px{
+	height:610px !important
+}
 .width100px{
 	display:block;
 	width:100px;
