@@ -111,7 +111,7 @@
 			-->
 			<div id="pages-container" class="col-xs-3 minwidth150Px">
 				<label>Pages</label>
-				<input type="text" id="pages" name="pages"<#if publication.startPage gt 0> value="${publication.startPage} - ${publication.endPage}"</#if> class="form-control">
+				<input type="text" id="pages" name="pages"<#if publication.startPage gt 0> value="${publication.startPage} - ${publication.endPage}"</#if> class="form-control" placaholder="e.g. 5-10">
 			</div>
 			<#--
 			<div id="publisher-container" class="col-xs-3 minwidth150Px">
@@ -155,7 +155,8 @@
 				height: "100%",
 		        size: "8px",
 	        	allowPageScroll: true,
-	   			touchScrollStep: 50
+	   			touchScrollStep: 50,
+	   			alwaysVisible: true
 		  });
 
 		<#-- multiple file-upload -->
