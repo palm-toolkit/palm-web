@@ -90,6 +90,7 @@
           <label>Publication Type</label>
           <select id="venue-type" name="venue-type" class="form-control" style="width:120px">
             <option value="conference">Conference</option>
+            <option value="workshop">Workshop</option>
             <option value="journal">Journal</option>
             <option value="book">Book</option>
           </select>
@@ -108,14 +109,16 @@
         
         <#-- Venue properties -->
 		<div class="form-group" style="width:100%;float:left">
-			<div id="volume-container" class="col-xs-2 minwidth150Px" style="display:none">
+			<div id="volume-container" class="col-xs-2 minwidth150Px">
 				<label>Volume</label>
 				<input type="text" id="volume" name="volume" class="form-control">
 			</div>
+			<#--
 			<div id="issue-container" class="col-xs-2 minwidth150Px" style="display:none">
 				<label>Issue</label>
 				<input type="text" id="issue" name="issue" class="form-control">
 			</div>
+			-->
 			<div id="pages-container" class="col-xs-3 minwidth150Px">
 				<label>Pages</label>
 				<input type="text" id="pages" name="pages" class="form-control">
@@ -160,7 +163,8 @@
 				height: "100%",
 		        size: "8px",
 	        	allowPageScroll: true,
-	   			touchScrollStep: 50
+	   			touchScrollStep: 50,
+	   			alwaysVisible: true
 		  });
 
 		<#-- multiple file-upload -->
@@ -170,17 +174,30 @@
 		$( "[data-mask]" ).inputmask();
 
 		$( "#submit" ).click( function(){
-			$("#addPublication").submit();
+			<#-- todo check input valid -->
+			$.post( $("#addPublication").attr( "action" ), $("#addPublication").serialize(), function( data ){
+				<#-- todo if error -->
+
+				<#-- if status ok -->
+				if( data.status == "ok" ){
+					<#-- reload main page with target author -->
+					if( inIframe() ){
+						window.top.location = "<@spring.url '/publication' />?id=" + data.publication.id + "&title=" + data.publication.title
+					} else {
+						window.location = "<@spring.url '/publication' />?id=" + data.publication.id  + "&title=" + data.publication.title
+					}
+				}
+			});
 		});
 		
 		$( "#venue-type" ).change( function(){
 			var selectionValue = $(this).val();
 			if( selectionValue == "conference" ){
 				$( "#venue-title>label>span" ).html( "Conference" );
-				$( "#volume-container,#issue-container" ).hide();
+				<#--$( "#volume-container,#issue-container" ).hide();-->
 			} else if( selectionValue == "journal" || selectionValue == "book"){
 				$( "#venue-title>label>span" ).html( "Journal" );
-				$( "#volume-container,#issue-container" ).show();
+				<#--$( "#volume-container,#issue-container" ).show();-->
 			}
 		});
 		
@@ -222,6 +239,8 @@
 			select: function( event, ui ) {
 				<#-- select appropriate vanue type -->
 				$( '#venue-type' ).val( ui.item.type ).change();
+				<#-- store the conference id -->
+				$( '#venue-id' ).val( ui.item.id );
 			},
 			open: function() {
 				$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
@@ -237,12 +256,12 @@
 		})
 		.autocomplete( "instance" )._renderItem = function( ul, item ) {
 			if( typeof item.id != "undefined" ){
-				var itemElem = createAutocompleteOutput( item );
-		      	return itemElem.appendTo( ul );
+		      	return $( "<li>" + item.label + "</li>" ).appendTo( ul );
 	      	} else{
 	      		return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo( ul );
 	      	}
 	    };
+	    
 		<#-- focus in and out on tag style -->
 		$(".palm-tagsinput").on('focusin',function() {
 		  	$( this ).addClass( "palm-tagsinput-focus" );
@@ -367,7 +386,6 @@
 
 						<#-- publication detail -->
 						var pubDetail = $('<div/>').addClass( "detail default-cursor width-auto" );
-						
 						
 						
 						<#-- title -->

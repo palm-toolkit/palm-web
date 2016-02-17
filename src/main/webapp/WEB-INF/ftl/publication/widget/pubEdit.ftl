@@ -159,9 +159,6 @@
 	   			alwaysVisible: true
 		  });
 
-		<#-- multiple file-upload -->
-    	convertToAjaxMultipleFileUpload( $( '#fileupload' ), $( '#progress' ) , $("#editPublication") );
-
 		<#-- activate input mask-->
 		$( "[data-mask]" ).inputmask();
 		
@@ -253,6 +250,7 @@
 	      		return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo( ul );
 	      	}
 	    };
+	    
 		<#-- focus in and out on tag style -->
 		$(".palm-tagsinput").on('focusin',function() {
 		  	$( this ).addClass( "palm-tagsinput-focus" );
@@ -331,100 +329,6 @@
 			$( tagContainerSelector ).next( "input" ).val( keywordList );
   		}
   		
-  		<#-- check against exisiting publication on PALM -->
-		<#--
-		$( "#title" ).on( "blur", function( e ){
-			$( "#similar-publication-container" ).hide();
-			checkForSimilarPublication( $( this ).val() );
-		});
-  		-->
-		<#--
-  		function checkForSimilarPublication( targetTitle ){
-  			// clean non alpha numeric from title 
-			var cleanTitle = targetTitle.replace(/[^\w\s]/gi, '');
-			var jqXHR =	$.getJSON( "<@spring.url '/publication/similar' />?title=" + cleanTitle, function( data ){
-				if( data.totalCount > 0){
-					// unhide container 
-					$( "#similar-publication-container" ).slideDown( "slow" );
-				  	var publicationListContainer = $( "#editPublication" ).find( ".content-list:first" );
-				  	publicationListContainer.html( "" );
-					// build the publication table
-					$.each( data.publications, function( index, itemPublication ){
-
-						var publicationItem = 
-							$('<div/>')
-							.addClass( "publication width-full" )
-							.attr({ "data-id": itemPublication.id });
-							
-						// publication menu
-						var pubNav = $( '<div/>' )
-							.attr({'class':'nav'});
-			
-						// publication icon 
-						var pubIcon = $('<i/>');
-						if( typeof itemPublication.type !== "undefined" ){
-							if( itemPublication.type == "Conference" )
-								pubIcon.addClass( "fa fa-file-text-o bg-blue" ).attr({ "title":"Conference" });
-							else if( itemPublication.type == "Journal" )
-								pubIcon.addClass( "fa fa-files-o bg-red" ).attr({ "title":"Journal" });
-							else if( itemPublication.type == "Book" )
-								pubIcon.addClass( "fa fa-book bg-green" ).attr({ "title":"Book" });
-						}else{
-							pubIcon.addClass( "fa fa-question bg-purple" ).attr({ "title":"Unknown publication type" });
-						}
-						
-						pubNav.append( pubIcon );
-						
-						publicationItem.append( pubNav );
-
-						// publication detail 
-						var pubDetail = $('<div/>').addClass( "detail default-cursor width-auto" );
-						
-						
-						
-						// title 
-						var pubTitle = $('<div/>').addClass( "title" ).html( itemPublication.title );
-
-						// author
-						var pubAuthor = $('<div/>').addClass( "author" );
-						$.each( itemPublication.authors , function( index, itemAuthor ){
-							if( index > 0)
-								pubAuthor.append(", ");
-							pubAuthor.append( itemAuthor.name );
-						});
-
-						// append detail 
-						pubDetail.append( pubTitle );
-						pubDetail.append( pubAuthor );
-						
-						// publicationDetailOption 
-						var pubDetailOption = $('<div/>').addClass( "option" );
-						// fill pub detail option 
-						var circleAddButton = $('<button/>')
-							.addClass( "btn btn-success width130px btn-xs pull-right" )
-							.html( "Use this publication" )
-							.on( "click", function( e ){
-								e.preventDefault();
-								$.PALM.circle.editPublication( itemPublication.id, e.target );
-							});
-						
-						pubDetailOption.append( circleAddButton );
-						
-						pubDetail.append( pubDetailOption );
-
-						// append to item 
-						publicationItem.append( pubDetail );
-						
-						publicationListContainer.append( publicationItem );
-					
-					});
-				}
-				//else{
-					//alert( "no similar publication found" );
-				//}
-			});
-  		}
-  		-->
   		<#-- author -->
 		$('#authors-tag input')
   		.on('keyup',function( e ){
