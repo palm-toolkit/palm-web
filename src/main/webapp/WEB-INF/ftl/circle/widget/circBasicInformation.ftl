@@ -3,9 +3,6 @@
 	</form>
 </div>
 
-<div class="box-footer">
-</div>
-
 <script>
 	$( function(){
 		<#-- add slimscroll to widget body -->
