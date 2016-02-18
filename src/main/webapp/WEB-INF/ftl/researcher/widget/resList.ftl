@@ -393,7 +393,7 @@
 		});
 	}
 	
-	<#-- when author list clciked --> 
+	<#-- when author list clicked --> 
 	function getAuthorDetails( authorId ){
 		<#-- put loading overlay -->
     	$.each( $.PALM.options.registeredWidget, function(index, obj){
@@ -448,6 +448,8 @@
 					
 					<#-- add new flag (has been executed once)  -->
 					obj.executed = true;
+					
+					<#-- refresh widget -->
 					$.PALM.boxWidget.refresh( obj.element , obj.options );
 					
 					<#-- set flag for cloud and evolution widget -->

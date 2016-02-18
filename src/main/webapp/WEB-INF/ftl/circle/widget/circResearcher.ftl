@@ -24,7 +24,7 @@
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
 				<#-- show pop up progress log -->
-				$.PALM.popUpMessage.create( "loading researchers...", { popUpHeight:40, directlyRemove:true});
+				//$.PALM.popUpMessage.create( "loading researchers...", { popUpHeight:40, directlyRemove:true});
 						},
 			onRefreshDone: function(  widgetElem , data ){
 
