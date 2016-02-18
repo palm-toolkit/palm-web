@@ -26,6 +26,8 @@ import de.rwth.i9.palm.model.AuthorInterestProfile;
 import de.rwth.i9.palm.model.Circle;
 import de.rwth.i9.palm.model.CircleInterest;
 import de.rwth.i9.palm.model.CircleInterestProfile;
+import de.rwth.i9.palm.model.CircleTopicModeling;
+import de.rwth.i9.palm.model.CircleTopicModelingProfile;
 import de.rwth.i9.palm.model.CircleWidget;
 import de.rwth.i9.palm.model.Config;
 import de.rwth.i9.palm.model.ConfigProperty;
@@ -52,6 +54,7 @@ import de.rwth.i9.palm.model.Role;
 import de.rwth.i9.palm.model.Source;
 import de.rwth.i9.palm.model.SourceProperty;
 import de.rwth.i9.palm.model.Subject;
+import de.rwth.i9.palm.model.TopicModelingAlgorithmCircle;
 import de.rwth.i9.palm.model.User;
 import de.rwth.i9.palm.model.UserRequest;
 import de.rwth.i9.palm.model.UserWidget;
@@ -153,6 +156,8 @@ public class DatabaseConfig
 				Circle.class,
 				CircleInterest.class,
 				CircleInterestProfile.class,
+				CircleTopicModeling.class,
+				CircleTopicModelingProfile.class,
 				CircleWidget.class,
 				Country.class,
 				Config.class,
@@ -179,6 +184,7 @@ public class DatabaseConfig
  				Source.class,
  				SourceProperty.class,
  				Subject.class,
+ 				TopicModelingAlgorithmCircle.class,
 				User.class,
 				UserRequest.class,
 				UserWidget.class,
