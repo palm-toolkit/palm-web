@@ -61,7 +61,7 @@
 		    <div id="circleAuth" class="circle-input-column circle-input-right">
 		    	<strong>Researchers on Circle</strong>
 		    	
-		    	<div class="content-list height500px">
+		    	<div class="content-list height610px">
 				</div>
 		    </div>
 		    
@@ -73,10 +73,11 @@
         
 	    	<div id="inputPub" class="circle-input-column">
 	    	                                                              
-	    		<strong>Publicaion List</strong>
+	    		<strong>Publications List</strong>
 	    	
 	    		<div class="box-body no-padding">
 					<div class="box-tools">
+						
 						<div class="input-group" style="width: 100%;">
 					      <input type="text" id="publication_search_field" name="publication_search_field" class="form-control input-sm pull-right" 
 					      placeholder="Search publication on database" />
@@ -84,12 +85,19 @@
 					        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
 					      </div>
 					    </div>
+					    <#-- add note -->
+						<div id="auth-info" style="position:relative;height:0;width:100%;display:none">
+							<div style="position:absolute;width:100%;height:30px;top:-30px;left:0px;z-index:500;background-color:#eee">
+								<span style="white-space:nowrap;line-height:30px;padding:0 0 0 6px">Publications of <strong></strong></span>
+								<span onclick="$( this ).parent().parent().hide()" title="close to start new search" style="display:block;float:right;width:30px;height:30px;cursor: pointer;padding:0 8px;background-color:#fff;line-height:25px;"> X </span>
+							</div>
+						</div>
 				  	</div>
 				  	
-				  	<div class="content-list height500px">
+				  	<div class="content-list height580px">
 				    </div>
 				</div>
-				
+				<#--
 				<div class="box-footer no-padding">
 					<div class="col-xs-12  no-padding alignCenter">
 						<div class="paging_simple_numbers">
@@ -104,13 +112,13 @@
 						<span class="paging-info">&nbsp;</span>
 					</div>
 				</div>
-	    		
+	    		-->
 	    	</div>
 		    	        
         	<div id="circlePub" class="circle-input-column circle-input-right">
 		    	<strong>Publications on Circle</strong>
 		    	
-		    	<div class="content-list height500px">
+		    	<div class="content-list height610px">
 				</div>
 		    </div>
 		    
@@ -233,7 +241,7 @@
 		});
 
 		function publicationSearch( query , jumpTo ){
-		
+			<#--
 				var maxPage = parseInt($( obj.element ).find( "span.total-page" ).html()) - 1;
 				if( jumpTo === "next")
 					obj.options.page = obj.options.page + 1;
@@ -260,10 +268,10 @@
 		
 				if ( jumpTo === "first") // if new searching performed -->
 					var url = "<@spring.url '/publication/search?query=' />" + query + "&publicationType=conference-journal";<#-- + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult; -->
-				
+				<#--
 				else
 					obj.options.source = "<@spring.url '/publication/search?query=' />" + obj.options.query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
-				
+				-->
 			getPublicationList( url );
 		}
 		
@@ -332,6 +340,67 @@
 						pubDetail.append( pubTitle );
 						pubDetail.append( pubAuthor );
 						
+						if( typeof itemPublication.event !== 'undefined' ){
+							var eventElem = $( '<div/>' )
+											.addClass( 'event-detail font-xs' );
+							
+												
+							var venueText = itemPublication.event.name;
+							//var venueHref = "<@spring.url '/venue' />?eventId=" + itemPublication.event.id + "&type=" + itemPublication.type.toLowerCase() + "&name=" + itemPublication.event.name.toLowerCase().replace(/[^\w\s]/gi, '');
+							
+							if( typeof itemPublication.volume != 'undefined' ){
+								venueText += " (" + itemPublication.volume + ")";
+								//venueHref += "&volume=" + itemPublication.volume;
+							}
+							if( typeof itemPublication.date != 'undefined' ){
+								venueText += " " + itemPublication.date.substring(0, 4);
+								//venueHref += "&year=" + itemPublication.date.substring(0, 4);
+							}
+							
+							var eventPart = $( '<span/>' )
+													.html( venueText );
+							eventElem.append( eventPart );
+							
+							if( itemPublication.event.isAdded ){
+								eventPart.removeClass( "text-gray" );
+							}
+							
+							<#-- pages -->
+							if( typeof itemPublication.pages !== 'undefined' ){
+								eventElem.append( " pp. " + itemPublication.pages );
+							}
+		
+							pubDetail.append( eventElem );			
+						} else if( typeof itemPublication.venue !== 'undefined'){
+							var eventElem = $( '<div/>' )
+											.addClass( 'event-detail font-xs' );
+														
+							var venueText = itemPublication.venue;
+							//var venueHref = "<@spring.url '/venue' />?type=" + itemPublication.type.toLowerCase() + "&name=" + itemPublication.venue.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + itemPublication.id ;
+							
+							if( typeof itemPublication.volume != 'undefined' ){
+								venueText += " (" + itemPublication.volume + ")";
+								//venueHref += "&volume=" + itemPublication.volume;
+							}
+							if( typeof itemPublication.date != 'undefined' ){
+								venueText += " " + itemPublication.date.substring(0, 4);
+								//venueHref += "&year=" + itemPublication.date.substring(0, 4);
+							}
+							
+							var eventPart = $( '<span/>' )
+													//.attr({ "href" : venueHref })
+													//.addClass( "text-gray" )
+													.html( venueText );
+							eventElem.append( eventPart );
+							
+							<#-- pages -->
+							if( typeof itemPublication.pages !== 'undefined' ){
+								eventElem.append( " pp. " + itemPublication.pages );
+							}
+		
+							pubDetail.append( eventElem );
+						}
+						
 						<#-- publicationDetailOption -->
 						var pubDetailOption = $('<div/>').addClass( "option" );
 						<#-- fill pub detail option -->
@@ -353,12 +422,14 @@
 						publicationListContainer.append( publicationItem );
 					
 					});
-					var maxPage = Math.ceil(data.count/data.maxresult);
+					<#--var maxPage = Math.ceil(data.count/data.maxresult);-->
 					
 					<#-- set dropdown page -->
+					<#--
 					for( var i=1;i<=maxPage;i++){
 						$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
 					}
+					-->
 					
 					<#-- set page number -->
 					<#--
@@ -371,11 +442,13 @@
 					-->
 				}
 				else{
+					<#--
 					$pageDropdown.append("<option value='0'>0</option>");
 					$( "#inputAuth" ).find( "span.total-page" ).html( 0 );
 					$( "#inputAuth" ).find( "span.paging-info" ).html( "Displaying researchers 0 - 0 of 0" );
 					$( "#inputAuth" ).find( "li.toNext" ).addClass( "disabled" );
 					$( "#inputAuth" ).find( "li.toEnd" ).addClass( "disabled" );
+					-->
 				}
 			});
   		}
@@ -563,10 +636,24 @@
 						<#-- fill researcher detail option -->
 						var circleAddButton = $('<button/>')
 							.addClass( "btn btn-success btn-xs width130px pull-right" )
+							.attr({ "data-id": item.id, "data-name": item.name })
 							.html( "+ add to circle" )
 							.on( "click", function( e ){
 								e.preventDefault();
 								$.PALM.circle.addResearcher( item.id, e.target );
+								
+								
+								<#-- get list of researcher -->
+								getPublicationList( "<@spring.url '/publication/search?authorId=' />" + $( this ).data( "id" ) + "&maxresult=300" );
+								<#-- show info -->
+								var authInfo = $( "#auth-info" );
+								authInfo.show();
+								authInfo.find( "strong" ).html( $( this ).data( "name" ) );
+								<#-- scroll to -->
+								var scrollTo_val = $( "#inputPub" )[0].offsetTop + 'px';
+								$(".content-wrapper>.content").slimscroll({
+									scrollTo : scrollTo_val
+								});
 							});
 						
 						researcherDetailOption.append( circleAddButton );

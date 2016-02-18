@@ -23,9 +23,13 @@ import de.rwth.i9.palm.model.Author;
 import de.rwth.i9.palm.model.AuthorAlias;
 import de.rwth.i9.palm.model.AuthorInterest;
 import de.rwth.i9.palm.model.AuthorInterestProfile;
+import de.rwth.i9.palm.model.AuthorTopicModeling;
+import de.rwth.i9.palm.model.AuthorTopicModelingProfile;
 import de.rwth.i9.palm.model.Circle;
 import de.rwth.i9.palm.model.CircleInterest;
 import de.rwth.i9.palm.model.CircleInterestProfile;
+import de.rwth.i9.palm.model.CircleTopicModeling;
+import de.rwth.i9.palm.model.CircleTopicModelingProfile;
 import de.rwth.i9.palm.model.CircleWidget;
 import de.rwth.i9.palm.model.Config;
 import de.rwth.i9.palm.model.ConfigProperty;
@@ -39,6 +43,7 @@ import de.rwth.i9.palm.model.Institution;
 import de.rwth.i9.palm.model.Interest;
 import de.rwth.i9.palm.model.InterestAuthor;
 import de.rwth.i9.palm.model.InterestProfile;
+import de.rwth.i9.palm.model.InterestProfileCircle;
 import de.rwth.i9.palm.model.InterestProfileProperty;
 import de.rwth.i9.palm.model.Location;
 import de.rwth.i9.palm.model.Publication;
@@ -51,6 +56,8 @@ import de.rwth.i9.palm.model.Role;
 import de.rwth.i9.palm.model.Source;
 import de.rwth.i9.palm.model.SourceProperty;
 import de.rwth.i9.palm.model.Subject;
+import de.rwth.i9.palm.model.TopicModelingAlgorithmAuthor;
+import de.rwth.i9.palm.model.TopicModelingAlgorithmCircle;
 import de.rwth.i9.palm.model.User;
 import de.rwth.i9.palm.model.UserRequest;
 import de.rwth.i9.palm.model.UserWidget;
@@ -149,9 +156,13 @@ public class DatabaseConfig
 				AuthorAlias.class,
 				AuthorInterest.class,
 				AuthorInterestProfile.class,
+				AuthorTopicModeling.class, 
+				AuthorTopicModelingProfile.class,
 				Circle.class,
 				CircleInterest.class,
 				CircleInterestProfile.class,
+				CircleTopicModeling.class,
+				CircleTopicModelingProfile.class,
 				CircleWidget.class,
 				Country.class,
 				Config.class,
@@ -165,6 +176,7 @@ public class DatabaseConfig
 				Interest.class,
 				InterestAuthor.class,
 				InterestProfile.class,
+				InterestProfileCircle.class,
 				InterestProfileProperty.class,
 				Location.class,
 				Publication.class,
@@ -177,6 +189,8 @@ public class DatabaseConfig
  				Source.class,
  				SourceProperty.class,
  				Subject.class,
+ 				TopicModelingAlgorithmAuthor.class,
+ 				TopicModelingAlgorithmCircle.class,
 				User.class,
 				UserRequest.class,
 				UserWidget.class,

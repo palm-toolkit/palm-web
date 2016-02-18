@@ -82,10 +82,13 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 		freeMarkerConfigurer.setTemplateLoaderPaths( 
 				"/WEB-INF/ftl/",
 				"/WEB-INF/ftl/administration",
+				"/WEB-INF/ftl/administration/api",
 				"/WEB-INF/ftl/administration/conference",
 				"/WEB-INF/ftl/administration/config",
+				"/WEB-INF/ftl/administration/datamanagement",
 				"/WEB-INF/ftl/administration/dataset",
 				"/WEB-INF/ftl/administration/publication",
+				"/WEB-INF/ftl/administration/pdfhtmlextract",
 				"/WEB-INF/ftl/administration/researcher",
 				"/WEB-INF/ftl/administration/source",
 				"/WEB-INF/ftl/administration/statistic",

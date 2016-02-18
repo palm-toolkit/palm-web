@@ -12,7 +12,7 @@
 	    </div>
   	</div>
   	
-  	<div class="content-list">
+  	<div class="content-list height610px">
     </div>
 </div>
 
@@ -33,35 +33,7 @@
 
 <script>
 	$( function(){
-		<#-- set target author id -->
-		<#if targetId??>
-			var targetId = "${targetId!''}";
-		<#else>
-			var targetId = "";
-		</#if>
-		<#if targetAdd??>
-			var targetAdd = "${targetAdd!''}";
-		<#else>
-			var targetAdd = "";
-		</#if>
-
-			<#-- add slim scroll -->
-	      $(".content-list").slimscroll({
-				height: "100%",
-		        size: "3px",
-	        	allowPageScroll: true,
-	   			touchScrollStep: 50
-		  });
-		  <#--
-		   $(".content-wrapper>.content").slimscroll({
-				height: "100%",
-		        size: "8px",
-	        	allowPageScroll: true,
-	   			touchScrollStep: 50,
-	   			railVisible: true,
-    			alwaysVisible: true
-		  });
-	    -->
+		
 	    <#-- event for searching researcher -->
 		var tempInput = $( "#researcher_search_field" ).val();
 	    $( "#researcher_search_field" )
@@ -128,9 +100,10 @@
 				$.PALM.popUpMessage.create( "loading researchers...", { uniqueId:uniquePidResearcherWidget, popUpHeight:40, directlyRemove:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){
-
-							<#-- remove  pop up progress log -->
+			
+				<#-- remove  pop up progress log -->
 							$.PALM.popUpMessage.remove( uniquePidResearcherWidget );
+				
 
 							var targetContainer = $( widgetElem ).find( ".content-list" );
 							<#-- remove previous list -->
@@ -147,7 +120,7 @@
 								$.each( data.researchers, function( index, item){
 									var researcherDiv = 
 									$( '<div/>' )
-										.addClass( 'author' )
+										.addClass( 'author static' )
 										.attr({ 'id' : item.id });
 										
 									var researcherNav =
@@ -156,7 +129,7 @@
 										
 									var researcherDetail =
 									$( '<div/>' )
-										.addClass( 'detail' )
+										.addClass( 'detail static' )
 										.append(
 											$( '<div/>' )
 												.addClass( 'name' )
@@ -230,13 +203,10 @@
 											.addClass( 'photo fa fa-user' )
 										);
 									}
-									<#-- add edit button -->
-									<#if loggedUser??>
-									<#-- add edit button -->
 									researcherNav
 										.append(
 											$( '<div/>' )
-											.addClass( 'btn btn-default btn-xs pull-left' )
+											.addClass( 'btn btn-default btn-xs pull-left visible' )
 											.attr({ "data-url":"<@spring.url '/researcher/edit' />?id=" + item.id, "title":"Update " + item.name + " Profile"})
 											.append(
 												$( '<i/>' )
@@ -247,21 +217,23 @@
 												$.PALM.popUpIframe.create( $(this).data("url") , {popUpHeight:"456px"}, $(this).attr("title") );
 											})
 										);
-									</#if>
 
-									<#-- add clcik event -->
-									researcherDetail
-										.on( "click", function(){
-											if( item.isAdded ){
-												if( $.PALM.selected.record( "researcher", item.id, $( this ).parent() )){
-													<#-- push history -->
-													history.pushState(null, "Researcher " + item.name, "<@spring.url '/researcher' />?id=" + item.id + "&name=" + item.name );
-													getAuthorDetails( item.id );
-												}
-											} else {
-												$.PALM.popUpIframe.create( "<@spring.url '/researcher/add' />?id=" + item.id + "&name=" + item.name , {popUpHeight:"456px"}, "Add " + item.name + " to PALM");
-											}
-										} );
+									
+								<#-- researcherDetailOption -->
+								var researcherDetailOption = $('<div/>').addClass( "option" );
+								<#-- fill researcher detail option -->
+								var researcherDeleteButton = $('<button/>')
+									.addClass( "btn btn-danger btn-xs width130px pull-right" )
+									.attr({ "data-id": item.id, "data-name": item.name })
+									.html( "! remove this author" )
+									.on( "click", function( e ){
+										e.preventDefault();
+										// TODO delete researcher
+									});
+								
+								researcherDetailOption.append( researcherDeleteButton );
+								
+								researcherDetail.append( researcherDetailOption );
 									
 									targetContainer
 										.append( 
@@ -275,36 +247,8 @@
 												imageAuthor.css({ "left" : (52 - imageAuthor.width())/2 + "px" });
 										}
 									}, 1000);
-									
-									<#-- display first author detail -->
-									if( item.isAdded ){
-										if( targetId == "" ){
-											if( index == 0 ){
-												<#-- record selection -->
-												if( $.PALM.selected.record( "researcher", item.id, researcherDiv ) ){
-													<#-- push history -->
-													history.pushState(null, "Researcher " + item.name, "<@spring.url '/researcher' />?id=" + item.id + "&name=" + item.name );
-													<#-- add active class -->
-													getAuthorDetails( item.id );
-												}
-											}
-										}
-										if( targetId == item.id ){
-											<#-- add active class -->
-											if( $.PALM.selected.record( "researcher", item.id, researcherDiv )){
-												<#-- push history -->
-												history.pushState(null, "Researcher " + item.name, "<@spring.url '/researcher' />?id=" + item.id + "&name=" + item.name );
-												getAuthorDetails( item.id );
-												targetId = "";
-											}
-										}
-									} else {
-										$.PALM.popUpIframe.create( "<@spring.url '/researcher/add' />?id=" + item.id + "&name=" + item.name , {popUpHeight:"456px"}, "Add " + item.name + " to PALM");
-									}
 
 								});
-								if( targetAdd == "yes" )
-									data.totalCount = data.count;
 									
 								var maxPage = Math.ceil(data.totalCount/data.maxresult);
 								var $pageDropdown = $( widgetElem ).find( "select.page-number" );
@@ -347,11 +291,7 @@
 		});
 		
 		<#--// first time on load, list 50 researchers-->
-		//$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) , options );
-		if( targetAdd == "yes" )
-			researcherSearch( $( "#researcher_search_field" ).val().trim() , "first");
-		else
-			researcherSearch( $( "#researcher_search_field" ).val().trim() , "first", "&addedAuthor=yes");
+		researcherSearch( $( "#researcher_search_field" ).val().trim() , "first");
 	});
 	
 	function researcherSearch( query , jumpTo , additionalQueryString){
@@ -359,7 +299,7 @@
 			additionalQueryString = "";
 		<#--//find the element option-->
 		$.each( $.PALM.options.registeredWidget, function(index, obj){
-			if( obj.type === "RESEARCHER" && obj.group === "sidebar" ){
+			if( obj.type === "ADMINISTRATION" && obj.group === "data-researcher" ){
 				var maxPage = parseInt($( obj.element ).find( "span.total-page" ).html()) - 1;
 				if( jumpTo === "next")
 					obj.options.page = obj.options.page + 1;
@@ -393,75 +333,4 @@
 		});
 	}
 	
-	<#-- when author list clicked --> 
-	function getAuthorDetails( authorId ){
-		<#-- put loading overlay -->
-    	$.each( $.PALM.options.registeredWidget, function(index, obj){
-				if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
-					obj.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
-				}
-			});
-
-		<#-- show pop up progress log -->
-		var uniquePid = $.PALM.utility.generateUniqueId();
-		$.PALM.popUpMessage.create( "Collecting author publications...", { uniqueId:uniquePid, popUpHeight:150, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
-		<#-- check and fetch publication from academic network if necessary -->
-		$.getJSON( "<@spring.url '/researcher/fetch?id=' />" + authorId + "&pid=" + uniquePid + "&force=false", function( data ){
-			<#-- remove  pop up progress log -->
-			$.PALM.popUpMessage.remove( uniquePid );
-			
-			<#-- update number of publication and citation if necessary -->
-			<#-- somehow the number of publication is not really correct -->
-			<#-- moving this code to author basic information -->
-<#--
-			if( data.fetchPerformed === "yes" ){
-					var updatedPublicationNumber; 
-					if( typeof data.author.publicationsNumber != 'undefined'){
-						var citedBy = 0;
-						if( typeof data.author.citedBy !== "undefined" )
-							citedBy = data.author.citedBy;
-						
-						updatedPublicationNumber = "Publications: " + data.author.publicationsNumber + " || Cited by: " + citedBy;
-					}
-									
-					var researcherListWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_list' ); 
-					researcherListWidget.element.find( "#" + authorId ).find( ".paper" ).html( updatedPublicationNumber );
-			}
--->			
-			<#-- widget researcher_interest_cloud and researcher_interest_evolution can not run simultaneusly together,
-			therefore put it in order -->
-			var isInterestCloudWidgetExecuted = false;
-			var isInterestEvolutionWidgetExecuted = false;
-			<#-- refresh registered widget -->
-			$.each( $.PALM.options.registeredWidget, function(index, obj){
-				if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
-					obj.options.queryString = "?id=" + authorId;
-					<#-- special for publication list, set only query recent 10 publication -->
-					if( obj.selector === "#widget-researcher_publication" )
-						obj.options.queryString += "&maxresult=10";
-						
-					<#-- check for cloud and evolution widget -->
-					if( obj.selector === "#widget-researcher_interest_cloud" && isInterestEvolutionWidgetExecuted )
-						return;
-					else if( obj.selector === "#widget-researcher_interest_evolution" && isInterestCloudWidgetExecuted )
-						return;
-					
-					<#-- add new flag (has been executed once)  -->
-					obj.executed = true;
-					
-					<#-- refresh widget -->
-					$.PALM.boxWidget.refresh( obj.element , obj.options );
-					
-					<#-- set flag for cloud and evolution widget -->
-					if( obj.selector === "#widget-researcher_interest_cloud" )
-						isInterestCloudWidgetExecuted = true;
-					else if( obj.selector === "#widget-researcher_interest_evolution" )
-						isInterestEvolutionWidgetExecuted = true;
-				}
-			});
-		
-		}).fail(function() {
-   	 		$.PALM.popUpMessage.remove( uniquePid );
-  		});
-	}
 </script>
