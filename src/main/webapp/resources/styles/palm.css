@@ -535,6 +535,9 @@ div.d3-tooltip {
 .content-list>.author>.nav>.btn{
 	display:none;
 }
+.content-list>.author>.nav>.btn.visible{
+	display:block;
+}
 .content-list>.author.active>.nav>.btn{
 	display:block;
 }
