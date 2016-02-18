@@ -39,6 +39,7 @@ import de.rwth.i9.palm.model.Institution;
 import de.rwth.i9.palm.model.Interest;
 import de.rwth.i9.palm.model.InterestAuthor;
 import de.rwth.i9.palm.model.InterestProfile;
+import de.rwth.i9.palm.model.InterestProfileCircle;
 import de.rwth.i9.palm.model.InterestProfileProperty;
 import de.rwth.i9.palm.model.Location;
 import de.rwth.i9.palm.model.Publication;
@@ -165,6 +166,7 @@ public class DatabaseConfig
 				Interest.class,
 				InterestAuthor.class,
 				InterestProfile.class,
+				InterestProfileCircle.class,
 				InterestProfileProperty.class,
 				Location.class,
 				Publication.class,
