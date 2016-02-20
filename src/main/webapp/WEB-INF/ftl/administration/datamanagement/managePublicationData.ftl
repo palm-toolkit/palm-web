@@ -303,7 +303,10 @@
 						}
 		};
 		
-		<#-- register the widget -->
+		<#-- remove old widget -->
+		$.PALM.boxWidget.removeRegisteredWidget( '${wUniqueName}' ); 
+		
+		<#--// register the widget-->
 		$.PALM.options.registeredWidget.push({
 			"type":"${wType}",
 			"group": "${wGroup}",

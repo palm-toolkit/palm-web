@@ -1,5 +1,5 @@
-<section class="sidebar" style="height: auto;">
-  <ul class="sidebar-menu">
+<section class="sidebar">
+  <ul id="left-menu-sidebar" class="sidebar-menu">
   	<#-- Menu header -->
     <li class="header"><strong>ADMINISTRATION</strong></li>
     
@@ -135,3 +135,25 @@
     
   </ul>
 </section>
+
+<script>
+	$( function(){
+		<#-- add slim scroll -->
+	      $("#left-menu-sidebar").slimscroll({
+				height: "100%",
+		        size: "5px",
+	        	allowPageScroll: true,
+	   			touchScrollStep: 50
+		  });
+		  <#--
+		   $(".content-wrapper>.content").slimscroll({
+				height: "100%",
+		        size: "8px",
+	        	allowPageScroll: true,
+	   			touchScrollStep: 50,
+	   			railVisible: true,
+    			alwaysVisible: true
+		  });
+		  -->
+	});
+</script>
