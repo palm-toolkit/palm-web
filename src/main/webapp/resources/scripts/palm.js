@@ -1202,7 +1202,7 @@ $.PALM.callout = {
  */
 $.PALM.api = {
 	submit : function($trigerElem) {
-		vat _this = this;
+		var _this = this;
 		var $closestForm = $trigerElem.closest("form");
 		// add overlay
 		var overlay = $('<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>');
@@ -1214,7 +1214,7 @@ $.PALM.api = {
 			// TODO:display json
 		});
 	},
-	jsonTidy; function ( json ){
+	jsonTidy: function ( json ){
 		// http://jsfiddle.net/KJQ9K/554/
 		json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 	    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {

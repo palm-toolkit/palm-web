@@ -29,6 +29,8 @@
 			<#local wClassBox = wClassBox + " box-danger">
 		<#elseif wParams["wColor"] == "BLUE">
 			<#local wClassBox = wClassBox + " box-info">
+		<#elseif wParams["wColor"] == "SOLID">
+			<#local wClassBox = wClassBox + " box-solid">
 		</#if>
 	
 	</#if>
