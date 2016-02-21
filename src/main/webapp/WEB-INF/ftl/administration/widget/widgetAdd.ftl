@@ -55,6 +55,13 @@
 	      </select>
 	    </div>
 	    
+	    
+	    <#-- text input Widget Position -->
+	    <div class="form-group">
+	      <label>Position</label>
+	      <input type="text" id="position" name="position" class="form-control col-md-4" value="0">
+	    </div>
+	    
 	    <#-- select Widget Color -->
 	    <div class="form-group">
 	      <label>Widget Header Color</label>
@@ -126,6 +133,21 @@
 	        </label>
 	        <label>
 	          <input type="radio" name="widgetColorEnable" id="widgetColorEnable2" value="off">
+	          No
+	        </label>
+	      </div>
+	    </div>
+	    
+	    <#-- radio widget header visible -->
+	    <div class="form-group">
+	      <label>Is widget contain header?</label>
+	      <div class="radio">
+	        <label class="col-md-4">
+	          <input type="radio" name="headerVisible" id="headerVisible1" value="on" checked="">
+	          Yes
+	        </label>
+	        <label>
+	          <input type="radio" name="headerVisible" id="headerVisible2" value="off">
 	          No
 	        </label>
 	      </div>
