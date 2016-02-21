@@ -98,9 +98,9 @@
 		<i class="fa fa-angle-left pull-right"></i>
       </a>
       <ul class="treeview-menu">
-        <li data-link="architecture"><a href="<@spring.url '/admin/developer/architecture' />"><i class="fa fa-building-o"></i>Architecture</a></li>
-        <li data-link="documentation"><a href="<@spring.url '/admin/developer/documentation' />"><i class="fa fa-file-o"></i>Documentation</a></li>
+        <li data-link="architecture"><a href="<@spring.url '/admin/developer/architecture' />"><i class="fa fa-building-o"></i>Architecture Overview</a></li>
         <li data-link="technologies"><a href="<@spring.url '/admin/developer/technologies' />"><i class="fa fa-asterisk"></i>Technologies</a></li>
+        <li data-link="documentation"><a href="<@spring.url '/admin/developer/documentation' />"><i class="fa fa-file-o"></i>Documentation</a></li>
         <li data-link="credit"><a href="<@spring.url '/admin/developer/creadit' />"><i class="fa fa-users"></i>Credit</a></li>
       </ul>
     </li>
