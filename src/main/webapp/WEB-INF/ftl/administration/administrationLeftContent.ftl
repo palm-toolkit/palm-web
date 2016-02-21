@@ -43,7 +43,6 @@
       </a>
       <ul class="treeview-menu">
         <li data-link="add"><a href="<@spring.url '/admin/widget/add' />"><i class="fa fa-caret-right"></i>Add New Widget</a></li>
-        <li data-link="all"><a href="<@spring.url '/admin/widget/all' />"><i class="fa fa-caret-right"></i>All Widgets</a></li>
         <li data-link="researcher"><a href="<@spring.url '/admin/widget/researcher' />"><i class="fa fa-caret-right"></i>Researcher Widgets</a></li>
         <li data-link="conference"><a href="<@spring.url '/admin/widget/conference' />"><i class="fa fa-caret-right"></i>Conference Widgets</a></li>
         <li data-link="publication"><a href="<@spring.url '/admin/widget/publication' />"><i class="fa fa-caret-right"></i>Publication Widgets</a></li>
@@ -77,7 +76,16 @@
       </a>
     </li>
     
+    <#-- User -->
+    <li class="treeview" data-link="termweighting">
+      <a href="<@spring.url '/admin/user' />">
+        <i class="fa fa-user"></i>
+        <span>Users</span>
+      </a>
+    </li>
+    
     <#-- Users menu -->
+	<#--
     <li class="treeview">
       <a href="#">
         <i class="fa fa-user"></i>
@@ -89,7 +97,8 @@
         <li><a href="pages/layout/boxed.html"><i class="fa fa-caret-right"></i> Edit</a></li>
       </ul>
     </li>
-    
+    -->
+
     <#-- Developer corner -->
     <li class="treeview" data-link="developer">
       <a href="#">
@@ -98,10 +107,10 @@
 		<i class="fa fa-angle-left pull-right"></i>
       </a>
       <ul class="treeview-menu">
-        <li data-link="architecture"><a href="<@spring.url '/admin/developer/architecture' />"><i class="fa fa-building-o"></i>Architecture Overview</a></li>
-        <li data-link="technologies"><a href="<@spring.url '/admin/developer/technologies' />"><i class="fa fa-asterisk"></i>Technologies</a></li>
-        <li data-link="documentation"><a href="<@spring.url '/admin/developer/documentation' />"><i class="fa fa-file-o"></i>Documentation</a></li>
-        <li data-link="credit"><a href="<@spring.url '/admin/developer/creadit' />"><i class="fa fa-users"></i>Credit</a></li>
+        <li data-link="architecture"><a href="<@spring.url '/developer/architecture' />"><i class="fa fa-building-o"></i>Architecture Overview</a></li>
+        <li data-link="technologies"><a href="<@spring.url '/developer/technology' />"><i class="fa fa-asterisk"></i>Technologies</a></li>
+        <li data-link="documentation"><a href="<@spring.url '/developer/documentation' />"><i class="fa fa-file-o"></i>Documentation</a></li>
+        <li data-link="credit"><a href="<@spring.url '/developer/credit' />"><i class="fa fa-users"></i>Credit</a></li>
       </ul>
     </li>
     
@@ -128,8 +137,8 @@
 		<i class="fa fa-angle-left pull-right"></i>
       </a>
       <ul class="treeview-menu">
-        <li data-link="pdf"><a href="<@spring.url '/admin/extract/pdf' />"><i class="fa fa-file-pdf-o"></i>PDF Extraction</a></li>
-        <li data-link="html"><a href="<@spring.url '/admin/extract/html' />"><i class="fa fa-file-text-o"></i>Webpage Extraction</a></li>
+        <li data-link="pdf"><a href="<@spring.url '/extraction/pdf' />"><i class="fa fa-file-pdf-o"></i>PDF Extraction</a></li>
+        <li data-link="html"><a href="<@spring.url '/extraction/html' />"><i class="fa fa-file-text-o"></i>Webpage Extraction</a></li>
       </ul>
     </li>
     
