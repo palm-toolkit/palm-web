@@ -62,6 +62,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
             			"/", 
             			"/circle/**", 
             			"/data/**", 
+            			"/developer/**", 
+            			"/extraction/**",
             			"/home", 
             			"/login", 
             			"/logout", 
