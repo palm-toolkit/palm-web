@@ -60,6 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
             .authorizeRequests()
             	.antMatchers( 
             			"/", 
+            			"/api/**", 
             			"/circle/**", 
             			"/data/**", 
             			"/developer/**", 

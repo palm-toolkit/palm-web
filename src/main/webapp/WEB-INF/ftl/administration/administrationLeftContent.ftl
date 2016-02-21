@@ -122,10 +122,10 @@
 		<i class="fa fa-angle-left pull-right"></i>
       </a>
       <ul class="treeview-menu">
-        <li data-link="researcher"><a href="<@spring.url '/admin/api/researcher' />"><i class="fa fa-users"></i>Researcher API</a></li>
-        <li data-link="publication"><a href="<@spring.url '/admin/api/publication' />"><i class="fa fa-file-text-o"></i>Publication API</a></li>
-        <li data-link="event"><a href="<@spring.url '/admin/api/conference' />"><i class="fa fa-globe"></i>Conferences API</a></li>
-        <li data-link="circle"><a href="<@spring.url '/admin/api/circle' />"><i class="fa fa-circle-o"></i>Circle API</a></li>
+        <li data-link="researcher"><a href="<@spring.url '/api/researcher' />"><i class="fa fa-users"></i>Researcher API</a></li>
+        <li data-link="publication"><a href="<@spring.url '/api/publication' />"><i class="fa fa-file-text-o"></i>Publication API</a></li>
+        <li data-link="event"><a href="<@spring.url '/api/conference' />"><i class="fa fa-globe"></i>Conferences API</a></li>
+        <li data-link="circle"><a href="<@spring.url '/api/circle' />"><i class="fa fa-circle-o"></i>Circle API</a></li>
       </ul>
     </li>
     
