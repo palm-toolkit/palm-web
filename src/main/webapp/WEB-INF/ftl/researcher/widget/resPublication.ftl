@@ -31,21 +31,22 @@
 			onRefreshStart: function( widgetElem ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
+				var mainContainer = $("#widget-${wUniqueName} .box-content");
 				<#--remove everything -->
-				$("#widget-${wUniqueName} .box-content").html( "" );
+				mainContainer.html( "" );
 				
-				<#--
+				<#-- check for error  -->
 				if( data.status != "ok"){
-					alert( "error on publication list" );
+					<#--alert( "error on publication list" );-->
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher doesn't ave any publications" );
 					return false;
 				}
-				-->
-				<#--
 				if ( typeof data.publications === 'undefined') {
-					alert( "error, no publication found" );
+					<#--alert( "error, no publication found" );-->
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher doesn't ave any publications" );
 					return false;
 				}
-				-->
+				
 				var filterContainer = $( '<div/>' )
 										.css({'width':'100%','margin':'0 10px 15px 0'})
 										.addClass( "pull-left" )
@@ -143,12 +144,12 @@
 				<#-- append filter -->
 				filterContainer.append( filterSearch );
 				filterContainer.append( filterYear );
-				$("#widget-${wUniqueName} .box-content").append( filterContainer );
+				mainContainer.append( filterContainer );
 				<#-- end of filter -->
 
 				<#-- no publication found -->
 				if ( typeof data.publications === 'undefined') {
-					$("#widget-${wUniqueName} .box-content").append( "<strong>error, no publication found/match</strong>" );
+					mainContainer.append( "<strong>error, no publication found/match</strong>" );
 					return false;
 				}
 
@@ -507,7 +508,7 @@
 				});
 
 				<#-- append everything to  -->
-				$("#widget-${wUniqueName} .box-content").append( timeLineContainer );
+				mainContainer.append( timeLineContainer );
 			}
 		};
 		

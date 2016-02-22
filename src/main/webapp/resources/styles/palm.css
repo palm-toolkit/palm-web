@@ -991,8 +991,8 @@ form.cmxform label.error, label.error {
 
 /* json tidy */
 pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
-.string { color: green; }
-.number { color: darkorange; }
-.boolean { color: blue; }
-.null { color: magenta; }
-.key { color: red; }
+.pre-string { color: green; }
+.pre-number { color: darkorange; }
+.pre-boolean { color: blue; }
+.pre-null { color: magenta; }
+.pre-key { color: red; }

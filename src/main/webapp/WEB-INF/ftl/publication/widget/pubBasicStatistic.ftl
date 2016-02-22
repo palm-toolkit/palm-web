@@ -167,11 +167,17 @@
 						);
 					} 
 					if( typeof data.publication.cited != "undefined"){
+						var citedByNumber = data.publication.cited;
+						if( typeof data.publication.citedUrl !== "undefined" )
+							citedByNumber = $( '<span/>' )
+												.addClass( "urlstyle" )
+												.html( data.publication.cited )
+												.click( function( event ){ event.preventDefault();window.open( data.publication.citedUrl, "link to citation list" ,'scrollbars=yes,width=650,height=500')});
 						targetContainer.append(
 							$( '<dt/>' ).html( "Cited by:" )
 						)
 						.append(
-							$( '<dd/>' ).html( data.publication.cited )
+							$( '<dd/>' ).html( citedByNumber )
 						);
 					}
 					if( typeof data.publication.language != "undefined"){
