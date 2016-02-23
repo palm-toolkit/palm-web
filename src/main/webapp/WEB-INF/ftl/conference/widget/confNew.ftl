@@ -91,6 +91,8 @@
 						url += "&volume=" + data.volume;
 					if( typeof eventId !== "undefined" )
 						url += "&year=" + data.year;
+					if( typeof publicationId !== "undefined" )
+						url += "&publicationId=" + data.publicationId;
 						
 					if( inIframe() ){
 						window.top.location = url;

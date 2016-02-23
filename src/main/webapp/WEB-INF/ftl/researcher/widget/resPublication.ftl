@@ -411,7 +411,7 @@
 							venueHref += "&name=" + item.event.name.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id ;
 							
 							<#-- the implementation logic is other way around, but this worked, then just leave it-->
-							if( typeof item.event.isGroupAdded !== "undefined" && item.event.isGroupAdded )
+							if( typeof item.event.isGroupAdded === "undefined" || !item.event.isGroupAdded )
 								venueHref += "&add=yes";
 							
 							if( typeof item.volume != 'undefined' ){
@@ -473,6 +473,8 @@
 								venueText += " " + item.date.substring(0, 4);
 								venueHref += "&year=" + item.date.substring(0, 4);
 							}
+							
+							venueHref += "&add=yes";
 							
 							var eventPart = $( '<a/>' )
 													.attr({ "href" : venueHref })

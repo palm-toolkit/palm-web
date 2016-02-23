@@ -390,10 +390,9 @@ $.PALM.circle = {
 		if (_this.circleResearcher.length > 0
 				&& _this.currentResearcherData.length > 0) {
 			// check for duplication between current and circle
-			$.each(_this.circleResearcher, function(indexCircle, itemCircle) {
+			$.each(_this.currentResearcherData, function(indexResearcher, itemResearcher) {
 				var isExistOnCircle = false;
-				$.each(_this.currentResearcherData, function(indexResearcher,
-						itemResearcher) {
+				$.each(_this.circleResearcher, function(indexCircle, itemCircle) {
 					if (itemCircle.id == itemResearcher.id) {
 						isExistOnCircle = true;
 						return;
@@ -401,7 +400,7 @@ $.PALM.circle = {
 				});
 
 				if (!isExistOnCircle)
-					currentCleanResearcherData.push(itemResearcher);
+					_this.currentCleanResearcherData.push(itemResearcher);
 			});
 
 		} else {
@@ -432,10 +431,9 @@ $.PALM.circle = {
 		if (_this.circlePublication.length > 0
 				&& _this.currentPublicationData.length > 0) {
 			// check for duplication between current and circle
-			$.each(_this.circlePublication, function(indexCircle, itemCircle) {
+			$.each(_this.currentPublicationData, function(indexPublication, itemPublication) {
 				var isExistOnCircle = false;
-				$.each(_this.currentPublicationData, function(indexPublication,
-						itemPublication) {
+				$.each(_this.circlePublication, function(indexCircle, itemCircle) {
 					if (itemCircle.id == itemPublication.id) {
 						isExistOnCircle = true;
 						return;
@@ -443,7 +441,7 @@ $.PALM.circle = {
 				});
 
 				if (!isExistOnCircle)
-					currentCleanPublicationData.push(itemPublication);
+					_this.currentCleanPublicationData.push(itemPublication);
 			});
 
 		} else {

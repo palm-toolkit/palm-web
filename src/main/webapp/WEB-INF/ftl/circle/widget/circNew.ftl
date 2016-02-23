@@ -5,7 +5,7 @@
 		<#-- name -->
 		<div class="form-group">
 	      <label>Title *</label>
-	      <input type="text" id="name" name="name" value="" class="form-control" placeholder="researcher name" />
+	      <input type="text" id="name" name="name" value="" class="form-control" placeholder="circle name" />
 	    </div>
 
 		<#-- abstract -->
@@ -88,7 +88,10 @@
 					    <#-- add note -->
 						<div id="auth-info" style="position:relative;height:0;width:100%;display:none">
 							<div style="position:absolute;width:100%;height:30px;top:-30px;left:0px;z-index:500;background-color:#eee">
-								<span style="white-space:nowrap;line-height:30px;padding:0 0 0 6px">Publications of <strong></strong></span>
+								<span class="btn btn-sm btn-success" style="white-space:nowrap;line-height:30px;padding:0 6px"
+									onclick="$.each( $( '#inputPub' ).find( '.content-list' ).find( 'button' ), function(){$( this ).click()});$( this ).parent().parent().hide()">
+									+ Add all <strong></strong> publications
+								</span>
 								<span onclick="$( this ).parent().parent().hide()" title="close to start new search" style="display:block;float:right;width:30px;height:30px;cursor: pointer;padding:0 8px;background-color:#fff;line-height:25px;"> X </span>
 							</div>
 						</div>

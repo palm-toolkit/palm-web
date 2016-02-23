@@ -99,8 +99,11 @@
 							
 												
 							var venueText = data.publication.event.name;
-							var venueHref = "<@spring.url '/venue' />?eventId=" + data.publication.event.id + "&type=" + data.publication.type.toLowerCase() + "&name=" + data.publication.event.name.toLowerCase().replace(/[^\w\s]/gi, '');
+							var venueHref = "<@spring.url '/venue' />?eventId=" + data.publication.event.id + "&type=" + data.publication.type.toLowerCase() + "&name=" + data.publication.event.name.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + data.publication.id;
 							
+							if( typeof data.publication.event.isGroupAdded === "undefined" || !data.publication.event.isGroupAdded )
+								venueHref += "&add=yes";
+								
 							if( typeof data.publication.volume != 'undefined' ){
 								venueText += " (" + data.publication.volume + ")";
 								venueHref += "&volume=" + data.publication.volume;
@@ -141,6 +144,8 @@
 								venueText += " " + data.publication.date.substring(0, 4);
 								venueHref += "&year=" + data.publication.date.substring(0, 4);
 							}
+							
+							venueHref += "&add=yes";
 							
 							var eventPart = $( '<a/>' )
 													.attr({ "href" : venueHref })
