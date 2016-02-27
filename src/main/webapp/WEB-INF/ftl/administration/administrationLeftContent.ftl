@@ -76,6 +76,19 @@
       </a>
     </li>
     
+    <#-- Topic Modeling -->
+    <li class="treeview" data-link="topicmodel">
+      <a href="#">
+        <i class="fa fa-th"></i>
+        <span>Topic Modeling</span>
+		<i class="fa fa-angle-left pull-right"></i>
+      </a>
+      <ul class="treeview-menu">
+        <li data-link="author"><a href="<@spring.url '/admin/topicmodel/author' />"><i class="fa fa-caret-right"></i>Researcher</a></li>
+        <li data-link="circle"><a href="<@spring.url '/admin/topicmodel/circle' />"><i class="fa fa-caret-right"></i>Circle</a></li>
+      </ul>
+    </li>
+    
     <#-- User -->
     <li class="treeview" data-link="termweighting">
       <a href="<@spring.url '/admin/user' />">
