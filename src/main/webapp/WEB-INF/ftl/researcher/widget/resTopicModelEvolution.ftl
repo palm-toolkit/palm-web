@@ -202,9 +202,9 @@ function visualizeInterest( yearIndex , yearType ){
 	for( var i = dataPointer.dataYearStart ; i <= dataPointer.dataYearEnd ; i++ ){
 		$.each( data.topicModel[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears[i].termvalue, function( index, item ){
 				var termValueData={
-					"key" : item[1],
+					"key" : item[0],
 					"date" : data.topicModel[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears[i].year,
-					"value" : item[2]
+					"value" : item[1]
 					
 				}
 				streamChartData.push( termValueData );
