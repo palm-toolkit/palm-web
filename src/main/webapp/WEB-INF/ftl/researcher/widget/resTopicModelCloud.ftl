@@ -240,11 +240,11 @@ function visualizeInterest( yearIndex , yearType ){
 				uniqueWords[ uniqueWordsHelperMap[ item[1] ] ].size = uniqueWords[ uniqueWordsHelperMap[ item[1] ] ].size + item[2];
 			} else{
 				var termValue={
-					"text" : item[1],
-					"size" : item[2]
+					"text" : item[0],
+					"size" : item[1]
 				}
 				uniqueWords.push( termValue );
-				uniqueWordsHelperMap[ item[1] ] = uniqueWords.length - 1;
+				uniqueWordsHelperMap[ item[0] ] = uniqueWords.length - 1;
 			}
 		});
 	}
