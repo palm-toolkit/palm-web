@@ -3,7 +3,7 @@
 		
 		<#-- Venue -->
 		<div class="form-group">
-          <label>Conference Type *</label>
+          <label>Type</label>
           <select id="type" name="type" class="form-control" style="width:120px">
             <option value="conference">Conference / Workshop</option>
             <option value="journal"<#if targetType?? && targetType == "journal"> selected</#if>>Journal</option>
@@ -103,7 +103,7 @@
 			});
 		});
 		
-		$( "#venue-type" ).change( function(){
+		$( "#type" ).change( function(){
 			setConferenceDropDown( $(this).val() );
 			$( "#name,#notation,#description" ).val( "" );
 		});

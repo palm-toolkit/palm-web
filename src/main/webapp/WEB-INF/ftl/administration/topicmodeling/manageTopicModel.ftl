@@ -1,5 +1,5 @@
 <div class="box-body">
-	  <form role="form" id="manageInterestProfile" action="<@spring.url '/admin/termweighting' />" method="post">
+	  <form role="form" id="manageInterestProfile" action="<@spring.url '/admin/topicmodel/' />${type!''}" method="post">
 	    <#-- text input widget title -->
 		<#list interestProfileListWrapper.topicModelingAlgorithms as interestProfile>
 			<#if interestProfile_index gt 0>
@@ -29,6 +29,7 @@
                 <textarea class="form-control" name="interestProfiles[${interestProfile_index}].description" id="interestProfiles[${interestProfile_index}].description" rows="2" placeholder="Enter interestProfile description/hint/info..."><#if interestProfile.description??>${interestProfile.description}</#if></textarea>
 				<#-- properties -->
 				
+				<#--
 				<strong>Properties:</strong>
 				<button type="button" class="btn btn-primary btn-xs pull-right" onclick="addPropertiesRow( $('#table_interestProfile_${interestProfile_index}'), ${interestProfile_index} ); return false;"> + Add Properties</button>
 				<table id="table_interestProfile_${interestProfile_index}" class="table table-condensed">
@@ -65,7 +66,7 @@
 	                    </#if>          
 	                  </tbody>
                   </table>
-				
+				-->
 	    	</div>
 			
 	  	</#list>
