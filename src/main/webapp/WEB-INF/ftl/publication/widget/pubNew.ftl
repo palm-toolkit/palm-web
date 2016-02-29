@@ -214,7 +214,7 @@
 		            		$('#venue').removeClass( "ui-autocomplete-loading" );
 		            		<#--return false;-->
 							var result = [{
-       									label: 'No matches Conference/Journal found, please add later on Conference page', 
+       									label: 'No matching conference/journal found, please add later on Conference page', 
    										value: response.term
 										}];
 										
@@ -460,7 +460,7 @@
 		            	if( data.count == 0){
 		            		$('#authors-tag input').removeClass( "ui-autocomplete-loading" );
 		            		var result = [{
-       									label: 'No matches researcher found, please add first on Researcher page', 
+       									label: 'No matching researcher found, please add first on Researcher page', 
    										value: response.term
 										}];
 										

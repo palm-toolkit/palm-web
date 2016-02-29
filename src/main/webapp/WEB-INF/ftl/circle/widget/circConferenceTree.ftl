@@ -47,13 +47,25 @@
 				        onlyCountLeafChild:true,
 				        hideZeros: true,
 				        hideExpanded: true
-				    },activate: function(event, data){ // allow re-loads
+				    },
+				    activate: function(event, data){ // allow re-loads
 			            var node = data.node,
 			                orgEvent = data.originalEvent;
 			            if( node.data.href !== ""){
-			                window.location = "<@spring.url '/' />" + node.data.href;
+			             	var href = "<@spring.url '/' />" + node.data.href;
+			             	if( !node.data.added && node.data.position < 3 )
+			             		href += "&add=yes";
+			                window.location = href;
 			            }
-			        }
+			        },
+			       	renderNode: function(event, data) {
+			        	<#--Optionally tweak data.node.span-->
+			        	var node = data.node;
+			        	if( !node.data.added && node.data.position < 3 ){
+			          		node.extraClasses = "text-gray";
+        					node.renderTitle();
+			        	}
+			      	}
 				});			
 							
 							
