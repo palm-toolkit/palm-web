@@ -145,7 +145,7 @@
 </div>
 
 <div class="box-footer">
-	<button id="submit" type="submit" class="btn btn-primary">Submit</button>
+	<button id="submit" type="submit" class="btn btn-primary">Save</button>
 </div>
 
 <script>
