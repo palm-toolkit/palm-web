@@ -154,7 +154,7 @@
 		            }
 		        });
 		    },
-			minLength: 3,
+			minLength: 2,
 			select: function( event, ui ) {
 				<#-- select appropriate vanue type -->
 				$( '#venue-type' ).val( ui.item.type ).change();

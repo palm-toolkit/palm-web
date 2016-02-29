@@ -303,7 +303,7 @@ span.fancytree-node {
   min-height: 20px;
 }
 span.fancytree-title {
-  color: #000000;
+  color: inherit;
   cursor: pointer;
   display: inline-block;
   vertical-align: top;

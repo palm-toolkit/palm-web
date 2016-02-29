@@ -10,9 +10,11 @@
 			<li id="header_htmlpdf">
 				<a href="#tab_publicationhtmlpdf" data-toggle="tab" aria-expanded="true">Html&Pdf</a>
 			</li>
+			<#--
 			<li id="header_revision">
 				<a href="#tab_publicationrevision" data-toggle="tab" aria-expanded="true">Revision</a>
 			</li>
+			-->
         </ul>
         <div class="tab-content">
 			<div id="tab_publicationresult" class="tab-pane active">
@@ -21,8 +23,10 @@
 			</div>
 			<div id="tab_publicationhtmlpdf" class="tab-pane">
 			</div>
+			<#--
 			<div id="tab_publicationrevision" class="tab-pane">
 			</div>
+			-->
         </div>
 	</div>
 </div>
