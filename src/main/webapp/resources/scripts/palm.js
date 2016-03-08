@@ -1045,6 +1045,12 @@ $.PALM.popUpIframe = {
 	create : function(iframeUrl, popUpOptions, iframeTitle) {
 		if (typeof iframeUrl === 'undefined')
 			return false;
+		
+		// change breowser history
+		var currentUrl = window.location.href;
+		var currentUrlFix = currentUrl.replace(/&add=yes/g, "");
+		if ( currentUrl.indexOf( "&add=yes" ) > -1)
+			history.replaceState( {} , '', currentUrl.replace(/&add=yes/g, "") );
 
 		var o = $.PALM.options.popUpIframeOptions;
 		var _this = this;

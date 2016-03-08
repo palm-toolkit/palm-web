@@ -395,8 +395,8 @@
 	
 							timelineBody.append( timeLineAuthor );
 						}
-						<#-- venue -->
 						
+						<#-- venue -->
 						if( typeof item.event !== 'undefined' ){
 							var eventElem = $( '<div/>' )
 											.addClass( 'event-detail font-xs' );
@@ -410,7 +410,6 @@
 							}
 							venueHref += "&name=" + item.event.name.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id ;
 							
-							<#-- the implementation logic is other way around, but this worked, then just leave it-->
 							if( typeof item.event.isGroupAdded === "undefined" || !item.event.isGroupAdded )
 								venueHref += "&add=yes";
 							
