@@ -233,7 +233,11 @@ function visualizeInterest( yearIndex , yearType ){
 				streamChartDataComplete.push( termValueData );
 			}
 		}
-		streamChartDataComplete[ streamChartDataCompleteMapIndex[ d.key+d.date ] ].value = Math.round( d.value ).toFixed(2).toString();
+		<#-- set threshold -->
+		var dataValue = d.value.toFixed(2);
+		if( dataValue < 0.4 )
+			dataValue = 0;
+		streamChartDataComplete[ streamChartDataCompleteMapIndex[ d.key+d.date ] ].value = dataValue.toString();
 		previousTerm = d.key;
 	});
 
