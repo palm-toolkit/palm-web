@@ -931,9 +931,13 @@ div.d3-tooltip {
 	display:block;
 	width:100px;
 }
-.width130px{
+.width80px{
 	display:block;
-	width:130px;
+	width:80px;
+}
+.width110px{
+	display:block;
+	width:110px;
 }
 
 /* manage widget style */

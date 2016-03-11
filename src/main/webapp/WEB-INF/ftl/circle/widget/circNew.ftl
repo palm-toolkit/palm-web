@@ -564,6 +564,7 @@
 						var researcherDetail =
 						$( '<div/>' )
 							.addClass( 'detail' )
+							.css({"cursor":"auto"})
 							.append(
 								$( '<div/>' )
 									.addClass( 'name' )
@@ -637,8 +638,30 @@
 						<#-- researcherDetailOption -->
 						var researcherDetailOption = $('<div/>').addClass( "option" );
 						<#-- fill researcher detail option -->
+						<#-- circle add button -->
+						var circlePublicationButton = $('<div/>')
+							.addClass( "btn btn-success bg-blue btn-xs width80px pull-left" )
+							.attr({ "data-id": item.id, "data-name": item.name , "title":"show list of publications not in circle"})
+							.html( "publications" )
+							.on( "click", function( e ){
+								e.preventDefault();
+								<#-- get list of publication -->
+								getPublicationList( "<@spring.url '/publication/search?authorId=' />" + $( this ).data( "id" ) + "&maxresult=300" );
+								<#-- show info -->
+								var authInfo = $( "#auth-info" );
+								authInfo.show();
+								authInfo.find( "strong" ).html( $( this ).data( "name" ) );
+								<#-- scroll to -->
+								var scrollTo_val = $( "#inputPub" )[0].offsetTop + 'px';
+								$(".content-wrapper>.content").slimscroll({
+									scrollTo : scrollTo_val
+								});
+							});
+						
+						researcherDetailOption.append( circlePublicationButton );
+						<#-- circle add button -->
 						var circleAddButton = $('<button/>')
-							.addClass( "btn btn-success btn-xs width130px pull-right" )
+							.addClass( "btn btn-success btn-xs width110px pull-right" )
 							.attr({ "data-id": item.id, "data-name": item.name })
 							.html( "+ add to circle" )
 							.on( "click", function( e ){
@@ -660,6 +683,7 @@
 							});
 						
 						researcherDetailOption.append( circleAddButton );
+						
 						
 						researcherDetail.append( researcherDetailOption );
 						
