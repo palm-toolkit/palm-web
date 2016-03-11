@@ -71,7 +71,44 @@ $.each( data.topics, function( index, item){
 	tabHeaderContainer.append( tabHeader );
 	tabContentContainer.append( tabContent );
 	
+	<#-- add service logo -->
+<#--
+	if( tabHeaderText === "Alchemy")
+		tabContent.append( 
+				$('<div/>')
+				.css({"position":"relative","bottom":"10px"})
+				.append(
+					$('<div/>')
+					.css({"position":"relative","bottom":"10px"})
+					.append(
+						$('<img/>').attr({"src":"http://www.alchemyapi.com/sites/default/files/Logo60Height.png"})
+					)
+				)
+			);
+-->
+	if( tabHeaderText === "Opencalais")
+		tabContent.append( 
+				$('<div/>')
+				.css({"position":"relative","height":"0","width":"100%"})
+				.append(
+					$('<div/>')
+					.css({"position":"absolute","top":"0","right":"0","z-index":"5000"})
+					.append(
+						$('<a/>')
+						.attr({"href":"http://opencalais.com","target":"_blank"})
+						.append(
+							$('<img/>')
+							.css({"width":"250px"})
+							.attr({"src":"http://www.opencalais.com/wp-content/themes/Frank-master/images/calais-logo.png"})
+						)
+					)
+				)
+			);
+	
+	<#-- add visualization -->
 	visualizeTermValue( item.termvalues, "#tab_" + tabHeaderText );
+	
+	
 });
 
 function capitalizeFirstLetter(string) {
