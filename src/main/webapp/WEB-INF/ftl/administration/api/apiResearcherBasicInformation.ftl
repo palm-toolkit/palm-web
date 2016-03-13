@@ -1,15 +1,15 @@
 <form action="<@spring.url '/researcher/basicInformation' />" method="post" role="form">
 
-<#-- Query name -->
+<#-- Info -->
 <div class="form-group">
   <label class="info-label">Note:<br/>Get researcher ID from first API (Researcher Search). Use only ID from researcher which is added to PALM (isAdded:true)</label>  
 </div>
 
-<#-- Text input-->
+<#-- Researcher ID-->
 <div class="form-group">
 	<label>id</label>  
 	<input name="id" type="text" class="form-control">
-	<span class="help-block">Researcher ID gathered from previous API</span>  
+	<span class="help-block">Researcher ID gathered from Researcher Search API</span>  
 </div>
 
 <#-- Button -->
