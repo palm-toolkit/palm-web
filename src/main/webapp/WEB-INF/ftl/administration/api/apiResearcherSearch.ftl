@@ -56,20 +56,21 @@
 
 <#-- Button -->
 <div class="form-group">
-  <div class="col-md-4">
     <button onclick="$.PALM.api.submit( $(this) ); return false;" class="btn btn-primary">Execute</button>
-  </div>
 </div>
+
+<br/>
 
 <#-- query -->
 <div class="form-group">
 	<label>API Query</label>
-	<textarea class="form-control queryAPI" rows="3" readonly>
+	<textarea class="form-control queryAPI" rows="2" readonly>
 	</textarea>
 </div>
 
-<#-- result -->
-<pre class="textarea">
-</pre>
-
+<div class="form-group">
+	<label>API Results</label>
+	<pre class="textarea">
+	</pre>
+</div>
 </form>

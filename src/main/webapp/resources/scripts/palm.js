@@ -1217,7 +1217,8 @@ $.PALM.api = {
 		var overlay = $('<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>');
 		$closestForm.append(overlay);
 		
-		var url = $closestForm.attr("action") + "?" + $closestForm.serialize();
+		var domainPort = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+		var url = domainPort +  $closestForm.attr("action") + "?" + $closestForm.serialize();
 		
 		$closestForm.find( ".queryAPI" ).val( url );
 
