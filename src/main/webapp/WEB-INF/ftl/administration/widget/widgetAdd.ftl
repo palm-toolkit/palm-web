@@ -183,5 +183,23 @@
   
 </div><#-- ./box-body -->
 <div class="box-footer">
-  	<button type="submit" class="btn btn-primary" onclick="postFormViaAjax( $( 'form#addWidget' ) )">Create</button>
+  	<button type="button" id="saveChanges" class="btn btn-primary">Create</button>
 </div><#-- /.box-footer -->
+
+<script>
+$(function(){
+	  
+	  <#-- submit via ajax -->
+		$( "#saveChanges" ).click( function( e ){
+			e.preventDefault();
+			<#-- put researcher & publication on circle into hidden input -->
+			$.post( $("#addWidget").attr( "action" ), $("#addWidget").serialize(), function( data ){
+				<#-- if status ok -->
+				if( data.status == "ok" ){
+					<#-- reload parent page -->
+					parent.location = "<@spring.url '/admin?page=widget-' />" + $( "#widgetType" ).val().toLowerCase();
+				}
+			});
+		});
+});
+</script>
