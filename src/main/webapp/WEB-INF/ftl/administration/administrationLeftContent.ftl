@@ -43,12 +43,12 @@
       </a>
       <ul class="treeview-menu">
         <li data-link="add"><a href="<@spring.url '/admin/widget/add' />"><i class="fa fa-caret-right"></i>Add New Widget</a></li>
-        <li data-link="researcher"><a href="<@spring.url '/admin/widget/researcher' />"><i class="fa fa-caret-right"></i>Researcher Widgets</a></li>
-        <li data-link="conference"><a href="<@spring.url '/admin/widget/conference' />"><i class="fa fa-caret-right"></i>Conference Widgets</a></li>
-        <li data-link="publication"><a href="<@spring.url '/admin/widget/publication' />"><i class="fa fa-caret-right"></i>Publication Widgets</a></li>
-        <li data-link="circle"><a href="<@spring.url '/admin/widget/circle' />"><i class="fa fa-caret-right"></i>Circle Widgets</a></li>
-        <li data-link="administration"><a href="<@spring.url '/admin/widget/administration' />"><i class="fa fa-caret-right"></i>Administration Widgets</a></li>
-        <li data-link="user"><a href="<@spring.url '/admin/widget/user' />"><i class="fa fa-caret-right"></i>User Widget</a></li>
+        <li data-link="researcher"><a href="<@spring.url '/admin/widget/manage/researcher' />"><i class="fa fa-caret-right"></i>Researcher Widgets</a></li>
+        <li data-link="publication"><a href="<@spring.url '/admin/widget/manage/publication' />"><i class="fa fa-caret-right"></i>Publication Widgets</a></li>
+        <li data-link="conference"><a href="<@spring.url '/admin/widget/manage/venue' />"><i class="fa fa-caret-right"></i>Conference Widgets</a></li>
+        <li data-link="circle"><a href="<@spring.url '/admin/widget/manage/circle' />"><i class="fa fa-caret-right"></i>Circle Widgets</a></li>
+        <li data-link="administration"><a href="<@spring.url '/admin/widget/manage/administration' />"><i class="fa fa-caret-right"></i>Administration Widgets</a></li>
+        <li data-link="user"><a href="<@spring.url '/admin/widget/manage/user' />"><i class="fa fa-caret-right"></i>User Widget</a></li>
       </ul>
     </li>
 

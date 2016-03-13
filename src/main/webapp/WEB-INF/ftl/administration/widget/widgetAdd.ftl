@@ -108,7 +108,22 @@
 	      </div>
 	    </div>
 	    
+	    <#-- widget moveable option -->
+	    <div class="form-group">
+	      <label>Enable widget moveable</label>
+	      <div class="radio">
+	        <label class="col-md-4">
+	          <input type="radio" name="widgetMoveable" id="widgetMoveable1" value="on" checked="">
+	          Yes
+	        </label>
+	        <label>
+	          <input type="radio" name="widgetMoveable" id="widgetMoveable2" value="off">
+	          No
+	        </label>
+	      </div>
+	    </div>
 	    <#-- radio widget resize option -->
+<#--
 	    <div class="form-group">
 	      <label>Enable widget resize option</label>
 	      <div class="radio">
@@ -122,8 +137,9 @@
 	        </label>
 	      </div>
 	    </div>
-	    
+-->   
 	    <#-- radio widget color option -->
+<#--
 	    <div class="form-group">
 	      <label>Enable widget color option</label>
 	      <div class="radio">
@@ -137,7 +153,7 @@
 	        </label>
 	      </div>
 	    </div>
-	    
+-->    
 	    <#-- radio widget header visible -->
 	    <div class="form-group">
 	      <label>Is widget contain header?</label>

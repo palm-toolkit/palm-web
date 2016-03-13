@@ -575,7 +575,7 @@ $.PALM.layout = {
 						listHeightOffset += 50;
 					$(".content-list").height(bodyheight - listHeightOffset);
 					$("#left-menu-sidebar").parent().height(
-							bodyheight - listHeightOffset + 100);
+							bodyheight - listHeightOffset + 150);
 
 				});
 	},
@@ -638,9 +638,9 @@ $.PALM.layout = {
 		if ($(window).width() < $.PALM.options.screenSizes.sm)
 			listHeightOffset += 50;
 		$(".content-list").height(bodyheight - listHeightOffset);
-		$(".content-wrapper").height(bodyheight);
+		$(".content-wrapper").height(bodyheight - 50);
 		$("#left-menu-sidebar").parent().height(
-				bodyheight - listHeightOffset + 100);
+				bodyheight - listHeightOffset + 150);
 	}
 
 };
@@ -742,6 +742,11 @@ $.PALM.tree = function(menu) {
 					e.preventDefault();
 					$this.parent("li").siblings().removeClass("active");
 					$this.parent("li").addClass("active");
+					// modify address
+					var dataLink = $this.parent("li").data( "link" );
+					if( !$this.parent("li").hasClass( "treeview" ) )
+						dataLink = $this.parent("li").parent("ul").parent("li").data( "link" ) + "-" + dataLink;
+					history.pushState( null, dataLink , $.PALM.utility.removeURLParameter(window.location.href, "page") + "page=" + dataLink);
 					// get content via ajax
 					var url = $this.attr("href");
 					if (url !== "#")
@@ -1351,6 +1356,32 @@ $.PALM.utility = {
 			return trimmedString;
 		} else
 			return inputText;
+	},
+	removeURLParameter: function (url, parameter) {
+	    //prefer to use l.search if you have a location/link object
+	    var urlparts= url.split('?');   
+	    if (urlparts.length>=2) {
+
+	        var prefix= encodeURIComponent(parameter)+'=';
+	        var pars= urlparts[1].split(/[&;]/g);
+
+	        //reverse iteration as may be destructive
+	        for (var i= pars.length; i-- > 0;) {    
+	            //idiom for string.startsWith
+	            if (pars[i].lastIndexOf(prefix, 0) !== -1) {  
+	                pars.splice(i, 1);
+	            }
+	        }
+
+	        url= urlparts[0]+'?'+pars.join('&');
+	        if((url.indexOf("?") == -1))
+	        	url += "?";
+	        return url;
+	    } else {
+	    	if((url.indexOf("?") == -1))
+	        	url += "?";
+	        return url;
+	    }
 	}
 // , generateDropDownDatePicker: function( containerSelector , additionalOptions
 // ){
