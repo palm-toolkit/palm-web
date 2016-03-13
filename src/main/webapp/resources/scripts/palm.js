@@ -1207,7 +1207,7 @@ $.PALM.callout = {
 }
 
 /**
- * PALM APIs javascript, get closest form, serialize and getJSON
+ * PALM xs javascript, get closest form, serialize and getJSON
  */
 $.PALM.api = {
 	submit : function($trigerElem) {
@@ -1216,28 +1216,33 @@ $.PALM.api = {
 		// add overlay
 		var overlay = $('<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>');
 		$closestForm.append(overlay);
+		
+		var url = $closestForm.attr("action") + "?" + $closestForm.serialize();
+		
+		$closestForm.find( ".queryAPI" ).val( url );
 
 		var jqXHR = $.getJSON( $closestForm.attr("action"), $closestForm.serialize(), function( data ) {
 			// remove overlay and loading
 			$closestForm.find(".overlay").remove();
-			// TODO:display json
+			// print json
+			$closestForm.find( ".textarea" ).html( _this.jsonTidy( JSON.stringify(data, undefined, 4)) );
 		});
 	},
 	jsonTidy: function ( json ){
 		// http://jsfiddle.net/KJQ9K/554/
 		json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 	    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-	        var cls = 'number';
+	        var cls = 'pre-number';
 	        if (/^"/.test(match)) {
 	            if (/:$/.test(match)) {
-	                cls = 'key';
+	                cls = 'pre-key';
 	            } else {
-	                cls = 'string';
+	                cls = 'pre-string';
 	            }
 	        } else if (/true|false/.test(match)) {
-	            cls = 'boolean';
+	            cls = 'pre-boolean';
 	        } else if (/null/.test(match)) {
-	            cls = 'null';
+	            cls = 'pre-null';
 	        }
 	        return '<span class="' + cls + '">' + match + '</span>';
 	    });

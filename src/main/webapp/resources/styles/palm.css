@@ -1001,8 +1001,21 @@ form.cmxform label.error, label.error {
 
 /* json tidy */
 pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
-.pre-string { color: green; }
-.pre-number { color: darkorange; }
-.pre-boolean { color: blue; }
-.pre-null { color: magenta; }
-.pre-key { color: red; }
+.pre-string { color:#249D7F; }
+.pre-number { color: #ED5C65; }
+.pre-boolean { color: #219; }
+.pre-null { color: #219; }
+.pre-key { color:#249D7F;font-weight:700;}
+.textarea {
+    -moz-appearance: textfield-multiline;
+    -webkit-appearance: textarea;
+    border: 1px solid gray;
+    font: medium -moz-fixed;
+    font: -webkit-small-control;
+    height: 28px;
+    overflow: auto;
+    padding: 2px;
+    resize: both;
+    width: 100%;
+    min-height:200px;
+}
