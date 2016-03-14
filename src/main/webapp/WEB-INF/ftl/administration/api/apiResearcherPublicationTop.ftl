@@ -11,7 +11,7 @@
 <div class="form-group">
   <label>id</label>  
   <input name="id" type="text" class="form-control input-md">
-  <span class="help-block">Researcher ID gathered from Researcher Search API<</span>  
+  <span class="help-block">Researcher ID gathered from Researcher Search API</span>  
 </div>
 
 <#-- Text input-->

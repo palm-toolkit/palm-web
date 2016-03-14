@@ -1,8 +1,8 @@
-<form action="<@spring.url '/researcher/publicationList' />" method="post" role="form">
+<form action="<@spring.url '/researcher/coAuthorList' />" method="post" role="form">
 
 <#-- Info -->
 <div class="form-group">
-  <label class="info-label">Get publications from a researcher</label> 
+  <label class="info-label">Get list of co-authors of a researcher</label> 
   <br/> 
   <label class="info-label">Note:<br/>Get researcher ID from first API (Researcher Search). Use only ID from researcher which is added to PALM (isAdded:true)</label>  
 </div>
@@ -12,29 +12,6 @@
   <label>id</label>  
   <input name="id" type="text" class="form-control input-md">
   <span class="help-block">Researcher ID gathered from Researcher Search API</span>  
-</div>
-
-<#-- Query -->
-<div class="form-group">
-  <label>query</label>  
-  <input name="query" type="text" class="form-control input-md">
-  <span class="help-block">e.g. knowledge management</span>  
-</div>
-
-<#-- Year -->
-<div class="form-group">
-  <label>year</label>  
-  <input name="year" type="text" value="all" class="form-control input-md">
-  <span class="help-block">e.g. 2010</span>
-</div>
-
-<#-- Select Basic -->
-<div class="form-group">
-	<label>orderBy</label>
-	<select name="orderBy" class="form-control">
-		<option value="date">date</option>
-		<option value="citation">number of citation</option>
-	</select>
 </div>
 
 <#-- Text input-->
@@ -47,7 +24,7 @@
 <#-- Text input-->
 <div class="form-group">
 	<label>maxresult</label>  
-	<input name="maxresult" type="text" class="form-control" value="30">
+	<input name="maxresult" type="text" class="form-control" value="10">
 	<span class="help-block">number of maximum retrieved records</span>  
 </div>
 
