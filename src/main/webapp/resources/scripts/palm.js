@@ -1043,7 +1043,7 @@ $.PALM.popUpMessage = {
 };
 
 /**
- * PopUp Iframe ============= Plugin for handling pop up iframe
+ * PopUp Iframe ============= Plugin for handling pop up widget iframe
  */
 
 $.PALM.popUpIframe = {
@@ -1251,51 +1251,8 @@ $.PALM.api = {
 }
 
 /**
- * Validation plugin or PALM input, just add validation attribute, such as
- * data-validation="required,email,checkduplication"
- * data-validationDuplicationUrl="/user/isUsernameExist" Note: checking based on
- * order
+ * Collections of utility functionalities on PALM
  */
-/* Validation plugin is subtituted by jquery.validation */
-// $.PALM.validation = {
-// activate: function ( containerSelector ){
-// // find any input or textarea on the container
-// $( containerSelector ).find( )
-// }
-// }
-/**
- * get form via ajax
- */
-function getFormViaAjax(url, alwaysCallback) {
-	var jqxhr = $.get(baseUrl + "/" + url, function(html) {
-		// removing query string
-		var formType = url.split("?");
-		getPopUpForm(formType[0], html);
-	}).done(function() {
-		// nothing to do
-	}).fail(function() {
-		// nothing to do
-	}).always(function() {
-		if (typeof alwaysCallback !== "undefined")
-			alwaysCallback
-	});
-}
-/**
- * Get popup form and display it
- */
-function getPopUpForm(popUpType, html) {
-	// remove existing popup if exist
-	$(".popup-form-container").remove();
-	/* add blur */
-	$(".wrapper").addClass("blur2px");
-
-	// create new one
-	var $popUpElem = $("<div/>").addClass("popup-form-container").append(
-			$("<div/>").addClass("dialog-overlay")).append(
-			$("<div/>").addClass(popUpType + "-container").html(html))
-			.appendTo("body");
-}
-
 $.PALM.utility = {
 	generateUniqueId : function() {
 		var aplhaNumeric = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -1389,27 +1346,6 @@ $.PALM.utility = {
 	        return url;
 	    }
 	}
-// , generateDropDownDatePicker: function( containerSelector , additionalOptions
-// ){
-// var o = $.PALM.utility;
-// o.options ={
-// yearStart:1950,
-// yearEnd:new Date().getFullYear(),
-// monthEnd:[31, function(){ o.options.yearEnd % 4 == 0 ? 29:28}, 31, 30, 31,
-// 30, 31, 31, 30, 31, 30, 31],
-// monthLabel:["January","February","March","April","May","June","July","August","September","October","November","December"],
-// inputClass:"form-control"
-// }
-// if( typeof additionalOptions !== "undefined" )
-// o.options = $.extend( o.options, additionalOptions );
-//		
-// o.dataElement = $('</div>');
-//		
-// var dayElement = $('</select>').addClass( "day-list " + o.options.inputClass
-// );
-// $.each( o.options );
-
-// }
 };
 
 $.PALM.postForm = {
@@ -1469,10 +1405,51 @@ $.PALM.postForm = {
 	}
 };
 
-/*
- * ------------------ - Custom Plugins - ------------------ All custom plugins
- * are defined below.
+/**
+ * Validation plugin or PALM input, just add validation attribute, such as
+ * data-validation="required,email,checkduplication"
+ * data-validationDuplicationUrl="/user/isUsernameExist" Note: checking based on
+ * order
  */
+/* Validation plugin is subtituted by jquery.validation */
+// $.PALM.validation = {
+// activate: function ( containerSelector ){
+// // find any input or textarea on the container
+// $( containerSelector ).find( )
+// }
+// }
+/**
+ * get form via ajax
+ */
+function getFormViaAjax(url, alwaysCallback) {
+	var jqxhr = $.get(baseUrl + "/" + url, function(html) {
+		// removing query string
+		var formType = url.split("?");
+		getPopUpForm(formType[0], html);
+	}).done(function() {
+		// nothing to do
+	}).fail(function() {
+		// nothing to do
+	}).always(function() {
+		if (typeof alwaysCallback !== "undefined")
+			alwaysCallback
+	});
+}
+/**
+ * Get popup form and display it
+ */
+function getPopUpForm(popUpType, html) {
+	// remove existing popup if exist
+	$(".popup-form-container").remove();
+	/* add blur */
+	$(".wrapper").addClass("blur2px");
+
+	// create new one
+	var $popUpElem = $("<div/>").addClass("popup-form-container").append(
+			$("<div/>").addClass("dialog-overlay")).append(
+			$("<div/>").addClass(popUpType + "-container").html(html))
+			.appendTo("body");
+}
 
 /*
  * BOX REFRESH BUTTON ------------------ This is a custom plugin to use with the
@@ -1640,14 +1617,6 @@ function postFormAndReloadPageViaAjax($form, message) {
 
 	return false;
 }
-
-/* document ready */
-$(function() {
-	/*
-	 * $( "#signin_button" ).click( function( event ){ event.preventDefault(); //
-	 * get login form getFormViaAjax( "login?form=true" ); });
-	 */
-});
 
 /**
  * Get popup form and display it

@@ -1,17 +1,21 @@
 <div id="boxbody<#--${wUniqueName}-->" class="box-body">
 
-	 <form role="form" id="addCircle" action="<@spring.url '/circle/add' />" method="post">
-		
+	 <form role="form" id="addCircle" action="<@spring.url '/circle/edit' />" method="post">
+		<#-- circle Id -->
+		<#if circleId??>
+			<input type="hidden" id="circleId" name="id" value="${circleId}" />
+		</#if>
+
 		<#-- name -->
 		<div class="form-group">
 	      <label>Title *</label>
-	      <input type="text" id="name" name="name" value="" class="form-control" placeholder="circle name" />
+	      <input type="text" id="circleName" name="name" class="form-control" placeholder="circle name" />
 	    </div>
 
 		<#-- abstract -->
 		<div class="form-group">
 	      <label>Description</label>
-	      <textarea name="description" id="description" class="form-control" rows="3" placeholder="Description"></textarea>
+	      <textarea name="description" id="circleDescription" class="form-control" rows="3" placeholder="Description"></textarea>
 	    </div>
 	    
 	    <div class="pull-left">
@@ -150,6 +154,46 @@
 	}
 	
 	$(function(){
+		<#if circleId??>
+			<#-- first ger circle detail -->
+			$.getJSON( "<@spring.url '/circle/detail?id=' />${circleId}&retrieveAuthor=yes&retrievePubication=yes", function( data ){
+				<#-- circle information -->
+				$( "#circleId" ).val( data.circle.id );
+				$( "#circleName" ).val( data.circle.name );
+				$( "#circleDescription" ).val( data.circle.description );
+				
+				<#-- researchers on circle -->
+				if( typeof data.circle.researchers != "undefined" ){
+					var targetContainer = $( "#inputAuth" ).find( ".content-list" );
+					printResearcherList( data.circle , targetContainer )
+					<#-- add all publication to circle author -->
+					$.each( targetContainer.find( 'button' ), function(){
+						$( this ).click();
+					});
+					
+					<#-- fill author list -->
+					researcherSearch( "" , "first" );
+					
+					<#-- hide add all publications option -->
+					$( "#auth-info" ).hide();
+				} else{
+					<#-- fill author list -->
+					researcherSearch( "" , "first" );
+				}
+						
+				<#--publications on circle -->
+				if( typeof data.circle.publications != "undefined" ){
+					var publicationListContainer = $( "#inputPub" ).find( ".content-list" )
+					printPublicationList( data.circle , publicationListContainer );
+					
+					<#-- add all publication to circle publication -->
+					$.each( publicationListContainer.find( 'button' ), function(){
+						$( this ).click();
+					});
+				}
+			});
+		</#if>
+	
 		$.PALM.circle = $.extend( $.PALM.circle, {
 					researcherCircleList: $( "#circleAuth>.content-list" ),
 					publicationCircleList: $( "#circlePub>.content-list" ),
@@ -243,7 +287,6 @@
 			   }
 		});
 		-->
-
 		function publicationSearch( query , jumpTo ){
 			<#--
 				var maxPage = parseInt($( obj.element ).find( "span.total-page" ).html()) - 1;
@@ -289,143 +332,14 @@
 				<#-- button search loading -->
 				$( "#publication_search_button" ).find( "i" ).removeClass( "fa-refresh fa-spin" ).addClass( "fa-search" );
 
+<#--
 				var $pageDropdown = $( "#inputPub" ).find( "select.page-number" );
 				$pageDropdown.find( "option" ).remove();
-				
+-->				
 				if( data.count > 0 ){
-					<#-- put data into PALM.circle object -->
-					$.PALM.circle.setCurrentPublicationData( data.publications );
-					<#-- build the publication table -->
-					$.each( $.PALM.circle.getCleanPublicationData(), function( index, itemPublication ){
-
-						var publicationItem = 
-							$('<div/>')
-							.addClass( "publication" )
-							.attr({ "data-id": itemPublication.id });
-							
-						<#-- publication menu -->
-						var pubNav = $( '<div/>' )
-							.attr({'class':'nav'});
-			
-						<#-- publication icon -->
-						var pubIcon = $('<i/>');
-						if( typeof itemPublication.type !== "undefined" ){
-							if( itemPublication.type == "Conference" )
-								pubIcon.addClass( "fa fa-file-text-o bg-blue" ).attr({ "title":"Conference" });
-							else if( itemPublication.type == "Journal" )
-								pubIcon.addClass( "fa fa-files-o bg-red" ).attr({ "title":"Journal" });
-							else if( itemPublication.type == "Book" )
-								pubIcon.addClass( "fa fa-book bg-green" ).attr({ "title":"Book" });
-						}else{
-							pubIcon.addClass( "fa fa-question bg-purple" ).attr({ "title":"Unknown publication type" });
-						}
-						
-						pubNav.append( pubIcon );
-						
-						publicationItem.append( pubNav );
-
-						<#-- publication detail -->
-						var pubDetail = $('<div/>').addClass( "detail default-cursor" );
-						
-						
-						
-						<#-- title -->
-						var pubTitle = $('<div/>').addClass( "title" ).html( itemPublication.title );
-
-						<#--author-->
-						var pubAuthor = $('<div/>').addClass( "author" );
-						$.each( itemPublication.authors , function( index, itemAuthor ){
-							if( index > 0)
-								pubAuthor.append(", ");
-							pubAuthor.append( itemAuthor.name );
-						});
-
-						<#-- append detail -->
-						pubDetail.append( pubTitle );
-						pubDetail.append( pubAuthor );
-						
-						if( typeof itemPublication.event !== 'undefined' ){
-							var eventElem = $( '<div/>' )
-											.addClass( 'event-detail font-xs' );
-							
-												
-							var venueText = itemPublication.event.name;
-							//var venueHref = "<@spring.url '/venue' />?eventId=" + itemPublication.event.id + "&type=" + itemPublication.type.toLowerCase() + "&name=" + itemPublication.event.name.toLowerCase().replace(/[^\w\s]/gi, '');
-							
-							if( typeof itemPublication.volume != 'undefined' ){
-								venueText += " (" + itemPublication.volume + ")";
-								//venueHref += "&volume=" + itemPublication.volume;
-							}
-							if( typeof itemPublication.date != 'undefined' ){
-								venueText += " " + itemPublication.date.substring(0, 4);
-								//venueHref += "&year=" + itemPublication.date.substring(0, 4);
-							}
-							
-							var eventPart = $( '<span/>' )
-													.html( venueText );
-							eventElem.append( eventPart );
-							
-							if( itemPublication.event.isAdded ){
-								eventPart.removeClass( "text-gray" );
-							}
-							
-							<#-- pages -->
-							if( typeof itemPublication.pages !== 'undefined' ){
-								eventElem.append( " pp. " + itemPublication.pages );
-							}
-		
-							pubDetail.append( eventElem );			
-						} else if( typeof itemPublication.venue !== 'undefined'){
-							var eventElem = $( '<div/>' )
-											.addClass( 'event-detail font-xs' );
-														
-							var venueText = itemPublication.venue;
-							//var venueHref = "<@spring.url '/venue' />?type=" + itemPublication.type.toLowerCase() + "&name=" + itemPublication.venue.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + itemPublication.id ;
-							
-							if( typeof itemPublication.volume != 'undefined' ){
-								venueText += " (" + itemPublication.volume + ")";
-								//venueHref += "&volume=" + itemPublication.volume;
-							}
-							if( typeof itemPublication.date != 'undefined' ){
-								venueText += " " + itemPublication.date.substring(0, 4);
-								//venueHref += "&year=" + itemPublication.date.substring(0, 4);
-							}
-							
-							var eventPart = $( '<span/>' )
-													//.attr({ "href" : venueHref })
-													//.addClass( "text-gray" )
-													.html( venueText );
-							eventElem.append( eventPart );
-							
-							<#-- pages -->
-							if( typeof itemPublication.pages !== 'undefined' ){
-								eventElem.append( " pp. " + itemPublication.pages );
-							}
-		
-							pubDetail.append( eventElem );
-						}
-						
-						<#-- publicationDetailOption -->
-						var pubDetailOption = $('<div/>').addClass( "option" );
-						<#-- fill pub detail option -->
-						var circleAddButton = $('<button/>')
-							.addClass( "btn btn-success width130px btn-xs pull-right" )
-							.html( "+ add to circle" )
-							.on( "click", function( e ){
-								e.preventDefault();
-								$.PALM.circle.addPublication( itemPublication.id, e.target );
-							});
-						
-						pubDetailOption.append( circleAddButton );
-						
-						pubDetail.append( pubDetailOption );
-
-						<#-- append to item -->
-						publicationItem.append( pubDetail );
-						
-						publicationListContainer.append( publicationItem );
 					
-					});
+					printPublicationList( data, publicationListContainer);
+					
 					<#--var maxPage = Math.ceil(data.count/data.maxresult);-->
 					
 					<#-- set dropdown page -->
@@ -457,14 +371,150 @@
 			});
   		}
   		
+  		<#-- display publication on publication input -->
+  		function printPublicationList( data , publicationListContainer ){
+  			<#-- put data into PALM.circle object -->
+			$.PALM.circle.setCurrentPublicationData( data.publications );
+			<#-- build the publication table -->
+			$.each( $.PALM.circle.getCleanPublicationData(), function( index, itemPublication ){
+
+				var publicationItem = 
+					$('<div/>')
+					.addClass( "publication" )
+					.attr({ "data-id": itemPublication.id });
+					
+				<#-- publication menu -->
+				var pubNav = $( '<div/>' )
+					.attr({'class':'nav'});
+	
+				<#-- publication icon -->
+				var pubIcon = $('<i/>');
+				if( typeof itemPublication.type !== "undefined" ){
+					if( itemPublication.type == "Conference" || itemPublication.type == "CONFERENCE" )
+						pubIcon.addClass( "fa fa-file-text-o bg-blue" ).attr({ "title":"Conference" });
+					if( itemPublication.type == "Workshop" || itemPublication.type == "WORKSHOP" )
+						pubIcon.addClass( "fa fa-file-text-o bg-blue-dark" ).attr({ "title":"Workshop" });
+					else if( itemPublication.type == "Journal" || itemPublication.type == "JOURNAL" )
+						pubIcon.addClass( "fa fa-files-o bg-red" ).attr({ "title":"Journal" });
+					else if( itemPublication.type == "Book" || itemPublication.type == "BOOK" )
+						pubIcon.addClass( "fa fa-book bg-green" ).attr({ "title":"Book" });
+				}else{
+					pubIcon.addClass( "fa fa-question bg-purple" ).attr({ "title":"Unknown publication type" });
+				}
+				
+				pubNav.append( pubIcon );
+				
+				publicationItem.append( pubNav );
+
+				<#-- publication detail -->
+				var pubDetail = $('<div/>').addClass( "detail default-cursor" );
+				
+				
+				
+				<#-- title -->
+				var pubTitle = $('<div/>').addClass( "title" ).html( itemPublication.title );
+
+				<#--author-->
+				var pubAuthor = $('<div/>').addClass( "author" );
+				$.each( itemPublication.authors , function( index, itemAuthor ){
+					if( index > 0)
+						pubAuthor.append(", ");
+					pubAuthor.append( itemAuthor.name );
+				});
+
+				<#-- append detail -->
+				pubDetail.append( pubTitle );
+				pubDetail.append( pubAuthor );
+				
+				if( typeof itemPublication.event !== 'undefined' ){
+					var eventElem = $( '<div/>' )
+									.addClass( 'event-detail font-xs' );
+					
+										
+					var venueText = itemPublication.event.name;
+					//var venueHref = "<@spring.url '/venue' />?eventId=" + itemPublication.event.id + "&type=" + itemPublication.type.toLowerCase() + "&name=" + itemPublication.event.name.toLowerCase().replace(/[^\w\s]/gi, '');
+					
+					if( typeof itemPublication.volume != 'undefined' ){
+						venueText += " (" + itemPublication.volume + ")";
+						//venueHref += "&volume=" + itemPublication.volume;
+					}
+					if( typeof itemPublication.date != 'undefined' ){
+						venueText += " " + itemPublication.date.substring(0, 4);
+						//venueHref += "&year=" + itemPublication.date.substring(0, 4);
+					}
+					
+					var eventPart = $( '<span/>' )
+											.html( venueText );
+					eventElem.append( eventPart );
+					
+					if( itemPublication.event.isAdded ){
+						eventPart.removeClass( "text-gray" );
+					}
+					
+					<#-- pages -->
+					if( typeof itemPublication.pages !== 'undefined' ){
+						eventElem.append( " pp. " + itemPublication.pages );
+					}
+
+					pubDetail.append( eventElem );			
+				} else if( typeof itemPublication.venue !== 'undefined'){
+					var eventElem = $( '<div/>' )
+									.addClass( 'event-detail font-xs' );
+												
+					var venueText = itemPublication.venue;
+					//var venueHref = "<@spring.url '/venue' />?type=" + itemPublication.type.toLowerCase() + "&name=" + itemPublication.venue.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + itemPublication.id ;
+					
+					if( typeof itemPublication.volume != 'undefined' ){
+						venueText += " (" + itemPublication.volume + ")";
+						//venueHref += "&volume=" + itemPublication.volume;
+					}
+					if( typeof itemPublication.date != 'undefined' ){
+						venueText += " " + itemPublication.date.substring(0, 4);
+						//venueHref += "&year=" + itemPublication.date.substring(0, 4);
+					}
+					
+					var eventPart = $( '<span/>' )
+											//.attr({ "href" : venueHref })
+											//.addClass( "text-gray" )
+											.html( venueText );
+					eventElem.append( eventPart );
+					
+					<#-- pages -->
+					if( typeof itemPublication.pages !== 'undefined' ){
+						eventElem.append( " pp. " + itemPublication.pages );
+					}
+
+					pubDetail.append( eventElem );
+				}
+				
+				<#-- publicationDetailOption -->
+				var pubDetailOption = $('<div/>').addClass( "option" );
+				<#-- fill pub detail option -->
+				var circleAddButton = $('<button/>')
+					.addClass( "btn btn-success width130px btn-xs pull-right" )
+					.html( "+ add to circle" )
+					.on( "click", function( e ){
+						e.preventDefault();
+						$.PALM.circle.addPublication( itemPublication.id, e.target );
+					});
+				
+				pubDetailOption.append( circleAddButton );
+				
+				pubDetail.append( pubDetailOption );
+
+				<#-- append to item -->
+				publicationItem.append( pubDetail );
+				
+				publicationListContainer.append( publicationItem );
+			
+			});
+  		}
+  		
   		<#-- End of related to publication -->
 
 
 
 		<#-- related to researcher list and search -->
-
-		<#-- get publication list -->
-		researcherSearch( "" , "first" );
 
 		<#-- event for searching researcher -->
 		
@@ -493,7 +543,7 @@
 			researcherSearch( $( "#researcher_search_field" ).val().trim() , "first");
 		});
 		
-		
+		<#-- search researcher -->
 		function researcherSearch( query , jumpTo ){
 			<#--//find the element option-->
 			<#--
@@ -548,177 +598,8 @@
 				$pageDropdown.find( "option" ).remove();
 				
 				if( data.count > 0 ){
-					<#-- put data into PALM.circle object -->
-					$.PALM.circle.setCurrentResearcherData( data.researchers );
-
-					<#-- build the researcher list -->
-					$.each( $.PALM.circle.getCleanResearcherData(), function( index, item){
-						var researcherDiv = 
-						$( '<div/>' )
-							.addClass( 'author' )
-							.attr({ 'id' : item.id });
-							
-						var researcherNav =
-						$( '<div/>' )
-							.addClass( 'nav' );
-							
-						var researcherDetail =
-						$( '<div/>' )
-							.addClass( 'detail' )
-							.css({"cursor":"auto"})
-							.append(
-								$( '<div/>' )
-									.addClass( 'name' )
-									.html( item.name )
-							);
-							
-						researcherDiv
-							.append(
-								researcherNav
-							).append(
-								researcherDetail
-							);
-							
-						if( !item.isAdded ){
-							researcherDiv.css("display","none");
-							data.count--;
-						}
-						
-						if( typeof item.status != 'undefined')
-							researcherDetail.append(
-								$( '<div/>' )
-								.addClass( 'status' )
-								.append( 
-									$( '<i/>' )
-									.addClass( 'fa fa-briefcase icon font-xs' )
-								).append( 
-									$( '<span/>' )
-									.addClass( 'info font-xs' )
-									.html( item.status )
-								)
-							);
-						if( typeof item.aff != 'undefined')
-							researcherDetail.append(
-								$( '<div/>' )
-								.addClass( 'affiliation' )
-								.append( 
-									$( '<i/>' )
-									.addClass( 'fa fa-institution icon font-xs' )
-								).append( 
-									$( '<span/>' )
-									.addClass( 'info font-xs' )
-									.html( item.aff )
-								)
-							);
-						if( typeof item.citedBy != 'undefined')
-							researcherDetail.append(
-								$( '<div/>' )
-								.addClass( 'paper font-xs' )
-								.html( "Publications: " + item.publicationsNumber + " || Cited by: " + item.citedBy)
-							);
-							
-						if( typeof item.photo != 'undefined'){
-							researcherNav
-								.append(
-								$( '<div/>' )
-									.addClass( 'photo' )
-									.css({ 'font-size':'14px'})
-									.append(
-										$( '<img/>' )
-											.attr({ 'src' : item.photo })
-									)
-								);
-						} else {
-							researcherNav
-							.append(
-								$( '<div/>' )
-								.addClass( 'photo fa fa-user' )
-							);
-						}
-						
-						<#-- researcherDetailOption -->
-						var researcherDetailOption = $('<div/>').addClass( "option" );
-						<#-- fill researcher detail option -->
-						<#-- circle add button -->
-						var circlePublicationButton = $('<div/>')
-							.addClass( "btn btn-success bg-blue btn-xs width80px pull-left" )
-							.attr({ "data-id": item.id, "data-name": item.name , "title":"show list of publications not in circle"})
-							.html( "publications" )
-							.on( "click", function( e ){
-								e.preventDefault();
-								<#-- get list of publication -->
-								getPublicationList( "<@spring.url '/publication/search?authorId=' />" + $( this ).data( "id" ) + "&maxresult=300" );
-								<#-- show info -->
-								var authInfo = $( "#auth-info" );
-								authInfo.show();
-								authInfo.find( "strong" ).html( $( this ).data( "name" ) );
-								<#-- scroll to -->
-								var scrollTo_val = $( "#inputPub" )[0].offsetTop + 'px';
-								$(".content-wrapper>.content").slimscroll({
-									scrollTo : scrollTo_val
-								});
-							});
-						
-						researcherDetailOption.append( circlePublicationButton );
-						<#-- circle add button -->
-						var circleAddButton = $('<button/>')
-							.addClass( "btn btn-success btn-xs width110px pull-right" )
-							.attr({ "data-id": item.id, "data-name": item.name })
-							.html( "+ add to circle" )
-							.on( "click", function( e ){
-								e.preventDefault();
-								$.PALM.circle.addResearcher( item.id, e.target );
-								
-								
-								<#-- get list of researcher -->
-								getPublicationList( "<@spring.url '/publication/search?authorId=' />" + $( this ).data( "id" ) + "&maxresult=300" );
-								<#-- show info -->
-								var authInfo = $( "#auth-info" );
-								authInfo.show();
-								authInfo.find( "strong" ).html( $( this ).data( "name" ) );
-								<#-- scroll to -->
-								var scrollTo_val = $( "#inputPub" )[0].offsetTop + 'px';
-								$(".content-wrapper>.content").slimscroll({
-									scrollTo : scrollTo_val
-								});
-							});
-						
-						researcherDetailOption.append( circleAddButton );
-						
-						
-						researcherDetail.append( researcherDetailOption );
-						
-						targetContainer
-							.append( 
-								researcherDiv
-							);
-						<#-- put image position in center -->
-						setTimeout(function() {
-							if( typeof item.photo != 'undefined'){
-								var imageAuthor = researcherDiv.find( "img:first" );
-								if( imageAuthor.width() > 30 )
-									imageAuthor.css({ "left" : (52 - imageAuthor.width())/2 + "px" });
-							}
-						}, 1000);
-
-					});
-					var maxPage = Math.ceil(data.count/data.maxresult);
-					var $pageDropdown = $( "#inputAuth" ).find( "select.page-number" );
-					<#-- set dropdown page -->
-					for( var i=1;i<=maxPage;i++){
-						$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
-					}
-					<#-- //enable bootstrap tooltip -->
-					<#-- $( "#inputAuth" ).find( "[data-toggle='tooltip']" ).tooltip(); -->
 					
-					<#--// set page number-->
-					$pageDropdown.val( data.page + 1 );
-					$( "#inputAuth" ).find( "span.total-page" ).html( maxPage );
-					var endRecord = (data.page + 1) * data.maxresult;
-					if( data.page == maxPage - 1 ) 
-					endRecord = data.count;
-					$( "#inputAuth" ).find( "span.paging-info" ).html( "Displaying researchers " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.count );
-				
+					printResearcherList( data , targetContainer );
 					
 				}
 				else{
@@ -731,8 +612,179 @@
 		});
 	}
 
+	<#-- show researcher on the list -->
+	function printResearcherList( data , targetContainer ){
+		<#-- put data into PALM.circle object -->
+		$.PALM.circle.setCurrentResearcherData( data.researchers );
+
+		<#-- build the researcher list -->
+		$.each( $.PALM.circle.getCleanResearcherData(), function( index, item){
+			var researcherDiv = 
+			$( '<div/>' )
+				.addClass( 'author' )
+				.attr({ 'id' : item.id });
+				
+			var researcherNav =
+			$( '<div/>' )
+				.addClass( 'nav' );
+				
+			var researcherDetail =
+			$( '<div/>' )
+				.addClass( 'detail' )
+				.css({"cursor":"auto"})
+				.append(
+					$( '<div/>' )
+						.addClass( 'name' )
+						.html( item.name )
+				);
+				
+			researcherDiv
+				.append(
+					researcherNav
+				).append(
+					researcherDetail
+				);
+				
+			if( !item.isAdded ){
+				researcherDiv.css("display","none");
+				data.count--;
+			}
+			
+			if( typeof item.status != 'undefined')
+				researcherDetail.append(
+					$( '<div/>' )
+					.addClass( 'status' )
+					.append( 
+						$( '<i/>' )
+						.addClass( 'fa fa-briefcase icon font-xs' )
+					).append( 
+						$( '<span/>' )
+						.addClass( 'info font-xs' )
+						.html( item.status )
+					)
+				);
+			if( typeof item.aff != 'undefined')
+				researcherDetail.append(
+					$( '<div/>' )
+					.addClass( 'affiliation' )
+					.append( 
+						$( '<i/>' )
+						.addClass( 'fa fa-institution icon font-xs' )
+					).append( 
+						$( '<span/>' )
+						.addClass( 'info font-xs' )
+						.html( item.aff )
+					)
+				);
+			if( typeof item.citedBy != 'undefined')
+				researcherDetail.append(
+					$( '<div/>' )
+					.addClass( 'paper font-xs' )
+					.html( "Publications: " + item.publicationsNumber + " || Cited by: " + item.citedBy)
+				);
+				
+			if( typeof item.photo != 'undefined'){
+				researcherNav
+					.append(
+					$( '<div/>' )
+						.addClass( 'photo' )
+						.css({ 'font-size':'14px'})
+						.append(
+							$( '<img/>' )
+								.attr({ 'src' : item.photo })
+						)
+					);
+			} else {
+				researcherNav
+				.append(
+					$( '<div/>' )
+					.addClass( 'photo fa fa-user' )
+				);
+			}
+			
+			<#-- researcherDetailOption -->
+			var researcherDetailOption = $('<div/>').addClass( "option" );
+			<#-- fill researcher detail option -->
+			<#-- circle add button -->
+			var circlePublicationButton = $('<div/>')
+				.addClass( "btn btn-success bg-blue btn-xs width80px pull-left" )
+				.attr({ "data-id": item.id, "data-name": item.name , "title":"show list of publications not in circle"})
+				.html( "publications" )
+				.on( "click", function( e ){
+					e.preventDefault();
+					<#-- get list of publication -->
+					getPublicationList( "<@spring.url '/publication/search?authorId=' />" + $( this ).data( "id" ) + "&maxresult=300" );
+					<#-- show info -->
+					var authInfo = $( "#auth-info" );
+					authInfo.show();
+					authInfo.find( "strong" ).html( $( this ).data( "name" ) );
+					<#-- scroll to -->
+					var scrollTo_val = $( "#inputPub" )[0].offsetTop + 'px';
+					$(".content-wrapper>.content").slimscroll({
+						scrollTo : scrollTo_val
+					});
+				});
+			
+			researcherDetailOption.append( circlePublicationButton );
+			<#-- circle add button -->
+			var circleAddButton = $('<button/>')
+				.addClass( "btn btn-success btn-xs width110px pull-right" )
+				.attr({ "data-id": item.id, "data-name": item.name })
+				.html( "+ add to circle" )
+				.on( "click", function( e ){
+					e.preventDefault();
+					$.PALM.circle.addResearcher( item.id, e.target );
+					
+					
+					<#-- get list of researcher -->
+					getPublicationList( "<@spring.url '/publication/search?authorId=' />" + $( this ).data( "id" ) + "&maxresult=300" );
+					<#-- show info -->
+					var authInfo = $( "#auth-info" );
+					authInfo.show();
+					authInfo.find( "strong" ).html( $( this ).data( "name" ) );
+					<#-- scroll to -->
+					var scrollTo_val = $( "#inputPub" )[0].offsetTop + 'px';
+					$(".content-wrapper>.content").slimscroll({
+						scrollTo : scrollTo_val
+					});
+				});
+			
+			researcherDetailOption.append( circleAddButton );
+			
+			
+			researcherDetail.append( researcherDetailOption );
+			
+			targetContainer
+				.append( 
+					researcherDiv
+				);
+			<#-- put image position in center -->
+			setTimeout(function() {
+				if( typeof item.photo != 'undefined'){
+					var imageAuthor = researcherDiv.find( "img:first" );
+					if( imageAuthor.width() > 30 )
+						imageAuthor.css({ "left" : (52 - imageAuthor.width())/2 + "px" });
+				}
+			}, 1000);
+
+		});
+		var maxPage = Math.ceil(data.count/data.maxresult);
+		var $pageDropdown = $( "#inputAuth" ).find( "select.page-number" );
+		<#-- set dropdown page -->
+		for( var i=1;i<=maxPage;i++){
+			$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
+		}
+		<#-- //enable bootstrap tooltip -->
+		<#-- $( "#inputAuth" ).find( "[data-toggle='tooltip']" ).tooltip(); -->
 		
-		
+		<#--// set page number-->
+		$pageDropdown.val( data.page + 1 );
+		$( "#inputAuth" ).find( "span.total-page" ).html( maxPage );
+		var endRecord = (data.page + 1) * data.maxresult;
+		if( data.page == maxPage - 1 ) 
+		endRecord = data.count;
+		$( "#inputAuth" ).find( "span.paging-info" ).html( "Displaying researchers " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.count );
+	}
 
 		
 
