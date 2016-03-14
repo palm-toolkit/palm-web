@@ -10,7 +10,7 @@
       <div class="box-header with-border">
         <h4 class="box-title">
           <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="collapsed" aria-expanded="false">
-            Search Researchers ( /researcher/search? )
+            Researchers Search ( /researcher/search? )
           </a>
         </h4>
       </div>
@@ -21,7 +21,7 @@
       </div>
     </div>
     
-    <#-- Researcher Detail-->
+    <#-- Researcher Detail -->
     <div class="panel box box-danger">
       <div class="box-header with-border">
         <h4 class="box-title">
@@ -38,7 +38,7 @@
       </div>
     </div>
     
-    
+    <#-- Researcher Publication List -->
     <div class="panel box box-success">
       <div class="box-header with-border">
         <h4 class="box-title">
@@ -55,6 +55,7 @@
       </div>
     </div>
     
+    <#-- Researcher Co-Author -->
     <div class="panel box box-info">
       <div class="box-header with-border">
         <h4 class="box-title">
@@ -71,6 +72,7 @@
       </div>
     </div>
     
+    <#-- Researcher Co-Author -->
     <div class="panel box  box-warning">
       <div class="box-header with-border">
         <h4 class="box-title">
@@ -87,6 +89,7 @@
       </div>
     </div>
     
+    <#-- Researcher Conference Tree -->
     <div class="panel box">
       <div class="box-header with-border">
         <h4 class="box-title">
@@ -99,6 +102,22 @@
       <div id="collapseSix" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
         <div class="box-body">
         	<#include "apiResearcherConferenceTree.ftl">
+        </div>
+      </div>
+    </div>
+    
+    <#-- Researcher Interest -->
+    <div class="panel box box-primary">
+      <div class="box-header with-border">
+        <h4 class="box-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" class="collapsed" aria-expanded="false">
+            Researchers Interest ( /researcher/interest? )
+          </a>
+        </h4>
+      </div>
+      <div id="collapseSeven" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+        <div class="box-body">
+        	<#include "apiResearcherInterest.ftl">
         </div>
       </div>
     </div>
