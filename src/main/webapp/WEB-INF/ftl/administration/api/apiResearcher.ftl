@@ -54,6 +54,24 @@
         </div>
       </div>
     </div>
+    
+    <div class="panel box box-info">
+      <div class="box-header with-border">
+        <h4 class="box-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" class="collapsed" aria-expanded="false">
+            Researcher Top Cited Publications( /researcher/publicationTopList? )
+          </a>
+        </h4>
+      </div>
+      
+      <div id="collapseFour" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+        <div class="box-body">
+        	<#include "apiResearcherPublicationTop.ftl">
+        </div>
+      </div>
+    </div>
+    
+    
   </div>
 
 </div>

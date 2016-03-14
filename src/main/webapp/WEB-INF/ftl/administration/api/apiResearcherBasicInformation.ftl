@@ -2,6 +2,8 @@
 
 <#-- Info -->
 <div class="form-group">
+  <label class="info-label">Get researcher basic information and number of publications per year</label> 
+  <br/> 
   <label class="info-label">Note:<br/>Get researcher ID from first API (Researcher Search). Use only ID from researcher which is added to PALM (isAdded:true)</label>  
 </div>
 

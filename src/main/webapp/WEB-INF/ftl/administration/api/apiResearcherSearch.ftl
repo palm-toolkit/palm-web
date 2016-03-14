@@ -1,5 +1,9 @@
 <form action="<@spring.url '/researcher/search' />" method="post" role="form">
 
+<div class="form-group">
+  <label class="info-label">Searching researchers either on PALM database or on Adacemic Networks</label> 
+</div>
+
 <#-- Query name -->
 <div class="form-group">
   <label>query</label>  
@@ -20,14 +24,14 @@
 <div class="form-group">
 	<label>startPage</label>  
 	<input name="startPage" type="text" class="form-control" value="0">
-	<span class="help-block">set the starting of records</span>  
+	<span class="help-block">set the starting point of retrieved records</span>  
 </div>
 
 <#-- Text input-->
 <div class="form-group">
 	<label>maxResult</label>  
 	<input name="maxResult" type="text" class="form-control" value="20">
-	<span class="help-block">number of maximum returned results</span>  
+	<span class="help-block">number of maximum retrieved records</span>  
 </div>
 
 <#-- Select Basic -->
