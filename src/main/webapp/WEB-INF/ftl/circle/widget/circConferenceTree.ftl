@@ -8,7 +8,7 @@
 
 		<#-- add slim scroll -->
        $("#boxbody-${wUniqueName}>.tree-container").slimscroll({
-			height: "300px",
+			height: "420px",
 	        size: "6px",
 			allowPageScroll: true,
    			touchScrollStep: 50//,

@@ -1,5 +1,5 @@
-<div class="box-body no-padding">
-  	<div class="content-list">
+<div id="boxbody${wUniqueName}" class="box-body no-padding">
+  	<div class="content-list" style="height:450px !important;">
     </div>
 </div>
 
@@ -8,7 +8,7 @@
 
 			<#-- add slim scroll -->
 	      $("#boxbody${wUniqueName}>.content-list").slimscroll({
-				height: "100%",
+				height: "450px",
 		        size: "3px",
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50

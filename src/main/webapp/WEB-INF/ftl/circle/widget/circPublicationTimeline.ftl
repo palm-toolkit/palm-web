@@ -25,7 +25,7 @@
 
 		<#-- set widget unique options -->
 		var options ={
-			source : "<@spring.url '/researcher/publicationList' />",
+			source : "<@spring.url '/circle/publication' />",
 			queryString : "",
 			id: "",
 			onRefreshStart: function( widgetElem ){
@@ -60,7 +60,7 @@
 									)
 									.append(
 										$( '<div/>' )
-										.attr({'id':'publist-search-button-cont', 'class':'input-group-btn', 'title':'Will automatically search for all ' + data.author.name + '\'s publications'})
+										.attr({'id':'publist-search-button-cont', 'class':'input-group-btn', 'title':'Will automatically search for all ' + data.circle.name + '\'s publications'})
 										.append(
 											$( '<button/>' )
 											.attr({'id':'publist-search-button', 'class':'btn btn-sm btn-default'})
@@ -75,7 +75,7 @@
 											<#-- find keyword if any -->
 											var keywordText = filterSearch.find( "#publist-search" ).val();
 											//if( typeof keywordText !== "undefined" && keywordText !== "")
-											thisWidget.options.queryString = "?id=" + data.author.id + "&year=all&query=" + keywordText;
+											thisWidget.options.queryString = "?id=" + data.circle.id + "&year=all&query=" + keywordText;
 											<#-- add overlay -->
 											thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 											$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
@@ -87,14 +87,14 @@
 									.attr({ "class":"btn btn-xs btn-default" })
 									.append(
 										$( "<input/>" )
-										.attr({ "type":"radio", "id":"year-all", "name":"filteryear", "value":"all", "data-link": "?id=" + data.author.id + "&year=all"})
+										.attr({ "type":"radio", "id":"year-all", "name":"filteryear", "value":"all", "data-link": "?id=" + data.circle.id + "&year=all"})
 									).append( "all (" + data.totalPublication + ")" )
 						 )
 						 .append( $( "<label/>" )
 									.attr({ "class":"btn btn-default btn-xs" })
 									.append(
 										$( "<input/>" )
-										.attr({ "type":"radio", "id":"maxresult-10", "name":"filteryear", "value":"maxresult10", "data-link": "?id=" + data.author.id + "&maxresult=10"})
+										.attr({ "type":"radio", "id":"maxresult-10", "name":"filteryear", "value":"maxresult10", "data-link": "?id=" + data.circle.id + "&maxresult=10"})
 									).append( "recent (10)" )
 						 )
 				$.each( data.years, function( index, item ){
@@ -102,7 +102,7 @@
 									.attr({ "class":"btn btn-default btn-xs" })
 									.append(
 										$( "<input/>" )
-										.attr({ "type":"radio", "id":"year-" + item, "name":"filteryear", "value":item , "data-link": "?id=" + data.author.id + "&year=" + item})
+										.attr({ "type":"radio", "id":"year-" + item, "name":"filteryear", "value":item , "data-link": "?id=" + data.circle.id + "&year=" + item})
 									).append( item )
 						 )
 				});
@@ -111,7 +111,7 @@
 									.attr({ "class":"btn btn-default btn-xs active" })
 									.append(
 										$( "<input/>" )
-										.attr({ "type":"radio", "id":"year-query", "name":"filteryear", "value":data.query , "data-link": "?id=" + data.author.id + "query=" + data.query, "checked": true})
+										.attr({ "type":"radio", "id":"year-query", "name":"filteryear", "value":data.query , "data-link": "?id=" + data.circle.id + "query=" + data.query, "checked": true})
 									).append( data.query + "(" + data.count + ")" )
 						 )
 				}

@@ -573,7 +573,7 @@ $.PALM.layout = {
 					var listHeightOffset = 192;
 					if ($(window).width() < $.PALM.options.screenSizes.sm)
 						listHeightOffset += 50;
-					$(".content-list").height(bodyheight - listHeightOffset);
+					$(".content-list:first").height(bodyheight - listHeightOffset);
 					$("#left-menu-sidebar").parent().height(
 							bodyheight - listHeightOffset + 150);
 
@@ -637,7 +637,7 @@ $.PALM.layout = {
 		var listHeightOffset = 192;
 		if ($(window).width() < $.PALM.options.screenSizes.sm)
 			listHeightOffset += 50;
-		$(".content-list").height(bodyheight - listHeightOffset);
+		$(".content-list:first").height(bodyheight - listHeightOffset);
 		$(".content-wrapper").height(bodyheight - 50);
 		$("#left-menu-sidebar").parent().height(
 				bodyheight - listHeightOffset + 150);

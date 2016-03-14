@@ -336,8 +336,7 @@ function visualizeTextCloud( words ){
       })
       .text(function(d) { return d.text; })
       .on("click", function (d, i){
-         	var publicationTimeLineWidget = $.PALM.boxWidget.getByUniqueName( 'circle_publication' ); 
-			<#--
+         	var publicationTimeLineWidget = $.PALM.boxWidget.getByUniqueName( 'circle_publication_timeline' ); 
 			if( typeof publicationTimeLineWidget !== "undefined" ){
 				publicationTimeLineWidget.options.queryString = "?id=" + data.circle.id + "&year=all&query=" + d.text;
 				// add overlay 
@@ -345,7 +344,6 @@ function visualizeTextCloud( words ){
 				$.PALM.boxWidget.refresh( publicationTimeLineWidget.element , publicationTimeLineWidget.options );
 			} else
 				alert( "Publication Timeline widget missing, please enable it from Researcher Widget Management" );
-			-->
       });
 	}
 }

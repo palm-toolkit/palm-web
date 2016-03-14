@@ -372,6 +372,10 @@
 				obj.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 				obj.options.queryString = "?id=" + circleId;
 				
+				<#-- special for publication list, set only query recent 10 publication -->
+					if( obj.selector === "#widget-circle_publication_timeline" )
+						obj.options.queryString += "&maxresult=10";
+				
 				<#-- check for cloud and evolution widget -->
 				if( obj.selector === "#widget-circle_interest_cloud" && isInterestEvolutionWidgetExecuted )
 					return;
