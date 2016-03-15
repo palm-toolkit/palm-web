@@ -105,7 +105,7 @@
 		
 		$( "#type" ).change( function(){
 			setConferenceDropDown( $(this).val() );
-			$( "#name,#notation,#description" ).val( "" );
+			<#--$( "#name,#notation,#description" ).val( "" );-->
 		});
 		
 		<#if targetType??>
