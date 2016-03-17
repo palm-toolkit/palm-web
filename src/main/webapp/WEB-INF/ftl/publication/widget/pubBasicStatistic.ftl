@@ -99,8 +99,11 @@
 							
 												
 							var venueText = data.publication.event.name;
-							var venueHref = "<@spring.url '/venue' />?eventId=" + data.publication.event.id + "&type=" + data.publication.type.toLowerCase() + "&name=" + data.publication.event.name.toLowerCase().replace(/[^\w\s]/gi, '');
+							var venueHref = "<@spring.url '/venue' />?eventId=" + data.publication.event.id + "&type=" + data.publication.type.toLowerCase() + "&name=" + data.publication.event.name.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + data.publication.id;
 							
+							if( typeof data.publication.event.isGroupAdded === "undefined" || !data.publication.event.isGroupAdded )
+								venueHref += "&add=yes";
+								
 							if( typeof data.publication.volume != 'undefined' ){
 								venueText += " (" + data.publication.volume + ")";
 								venueHref += "&volume=" + data.publication.volume;
@@ -142,6 +145,8 @@
 								venueHref += "&year=" + data.publication.date.substring(0, 4);
 							}
 							
+							venueHref += "&add=yes";
+							
 							var eventPart = $( '<a/>' )
 													.attr({ "href" : venueHref })
 													.addClass( "text-gray" )
@@ -167,11 +172,17 @@
 						);
 					} 
 					if( typeof data.publication.cited != "undefined"){
+						var citedByNumber = data.publication.cited;
+						if( typeof data.publication.citedUrl !== "undefined" )
+							citedByNumber = $( '<span/>' )
+												.addClass( "urlstyle" )
+												.html( data.publication.cited )
+												.click( function( event ){ event.preventDefault();window.open( data.publication.citedUrl, "link to citation list" ,'scrollbars=yes,width=650,height=500')});
 						targetContainer.append(
 							$( '<dt/>' ).html( "Cited by:" )
 						)
 						.append(
-							$( '<dd/>' ).html( data.publication.cited )
+							$( '<dd/>' ).html( citedByNumber )
 						);
 					}
 					if( typeof data.publication.language != "undefined"){

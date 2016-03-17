@@ -18,7 +18,7 @@
 		
 		<#-- unique options in each widget -->
 		var options ={
-			source : "<@spring.url '/researcher/coAuhtorList' />",
+			source : "<@spring.url '/researcher/coAuthorList' />",
 			query: "",
 			queryString : "",
 			page:0,

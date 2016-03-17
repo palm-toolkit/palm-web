@@ -101,6 +101,8 @@
 				<#-- load content -->
 				getContentViaAjax( $subMenu.find( "a" ).attr( "href" ), "section.content .row");
 			</#if>
-		</#list>  
+		</#list> 
+		<#-- modify address -->		
+		history.pushState( null, "<#if link??>${link?capitalize}</#if> ${activeMenu}" , $.PALM.utility.removeURLParameter(window.location.href, "page") + "page=${activeMenu}");
 	</script>
 </#if>

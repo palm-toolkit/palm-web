@@ -5,7 +5,7 @@
 		<#-- name -->
 		<div class="form-group">
 	      <label>Title *</label>
-	      <input type="text" id="name" name="name" value="" class="form-control" placeholder="researcher name" />
+	      <input type="text" id="name" name="name" value="" class="form-control" placeholder="circle name" />
 	    </div>
 
 		<#-- abstract -->
@@ -88,7 +88,10 @@
 					    <#-- add note -->
 						<div id="auth-info" style="position:relative;height:0;width:100%;display:none">
 							<div style="position:absolute;width:100%;height:30px;top:-30px;left:0px;z-index:500;background-color:#eee">
-								<span style="white-space:nowrap;line-height:30px;padding:0 0 0 6px">Publications of <strong></strong></span>
+								<span class="btn btn-sm btn-success" style="white-space:nowrap;line-height:30px;padding:0 6px"
+									onclick="$.each( $( '#inputPub' ).find( '.content-list' ).find( 'button' ), function(){$( this ).click()});$( this ).parent().parent().hide()">
+									+ Add all <strong></strong> publications
+								</span>
 								<span onclick="$( this ).parent().parent().hide()" title="close to start new search" style="display:block;float:right;width:30px;height:30px;cursor: pointer;padding:0 8px;background-color:#fff;line-height:25px;"> X </span>
 							</div>
 						</div>
@@ -225,20 +228,21 @@
 		
 		   <#-- event for searching researcher -->
 	    $( "#publication_search_field" )
-	    <#--
 	    .on( "keypress", function(e) {
 	    	//e.preventDefault();
 			  if ( e.keyCode == 0 || e.keyCode == 13/* || e.keyCode == 32*/ )
 			    publicationSearch( $( this ).val() , "first");
-		})-->
+		})
+		<#--
 		.on( "keydown", function(e) {
 			//e.preventDefault();
 			  if( e.keyCode == 8 || e.keyCode == 46 ){
-			    if( $( "#publication_search_field" ).val().length == 0 )
-			    	<#--publicationSearch( $( this ).val() , "first");-->
-					$( "#inputPub" ).find( ".content-list" );
+			    	if( $( "#publication_search_field" ).val().length == 0 ){
+			    		publicationSearch( $( "#publication_search_field" ).val().trim() , "first");
+			    	}
 			   }
 		});
+		-->
 
 		function publicationSearch( query , jumpTo ){
 			<#--
@@ -561,6 +565,7 @@
 						var researcherDetail =
 						$( '<div/>' )
 							.addClass( 'detail' )
+							.css({"cursor":"auto"})
 							.append(
 								$( '<div/>' )
 									.addClass( 'name' )
@@ -634,8 +639,30 @@
 						<#-- researcherDetailOption -->
 						var researcherDetailOption = $('<div/>').addClass( "option" );
 						<#-- fill researcher detail option -->
+						<#-- circle add button -->
+						var circlePublicationButton = $('<div/>')
+							.addClass( "btn btn-success bg-blue btn-xs width80px pull-left" )
+							.attr({ "data-id": item.id, "data-name": item.name , "title":"show list of publications not in circle"})
+							.html( "publications" )
+							.on( "click", function( e ){
+								e.preventDefault();
+								<#-- get list of publication -->
+								getPublicationList( "<@spring.url '/publication/search?authorId=' />" + $( this ).data( "id" ) + "&maxresult=300" );
+								<#-- show info -->
+								var authInfo = $( "#auth-info" );
+								authInfo.show();
+								authInfo.find( "strong" ).html( $( this ).data( "name" ) );
+								<#-- scroll to -->
+								var scrollTo_val = $( "#inputPub" )[0].offsetTop + 'px';
+								$(".content-wrapper>.content").slimscroll({
+									scrollTo : scrollTo_val
+								});
+							});
+						
+						researcherDetailOption.append( circlePublicationButton );
+						<#-- circle add button -->
 						var circleAddButton = $('<button/>')
-							.addClass( "btn btn-success btn-xs width130px pull-right" )
+							.addClass( "btn btn-success btn-xs width110px pull-right" )
 							.attr({ "data-id": item.id, "data-name": item.name })
 							.html( "+ add to circle" )
 							.on( "click", function( e ){
@@ -657,6 +684,7 @@
 							});
 						
 						researcherDetailOption.append( circleAddButton );
+						
 						
 						researcherDetail.append( researcherDetailOption );
 						

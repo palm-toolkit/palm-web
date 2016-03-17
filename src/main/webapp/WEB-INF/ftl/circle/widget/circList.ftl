@@ -1,3 +1,6 @@
+<@security.authorize access="isAuthenticated()">
+	<#assign loggedUser = securityService.getUser() >
+</@security.authorize>
 <div id="boxbody${wUniqueName}" class="box-body no-padding">
 	<#--  search block -->
 	<div class="box-tools">
@@ -138,59 +141,51 @@
 										.attr({'class':'nav'});
 						
 									<#-- circle icon -->
-									var pubIcon = $('<i/>');
+									var circIcon = $('<i/>');
 									<#--
 									
 									if( typeof itemCircle.type !== "undefined" ){
 										if( itemCircle.type == "Conference" )
-											pubIcon.addClass( "fa fa-file-text-o bg-blue" ).attr({ "title":"Conference" });
+											circIcon.addClass( "fa fa-file-text-o bg-blue" ).attr({ "title":"Conference" });
 										else if( itemCircle.type == "Journal" )
-											pubIcon.addClass( "fa fa-files-o bg-red" ).attr({ "title":"Journal" });
+											circIcon.addClass( "fa fa-files-o bg-red" ).attr({ "title":"Journal" });
 										else if( itemCircle.type == "Book" )
-											pubIcon.addClass( "fa fa-book bg-green" ).attr({ "title":"Book" });
+											circIcon.addClass( "fa fa-book bg-green" ).attr({ "title":"Book" });
 									}else{
-										pubIcon.addClass( "fa fa-question bg-purple" ).attr({ "title":"Unknown circle type" });
+										circIcon.addClass( "fa fa-question bg-purple" ).attr({ "title":"Unknown circle type" });
 									}
 									
 									
 									-->
 									
-									pubIcon
+									circIcon
 										.addClass( "fa fa-circle-o" )
 										.attr({ "title":"Circle Readonly" })
 										.css({"color":"#0073b7","font-size":"22px"});
-									circleNav.append( pubIcon );
+									circleNav.append( circIcon );
+									
+								<#if loggedUser??>
 									<#-- edit option -->
-<#--
 									var circEdit = $('<i/>')
 												.attr({
 													'class':'fa fa-edit', 
 													'title':'edit circle',
-													'data-url':'<@spring.url '/circle/edit' />' + '?id=' + itemCircle.id,
-													'style':'display:none'
+													'data-url':'<@spring.url '/circle/edit' />' + '?id=' + itemCircle.id
 												});
-												-->
+												
 									<#-- add click event to edit circle -->
-<#--
+
 									circEdit.click( function( event ){
 										event.preventDefault();
 										$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Circle");
 									});
-									-->
+									
 									<#-- append edit  -->
-									<#--circleNav.append( circEdit );-->
-									
+									circleNav.append( circEdit );
+								</#if>
+
 									circleItem.append( circleNav );
-									
-									<#--
-									circleItem.hover(function()
-									{
-									     circEdit.show();
-									}, function()
-									{ 
-									     circEdit.hide();
-									});
-									-->
+
 									<#-- circle detail -->
 									var circleDetail = $('<div/>').addClass( "detail" );
 									<#-- title -->
@@ -371,6 +366,10 @@
 			if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
 				obj.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 				obj.options.queryString = "?id=" + circleId;
+				
+				<#-- special for publication list, set only query recent 10 publication -->
+					if( obj.selector === "#widget-circle_publication_timeline" )
+						obj.options.queryString += "&maxresult=10";
 				
 				<#-- check for cloud and evolution widget -->
 				if( obj.selector === "#widget-circle_interest_cloud" && isInterestEvolutionWidgetExecuted )

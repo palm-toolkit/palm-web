@@ -432,6 +432,8 @@
 			therefore put it in order -->
 			var isInterestCloudWidgetExecuted = false;
 			var isInterestEvolutionWidgetExecuted = false;
+			var isTopicModelCloudWidgetExecuted = false;
+			var isTopicModelEvolutionWidgetExecuted = false;
 			<#-- refresh registered widget -->
 			$.each( $.PALM.options.registeredWidget, function(index, obj){
 				if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
@@ -445,6 +447,12 @@
 						return;
 					else if( obj.selector === "#widget-researcher_interest_evolution" && isInterestCloudWidgetExecuted )
 						return;
+						
+					<#-- check for cloud and evolution widget (topic model)-->
+					if( obj.selector === "#widget-researcher_topicmodel_cloud" && isTopicModelEvolutionWidgetExecuted )
+						return;
+					else if( obj.selector === "#widget-researcher_topicmodel_evolution" && isTopicModelCloudWidgetExecuted )
+						return;
 					
 					<#-- add new flag (has been executed once)  -->
 					obj.executed = true;
@@ -457,6 +465,12 @@
 						isInterestCloudWidgetExecuted = true;
 					else if( obj.selector === "#widget-researcher_interest_evolution" )
 						isInterestEvolutionWidgetExecuted = true;
+						
+					<#-- set flag for cloud and evolution widget (topicmodel) -->
+					if( obj.selector === "#widget-researcher_topicmodel_cloud" )
+						isTopicModelCloudWidgetExecuted = true;
+					else if( obj.selector === "#widget-researcher_topicmodel_evolution" )
+						isTopicModelEvolutionWidgetExecuted = true;
 				}
 			});
 		

@@ -2152,7 +2152,7 @@ nv.models.cumulativeLineChart = function() {
     , rescaleY = true
     , tooltip = function(key, x, y, e, graph) {
         return '<h3>' + key + '</h3>' +
-               '<p>' +  y + ' at ' + x + '</p>'
+               '<p>' +  y + ' in ' + x + '</p>'
       }
     , x //can be accessed via chart.xScale()
     , y //can be accessed via chart.yScale()
@@ -4097,7 +4097,7 @@ nv.models.historicalBarChart = function() {
     , tooltips = true
     , tooltip = function(key, x, y, e, graph) {
         return '<h3>' + key + '</h3>' +
-               '<p>' +  y + ' at ' + x + '</p>'
+               '<p>' +  y + ' in ' + x + '</p>'
       }
     , x
     , y
@@ -5407,7 +5407,7 @@ nv.models.lineChart = function() {
     , tooltips = true
     , tooltip = function(key, x, y, e, graph) {
         return '<h3>' + key + '</h3>' +
-               '<p>' +  y + ' at ' + x + '</p>'
+               '<p>' +  y + ' in ' + x + '</p>'
       }
     , x
     , y
@@ -5875,7 +5875,7 @@ nv.models.linePlusBarChart = function() {
     , tooltips = true
     , tooltip = function(key, x, y, e, graph) {
         return '<h3>' + key + '</h3>' +
-               '<p>' +  y + ' at ' + x + '</p>';
+               '<p>' +  y + ' in ' + x + '</p>';
       }
     , x
     , y1
@@ -6314,7 +6314,7 @@ nv.models.lineWithFocusChart = function() {
     , tooltips = true
     , tooltip = function(key, x, y, e, graph) {
         return '<h3>' + key + '</h3>' +
-               '<p>' +  y + ' at ' + x + '</p>'
+               '<p>' +  y + ' in ' + x + '</p>'
       }
     , noData = "No Data Available."
     , dispatch = d3.dispatch('tooltipShow', 'tooltipHide', 'brush')
@@ -6892,7 +6892,7 @@ nv.models.linePlusBarWithFocusChart = function() {
     , tooltips = true
     , tooltip = function(key, x, y, e, graph) {
         return '<h3>' + key + '</h3>' +
-               '<p>' +  y + ' at ' + x + '</p>';
+               '<p>' +  y + ' in ' + x + '</p>';
       }
     , x
     , x2
@@ -9369,7 +9369,7 @@ nv.models.multiChart = function() {
       tooltips = true,
       tooltip = function(key, x, y, e, graph) {
         return '<h3>' + key + '</h3>' +
-               '<p>' +  y + ' at ' + x + '</p>'
+               '<p>' +  y + ' in ' + x + '</p>'
       },
       x,
       y,

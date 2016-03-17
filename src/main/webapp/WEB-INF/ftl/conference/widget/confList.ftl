@@ -243,8 +243,6 @@
 									eventDetail.on( "click", function( e){
 										<#-- remove active class -->
 										if( $.PALM.selected.record(  "eventGroup", $( this ).parent().data( 'id' ) , $( this ).parent() )){
-											//$( this ).parent().siblings().removeClass( "active" );
-											//$( this ).parent().addClass( "active" );
 											getVenueGroupDetails( $( this ).parent().data( 'id' ) , eventGroup);
 										}
 									});
@@ -253,7 +251,7 @@
 									
 									
 									<#-- display first conference detail -->
-									if( itemEvent.isAdded ){
+									if( <#--itemEvent.isAdded &&--> typeof eventObj.add === "undefined" ){
 										if( typeof eventObj.id != "undefined" && eventObj.id != "" && eventObj.id == itemEvent.id ){
 											getVenueGroupDetails( eventObj.id , eventGroup );
 											eventObj.id = "";
@@ -263,7 +261,7 @@
 											//	getVenueGroupDetails( itemEvent.id , eventGroup );
 										}
 									} else {
-										if( data.count == 0 ){
+										<#--if( data.count == 0 ){-->
 											var eventUrl = "<@spring.url '/venue/add' />";
 											var eventUrlQuery = "";
 											if( typeof eventObj.eventId !== "undefined" ){
@@ -292,7 +290,7 @@
 												eventUrl += "?" + eventUrlQuery.substring( 1, eventUrlQuery.length );
 											}
 											$.PALM.popUpIframe.create( eventUrl, { "popUpHeight":"460px"} , "Add New Conference/Journal to PALM");
-										}
+										<#--}-->
 									}
 									
 								});

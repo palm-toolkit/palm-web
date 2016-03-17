@@ -3,7 +3,7 @@
 		
 		<#-- Venue -->
 		<div class="form-group">
-          <label>Conference Type *</label>
+          <label>Type</label>
           <select id="type" name="type" class="form-control" style="width:120px">
             <option value="conference">Conference / Workshop</option>
             <option value="journal"<#if targetType?? && targetType == "journal"> selected</#if>>Journal</option>
@@ -91,6 +91,8 @@
 						url += "&volume=" + data.volume;
 					if( typeof eventId !== "undefined" )
 						url += "&year=" + data.year;
+					if( typeof publicationId !== "undefined" )
+						url += "&publicationId=" + data.publicationId;
 						
 					if( inIframe() ){
 						window.top.location = url;
@@ -101,9 +103,9 @@
 			});
 		});
 		
-		$( "#venue-type" ).change( function(){
+		$( "#type" ).change( function(){
 			setConferenceDropDown( $(this).val() );
-			$( "#name,#notation,#description" ).val( "" );
+			<#--$( "#name,#notation,#description" ).val( "" );-->
 		});
 		
 		<#if targetType??>
@@ -152,7 +154,7 @@
 		            }
 		        });
 		    },
-			minLength: 3,
+			minLength: 2,
 			select: function( event, ui ) {
 				<#-- select appropriate vanue type -->
 				$( '#venue-type' ).val( ui.item.type ).change();

@@ -35,6 +35,8 @@
 			onRefreshStart: function(  widgetElem  ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
+			
+				if( typeof data.author !== "undefined" ){
 
 							var targetContainer = $( widgetElem ).find( ".coauthor-list" );
 							<#-- remove previous list -->
@@ -187,85 +189,89 @@
 								);
 
 						<#-- publication visualization -->
-nv.addGraph(function() {
-  var chart = nv.models.linePlusBarChart()
-        .margin({top: 30, right: 30, bottom: 50, left: 30})
-        //We can set x data2 accessor to use index. Reason? So the bars all appear evenly spaced.
-        .x(function(d,i) { return i })
-        .y(function(d,i) {return d[1] })
-        ;
-
-    chart.xAxis
-      .showMaxMin(false)
-      .tickFormat(function(d) {
-        var dx = data.d3data[0].values[d] && data.d3data[0].values[d][0] || 0;
-        return d3.time.format('%Y')(new Date(dx))
-      });
- 
-  chart.y1Axis
-      .tickFormat(d3.format(',f'));
-
-  chart.y2Axis
-      .tickFormat(d3.format(',f'));
-
-  chart.bars.forceY([0]);
-
-  d3.select('#authBasicSvg svg')
-    .datum( data.d3data )
-    .transition().duration(500)
-    .call(chart)
-    ;
-    
-  chart.bars.dispatch.on("elementClick", function(e) {
-    var researcherPublicationWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_publication' ); 
-					
-	researcherPublicationWidget.options.queryString = "?id=" + data.author.id + "&year=" + e.data[2];
-	<#-- add overlay -->
-	researcherPublicationWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+	nv.addGraph(function() {
+	  var chart = nv.models.linePlusBarChart()
+	        .margin({top: 30, right: 30, bottom: 50, left: 30})
+	        //We can set x data2 accessor to use index. Reason? So the bars all appear evenly spaced.
+	        .x(function(d,i) { return i })
+	        .y(function(d,i) {return d[1] })
+	        ;
 	
-	$.PALM.boxWidget.refresh( researcherPublicationWidget.element , researcherPublicationWidget.options );
-  });
-
-  nv.utils.windowResize(chart.update);
-
-  return chart;
-});
-
-						<#-- end of publication visualization -->
-			
-			<#-- other information -->
-			<#-- Academic Networks -->
-					if( typeof data.sources!= "undefined"){
-						var onAcademicNetwork = $( '<dd/>' );
-						$.each( data.sources , function( index, sourceItem ){							
-							onAcademicNetwork.append( 
-								$( '<div/>' )
-									.addClass( "nowarp urlstyle" )
-									.attr( "title", sourceItem.source + " - " + sourceItem.url)
-									.html( "<i class='fa fa-globe'></i> " + sourceItem.source + " - " + sourceItem.url)
-									.click( function( event ){ event.preventDefault();window.open( sourceItem.url, sourceItem.source ,'scrollbars=yes,width=650,height=500')})
-							);
-						});
+	    chart.xAxis
+	      .showMaxMin(false)
+	      .tickFormat(function(d) {
+	        var dx = data.d3data[0].values[d] && data.d3data[0].values[d][0] || 0;
+	        // if invalid date
+	        if( dx == 0 )
+	        	return "";
+	        var dateformat = d3.time.format('%Y')(new Date(dx));
+	        return dateformat;
+	      });
+	 
+	  chart.y1Axis
+	      .tickFormat(d3.format(',f'));
+	
+	  chart.y2Axis
+	      .tickFormat(d3.format(',f'));
+	
+	  chart.bars.forceY([0]);
+	
+	  d3.select('#authBasicSvg svg')
+	    .datum( data.d3data )
+	    .transition().duration(500)
+	    .call(chart)
+	    ;
+	    
+	  chart.bars.dispatch.on("elementClick", function(e) {
+	    var researcherPublicationWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_publication' ); 
 						
-						$( "#autOtherInfo" ).html( "" )
-							.append( $( '<dt/>' ).html( "On Academic Networks:" ).css("margin-top","15px") )
-							.append( onAcademicNetwork);
-						
-					}
-			
-			<#-- syncronize number of publication -->
-			var updatedPublicationNumber; 
-			if( typeof data.author.publicationsNumber != 'undefined'){
-				var citedBy = 0;
-				if( typeof data.author.citedBy !== "undefined" )
-					citedBy = data.author.citedBy;
+		researcherPublicationWidget.options.queryString = "?id=" + data.author.id + "&year=" + e.data[2];
+		<#-- add overlay -->
+		researcherPublicationWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+		
+		$.PALM.boxWidget.refresh( researcherPublicationWidget.element , researcherPublicationWidget.options );
+	  });
+	
+	  nv.utils.windowResize(chart.update);
+	
+	  return chart;
+	});
+	
+							<#-- end of publication visualization -->
 				
-				updatedPublicationNumber = "Publications: " + data.author.publicationsNumber + " || Cited by: " + citedBy;
-			}
+				<#-- other information -->
+				<#-- Academic Networks -->
+						if( typeof data.sources!= "undefined"){
+							var onAcademicNetwork = $( '<dd/>' );
+							$.each( data.sources , function( index, sourceItem ){							
+								onAcademicNetwork.append( 
+									$( '<div/>' )
+										.addClass( "nowarp urlstyle" )
+										.attr( "title", sourceItem.source + " - " + sourceItem.url)
+										.html( "<i class='fa fa-globe'></i> " + sourceItem.source + " - " + sourceItem.url)
+										.click( function( event ){ event.preventDefault();window.open( sourceItem.url, sourceItem.source ,'scrollbars=yes,width=650,height=500')})
+								);
+							});
 							
-			var researcherListWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_list' ); 
-			researcherListWidget.element.find( "#" + data.author.id ).find( ".paper" ).html( updatedPublicationNumber );
+							$( "#autOtherInfo" ).html( "" )
+								.append( $( '<dt/>' ).html( "On Academic Networks:" ).css("margin-top","15px") )
+								.append( onAcademicNetwork);
+							
+						}
+				
+				<#-- syncronize number of publication -->
+				var updatedPublicationNumber; 
+				if( typeof data.author.publicationsNumber != 'undefined'){
+					var citedBy = 0;
+					if( typeof data.author.citedBy !== "undefined" )
+						citedBy = data.author.citedBy;
 					
+					updatedPublicationNumber = "Publications: " + data.author.publicationsNumber + " || Cited by: " + citedBy;
+				}
+								
+				var researcherListWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_list' ); 
+				researcherListWidget.element.find( "#" + data.author.id ).find( ".paper" ).html( updatedPublicationNumber );
+			}
 													
 						}
 		};

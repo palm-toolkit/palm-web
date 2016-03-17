@@ -31,21 +31,22 @@
 			onRefreshStart: function( widgetElem ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
+				var mainContainer = $("#widget-${wUniqueName} .box-content");
 				<#--remove everything -->
-				$("#widget-${wUniqueName} .box-content").html( "" );
+				mainContainer.html( "" );
 				
-				<#--
+				<#-- check for error  -->
 				if( data.status != "ok"){
-					alert( "error on publication list" );
+					<#--alert( "error on publication list" );-->
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher doesn't ave any publications" );
 					return false;
 				}
-				-->
-				<#--
 				if ( typeof data.publications === 'undefined') {
-					alert( "error, no publication found" );
+					<#--alert( "error, no publication found" );-->
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher doesn't ave any publications" );
 					return false;
 				}
-				-->
+				
 				var filterContainer = $( '<div/>' )
 										.css({'width':'100%','margin':'0 10px 15px 0'})
 										.addClass( "pull-left" )
@@ -143,12 +144,12 @@
 				<#-- append filter -->
 				filterContainer.append( filterSearch );
 				filterContainer.append( filterYear );
-				$("#widget-${wUniqueName} .box-content").append( filterContainer );
+				mainContainer.append( filterContainer );
 				<#-- end of filter -->
 
 				<#-- no publication found -->
 				if ( typeof data.publications === 'undefined') {
-					$("#widget-${wUniqueName} .box-content").append( "<strong>error, no publication found/match</strong>" );
+					mainContainer.append( "<strong>error, no publication found/match</strong>" );
 					return false;
 				}
 
@@ -394,8 +395,8 @@
 	
 							timelineBody.append( timeLineAuthor );
 						}
-						<#-- venue -->
 						
+						<#-- venue -->
 						if( typeof item.event !== 'undefined' ){
 							var eventElem = $( '<div/>' )
 											.addClass( 'event-detail font-xs' );
@@ -409,8 +410,7 @@
 							}
 							venueHref += "&name=" + item.event.name.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id ;
 							
-							<#-- the implementation logic is other way around, but this worked, then just leave it-->
-							if( typeof item.event.isGroupAdded !== "undefined" && item.event.isGroupAdded )
+							if( typeof item.event.isGroupAdded === "undefined" || !item.event.isGroupAdded )
 								venueHref += "&add=yes";
 							
 							if( typeof item.volume != 'undefined' ){
@@ -473,6 +473,8 @@
 								venueHref += "&year=" + item.date.substring(0, 4);
 							}
 							
+							venueHref += "&add=yes";
+							
 							var eventPart = $( '<a/>' )
 													.attr({ "href" : venueHref })
 													.addClass( "text-gray" )
@@ -507,7 +509,7 @@
 				});
 
 				<#-- append everything to  -->
-				$("#widget-${wUniqueName} .box-content").append( timeLineContainer );
+				mainContainer.append( timeLineContainer );
 			}
 		};
 		

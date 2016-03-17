@@ -55,6 +55,13 @@
 	      </select>
 	    </div>
 	    
+	    
+	    <#-- text input Widget Position -->
+	    <div class="form-group">
+	      <label>Position</label>
+	      <input type="text" id="position" name="position" class="form-control col-md-4" value="0">
+	    </div>
+	    
 	    <#-- select Widget Color -->
 	    <div class="form-group">
 	      <label>Widget Header Color</label>
@@ -101,7 +108,22 @@
 	      </div>
 	    </div>
 	    
+	    <#-- widget moveable option -->
+	    <div class="form-group">
+	      <label>Enable widget moveable</label>
+	      <div class="radio">
+	        <label class="col-md-4">
+	          <input type="radio" name="widgetMoveable" id="widgetMoveable1" value="on" checked="">
+	          Yes
+	        </label>
+	        <label>
+	          <input type="radio" name="widgetMoveable" id="widgetMoveable2" value="off">
+	          No
+	        </label>
+	      </div>
+	    </div>
 	    <#-- radio widget resize option -->
+<#--
 	    <div class="form-group">
 	      <label>Enable widget resize option</label>
 	      <div class="radio">
@@ -115,8 +137,9 @@
 	        </label>
 	      </div>
 	    </div>
-	    
+-->   
 	    <#-- radio widget color option -->
+<#--
 	    <div class="form-group">
 	      <label>Enable widget color option</label>
 	      <div class="radio">
@@ -126,6 +149,21 @@
 	        </label>
 	        <label>
 	          <input type="radio" name="widgetColorEnable" id="widgetColorEnable2" value="off">
+	          No
+	        </label>
+	      </div>
+	    </div>
+-->    
+	    <#-- radio widget header visible -->
+	    <div class="form-group">
+	      <label>Is widget contain header?</label>
+	      <div class="radio">
+	        <label class="col-md-4">
+	          <input type="radio" name="headerVisible" id="headerVisible1" value="on" checked="">
+	          Yes
+	        </label>
+	        <label>
+	          <input type="radio" name="headerVisible" id="headerVisible2" value="off">
 	          No
 	        </label>
 	      </div>
@@ -145,5 +183,23 @@
   
 </div><#-- ./box-body -->
 <div class="box-footer">
-  	<button type="submit" class="btn btn-primary" onclick="postFormViaAjax( $( 'form#addWidget' ) )">Create</button>
+  	<button type="button" id="saveChanges" class="btn btn-primary">Create</button>
 </div><#-- /.box-footer -->
+
+<script>
+$(function(){
+	  
+	  <#-- submit via ajax -->
+		$( "#saveChanges" ).click( function( e ){
+			e.preventDefault();
+			<#-- put researcher & publication on circle into hidden input -->
+			$.post( $("#addWidget").attr( "action" ), $("#addWidget").serialize(), function( data ){
+				<#-- if status ok -->
+				if( data.status == "ok" ){
+					<#-- reload parent page -->
+					parent.location = "<@spring.url '/admin?page=widget-' />" + $( "#widgetType" ).val().toLowerCase();
+				}
+			});
+		});
+});
+</script>

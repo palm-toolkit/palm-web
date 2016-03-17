@@ -275,6 +275,12 @@ iframe.externalContent{
 	color:#555;
 	height:auto !important;
 }
+.no_selection {
+    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+    -moz-user-select: none; /* mozilla browsers */
+    -khtml-user-select: none; /* webkit (konqueror) browsers */
+    -ms-user-select: none; /* IE10+ */
+}
 .width-auto{
 	width:auto !important;
 }
@@ -542,20 +548,15 @@ div.d3-tooltip {
 	display:block;
 }
 
-.content-list>.publication>.nav>.fa-edit{
+.content-list>.publication>.nav>.fa-edit,
+.content-list>.eventgroup-item>.eventgroup>.nav>.fa-edit,
+.content-list>.circle>.nav>.fa-edit{
 	display:none;
 	cursor:auto;
 }
-.content-list>.publication.active>.nav>.fa-edit{
-	display:block;
-	cursor:pointer;
-}
-
-.content-list>.eventgroup-item>.eventgroup>.nav>.fa-edit{
-	display:none;
-	cursor:auto;
-}
-.content-list>.eventgroup-item>.eventgroup.active>.nav>.fa-edit{
+.content-list>.publication.active>.nav>.fa-edit,
+.content-list>.eventgroup-item>.eventgroup.active>.nav>.fa-edit,
+.content-list>.circle.active>.nav>.fa-edit{
 	display:block;
 	cursor:pointer;
 }
@@ -624,7 +625,7 @@ div.d3-tooltip {
 }
 .content-list>.publication>.nav>.fa-edit, .content-list>.eventgroup-item>.eventgroup>.nav>.fa-edit,
 .content-list>.author>.nav>.fa-edit, .eventyear-list>.eventyear-item>.eventyear>.nav>.fa-edit,
-.eventvolume-list>.eventvolume>.nav>.fa-edit{
+.eventvolume-list>.eventvolume>.nav>.fa-edit,.content-list>.circle>.nav>.fa-edit{
 	color: #999;
     margin-top: 1px;
     background-color:#fff;
@@ -931,9 +932,13 @@ div.d3-tooltip {
 	display:block;
 	width:100px;
 }
-.width130px{
+.width80px{
 	display:block;
-	width:130px;
+	width:80px;
+}
+.width110px{
+	display:block;
+	width:110px;
 }
 
 /* manage widget style */
@@ -988,3 +993,25 @@ form.cmxform label.error, label.error {
     color: red;
     font-style: italic;
 }
+
+/* json tidy */
+pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+.pre-string { color:#249D7F; }
+.pre-number { color: #ED5C65; }
+.pre-boolean { color: #219; }
+.pre-null { color: #219; }
+.pre-key { color:#249D7F;font-weight:700;}
+.textarea {
+    -moz-appearance: textfield-multiline;
+    -webkit-appearance: textarea;
+    border: 1px solid gray;
+    font: medium -moz-fixed;
+    font: -webkit-small-control;
+    height: 28px;
+    overflow: auto;
+    padding: 2px;
+    resize: both;
+    width: 100%;
+    min-height:200px;
+}
+.info-label{color:#a2a2a2}

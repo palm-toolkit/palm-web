@@ -152,11 +152,19 @@
 				$.PALM.popUpMessage.create( "loading publications...", { uniqueId:uniquePidResearcherWidget, popUpHeight:40, directlyRemove:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){
+							var publicationListContainer = $( widgetElem ).find( ".content-list" );
+							
+							<#-- check for error  -->
+							if( typeof data.publications === "undefined"){
+								<#--alert( "error on publication list" );-->
+								$.PALM.callout.generate( publicationListContainer , "warning", "Empty Publications !", "No publication found" );
+								return false;
+							}
 			
 							<#-- remove  pop up progress log -->
 							$.PALM.popUpMessage.remove( uniquePidResearcherWidget );
 
-							var publicationListContainer = $( widgetElem ).find( ".content-list" );
+							
 							<#-- remove previous result -->
 							publicationListContainer.html( "" );
 							<#-- button search loading -->

@@ -109,7 +109,7 @@
 		            		$('#name').removeClass( "ui-autocomplete-loading" );
 		            		<#--return info message -->
 							var result = [{
-       									label: 'No matches researcher found, please add first on Researcher page', 
+       									label: 'No matching researcher found, please add first on Researcher page', 
    										value: response.term
 										}];
 										
