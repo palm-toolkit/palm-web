@@ -1,5 +1,15 @@
-<@dialoglayout.global>
-	<@content.dialogmain>
+ <@layout.global classStyle="layout-top-nav skin-blue-light">
+ 	 	
+ 	<@content.header>
+
+		<#include "headerHome.ftl" />
+		
+ 	</@content.header>
+ 	
+ 	<@content.contentWrapper>
+ 	
+ 		<div class="row center-content padding-home-content">
+ 		
 	<form id="form-palm-analytics" action="<@spring.url '/analytics' />" style="padding-left: 25px" class="MISSY_round_right"  enctype="multipart/form-data" >	
 	
 	<table>
@@ -28,6 +38,7 @@
 	  	<#-- text result -->
 	  	<div id="results"></div>
 	</form>
+</div>
 <script>
 	$(function() {
     	<#-- multiple file-upload -->
@@ -46,5 +57,8 @@
 	}
 	
 </script>  	
-	</@content.dialogmain>
-</@dialoglayout.global>
+
+          		
+ 	</@content.contentWrapper>
+ 	
+</@layout.global>
