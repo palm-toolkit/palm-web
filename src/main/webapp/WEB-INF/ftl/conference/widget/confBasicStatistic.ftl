@@ -1,5 +1,5 @@
 <@security.authorize access="isAuthenticated()">
-	<#assign loggedUser = securityService.getUser() >
+	<#assign currentUser = securityService.getUser() >
 </@security.authorize>
 <div id="boxbody${wUniqueName}" class="box-body no-margin no-padding" style="overflow:hidden">
 </div>
@@ -31,6 +31,41 @@
 				<#--remove previous content -->
 				targetContainer.html( "" );
 				
+				<#-- bookmark button -->
+				<#if currentUser??>
+					if( !data.booked ){
+	                	var butBook = $( "<a/>" )
+	                					.attr({
+	                						"class":"btn btn-block btn-social btn-twitter btn-sm width110px pull-right",
+	                						"onclick":"$.PALM.bookmark.eventGroup( $( this ), '${currentUser.id}', '" + data.eventGroup.id + "' )",
+	                						"data-goal":"add"})
+	                					.append(
+	                						$( "<i/>" )
+	                							.attr({"class":"fa fa-bookmark"})
+	                					)
+	                					.append(
+	                						"<strong>Bookmark</strong>"
+	                					);
+	                			
+						targetContainer.append( butBook );
+					} else {
+						var butBook = $( "<a/>" )
+	                					.attr({
+	                						"class":"btn btn-block btn-social btn-twitter active btn-sm width110px pull-right",
+	                						"onclick":"$.PALM.bookmark.eventGroup( $( this ), '${currentUser.id}', '" + data.eventGroup.id + "' )",
+	                						"data-goal":"remove"})
+	                					.append(
+	                						$( "<i/>" )
+	                							.attr({"class":"fa fa-check"})
+	                					)
+	                					.append(
+	                						"<strong>Booked</strong>"
+	                					);
+	                			
+						targetContainer.append( butBook );
+					}
+				</#if>
+				
 				<#-- check data status -->
 				var genaralBoxBody = $( '<div/>' )
 										.attr({'class':'box-body'})
@@ -38,6 +73,7 @@
 				<#-- create generalBox -->
 				var generalBox = $( '<div/>' )
 									.attr({'class':'col-md-12'})
+									.css({"clear":"both"})
 									.append(
 										$( '<div/>' )
 										.attr({'class':'box box-default box-solid no-border'})
@@ -52,7 +88,7 @@
 											.append(
 												$( '<div/>' )
 												.attr({'class':'box-tools pull-right'})
-												<#if loggedUser??>
+												<#if currentUser??>
 												.append(
 													$( '<div/>' )
 													.attr({'class':'btn btn-default btn-xs','data-url': '<@spring.url '/venue/eventGroup/edit' />?id=' + data.eventGroup.id, 'title':'Update ' + data.eventGroup.name})
@@ -212,7 +248,7 @@
 														.attr({'class':'box-title'})
 														.html( boxHeaderTitle )
 													)
-													<#if loggedUser??>
+													<#if currentUser??>
 													<#--
 													.append(
 														$( '<div/>' )

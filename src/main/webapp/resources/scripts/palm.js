@@ -1254,6 +1254,17 @@ $.PALM.api = {
  * PALM bookmark functionalities
  */
 $.PALM.bookmark = {
+	author : function( bookButton, userId, authorId ) {
+		var _this = this;
+		var goal = bookButton.attr( "data-goal" );
+		if( !_this.ajaxRunning ){
+			_this.ajaxRunning = true;
+			if( goal == "add" )
+				_this.addBookmark( bookButton, "researcher", "user/bookmark/author"  ,{ "userId" : userId , "bookId" : authorId });
+			else
+				_this.removeBookmark( bookButton, "researcher", "user/bookmark/remove/author"  ,{ "userId" : userId , "bookId" : authorId });
+		}
+	},
 	publication : function( bookButton, userId, publicationId ) {
 		var _this = this;
 		var goal = bookButton.attr( "data-goal" );
@@ -1264,7 +1275,29 @@ $.PALM.bookmark = {
 			else
 				_this.removeBookmark( bookButton, "publication", "user/bookmark/remove/publication"  ,{ "userId" : userId , "bookId" : publicationId });
 		}
-		},
+	},
+	circle : function( bookButton, userId, circleId ) {
+		var _this = this;
+		var goal = bookButton.attr( "data-goal" );
+		if( !_this.ajaxRunning ){
+			_this.ajaxRunning = true;
+			if( goal == "add" )
+				_this.addBookmark( bookButton, "circle", "user/bookmark/circle"  ,{ "userId" : userId , "bookId" : circleId });
+			else
+				_this.removeBookmark( bookButton, "circle", "user/bookmark/remove/circle"  ,{ "userId" : userId , "bookId" : circleId });
+		}
+	},
+	eventGroup : function( bookButton, userId, eventGroupId ) {
+		var _this = this;
+		var goal = bookButton.attr( "data-goal" );
+		if( !_this.ajaxRunning ){
+			_this.ajaxRunning = true;
+			if( goal == "add" )
+				_this.addBookmark( bookButton, "eventGroup", "user/bookmark/eventGroup"  ,{ "userId" : userId , "bookId" : eventGroupId });
+			else
+				_this.removeBookmark( bookButton, "eventGroup", "user/bookmark/remove/eventGroup"  ,{ "userId" : userId , "bookId" : eventGroupId });
+		}
+	},
 	addBookmark: function (bookButton, type, url, parameters) {
 		var _this = this;
 	    $.post( baseUrl + "/" + url  , parameters , function( data) {
@@ -1274,7 +1307,8 @@ $.PALM.bookmark = {
 			   	.addClass( "active" );
 			   // change label
 			   if( type == "researcher" ){
-				   
+				   bookButton.find( "i" ).removeClass( "fa-user-plus" ).addClass( "fa-check" );
+				   bookButton.find( "strong" ).html( "Followed" );
 			   } else {
 				   bookButton.find( "i" ).removeClass( "fa-bookmark" ).addClass( "fa-check" );
 				   bookButton.find( "strong" ).html( "Booked" );
@@ -1292,7 +1326,8 @@ $.PALM.bookmark = {
 			   	.removeClass( "active" );
 			   // change label
 			   if( type == "researcher" ){
-				   
+				   bookButton.find( "i" ).removeClass( "fa-check" ).addClass( "fa-user-plus" );
+				   bookButton.find( "strong" ).html( "Follow" );
 			   } else {
 				   bookButton.find( "i" ).removeClass( "fa-check" ).addClass( "fa-bookmark" );
 				   bookButton.find( "strong" ).html( "Bookmark" );
