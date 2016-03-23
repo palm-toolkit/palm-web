@@ -1,3 +1,6 @@
+<@security.authorize access="isAuthenticated()">
+	<#assign currentUser = securityService.getUser() >
+</@security.authorize>
 <div id="boxbody${wUniqueName}" class="box-body" style="overflow:hidden">
 	<form role="form" action="<@spring.url '/publication' />" method="post">
 	</form>
@@ -29,7 +32,41 @@
 
 				<#--remove previous content -->
 				targetContainer.html( "" );
-
+				
+				<#if currentUser??>
+					if( !data.booked ){
+	                	var butBook = $( "<a/>" )
+	                					.attr({
+	                						"class":"btn btn-block btn-social btn-twitter btn-sm width110px pull-right",
+	                						"onclick":"$.PALM.bookmark.publication( $( this ), '${currentUser.id}', '" + data.publication.id + "' )",
+	                						"data-goal":"add"})
+	                					.append(
+	                						$( "<i/>" )
+	                							.attr({"class":"fa fa-bookmark"})
+	                					)
+	                					.append(
+	                						"<strong>Bookmark</strong>"
+	                					);
+	                			
+						targetContainer.append( butBook );
+					} else {
+						var butBook = $( "<a/>" )
+	                					.attr({
+	                						"class":"btn btn-block btn-social btn-twitter active btn-sm width110px pull-right",
+	                						"onclick":"$.PALM.bookmark.publication( $( this ), '${currentUser.id}', '" + data.publication.id + "' )",
+	                						"data-goal":"remove"})
+	                					.append(
+	                						$( "<i/>" )
+	                							.attr({"class":"fa fa-check"})
+	                					)
+	                					.append(
+	                						"<strong>Booked</strong>"
+	                					);
+	                			
+						targetContainer.append( butBook );
+					}
+				</#if>
+				
 				if( typeof data.publication !== "undefined" ){
 						targetContainer.append(
 											$( '<dt/>' ).html( "Title:" )

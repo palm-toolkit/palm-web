@@ -1251,6 +1251,59 @@ $.PALM.api = {
 }
 
 /**
+ * PALM bookmark functionalities
+ */
+$.PALM.bookmark = {
+	publication : function( bookButton, userId, publicationId ) {
+		var _this = this;
+		var goal = bookButton.attr( "data-goal" );
+		if( !_this.ajaxRunning ){
+			_this.ajaxRunning = true;
+			if( goal == "add" )
+				_this.addBookmark( bookButton, "publication", "user/bookmark/publication"  ,{ "userId" : userId , "bookId" : publicationId });
+			else
+				_this.removeBookmark( bookButton, "publication", "user/bookmark/remove/publication"  ,{ "userId" : userId , "bookId" : publicationId });
+		}
+		},
+	addBookmark: function (bookButton, type, url, parameters) {
+		var _this = this;
+	    $.post( baseUrl + "/" + url  , parameters , function( data) {
+		   if( data.status == "ok" ){
+			   bookButton
+			   	.attr( "data-goal" , "remove" )
+			   	.addClass( "active" );
+			   // change label
+			   if( type == "researcher" ){
+				   
+			   } else {
+				   bookButton.find( "i" ).removeClass( "fa-bookmark" ).addClass( "fa-check" );
+				   bookButton.find( "strong" ).html( "Booked" );
+			   }
+		   }
+		   _this.ajaxRunning = false;
+	   });
+	},
+	removeBookmark: function ( bookButton, type, url, parameters) {
+		var _this = this;
+	    $.post( baseUrl + "/" + url  , parameters , function( data) {
+		   if( data.status == "ok" ){
+			   bookButton
+			   	.attr( "data-goal" , "add" )
+			   	.removeClass( "active" );
+			   // change label
+			   if( type == "researcher" ){
+				   
+			   } else {
+				   bookButton.find( "i" ).removeClass( "fa-check" ).addClass( "fa-bookmark" );
+				   bookButton.find( "strong" ).html( "Bookmark" );
+			   }
+		   }
+		   _this.ajaxRunning = false;
+	   });
+	}
+};
+
+/**
  * Collections of utility functionalities on PALM
  */
 $.PALM.utility = {

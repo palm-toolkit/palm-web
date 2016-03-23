@@ -59,6 +59,7 @@ import de.rwth.i9.palm.model.Subject;
 import de.rwth.i9.palm.model.TopicModelingAlgorithmAuthor;
 import de.rwth.i9.palm.model.TopicModelingAlgorithmCircle;
 import de.rwth.i9.palm.model.User;
+import de.rwth.i9.palm.model.UserPublicationBookmark;
 import de.rwth.i9.palm.model.UserRequest;
 import de.rwth.i9.palm.model.UserWidget;
 import de.rwth.i9.palm.model.WeightingAlgorithm;
@@ -192,6 +193,7 @@ public class DatabaseConfig
  				TopicModelingAlgorithmAuthor.class,
  				TopicModelingAlgorithmCircle.class,
 				User.class,
+				UserPublicationBookmark.class,
 				UserRequest.class,
 				UserWidget.class,
 				Widget.class,
