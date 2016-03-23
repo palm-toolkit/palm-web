@@ -37,6 +37,8 @@ import de.rwth.i9.palm.feature.publication.PublicationFeature;
 import de.rwth.i9.palm.feature.publication.PublicationFeatureImpl;
 import de.rwth.i9.palm.feature.researcher.ResearcherFeature;
 import de.rwth.i9.palm.feature.researcher.ResearcherFeatureImpl;
+import de.rwth.i9.palm.feature.user.UserFeature;
+import de.rwth.i9.palm.feature.user.UserFeatureImpl;
 import de.rwth.i9.palm.service.ApplicationService;
 import de.rwth.i9.palm.service.SecurityService;
 import de.rwth.i9.palm.service.TemplateService;
@@ -211,12 +213,20 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 		return new PublicationFeatureImpl();
 	}
 
-	/* palm publication feature */
+	/* palm circle feature */
 	@Bean
 	@Scope( "singleton" )
 	public CircleFeature CircleFeature()
 	{
 		return new CircleFeatureImpl();
+	}
+
+	/* palm user feature */
+	@Bean
+	@Scope( "singleton" )
+	public UserFeature userFeature()
+	{
+		return new UserFeatureImpl();
 	}
 
 	/* Scheduling and ThreadPool */
