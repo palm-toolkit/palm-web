@@ -30,10 +30,41 @@
     <#-- Circles menu -->
     <li class="treeview" data-link="termextraction">
       <a href="<@spring.url '/user/circle' />">
-        <i class="fa fa fa-circle-o"></i>
+        <i class="fa fa-circle-o"></i>
         <span>My Circles</span>
       </a>
     </li>
     
+    <#-- Bookmark author menu -->
+    <li class="treeview" data-link="bookmarkauthor">
+      <a href="<@spring.url '/user/book/author' />">
+        <i class="fa fa-file-text-o"></i>
+        <span>Followed Researchers</span>
+      </a>
+    </li>
+    
+    <#-- Bookmark publication menu -->
+    <li class="treeview" data-link="bookmarkpublication">
+      <a href="<@spring.url '/user/book/publication' />">
+        <i class="fa fa fa-user"></i>
+        <span>Booked Publications</span>
+      </a>
+    </li>
+    
+    <#-- Bookmark eventGroup menu -->
+    <li class="treeview" data-link="bookmarkeventgroup">
+      <a href="<@spring.url '/user/book/conference' />">
+        <i class="fa fa-globe"></i>
+        <span>Booked Conferences</span>
+      </a>
+    </li>
+    
+    <#-- Bookmark circle menu -->
+    <li class="treeview" data-link="bookmarkcircle">
+      <a href="<@spring.url '/user/book/circle' />">
+        <i class="fa fa-circle-o"></i>
+        <span>Booked Circles</span>
+      </a>
+    </li>
   </ul>
 </section>
