@@ -12,7 +12,7 @@
     </li>
 
 	<#-- Publications menu -->
-    <li class="treeview" data-link="termextraction">
+    <li class="treeview" data-link="publication">
       <a href="<@spring.url '/user/publication' />">
         <i class="fa fa-file-text-o"></i>
         <span>My Publications</span>
@@ -20,7 +20,7 @@
     </li>
     
     <#-- Conferences menu -->
-    <li class="treeview" data-link="termextraction">
+    <li class="treeview" data-link="event">
       <a href="<@spring.url '/user/event' />">
         <i class="fa fa-globe"></i>
         <span>My Conferences</span>
@@ -28,7 +28,7 @@
     </li>
     
     <#-- Circles menu -->
-    <li class="treeview" data-link="termextraction">
+    <li class="treeview" data-link="circle">
       <a href="<@spring.url '/user/circle' />">
         <i class="fa fa-circle-o"></i>
         <span>My Circles</span>
