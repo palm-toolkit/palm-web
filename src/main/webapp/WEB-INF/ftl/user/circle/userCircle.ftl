@@ -1,3 +1,6 @@
+<@security.authorize access="isAuthenticated()">
+	<#assign currentUser = securityService.getUser() >
+</@security.authorize>
 <div id="boxbody${wUniqueName}" class="box-body no-padding">
   	<div class="content-list">
     </div>
@@ -16,7 +19,7 @@
 	
 		<#-- unique options in each widget -->
 		var options ={
-			source : "<@spring.url '/user/bookmark/circle' />",
+			source : "<@spring.url '/circle/search' />",
 			query: "",
 			queryString : "",
 			page:0,
@@ -143,6 +146,8 @@
 							}
 						}
 		};
+		
+		options.queryString = "?creatorId=${currentUser.id}";
 		
 		<#-- register the widget -->
 		$.PALM.options.registeredWidget.push({
