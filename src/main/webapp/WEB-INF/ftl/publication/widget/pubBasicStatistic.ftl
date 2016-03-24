@@ -60,7 +60,7 @@
 	                							.attr({"class":"fa fa-check"})
 	                					)
 	                					.append(
-	                						"<strong>Booked</strong>"
+	                						"<strong>Bookmarked</strong>"
 	                					);
 	                			
 						targetContainer.append( butBook );

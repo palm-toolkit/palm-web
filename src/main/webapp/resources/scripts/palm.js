@@ -1311,7 +1311,7 @@ $.PALM.bookmark = {
 				   bookButton.find( "strong" ).html( "Followed" );
 			   } else {
 				   bookButton.find( "i" ).removeClass( "fa-bookmark" ).addClass( "fa-check" );
-				   bookButton.find( "strong" ).html( "Booked" );
+				   bookButton.find( "strong" ).html( "Bookmarked" );
 			   }
 		   }
 		   _this.ajaxRunning = false;
