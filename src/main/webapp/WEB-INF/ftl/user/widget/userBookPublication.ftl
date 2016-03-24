@@ -137,8 +137,6 @@
 
 									<#-- add click event -->
 									pubDetail.on( "click", function(){
-										<#-- push history -->
-										history.pushState( null, "Publication " + itemPublication.title, "<@spring.url '/publication' />?id=" + itemPublication.id + "&title=" + itemPublication.title);
 										window.location.href = "<@spring.url '/publication' />?id=" + itemPublication.id + "&title=" + itemPublication.title;
 									});
 
