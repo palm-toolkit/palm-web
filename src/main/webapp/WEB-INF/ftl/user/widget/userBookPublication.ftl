@@ -147,7 +147,7 @@
 								<#-- $( widgetElem ).find( "span.paging-info" ).html( "Displaying publications " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.totalCount );-->
 							}
 							else{
-								<#-- circle contain no publication -->
+								$.PALM.callout.generate( publicationListContainer, "warning", "Empty Bookmark !", "No Conference/Journal bookmarked" );
 							}
 						}
 		};

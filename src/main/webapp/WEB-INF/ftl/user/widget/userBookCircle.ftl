@@ -119,27 +119,10 @@
 									circleListContainer.append( circleItem );
 								
 								});
-								var maxPage = Math.ceil(data.count/data.maxresult);
 								
-								<#-- set dropdown page -->
-								for( var i=1;i<=maxPage;i++){
-									$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
-								}
-								
-								<#-- set page number -->
-								$pageDropdown.val( data.page + 1 );
-								$( widgetElem ).find( "span.total-page" ).html( maxPage );
-								var endRecord = (data.page + 1) * data.maxresult;
-								if( data.page == maxPage - 1 ) 
-								endRecord = data.count;
-								$( widgetElem ).find( "span.paging-info" ).html( "Displaying circles " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.count );
 							}
 							else{
-								$pageDropdown.append("<option value='0'>0</option>");
-								$( widgetElem ).find( "span.total-page" ).html( 0 );
-								$( widgetElem ).find( "span.paging-info" ).html( "Displaying researchers 0 - 0 of 0" );
-								$( widgetElem ).find( "li.toNext" ).addClass( "disabled" );
-								$( widgetElem ).find( "li.toEnd" ).addClass( "disabled" );
+								$.PALM.callout.generate( circleListContainer, "warning", "Empty Bookmark !", "No Circle bookmarked" );
 							}
 						}
 		};

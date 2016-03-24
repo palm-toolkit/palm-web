@@ -38,12 +38,12 @@
 				<#-- check for error  -->
 				if( data.status != "ok"){
 					<#--alert( "error on publication list" );-->
-					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher doesn't ave any publications" );
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Sorry, you don't have any publication, please try to add one" );
 					return false;
 				}
 				if ( typeof data.publications === 'undefined') {
 					<#--alert( "error, no publication found" );-->
-					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher doesn't ave any publications" );
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Sorry, you don't have any publication, please try to add one" );
 					return false;
 				}
 				

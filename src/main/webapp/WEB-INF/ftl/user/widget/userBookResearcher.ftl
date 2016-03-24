@@ -122,7 +122,6 @@
 									<#-- add clcik event -->
 									researcherDetail
 										.on( "click", function(){
-											history.pushState(null, "Researcher " + item.name, "<@spring.url '/researcher' />?id=" + item.id + "&name=" + item.name );
 											window.location.href = "<@spring.url '/researcher' />?id=" + item.id + "&name=" + item.name;
 										} );
 									
@@ -146,7 +145,7 @@
 								
 							}
 							else{
-								<#-- circle contain no researchers -->
+								$.PALM.callout.generate( targetContainer, "warning", "You are not following any one" , "" );
 							}
 						}
 		};

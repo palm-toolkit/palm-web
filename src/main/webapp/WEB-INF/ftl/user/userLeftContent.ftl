@@ -39,7 +39,7 @@
     <li class="treeview" data-link="bookmarkauthor">
       <a href="<@spring.url '/user/book/author' />">
         <i class="fa fa-file-text-o"></i>
-        <span>Followed Researchers</span>
+        <span>Following Researchers</span>
       </a>
     </li>
     
@@ -47,7 +47,7 @@
     <li class="treeview" data-link="bookmarkpublication">
       <a href="<@spring.url '/user/book/publication' />">
         <i class="fa fa fa-user"></i>
-        <span>Bookmarked Publications</span>
+        <span>My Publication Bookmarks</span>
       </a>
     </li>
     
@@ -55,7 +55,7 @@
     <li class="treeview" data-link="bookmarkeventgroup">
       <a href="<@spring.url '/user/book/conference' />">
         <i class="fa fa-globe"></i>
-        <span>Bookmarked Conferences</span>
+        <span>My Conference Bookmarks</span>
       </a>
     </li>
     
@@ -63,7 +63,7 @@
     <li class="treeview" data-link="bookmarkcircle">
       <a href="<@spring.url '/user/book/circle' />">
         <i class="fa fa-circle-o"></i>
-        <span>Bookmarked Circles</span>
+        <span>My Circle Bookmarks</span>
       </a>
     </li>
   </ul>

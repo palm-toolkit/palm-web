@@ -35,6 +35,12 @@
 							var targetContainer = $( widgetElem ).find( ".tree-container" );
 							<#-- remove previous list -->
 							targetContainer.html( "" );
+							
+							if( typeof data.evenTree === "undefined" )
+							{
+								$.PALM.callout.generate( targetContainer , "warning", "Empty Conference/Journal", "Sorry, you don't have any Conference/Journal on PALM database" );
+								return false;
+							} 
 				
 				<#-- check and destroy first if exist -->
 				try {
