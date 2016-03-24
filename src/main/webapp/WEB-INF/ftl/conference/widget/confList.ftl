@@ -155,7 +155,7 @@
 							
 							if( data.count > 0 ){
 							
-								// build the conference table
+								// build the conference list
 								$.each( data.eventGroups, function( index, itemEvent ){
 									var eventItem = 
 										$('<div/>')
@@ -758,7 +758,7 @@
 			<#-- show pop up progress log -->
 			var uniquePid = $.PALM.utility.generateUniqueId();
 			$.PALM.popUpMessage.create( "Fetch venue details...", { uniqueId:uniquePid, popUpHeight:150, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
-			<#-- chack and fetch pzblication from academic network if necessary -->
+			<#-- chack and fetch publication from academic network if necessary -->
 			$.getJSON( "<@spring.url '/venue/fetch?id=' />" + venueId + "&pid=" + uniquePid + "&force=false", function( data ){
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniquePid );

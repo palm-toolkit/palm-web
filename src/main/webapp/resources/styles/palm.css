@@ -498,7 +498,7 @@ div.d3-tooltip {
 
 .content-list>.circle{
 	min-height:60px;
-	width:100%;
+	/*width:100%;*/
 }
 .content-list>.eventgroup-item,
 .eventyear-list>.eventyear-item{
@@ -680,7 +680,7 @@ div.d3-tooltip {
 	width:190px
 }
 .content-list>.circle>.detail{
-	width:235px
+	/*width:235px*/
 }
 
 .content-list>.publication>.detail>.title, .content-list>.eventgroup-item>.eventgroup>.detail>.title, 

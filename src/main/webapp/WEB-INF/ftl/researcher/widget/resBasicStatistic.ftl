@@ -41,6 +41,42 @@
 							var targetContainer = $( widgetElem ).find( ".coauthor-list" );
 							<#-- remove previous list -->
 							targetContainer.html( "" );
+							
+							<#-- bookmark button -->
+				<#if currentUser??>
+					if( !data.booked ){
+	                	var butBook = $( "<a/>" )
+	                					.attr({
+	                						"class":"btn btn-block btn-social btn-twitter btn-sm width110px pull-right",
+	                						"onclick":"$.PALM.bookmark.author( $( this ), '${currentUser.id}', '" + data.author.id + "' )",
+	                						"data-goal":"add"})
+	                					.append(
+	                						$( "<i/>" )
+	                							.attr({"class":"fa fa-user-plus"})
+	                					)
+	                					.append(
+	                						"<strong>Follow</strong>"
+	                					);
+	                			
+						targetContainer.append( butBook );
+					} else {
+						var butBook = $( "<a/>" )
+	                					.attr({
+	                						"class":"btn btn-block btn-social btn-twitter active btn-sm width110px pull-right",
+	                						"onclick":"$.PALM.bookmark.author( $( this ), '${currentUser.id}', '" + data.author.id + "' )",
+	                						"data-goal":"remove"})
+	                					.append(
+	                						$( "<i/>" )
+	                							.attr({"class":"fa fa-check"})
+	                					)
+	                					.append(
+	                						"<strong>Followed</strong>"
+	                					);
+	                			
+						targetContainer.append( butBook );
+					}
+				</#if>
+
 							$( widgetElem ).find( "svg" ).html( "" );
 
 							var researcherDiv = 

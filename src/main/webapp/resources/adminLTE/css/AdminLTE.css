@@ -3065,7 +3065,7 @@ table.text-center th {
     overflow: hidden;
     text-overflow: ellipsis
 }
-.btn-social:first-child {
+.btn-social>i {
     position: absolute;
     left: 0;
     top: 0;
@@ -3087,15 +3087,15 @@ table.text-center th {
 .btn-social.btn-sm {
     padding-left: 38px !important
 }
-.btn-social.btn-sm:first-child {
-    line-height: 28px;
-    width: 28px;
-    font-size: 1.4em
+.btn-social.btn-sm>i {
+    line-height: 28px !important;
+    width: 28px !important;
+    font-size: 1.4em !important
 }
 .btn-social.btn-xs {
     padding-left: 30px !important
 }
-.btn-social.btn-xs:first-child {
+.btn-social.btn-xs>i {
     line-height: 20px;
     width: 20px;
     font-size: 1.2em
@@ -3111,7 +3111,7 @@ table.text-center th {
     width: 34px;
     padding: 0
 }
-.btn-social-icon:first-child {
+.btn-social-icon>i {
     position: absolute;
     left: 0;
     top: 0;
@@ -3125,7 +3125,7 @@ table.text-center th {
 .btn-social-icon.btn-lg {
     padding-left: 61px !important
 }
-.btn-social-icon.btn-lg:first-child {
+.btn-social-icon.btn-lg>i {
     line-height: 45px;
     width: 45px;
     font-size: 1.8em
@@ -3133,7 +3133,7 @@ table.text-center th {
 .btn-social-icon.btn-sm {
     padding-left: 38px !important
 }
-.btn-social-icon.btn-sm:first-child {
+.btn-social-icon.btn-sm>i {
     line-height: 28px;
     width: 28px;
     font-size: 1.4em
@@ -3141,12 +3141,12 @@ table.text-center th {
 .btn-social-icon.btn-xs {
     padding-left: 30px !important
 }
-.btn-social-icon.btn-xs:first-child {
+.btn-social-icon.btn-xs>i{
     line-height: 20px;
     width: 20px;
     font-size: 1.2em
 }
-.btn-social-icon:first-child {
+.btn-social-icon>i {
     border: none;
     text-align: center;
     width: 100%!important

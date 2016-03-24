@@ -1,4 +1,4 @@
-<div class="box-body">
+<div id="boxbody-${wUniqueName}" class="box-body">
 	  <form role="form" id="profileForm" action="<@spring.url '/user/profile' />" method="post">
 		<#if author??><#-- if author not null -->
 			<h1>
@@ -76,6 +76,13 @@
 <script>
 	$(function(){
 		<#if author??>
+			$( "#boxbody-${wUniqueName}" )
+			.find( "h1" )
+			.css({ "cursor":"pointer"})
+			.on( "click", function(){
+				window.location.href = "<@spring.url '/researcher' />?id=${author.id}";
+			});
+		
 		<#else>
 		<#-- user profile select submit -->
 		<#-- jquery post on button click -->

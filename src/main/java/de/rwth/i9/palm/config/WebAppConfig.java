@@ -37,8 +37,11 @@ import de.rwth.i9.palm.feature.publication.PublicationFeature;
 import de.rwth.i9.palm.feature.publication.PublicationFeatureImpl;
 import de.rwth.i9.palm.feature.researcher.ResearcherFeature;
 import de.rwth.i9.palm.feature.researcher.ResearcherFeatureImpl;
+import de.rwth.i9.palm.feature.user.UserFeature;
+import de.rwth.i9.palm.feature.user.UserFeatureImpl;
 import de.rwth.i9.palm.service.ApplicationService;
 import de.rwth.i9.palm.service.SecurityService;
+import de.rwth.i9.palm.service.TemplateService;
 
 //import de.rwth.i9.palm.analytics.api.PalmAnalyticsImpl;
 
@@ -144,12 +147,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 		return freeMarkerConfigurer;
 	}
 
-	// @Bean
-	// <bean id="freemarkerConfiguration"
-	// class="freemarker.template.Configuration" />
-
 	/* resource */
-
 	// Maps resources path to webapp/resources
 	public void addResourceHandlers( ResourceHandlerRegistry registry )
 	{
@@ -173,21 +171,12 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 	}
 
 	/* fileupload */
-
-	// @Bean
-	// public CommonsMultipartResolver commonsMultipartResolver()
-	// {
-	// CommonsMultipartResolver commonsMultipartResolver = new
-	// CommonsMultipartResolver();
-	// commonsMultipartResolver.setMaxUploadSize( 10000000 );
-	// return commonsMultipartResolver;
-	// }
-
 	@Bean( name = "multipartResolver" )
 	public CommonsMultipartResolver createMultipartResolver()
 	{
 		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
 		resolver.setDefaultEncoding( "utf-8" );
+		resolver.setMaxUploadSize( 10000000 );
 		return resolver;
 	}
 
@@ -224,12 +213,20 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 		return new PublicationFeatureImpl();
 	}
 
-	/* palm publication feature */
+	/* palm circle feature */
 	@Bean
 	@Scope( "singleton" )
 	public CircleFeature CircleFeature()
 	{
 		return new CircleFeatureImpl();
+	}
+
+	/* palm user feature */
+	@Bean
+	@Scope( "singleton" )
+	public UserFeature userFeature()
+	{
+		return new UserFeatureImpl();
 	}
 
 	/* Scheduling and ThreadPool */
@@ -264,5 +261,12 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 	public SecurityService securityService()
 	{
 		return new SecurityService();
+	}
+
+	@Bean( name = "templateService" )
+	@DependsOn( { "sessionFactory" } )
+	public TemplateService templateService()
+	{
+		return new TemplateService();
 	}
 }

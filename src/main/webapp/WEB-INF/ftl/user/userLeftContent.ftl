@@ -12,7 +12,7 @@
     </li>
 
 	<#-- Publications menu -->
-    <li class="treeview" data-link="termextraction">
+    <li class="treeview" data-link="publication">
       <a href="<@spring.url '/user/publication' />">
         <i class="fa fa-file-text-o"></i>
         <span>My Publications</span>
@@ -20,7 +20,7 @@
     </li>
     
     <#-- Conferences menu -->
-    <li class="treeview" data-link="termextraction">
+    <li class="treeview" data-link="event">
       <a href="<@spring.url '/user/event' />">
         <i class="fa fa-globe"></i>
         <span>My Conferences</span>
@@ -28,12 +28,43 @@
     </li>
     
     <#-- Circles menu -->
-    <li class="treeview" data-link="termextraction">
+    <li class="treeview" data-link="circle">
       <a href="<@spring.url '/user/circle' />">
-        <i class="fa fa fa-circle-o"></i>
+        <i class="fa fa-circle-o"></i>
         <span>My Circles</span>
       </a>
     </li>
     
+    <#-- Bookmark author menu -->
+    <li class="treeview" data-link="bookmarkauthor">
+      <a href="<@spring.url '/user/book/author' />">
+        <i class="fa fa-file-text-o"></i>
+        <span>Following Researchers</span>
+      </a>
+    </li>
+    
+    <#-- Bookmark publication menu -->
+    <li class="treeview" data-link="bookmarkpublication">
+      <a href="<@spring.url '/user/book/publication' />">
+        <i class="fa fa fa-user"></i>
+        <span>My Publication Bookmarks</span>
+      </a>
+    </li>
+    
+    <#-- Bookmark eventGroup menu -->
+    <li class="treeview" data-link="bookmarkeventgroup">
+      <a href="<@spring.url '/user/book/conference' />">
+        <i class="fa fa-globe"></i>
+        <span>My Conference Bookmarks</span>
+      </a>
+    </li>
+    
+    <#-- Bookmark circle menu -->
+    <li class="treeview" data-link="bookmarkcircle">
+      <a href="<@spring.url '/user/book/circle' />">
+        <i class="fa fa-circle-o"></i>
+        <span>My Circle Bookmarks</span>
+      </a>
+    </li>
   </ul>
 </section>
