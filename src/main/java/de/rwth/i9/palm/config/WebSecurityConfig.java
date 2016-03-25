@@ -61,6 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
             	.antMatchers( 
             			"/", 
             			"/api/**", 
+            			"/analytics/**", 
             			"/circle/**", 
             			"/data/**", 
             			"/developer/**", 

@@ -1,5 +1,5 @@
 <div id="boxbody${wUniqueName}" class="box-body" style="height:320px;overflow:hidden">
-	researcher interest evolution
+	circle interest evolution
 </div>
 
 <div class="box-footer">
@@ -15,7 +15,7 @@
 
 				<#-- set widget unique options -->
 		var options ={
-			source : "<@spring.url '/researcher/topicModel' />",
+			source : "<@spring.url '/circle/topicModel' />",
 			queryString : "",
 			id: "",
 			onRefreshStart: function( widgetElem ){
@@ -24,9 +24,9 @@
 			
 			
 				<#-- check for interest cloud widget -->
-				var topicModelCloudWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_topicmodel_cloud' ); 
-				if( typeof topicModelCloudWidget !== "undefined" && !topicModelCloudWidget.executed){
-					$.PALM.boxWidget.refresh( topicModelCloudWidget.element , topicModelCloudWidget.options );
+				var interestCloudWidget = $.PALM.boxWidget.getByUniqueName( 'circle_topic_evolution' ); 
+				if( typeof interestCloudWidget !== "undefined" && !interestCloudWidget.executed){
+					$.PALM.boxWidget.refresh( interestCloudWidget.element , interestCloudWidget.options );
 				}
 				
 
@@ -236,12 +236,16 @@ function visualizeInterest( yearIndex , yearType ){
 				streamChartDataComplete.push( termValueData );
 			}
 		}
+		
+		if( typeof d.value === "undefined" )
+			return;
+		
 		var dataValue = d.value.toString();
 		streamChartDataComplete[ streamChartDataCompleteMapIndex[ d.key+d.date ] ].value = dataValue;
 		previousTerm = d.key;
 	});
 
-	visualizeStreamChart( streamChartDataComplete );
+	visualizeStreamChart( streamChartDataComplete , data.author);
 }
 
 function compareTermWord( a, b){
@@ -391,15 +395,17 @@ margin = {top: 20, right: 20, bottom: 20, left: 10};
       	.attr("stroke-width", "0px"), tooltip.html( "<p>" + d.key + "</p>" ).style("visibility", "hidden");
   	})
 	.on("click", function (d, i){
-         	var publicationTimeLineWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_publication' ); 
+			<#--
+         	var publicationTimeLineWidget = $.PALM.boxWidget.getByUniqueName( 'circle_publication' ); 
 			if( typeof publicationTimeLineWidget !== "undefined" ){
 				publicationTimeLineWidget.options.queryString = "?id=" + author.id + "&year=all&query=" + d.key;
-			<#-- add overlay -->
+			// add overlay 
 				publicationTimeLineWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 				$.PALM.boxWidget.refresh( publicationTimeLineWidget.element , publicationTimeLineWidget.options );
 			} 
 			else
 				alert( "Publication Timeline widget missing, please enable it from Researcher Widget Management" );
+				-->
      });
       
     svg.append("g")

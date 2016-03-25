@@ -19,7 +19,7 @@
 	$( function(){
 		<#-- set widget unique options -->
 		var options ={
-			source : "<@spring.url '/publication/topic' />",
+			source : "<@spring.url '/researcher/topicComposition' />",
 			queryString : "",
 			id: "",
 			onRefreshStart: function( widgetElem ){
@@ -40,16 +40,16 @@ tabContentContainer.html( "" );
 if( data.status != "ok" )
 	alertCallOutWarning( "An error occurred", "Failed to show publication topic composition" );
 	
-if( typeof data.topics === "undefined" || data.topics.length == 0){
-	alertCallOutWarning( "Publication contain no topics", "Topics mining only performed on complete publication with abstract" );
+if( typeof data.topicModel === "undefined" || data.topicModel.length == 0){
+	alertCallOutWarning( "Publication contain no topicModel", "Topics mining only performed on complete publication with abstract" );
 	return false;
 }
 <#-- show tab -->
 tabContainer.show();
 
-$.each( data.topics, function( index, item){
+$.each( data.topicModel, function( index, item){
 	<#-- tab header -->
-	var tabHeaderText = capitalizeFirstLetter( item.extractor );
+	var tabHeaderText = item.profile;
 	var tabHeader = $( '<li/>' )
 						.append(
 							$( '<a/>' )
@@ -106,16 +106,10 @@ $.each( data.topics, function( index, item){
 			);
 	
 	<#-- add visualization -->
-	visualizeTermValue( item.termvalues, "#tab_" + tabHeaderText );
+	visualizeTermValue( item.termvalue, "#tab_" + tabHeaderText );
 	
 	
 });
-
-function capitalizeFirstLetter(string) {
-	if( string.lastIndexOf("YAHOO", 0) === 0 )
-		return "Yahoo";
-    return string.charAt(0).toUpperCase() + string.toLowerCase().slice(1);
-}
 
 <#-- show callout if error happened -->
 function alertCallOutWarning( titleCallOut, messageCallout ){
@@ -159,13 +153,8 @@ function visualizeTermValue( termValueMap, svgContainer )
 	
 	<#-- D3 helper function to draw arcs, populates parameter "d" in path object -->
 	var arc = d3.svg.arc()
-	  .startAngle(function(d){ 
-	  		console.log( d )
-	  		return d.startAngle; 
-	  })
-	  .endAngle(function(d){ 
-	  		return d.endAngle; 
-	  })
+	  .startAngle(function(d){ return d.startAngle; })
+	  .endAngle(function(d){ return d.endAngle; })
 	  .innerRadius(ir)
 	  .outerRadius(r);
 	  
@@ -241,8 +230,8 @@ function visualizeTermValue( termValueMap, svgContainer )
 	  var totalOctets = 0;
 	  filteredPieData = pieData.filter(filterData);
 	  function filterData(element, index, array) {
-	    element.name = streakerDataAdded[index].term;
-	    element.value = streakerDataAdded[index].value;
+	    element.name = streakerDataAdded[index][0];
+	    element.value = streakerDataAdded[index][1];
 	    totalOctets += element.value;
 	    return (element.value > 0);
 	  }
