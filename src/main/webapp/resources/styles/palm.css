@@ -495,6 +495,11 @@ div.d3-tooltip {
 .content-list>.author{
 	min-height:95px;
 }
+.content-list>.author.small{
+	height:60px;
+	min-height:60px;
+	overflow:hidden;
+}
 
 .content-list>.circle{
 	min-height:60px;

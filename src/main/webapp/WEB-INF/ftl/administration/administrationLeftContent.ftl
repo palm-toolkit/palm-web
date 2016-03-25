@@ -90,7 +90,7 @@
     </li>
     
     <#-- User -->
-    <li class="treeview" data-link="termweighting">
+    <li class="treeview" data-link="manageuser">
       <a href="<@spring.url '/admin/user' />">
         <i class="fa fa-user"></i>
         <span>Users</span>
