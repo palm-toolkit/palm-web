@@ -1020,3 +1020,11 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
     min-height:200px;
 }
 .info-label{color:#a2a2a2}
+.widget-section{
+	font-weight: 700;
+    border-bottom: 1px solid #f4f4f4;
+    padding: 3px 20px;
+    float: left;
+    background-color: rgba(150, 138, 125, 0.29);
+    width: 100%;
+}

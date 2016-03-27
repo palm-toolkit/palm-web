@@ -336,6 +336,11 @@
 												getPublicationDetails( itemPublication.id );
 												targetId == "";
 											}
+											<#-- add related publication header if necessary -->
+											$("<div/>").attr("class","widget-section").html("Related Publications").prependTo( publicationListContainer );
+											<#-- put to the top list -->
+											publicationItem.prependTo( publicationListContainer );
+											
 										}
 									}
 								
