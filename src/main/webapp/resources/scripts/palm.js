@@ -574,9 +574,27 @@ $.PALM.layout = {
 					if ($(window).width() < $.PALM.options.screenSizes.sm)
 						listHeightOffset += 50;
 					$(".content-list:first").height(bodyheight - listHeightOffset);
+					$(".content-wrapper").height(bodyheight - 25);
 					$("#left-menu-sidebar").parent().height(
 							bodyheight - listHeightOffset + 150);
-
+					// navigation menu
+					if ($(window).width() <= $.PALM.options.screenSizes.md) {
+						$.each($(o.navMenuSelector).find("a"), function(index, elem) {
+							$(elem).find("strong").hide();
+							if (typeof $(elem).attr("title") != "undefined")
+								$(elem).attr({
+									"data-toggle" : "tooltip",
+									"data-placement" : "bottom",
+									"data-original-title" : $(elem).attr("title")
+								}).tooltip('enable');
+						});
+					} else{
+						$.each($(o.navMenuSelector).find("a"), function(index, elem) {
+							$(elem).find("strong").show();
+							if (typeof $(elem).attr("title") != "undefined")
+								$(elem).tooltip('disable');
+						});
+					}
 				});
 	},
 	fix : function() {
@@ -638,7 +656,7 @@ $.PALM.layout = {
 		if ($(window).width() < $.PALM.options.screenSizes.sm)
 			listHeightOffset += 50;
 		$(".content-list:first").height(bodyheight - listHeightOffset);
-		$(".content-wrapper").height(bodyheight - 50);
+		$(".content-wrapper").height(bodyheight - 25);
 		$("#left-menu-sidebar").parent().height(
 				bodyheight - listHeightOffset + 150);
 	}
