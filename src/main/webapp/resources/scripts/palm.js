@@ -158,7 +158,8 @@ $.PALM.options = {
 	registeredWidget : [],
 	xhrPool : [],
 	// main nav menu selector
-	navMenuSelector : ".navbar-custom-menu"
+	navMenuSelector : ".navbar-custom-menu",
+	navMenuHomeSelector: ".navbar-nav"
 };
 
 /*
@@ -184,31 +185,12 @@ $(function() {
 			size : "3px"
 		}).css("width", "100%");
 	}
-
-	// Activate sidebar push menu
-	if (o.sidebarPushMenu) {
-		$.PALM.pushMenu(o.sidebarToggleSelector);
-		// for small screen
-		if ($(window).width() <= $.PALM.options.screenSizes.md) {
-			$(o.sidebarToggleSelector).click();
-			// add bootstrap tooltip
-			$.each($(o.navMenuSelector).find("a"), function(index, elem) {
-				$(elem).find("strong").hide();
-				if (typeof $(elem).attr("title") != "undefined")
-					$(elem).attr({
-						"data-toggle" : "tooltip",
-						"data-placement" : "bottom",
-						"data-original-title" : $(elem).attr("title")
-					});
-			});
-		}
-
-	}
-
+	
 	// Activate Bootstrap tooltip
 	if (o.enableBSToppltip) {
 		$(o.BSTooltipSelector).tooltip();
 	}
+
 
 	// Activate box widget
 	if (o.enableBoxWidget) {
@@ -227,7 +209,7 @@ $(function() {
 			box.toggleClass('direct-chat-contacts-open');
 		});
 	}
-
+	
 	/*
 	 * INITIALIZE BUTTON TOGGLE ------------------------
 	 */
@@ -240,6 +222,38 @@ $(function() {
 		});
 
 	});
+	
+	// Activate sidebar push menu
+	if (o.sidebarPushMenu) {
+		$.PALM.pushMenu(o.sidebarToggleSelector);
+		// for small screen
+		if ($(window).width() <= $.PALM.options.screenSizes.xs) {
+			$(o.sidebarToggleSelector).click();
+			// add bootstrap tooltip
+			$.each($(o.navMenuSelector).find("a"), function(index, elem) {
+				$(elem).find("strong").hide();
+			});
+		} else if( $(window).width() <= $.PALM.options.screenSizes.md){
+			$(o.sidebarToggleSelector).click();
+			// add bootstrap tooltip
+			$.each($(o.navMenuSelector).find("a"), function(index, elem) {
+				$(elem).find("strong").hide();
+			});
+		} else{
+			$.each($(o.navMenuSelector).find("a"), function(index, elem) {
+				$(elem).tooltip('destroy');
+			});
+			$.each($(o.navMenuHomeSelector).find("a"), function(index, elem) {
+				$(elem).tooltip('destroy');
+			});
+		}
+
+	}
+	
+	// by default set sidebar open
+	$( "body" ).addClass( "sidebar-open" );
+
+
 });
 
 /*
@@ -581,18 +595,12 @@ $.PALM.layout = {
 					if ($(window).width() <= $.PALM.options.screenSizes.md) {
 						$.each($(o.navMenuSelector).find("a"), function(index, elem) {
 							$(elem).find("strong").hide();
-							if (typeof $(elem).attr("title") != "undefined")
-								$(elem).attr({
-									"data-toggle" : "tooltip",
-									"data-placement" : "bottom",
-									"data-original-title" : $(elem).attr("title")
-								}).tooltip('enable');
+							$(elem).tooltip();
 						});
 					} else{
 						$.each($(o.navMenuSelector).find("a"), function(index, elem) {
 							$(elem).find("strong").show();
-							if (typeof $(elem).attr("title") != "undefined")
-								$(elem).tooltip('disable');
+							$(elem).tooltip('destroy');
 						});
 					}
 				});
@@ -679,6 +687,15 @@ $.PALM.pushMenu = function(toggleBtn) {
 		// Enable sidebar push menu
 		if ($(window).width() > screenSizes.md) {
 			$("body").toggleClass('sidebar-collapse');
+		}
+		else if ($(window).width() > screenSizes.xs) {
+			if ($("body").hasClass('sidebar-open')) {
+				$("body").removeClass('sidebar-open');
+				$("body").addClass('sidebar-collapse')
+			} else {
+				$("body").addClass('sidebar-open');
+				$("body").removeClass('sidebar-collapse')
+			}
 		}
 		// Handle sidebar push menu for small screens
 		else {

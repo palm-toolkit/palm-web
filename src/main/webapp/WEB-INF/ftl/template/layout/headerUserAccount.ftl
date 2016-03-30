@@ -82,7 +82,7 @@ $(function(){
 
 <@security.authorize access="isAnonymous()">
 	<li>	
-		<a href="javascript:void(0)" id="signin_button" title="Sign In" onclick="$.PALM.popUpAjaxModal.load( 'login?form=true' )">
+		<a href="javascript:void(0)" id="signin_button" title="Sign In" onclick="$.PALM.popUpAjaxModal.load( 'login?form=true' )"  data-toggle="tooltip" data-placement="bottom" data-original-title="Sign in">
 		<i class="fa fa-sign-in"></i>
 		<strong>Sign in</strong>
 	</a>
@@ -92,7 +92,7 @@ $(function(){
 <@security.authorize access="isAuthenticated()">
 	<#if securityService.isAuthorizedForRole( 'ADMIN' )>
 		<li<#if link?? && link == "administration"> class="open"</#if>>
-			<a href="<@spring.url '/admin' />" title="Administration">
+			<a href="<@spring.url '/admin' />" data-toggle="tooltip" data-placement="bottom" data-original-title="Admin">
 				<i class="fa fa fa-gears"></i>
 			</a>
 		</li>
