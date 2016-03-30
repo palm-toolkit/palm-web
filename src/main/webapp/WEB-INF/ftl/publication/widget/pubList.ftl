@@ -334,13 +334,12 @@
 												<#-- push history -->
 												history.pushState( null, "Publication " + itemPublication.title, "<@spring.url '/publication' />?id=" + itemPublication.id + "&title=" + itemPublication.title);
 												getPublicationDetails( itemPublication.id );
+												<#-- add related publication header if necessary -->
+												$("<div/>").attr("class","widget-section").html("Related Publications").prependTo( publicationListContainer );
+												<#-- put to the top list -->
+												publicationItem.prependTo( publicationListContainer );
 												targetId == "";
-											}
-											<#-- add related publication header if necessary -->
-											$("<div/>").attr("class","widget-section").html("Related Publications").prependTo( publicationListContainer );
-											<#-- put to the top list -->
-											publicationItem.prependTo( publicationListContainer );
-											
+											}										
 										}
 									}
 								
