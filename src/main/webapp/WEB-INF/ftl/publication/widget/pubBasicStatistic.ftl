@@ -280,6 +280,20 @@
 				else
 					targetContainer.html( $( '<dl/>' ).append( $( '<dt/>' ).html( "No information available" ) ) );
 					
+				var butBibtex = $( "<a/>" )
+        					.attr({
+        						"class":"btn btn-block btn-default btn-sm pull-right",
+        						"style":"width:80px"
+        						})
+        					.append(
+        						"<strong>BibTeX</strong>"
+        					)
+							.click( function( event ){
+								event.preventDefault();
+								$.PALM.popUpIframe.create( "<@spring.url '/publication/bibtexview' />?id=" + data.publication.id , {}, "BibTeX & Cite" );
+							});
+
+				targetContainer.append( butBibtex );
 			}
 		};
 		

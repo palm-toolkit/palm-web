@@ -160,7 +160,6 @@ function visualizeTermValue( termValueMap, svgContainer )
 	<#-- D3 helper function to draw arcs, populates parameter "d" in path object -->
 	var arc = d3.svg.arc()
 	  .startAngle(function(d){ 
-	  		console.log( d )
 	  		return d.startAngle; 
 	  })
 	  .endAngle(function(d){ 

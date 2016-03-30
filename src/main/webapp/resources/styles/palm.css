@@ -1028,3 +1028,7 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
     background-color: rgba(150, 138, 125, 0.29);
     width: 100%;
 }
+.separator{
+	padding-bottom: 9px;
+    border-bottom: 1px solid #eee;
+}

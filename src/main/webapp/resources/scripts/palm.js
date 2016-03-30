@@ -249,9 +249,6 @@ $(function() {
 		}
 
 	}
-	
-	// by default set sidebar open
-	$( "body" ).addClass( "sidebar-open" );
 
 
 });
