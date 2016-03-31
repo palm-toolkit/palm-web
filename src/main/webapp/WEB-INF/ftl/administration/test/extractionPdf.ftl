@@ -127,6 +127,8 @@
 				//	alert( "Not a valid URL" );
 				//	return false;
 				//}
+				
+				$( "#widget-${wUniqueName}" ).find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 			
 				$.getJSON( "<@spring.url '/publication/pdfExtract' />" + "?url=" + encodeURIComponent(sourceUrl) , function( data ) {
 					$container.find("#title").val(data.title);
@@ -135,6 +137,7 @@
 					$container.find("#keywords").val(data.keyword);
 					$container.find("#contentText").val(data.content);
 					$container.find("#referenceText").val(data.reference);
+					$( "#widget-${wUniqueName}" ).find( ".overlay" ).remove();
 				});
 			}, 300);
 		});

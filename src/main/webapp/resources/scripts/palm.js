@@ -1831,6 +1831,7 @@ function convertToAjaxMultipleFileUpload($inputFile, $progressBar,
 		$container = $resultContainer;
 	else
 		$container = $($resultContainer);
+	
 
 	$inputFile.fileupload({
 		dataType : 'json',
@@ -1842,9 +1843,11 @@ function convertToAjaxMultipleFileUpload($inputFile, $progressBar,
 			$container.find("#keywords").val(data.result.keyword);
 			$container.find("#contentText").val(data.result.content);
 			$container.find("#referenceText").val(data.result.reference);
+			$container.closest( ".box" ).find( ".overlay" ).remove();
 		},
 
 		progressall : function(e, data) {
+			$container.closest( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 			var progress = parseInt(data.loaded / data.total * 100, 10);
 			$progressBar.find('.bar').css('width', progress + '%').html(
 					progress + '%');
