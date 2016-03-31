@@ -724,11 +724,11 @@
 				function extractHtmlOrPublication( sourceUrl , targetType, contentExtractedResult ){
 					contentExtractedResult.html( "Extracting " + targetType + " from " + sourceUrl + " ..."  );
 					if( targetType == "PDF" ){
-						$.getJSON( "<@spring.url '/publication/pdfExtractTest' />" + "?url=" + encodeURIComponent(sourceUrl) , function( data ) {
+						$.getJSON( "<@spring.url '/publication/pdfExtract' />" + "?url=" + encodeURIComponent(sourceUrl) , function( data ) {
   							contentExtractedResult.html( printKeyValue( data ));
   						});
 					} else if( targetType == "HTML" ){
-						$.getJSON( "<@spring.url '/publication/htmlExtractTest' />" + "?url=" + encodeURIComponent(sourceUrl) , function( data ) {
+						$.getJSON( "<@spring.url '/publication/htmlExtract' />" + "?url=" + encodeURIComponent(sourceUrl) , function( data ) {
   							contentExtractedResult.html( printKeyValue( data ));
   						});
 					}

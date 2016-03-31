@@ -24,6 +24,20 @@
 						    </div>
 						</td>
 			        </tr>
+			        <tr style="background:transparent">
+			            <td style="width:70%;padding:0">
+			            	Or
+						</td>
+			            <td style="padding:0">
+			            	&nbsp;
+						</td>
+			        </tr>
+			        <tr style="background:transparent">
+			            <td style="width:70%;padding:0" colspan="2">
+			            	<span style="margin-top:5px;">Paste PDF link here: </span>
+			            	<input id="pdflink" name="pdflink" class="form-control"/>
+						</td>
+			        </tr>
 			    </table>
 	    
 			</div>
@@ -32,7 +46,7 @@
 	
 	 <br/>
 
-	 <form role="form" id="addPublication" action="<@spring.url '/publication/add' />" method="post" style="clear:both">
+	 <form role="form" id="extractPublication" style="clear:both">
 		
 		<#-- title -->
 		<div class="form-group">
@@ -95,9 +109,36 @@
 		  });
 
 		<#-- multiple file-upload -->
-    	convertToAjaxMultipleFileUpload( $( '#fileupload' ), $( '#progress' ) , $("#addPublication") );
+    	convertToAjaxMultipleFileUpload( $( '#fileupload' ), $( '#progress' ) , $("#extractPublication") );
 		
-	   
+		var tempUrl = "";
+	    <#-- extract with given link -->
+		$( "#pdflink" ).on( "paste blur", function(){
+			var _this = $( this );
+			setTimeout(function(){ 
+				var sourceUrl = _this.val();
+				var $container = $("#extractPublication");
+				
+				if( tempUrl == sourceUrl )
+					return false;
+				tempUrl = sourceUrl;
+				
+				//if( !$.PALM.utility.validateUrl(sourceUrl)){
+				//	alert( "Not a valid URL" );
+				//	return false;
+				//}
+			
+				$.getJSON( "<@spring.url '/publication/pdfExtract' />" + "?url=" + encodeURIComponent(sourceUrl) , function( data ) {
+					$container.find("#title").val(data.title);
+					$container.find("#author").val(data.author);
+					$container.find("#abstractText").val(data.abstract);
+					$container.find("#keywords").val(data.keyword);
+					$container.find("#contentText").val(data.content);
+					$container.find("#referenceText").val(data.reference);
+				});
+			}, 300);
+		});
+		
 	});
 
 </script>
