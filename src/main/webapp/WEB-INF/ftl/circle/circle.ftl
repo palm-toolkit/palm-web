@@ -12,8 +12,7 @@
  	
  	<@content.contentWrapper>
  		<section class="content">
-			<div class ="row">
- 			<#include "widgetLayoutMainContent.ftl" />
+			<div id="row" class ="row">
 			</div>
 		</section>
  	</@content.contentWrapper>

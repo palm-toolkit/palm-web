@@ -56,8 +56,13 @@
 	        		<#assign linkLabel = "Conference">
 	        	</#if>
 		        <div class="pull-left col-xs-12 text-center">
+		        	<#if link == "circle">
+		          <a href="javascript:void(0)" id="manage-widget" class="btn btn-default btn-flat" style="width:100%;height:100%;margin-top:8px" 
+		          data-url="" data-original-url="<@spring.url '/circle/widget' />" data-title="Manage ${linkLabel?capitalize} Widgets"><i class="fa fa-th" style="margin-right:5px"></i><span style="font-weight:600;font-size:16px">${linkLabel?capitalize} Widgets</span></a>
+		        	<#else>
 		          <a href="javascript:void(0)" id="manage-widget" class="btn btn-default btn-flat" style="width:100%;height:100%;margin-top:8px" 
 		          data-url="<@spring.url '/widget' />/${link}" data-title="Manage ${linkLabel?capitalize} Widgets"><i class="fa fa-th" style="margin-right:5px"></i><span style="font-weight:600;font-size:16px">${linkLabel?capitalize} Widgets</span></a>
+		        	</#if>
 		        </div>
 		        
 <script>

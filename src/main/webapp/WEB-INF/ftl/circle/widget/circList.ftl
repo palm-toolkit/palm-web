@@ -356,40 +356,50 @@
 
 	<#-- when circle list clicked --> 
 	function getCircleDetails( circleId ){
-		<#-- widget circle_interest_cloud and circle_interest_evolution can not run simultaneusly together,
-		therefore put it in order -->
-		var isInterestCloudWidgetExecuted = false;
-		var isInterestEvolutionWidgetExecuted = false;
-			
-		<#-- put loading overlay -->
-		$.each( $.PALM.options.registeredWidget, function(index, obj){
-			if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
-				obj.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
-				obj.options.queryString = "?id=" + circleId;
+		<#-- updata manage widget url -->
+		var manageWidgetButton = $( "#manage-widget" );
+		manageWidgetButton.attr("data-url", manageWidgetButton.attr("data-original-url" ) + "?circleId=" + circleId );
+		<#-- call circle widget first -->
+		$.get( "<@spring.url '/circle/widgetContent?id=' />" + circleId, function( html ){
+			$( "#row" ).html( html );
+		
+			<#-- widget circle_interest_cloud and circle_interest_evolution can not run simultaneusly together,
+			therefore put it in order -->
+			var isInterestCloudWidgetExecuted = false;
+			var isInterestEvolutionWidgetExecuted = false;
 				
-				<#-- special for publication list, set only query recent 10 publication -->
-					if( obj.selector === "#widget-circle_publication_timeline" )
-						obj.options.queryString += "&maxresult=10";
-				
-				<#-- check for cloud and evolution widget -->
-				if( obj.selector === "#widget-circle_interest_cloud" && isInterestEvolutionWidgetExecuted )
-					return;
-				else if( obj.selector === "#widget-circle_interest_evolution" && isInterestCloudWidgetExecuted )
-					return;
-				
-				<#-- add new flag (has been executed once)  -->
-				obj.executed = true;
-				
-				<#-- refresh widget -->
-				$.PALM.boxWidget.refresh( obj.element , obj.options );
-				
-				<#-- set flag for cloud and evolution widget -->
-				if( obj.selector === "#widget-circle_interest_cloud" )
-					isInterestCloudWidgetExecuted = true;
-				else if( obj.selector === "#widget-circle_interest_evolution" )
-					isInterestEvolutionWidgetExecuted = true;
-			}
+			<#-- put loading overlay -->
+			$.each( $.PALM.options.registeredWidget, function(index, obj){
+				if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
+					obj.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+					obj.options.queryString = "?id=" + circleId;
+					
+					<#-- special for publication list, set only query recent 10 publication -->
+						if( obj.selector === "#widget-circle_publication_timeline" )
+							obj.options.queryString += "&maxresult=10";
+					
+					<#-- check for cloud and evolution widget -->
+					if( obj.selector === "#widget-circle_interest_cloud" && isInterestEvolutionWidgetExecuted )
+						return;
+					else if( obj.selector === "#widget-circle_interest_evolution" && isInterestCloudWidgetExecuted )
+						return;
+					
+					<#-- add new flag (has been executed once)  -->
+					obj.executed = true;
+					
+					<#-- refresh widget -->
+					$.PALM.boxWidget.refresh( obj.element , obj.options );
+					
+					<#-- set flag for cloud and evolution widget -->
+					if( obj.selector === "#widget-circle_interest_cloud" )
+						isInterestCloudWidgetExecuted = true;
+					else if( obj.selector === "#widget-circle_interest_evolution" )
+						isInterestEvolutionWidgetExecuted = true;
+				}
+			});
+		
 		});
+		
 	}
 	
 </script>
