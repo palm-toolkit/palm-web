@@ -92,13 +92,24 @@
 			        </tr>
 			        <tr style="background:transparent">
 			        	<td style="width:20px;padding:0">
-			        		<input type="radio" name="source" value="input1" />
+			        		<input type="radio" name="source" value="input9" />
 			        	<td>
 			            <td class="urlstyle" title="Click to open left URL as new small window" style="width:20%;padding:0">
 			            	<span style="margin-top:5px;">scitepress.org</span>
 						</td>
 			            <td style="padding:0">
-			            	<input type="text" id="input1" name="input1" class="form-control" value="http://www.scitepress.org/DigitalLibrary/Link.aspx?doi=10.5220/0004791400090020"/>
+			            	<input type="text" id="input9" name="input9" class="form-control" value="http://www.scitepress.org/DigitalLibrary/Link.aspx?doi=10.5220/0004791400090020"/>
+						</td>
+			        </tr>
+			        <tr style="background:transparent">
+			        	<td style="width:20px;padding:0">
+			        		<input type="radio" name="source" value="input10" />
+			        	<td>
+			            <td class="urlstyle" title="Click to open left URL as new small window" style="width:20%;padding:0">
+			            	<span style="margin-top:5px;">inderscience.com</span>
+						</td>
+			            <td style="padding:0">
+			            	<input type="text" id="input10" name="input10" class="form-control" value="http://www.inderscience.com/offer.php?id=16702"/>
 						</td>
 			        </tr>
 			        <tr style="background:transparent">
