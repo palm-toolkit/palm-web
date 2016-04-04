@@ -166,22 +166,24 @@
 									
 								<#if loggedUser??>
 									<#-- edit option -->
-									var circEdit = $('<i/>')
-												.attr({
-													'class':'fa fa-edit', 
-													'title':'edit circle',
-													'data-url':'<@spring.url '/circle/edit' />' + '?id=' + itemCircle.id
-												});
-												
-									<#-- add click event to edit circle -->
-
-									circEdit.click( function( event ){
-										event.preventDefault();
-										$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Circle");
-									});
-									
-									<#-- append edit  -->
-									circleNav.append( circEdit );
+									if( itemCircle.isEditable){
+										var circEdit = $('<i/>')
+													.attr({
+														'class':'fa fa-edit', 
+														'title':'edit circle',
+														'data-url':'<@spring.url '/circle/edit' />' + '?id=' + itemCircle.id
+													});
+													
+										<#-- add click event to edit circle -->
+	
+										circEdit.click( function( event ){
+											event.preventDefault();
+											$.PALM.popUpIframe.create( $(this).data("url") , {}, "Edit Circle");
+										});
+										
+										<#-- append edit  -->
+										circleNav.append( circEdit );
+									}
 								</#if>
 
 									circleItem.append( circleNav );

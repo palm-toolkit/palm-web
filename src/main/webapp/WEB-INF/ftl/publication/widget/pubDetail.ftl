@@ -295,20 +295,22 @@
 					<#-- content detail -->
 					var contentDetail = $( '<dl/>' )
 										.addClass( "dl-horizontal" )
-										.css( "clean","both" )
-										.append(
+										.css( "clean","both" );
+										
+					contentDetail.append(
 											$( '<dt/>' ).html( "Obtained from : " )
 										)
 										.append(
 											$( '<dd/>' ).html( htmlpdf_item.source )
-										)
-										.append(
+										);
+					if( typeof htmlpdf_item.label !== "undefoned" && htmlpdf_item.label != "" )
+						contentDetail.append(
 											$( '<dt/>' ).html( "Source name:" )
 										)
 										.append(
 											$( '<dd/>' ).html( htmlpdf_item.label )
 										)
-										.append(
+					contentDetail.append(
 											$( '<dt/>' ).html( "Source url:" )
 										)
 										.append(
@@ -320,7 +322,7 @@
 													.attr({ "id" : "result" + tabHeaderTextShort })
 													.css({ "width" : "100%" });
 													
-					if( data.publication.type !== "BOOK" )
+					<#--if( data.publication.type !== "BOOK" )-->
 						contentExtractedResult.html( 'Please press "Extract ' + htmlpdf_item.type + '" button to see the extracted result here'  );
 
 					<#-- content navigation -->
@@ -336,7 +338,7 @@
 						.click( function( event ){ event.preventDefault();window.open( htmlpdf_item.url , tabHeaderText ,'scrollbars=yes,width=650,height=500')})
 					)
 					
-					if( data.publication.type !== "BOOK" )
+					<#--if( data.publication.type !== "BOOK" ) -->
 						contentNavigation.append(
 							$('<button/>')
 							.addClass( "btn btn-default btn-sm pull-right" )
@@ -369,6 +371,9 @@
 					$.each( jsObject , function( k, v){
 						if( k == "source" )
 							return;
+							
+						if( typeof v == "string")
+							v = v.replace(/(?:\r\n|\r|\n)/g, '<br />');
 						descriptionList.append(
 											$( '<dt/>' ).addClass( "capitalize" ).html( k )
 										)
