@@ -24,12 +24,12 @@
 			<ul id="conferencePaging" class="pagination marginBottom0">
 				<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
 				<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
-				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">20</span></span></li>
+				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>
 				<li class="paginate_button toNext"><a href="#"><i class="fa fa-caret-right"></i></a></li>
 				<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
 			</ul>
 		</div>
-		<span class="paging-info">Displaying conferences 1 - 50 of 462</span>
+		<span class="paging-info">Displaying conferences 0 - 0 of 0</span>
 	</div>
 </div>
 

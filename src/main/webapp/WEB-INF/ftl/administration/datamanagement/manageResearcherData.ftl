@@ -22,12 +22,12 @@
 			<ul id="researcherPaging" class="pagination marginBottom0">
 				<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
 				<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
-				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">20</span></span></li>
+				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>
 				<li class="paginate_button toNext"><a href="#"><i class="fa fa-caret-right"></i></a></li>
 				<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
 			</ul>
 		</div>
-		<span class="paging-info">Displaying researchers 1 - 50 of 462</span>
+		<span class="paging-info">Displaying researchers 0 - 0 of 0</span>
 	</div>
 </div>
 
@@ -224,11 +224,16 @@
 								<#-- fill researcher detail option -->
 								var researcherDeleteButton = $('<button/>')
 									.addClass( "btn btn-danger btn-xs width130px pull-right" )
-									.attr({ "data-id": item.id, "data-name": item.name })
-									.html( "! remove this author" )
+									.attr({ "data-id": item.id, "data-name": item.name, "title":"make author not visible from researchers page" })
+									.html( "set invisible" )
 									.on( "click", function( e ){
 										e.preventDefault();
-										// TODO delete researcher
+										if ( confirm("Do you want to make this researcher invisible from researcher page, you may set it visible again from Add Researcher form?") ) {
+										    $.post( "<@spring.url '/researcher/setInvisible' />", { id:item.id }, function( data ){
+										    	if( data.status == "ok")
+										    		location.reload();
+										    } )
+										}
 									});
 								
 								researcherDetailOption.append( researcherDeleteButton );

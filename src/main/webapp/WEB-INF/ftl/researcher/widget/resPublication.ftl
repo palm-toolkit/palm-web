@@ -38,12 +38,15 @@
 				<#-- check for error  -->
 				if( data.status != "ok"){
 					<#--alert( "error on publication list" );-->
-					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher doesn't ave any publications" );
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "An error occured when accesing server" );
 					return false;
 				}
 				if ( typeof data.publications === 'undefined') {
 					<#--alert( "error, no publication found" );-->
-					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher doesn't ave any publications" );
+					if( typeof data.query === "undefined" || data.query == "" )
+						$.PALM.callout.generate( mainContainer , "warning", "Empty Publications!", "Currently no publications found on PALM database" );
+					else
+						$.PALM.callout.generate( mainContainer , "warning", "Empty search result!", "No publications found with query \"" + data.query + "\"" );
 					return false;
 				}
 				
@@ -408,7 +411,7 @@
 								venueText += " - " + item.event.abbr;
 								venueHref += "&abbr=" + item.event.abbr;
 							}
-							venueHref += "&name=" + item.event.name.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id ;
+							venueHref += "&name=" + item.event.name.replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id ;
 							
 							if( typeof item.event.isGroupAdded === "undefined" || !item.event.isGroupAdded )
 								venueHref += "&add=yes";

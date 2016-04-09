@@ -274,7 +274,7 @@
 		<#-- trigger autocomplete is there is value on name input -->
 		<#if author.name??>
 			$('#name').bind('focus', function(){ $(this).autocomplete("search"); } );
-			$('#name').val("${author.name}").focus();
+			$('#name').val("${author.name?capitalize}").focus();
 			var textToShow = $('#name').find(":selected").text();
    			$('#name').parent().find("span").find("input").val(textToShow);
 		</#if>

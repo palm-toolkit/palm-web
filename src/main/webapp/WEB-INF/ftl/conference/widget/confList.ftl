@@ -24,12 +24,12 @@
 			<ul id="conferencePaging" class="pagination marginBottom0">
 				<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
 				<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
-				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">20</span></span></li>
+				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>
 				<li class="paginate_button toNext"><a href="#"><i class="fa fa-caret-right"></i></a></li>
 				<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
 			</ul>
 		</div>
-		<span class="paging-info">Displaying conferences 1 - 50 of 462</span>
+		<span class="paging-info">Displaying conferences 0 - 0 of 0</span>
 	</div>
 </div>
 
@@ -84,14 +84,20 @@
 		  });
 	  		-->
 	    <#-- event for searching conference -->
+		var tempInput = $( "#conference_search_field" ).val();
 	    $( "#conference_search_field" )
 	    .on( "keypress", function(e) {
-			  if ( e.keyCode == 0 || e.keyCode == 13 /* || e.keyCode == 32 */ )
+			  if ( e.keyCode == 0 || e.keyCode == 13  || e.keyCode == 32  )
 			    conferenceSearch( $( this ).val() , "first");
+			  tempInput = $( this ).val().trim();
 		}).on( "keydown", function(e) {
 			  if( e.keyCode == 8 || e.keyCode == 46 )
-			    if( $( "#conference_search_field" ).val().length == 0 )
-			    	conferenceSearch( $( this ).val() , "first");
+			    if( $( "#conference_search_field" ).val().length < 2 && tempInput != $( this ).val().trim()){
+			    	conferenceSearch( "" , "first");
+			    	history.pushState( null, "Publication page", "<@spring.url '/publication' />");
+			   		tempInput = "";
+			    } else
+			    	tempInput = $( this ).val().trim();
 		});
 		
 		<#-- icon search presed -->
@@ -146,12 +152,29 @@
 							$.PALM.popUpMessage.remove( uniquePidVenueWidget );
 
 							var eventListContainer = $( widgetElem ).find( ".content-list" );
+							
+							<#-- check for error  -->
+							<#--
+							if( typeof data.eventGroups === "undefined"){
+								$.PALM.callout.generate( eventListContainer , "warning", "Empty Conference/Journal!", "An error occured - please try again later" );
+								return false;
+							}
+							-->
 							<#-- remove previous result -->
 							eventListContainer.html( "" );
 							// remove any remaing tooltip
 							$( "body .tooltip" ).remove();
 							var $pageDropdown = $( widgetElem ).find( "select.page-number" );
 							$pageDropdown.find( "option" ).remove();
+							
+							<#-- callout -->
+							if( data.count == 0 ){
+								if( typeof data.query === "undefined" || data.query == "" )
+									$.PALM.callout.generate( eventListContainer , "normal", "Currently no conferences/journals found on PALM database" );
+								else
+									$.PALM.callout.generate( eventListContainer , "warning", "Empty search results!", "No conferences/journals found with query \"" + data.query + "\"" );
+								return false;
+							}
 							
 							if( data.count > 0 ){
 							

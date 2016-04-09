@@ -53,12 +53,12 @@
 			<ul id="publicationPaging" class="pagination marginBottom0">
 				<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
 				<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
-				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">20</span></span></li>
+				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>
 				<li class="paginate_button toNext"><a href="#"><i class="fa fa-caret-right"></i></a></li>
 				<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
 			</ul>
 		</div>
-		<span class="paging-info">Displaying publications 1 - 50 of 462</span>
+		<span class="paging-info">Displaying publications 0 - 0 of 0</span>
 	</div>
 </div>
 
@@ -89,14 +89,20 @@
 		  });
 	    -->
 	    <#-- event for searching researcher -->
+		var tempInput = $( "#publication_search_field" ).val();
 	    $( "#publication_search_field" )
 	    .on( "keypress", function(e) {
 			  if ( e.keyCode == 0 || e.keyCode == 13 || e.keyCode == 32 )
 			    publicationSearch( $( this ).val() , "first");
+			  tempInput = $( this ).val().trim();
 		}).on( "keydown", function(e) {
 			  if( e.keyCode == 8 || e.keyCode == 46 )
-			    if( $( "#publication_search_field" ).val().length == 0 )
-			    	publicationSearch( $( this ).val() , "first");
+			    if( $( "#publication_search_field" ).val().length < 2 && tempInput != $( this ).val().trim()){
+			    	publicationSearch( "" , "first");
+			    	history.pushState( null, "Publication page", "<@spring.url '/publication' />");
+			   		tempInput = "";
+			    } else
+			    	tempInput = $( this ).val().trim();
 		});
 
 		<#-- icon search presed -->
@@ -138,7 +144,7 @@
 		$( "#publication_search_button" ).find( "i" ).removeClass( "fa-search" ).addClass( "fa-refresh fa-spin" );
 		
 		<#-- generate unique id for progress log -->
-		var uniquePidResearcherWidget = $.PALM.utility.generateUniqueId();
+		var uniquePidPublicationWidget = $.PALM.utility.generateUniqueId();
 		
 		<#-- unique options in each widget -->
 		var options ={
@@ -149,22 +155,22 @@
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
 				<#-- show pop up progress log -->
-				$.PALM.popUpMessage.create( "loading publications...", { uniqueId:uniquePidResearcherWidget, popUpHeight:40, directlyRemove:false});
+				$.PALM.popUpMessage.create( "loading publications...", { uniqueId:uniquePidPublicationWidget, popUpHeight:40, directlyRemove:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){
 							var publicationListContainer = $( widgetElem ).find( ".content-list" );
 							
+							<#-- remove  pop up progress log -->
+							$.PALM.popUpMessage.remove( uniquePidPublicationWidget );
+							
 							<#-- check for error  -->
+							<#--
 							if( typeof data.publications === "undefined"){
-								<#--alert( "error on publication list" );-->
-								$.PALM.callout.generate( publicationListContainer , "warning", "Empty Publications !", "No publication found" );
+								$.PALM.callout.generate( publicationListContainer , "warning", "Empty Publications!", "An error occured - please try again later" );
 								return false;
 							}
-			
-							<#-- remove  pop up progress log -->
-							$.PALM.popUpMessage.remove( uniquePidResearcherWidget );
+							-->
 
-							
 							<#-- remove previous result -->
 							publicationListContainer.html( "" );
 							<#-- button search loading -->
@@ -172,6 +178,15 @@
 
 							var $pageDropdown = $( widgetElem ).find( "select.page-number" );
 							$pageDropdown.find( "option" ).remove();
+							
+							<#-- callout -->
+							if( data.count == 0 ){
+								if( typeof data.query === "undefined" || data.query == "" )
+									$.PALM.callout.generate( publicationListContainer , "normal", "Currently no publications found on PALM database" );
+								else
+									$.PALM.callout.generate( publicationListContainer , "warning", "Empty search results!", "No publications found with query \"" + data.query + "\"" );
+								return false;
+							}
 							
 							if( data.count > 0 ){
 							
@@ -332,7 +347,7 @@
 										if( targetId == itemPublication.id ){
 											if( $.PALM.selected.record( "publication", itemPublication.id, pubDetail.parent() )){
 												<#-- push history -->
-												history.pushState( null, "Publication " + itemPublication.title, "<@spring.url '/publication' />?id=" + itemPublication.id + "&title=" + itemPublication.title);
+												//history.pushState( null, "Publication " + itemPublication.title, "<@spring.url '/publication' />?id=" + itemPublication.id + "&title=" + itemPublication.title);
 												getPublicationDetails( itemPublication.id );
 												<#-- add related publication header if necessary -->
 												$("<div/>").attr("class","widget-section").html("Related Publications").prependTo( publicationListContainer );
@@ -383,31 +398,6 @@
 		//$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) , options );
 		publicationSearch( $( "#publication_search_field" ).val()  , "first" );
 
-		<#-- autocomplete -->
-		$( "#author_search_block" ).autocomplete({
-      			source: function( request, response ) {
-        			$.ajax({
-          			url: "http://gd.geobytes.com/AutoCompleteCity",
-          			dataType: "jsonp",
-          			data: {
-            			q: request.term
-          			},
-          			success: function( data ) {
-            			response( data );
-          			}
-        		});
-      		},
-      		minLength: 3,
-      		select: function( event, ui ) {
-        		log( ui.item ?"Selected: " + ui.item.label : "Nothing selected, input was " + this.value);
-      		},
-      		open: function() {
-        		$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-      		},
-      		close: function() {
-        		$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-      		}
-    	});
 	});
 	
 	function publicationSearch( query , jumpTo ){

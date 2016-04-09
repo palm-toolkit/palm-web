@@ -38,12 +38,12 @@
 				<#-- check for error  -->
 				if( data.status != "ok"){
 					<#--alert( "error on publication list" );-->
-					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher doesn't ave any publications" );
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Sorry, an error occured, please try again" );
 					return false;
 				}
 				if ( typeof data.publications === 'undefined') {
 					<#--alert( "error, no publication found" );-->
-					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher doesn't ave any publications" );
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications!", "Circle doesn't contain any publications" );
 					return false;
 				}
 				
@@ -408,7 +408,7 @@
 								venueText += " - " + item.event.abbr;
 								venueHref += "&abbr=" + item.event.abbr;
 							}
-							venueHref += "&name=" + item.event.name.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id ;
+							venueHref += "&name=" + item.event.name.replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id ;
 							
 							if( typeof item.event.isGroupAdded === "undefined" || !item.event.isGroupAdded )
 								venueHref += "&add=yes";

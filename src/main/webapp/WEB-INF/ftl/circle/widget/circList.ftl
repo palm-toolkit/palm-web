@@ -23,12 +23,12 @@
 			<ul id="circlePaging" class="pagination marginBottom0">
 				<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
 				<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
-				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">20</span></span></li>
+				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>
 				<li class="paginate_button toNext"><a href="#"><i class="fa fa-caret-right"></i></a></li>
 				<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
 			</ul>
 		</div>
-		<span class="paging-info">Displaying circles 1 - 50 of 462</span>
+		<span class="paging-info">Displaying circles 0 - 0 of 0</span>
 	</div>
 </div>
 
@@ -59,14 +59,21 @@
 		  });
 	    -->
 	    <#-- event for searching researcher -->
+		var tempInput = $( "#circle_search_field" ).val();
 	    $( "#circle_search_field" )
 	    .on( "keypress", function(e) {
 			  if ( e.keyCode == 0 || e.keyCode == 13 || e.keyCode == 32 )
 			    circleSearch( $( this ).val() , "first");
+			 tempInput = $( this ).val().trim();
 		}).on( "keydown", function(e) {
-			  if( e.keyCode == 8 || e.keyCode == 46 )
-			    if( $( "#circle_search_field" ).val().length == 0 )
-			    	circleSearch( $( this ).val() , "first");
+			  if( e.keyCode == 8 || e.keyCode == 46 ){
+			    if( $( "#circle_search_field" ).val().length < 2 && tempInput != $( this ).val().trim()){
+			    	circleSearch( "" , "first");
+			    	history.pushState( null, "Researcher page", "<@spring.url '/circle' />");
+			    	tempInput = "";
+			    } else
+			    	tempInput = $( this ).val().trim();
+			  }
 		});
 
 		<#-- icon search presed -->
@@ -106,6 +113,9 @@
 		<#-- button search loading -->
 		$( "#circle_search_button" ).find( "i" ).removeClass( "fa-search" ).addClass( "fa-refresh fa-spin" );
 		
+	<#-- generate unique id for progress log -->
+		var uniquePidCircleWidget = $.PALM.utility.generateUniqueId();
+		
 		<#-- unique options in each widget -->
 		var options ={
 			source : "<@spring.url '/circle/search' />",
@@ -114,10 +124,24 @@
 			page:0,
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
+				<#-- show pop up progress log -->
+				$.PALM.popUpMessage.create( "loading circles...", { uniqueId:uniquePidCircleWidget, popUpHeight:40, directlyRemove:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){
 
 							var circleListContainer = $( widgetElem ).find( ".content-list" );
+							
+							<#-- remove  pop up progress log -->
+							$.PALM.popUpMessage.remove( uniquePidCircleWidget );
+							
+							<#-- check for error  -->
+							<#--
+							if( typeof data.circles === "undefined"){
+								$.PALM.callout.generate( circleListContainer , "warning", "Empty Circles!", "An error occured - please try again later" );
+								return false;
+							}
+							-->
+
 							<#-- remove previous result -->
 							circleListContainer.html( "" );
 							<#-- button search loading -->
@@ -125,6 +149,15 @@
 
 							var $pageDropdown = $( widgetElem ).find( "select.page-number" );
 							$pageDropdown.find( "option" ).remove();
+							
+							<#-- callout -->
+							if( data.count == 0 ){
+								if( typeof data.query === "undefined" || data.query == "" )
+									$.PALM.callout.generate( circleListContainer , "normal", "Currently no circles found on PALM database" );
+								else
+									$.PALM.callout.generate( circleListContainer , "warning", "Empty search results!", "No circles found with query \"" + data.query + "\"" );
+								return false;
+							}
 							
 							if( data.count > 0 ){
 							
@@ -228,10 +261,11 @@
 
 									<#-- add clcik event -->
 									circleDetail.on( "click", function(){
-										<#-- remove active class -->
-										$( this ).parent().siblings().removeClass( "active" );
-										$( this ).parent().addClass( "active" );
-										getCircleDetails( $( this ).parent().data( 'id' ));
+										if( $.PALM.selected.record( "circle", itemCircle.id, circleDetail.parent() )){
+											<#-- push history -->
+											history.pushState( null, "Circle " + itemCircle.name, "<@spring.url '/circle' />?id=" + itemCircle.id + "&name=" + itemCircle.name);
+											getCircleDetails( itemCircle.id );
+										}
 									});
 
 									circleListContainer.append( circleItem );
@@ -239,15 +273,19 @@
 									<#-- display first circle detail -->
 									if( targetId == "" ){
 										if( index == 0 ){
-											circleDetail.parent().siblings().removeClass( "active" );
-											circleDetail.parent().addClass( "active" );
-											getCircleDetails( itemCircle.id );
+											if( $.PALM.selected.record( "circle", itemCircle.id, circleDetail.parent() )){
+												<#-- push history -->
+												history.pushState( null, "Circle " + itemCircle.name, "<@spring.url '/circle' />?id=" + itemCircle.id + "&name=" + itemCircle.name);
+												getCircleDetails( itemCircle.id );
+											}
 										}
 									} else {
 										if( targetId == itemCircle.id ){
-											circleDetail.parent().siblings().removeClass( "active" );
-											circleDetail.parent().addClass( "active" );
-											getCircleDetails( itemCircle.id );
+											if( $.PALM.selected.record( "circle", itemCircle.id, circleDetail.parent() )){
+												<#-- push history -->
+												//history.pushState( null, "Circle " + itemCircle.name, "<@spring.url '/circle' />?id=" + itemCircle.id + "&name=" + itemCircle.name);
+												getCircleDetails( itemCircle.id );
+											}
 										}
 									}
 								
@@ -291,31 +329,6 @@
 		//$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) , options );
 		circleSearch( $( "#circle_search_field" ).val()  , "first" );
 
-		<#-- autocomplete -->
-		$( "#circle_search_block" ).autocomplete({
-      			source: function( request, response ) {
-        			$.ajax({
-          			url: "http://gd.geobytes.com/AutoCompleteCity",
-          			dataType: "jsonp",
-          			data: {
-            			q: request.term
-          			},
-          			success: function( data ) {
-            			response( data );
-          			}
-        		});
-      		},
-      		minLength: 3,
-      		select: function( event, ui ) {
-        		log( ui.item ?"Selected: " + ui.item.label : "Nothing selected, input was " + this.value);
-      		},
-      		open: function() {
-        		$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-      		},
-      		close: function() {
-        		$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-      		}
-    	});
 	});
 	
 	function circleSearch( query , jumpTo ){

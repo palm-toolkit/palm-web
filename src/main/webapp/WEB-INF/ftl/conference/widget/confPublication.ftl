@@ -170,7 +170,7 @@
 										.addClass( 'event-detail font-xs' );
 													
 						var venueText = item.event.name;
-						var venueHref = "<@spring.url '/venue' />?eventId=" + item.event.id + "&type=" + item.type.toLowerCase() + "&name=" + item.event.name.toLowerCase().replace(/[^\w\s]/gi, '');
+						var venueHref = "<@spring.url '/venue' />?eventId=" + item.event.id + "&type=" + item.type.toLowerCase() + "&name=" + item.event.name.replace(/[^\w\s]/gi, '');
 						
 						if( typeof item.volume != 'undefined' ){
 							venueText += " (" + item.volume + ")";

@@ -408,7 +408,7 @@
 								venueText += " - " + item.event.abbr;
 								venueHref += "&abbr=" + item.event.abbr;
 							}
-							venueHref += "&name=" + item.event.name.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id ;
+							venueHref += "&name=" + item.event.name.replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id ;
 							
 							if( typeof item.event.isGroupAdded === "undefined" || !item.event.isGroupAdded )
 								venueHref += "&add=yes";

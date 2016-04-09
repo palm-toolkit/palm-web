@@ -53,12 +53,12 @@
 			<ul id="publicationPaging" class="pagination marginBottom0">
 				<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
 				<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
-				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">20</span></span></li>
+				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>
 				<li class="paginate_button toNext"><a href="#"><i class="fa fa-caret-right"></i></a></li>
 				<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
 			</ul>
 		</div>
-		<span class="paging-info">Displaying publications 1 - 50 of 462</span>
+		<span class="paging-info">Displaying publications 0 - 0 of 0</span>
 	</div>
 </div>
 
@@ -175,8 +175,9 @@
 									
 									<#-- edit option -->
 									var pubEdit = $('<i/>')
+												.css({'display':'block'})
 												.attr({
-													'class':'fa fa-edit visible', 
+													'class':'fa fa-edit visible',
 													'title':'edit publication',
 													'data-url':'<@spring.url '/publication/edit' />' + '?id=' + itemPublication.id
 												});
@@ -271,6 +272,29 @@
 										pubDetail.append( eventElem );
 									}
 									
+									
+									<#-- publicationDetailOption -->
+									var publicationDetailOption = $('<div/>').addClass( "option" );
+									<#-- fill publication detail option -->
+									<#-- remove publication button -->
+									var publicationDeleteButton = $('<button/>')
+										.addClass( "btn btn-danger btn-xs width130px pull-right" )
+										.attr({ "data-id": itemPublication.id, "title":"remove " + itemPublication.title + " from PALM database" })
+										.html( "delete publication" )
+										.on( "click", function( e ){
+											e.preventDefault();
+											if ( confirm("Do you really want to remove this publication?") ) {
+											    $.post( "<@spring.url '/publication/delete' />", { id:itemPublication.id }, function( data ){
+											    	if( data.status == "ok")
+											    		location.reload();
+											    } )
+											}
+										});
+									
+									publicationDetailOption.append( publicationDeleteButton );
+									
+									pubDetail.append( publicationDetailOption );
+										
 									<#-- append to item -->
 									publicationItem.append( pubDetail );
 
@@ -319,32 +343,6 @@
 		<#--// first time on load, list 50 publications-->
 		//$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) , options );
 		publicationSearch( $( "#publication_search_field" ).val()  , "first" );
-
-		<#-- autocomplete -->
-		$( "#author_search_block" ).autocomplete({
-      			source: function( request, response ) {
-        			$.ajax({
-          			url: "http://gd.geobytes.com/AutoCompleteCity",
-          			dataType: "jsonp",
-          			data: {
-            			q: request.term
-          			},
-          			success: function( data ) {
-            			response( data );
-          			}
-        		});
-      		},
-      		minLength: 3,
-      		select: function( event, ui ) {
-        		log( ui.item ?"Selected: " + ui.item.label : "Nothing selected, input was " + this.value);
-      		},
-      		open: function() {
-        		$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-      		},
-      		close: function() {
-        		$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-      		}
-    	});
 	});
 	
 	function publicationSearch( query , jumpTo ){

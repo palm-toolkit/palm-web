@@ -97,20 +97,18 @@
       </a>
     </li>
     
-    <#-- Users menu -->
-	<#--
-    <li class="treeview">
+    <#-- Data Management -->
+    <li class="treeview" data-link="database">
       <a href="#">
-        <i class="fa fa-user"></i>
-        <span>Users</span>
-        <i class="fa fa-angle-left pull-right"></i>
+        <i class="fa fa-database"></i>
+        <span>Database</span>
+		<i class="fa fa-angle-left pull-right"></i>
       </a>
       <ul class="treeview-menu">
-        <li><a href="pages/layout/top-nav.html"><i class="fa fa-caret-right"></i> Overview</a></li>
-        <li><a href="pages/layout/boxed.html"><i class="fa fa-caret-right"></i> Edit</a></li>
+         <li data-link="index"><a href="<@spring.url '/admin/data/index' />"><i class="fa fa-table"></i>Indexing</a></li>
+         <li data-link="migration"><a href="<@spring.url '/admin/data/migration' />"><i class="fa fa-check-circle"></i>Migration</a></li>
       </ul>
     </li>
-    -->
 
     <#-- Developer corner -->
     <li class="treeview" data-link="developer">

@@ -337,6 +337,9 @@ $.PALM.selected = {
 		});
 		// reset popup messages
 		$.PALM.options.popUpMessageOptions.popUpElement = [];
+		// if circle remove widget group content
+		if (typeSelected == "circle")
+			$.PALM.boxWidget.removeRegisteredWidgetByGroup( "content" );
 		return false;
 	},
 	reset : function() {
@@ -926,6 +929,13 @@ $.PALM.boxWidget = {
 		// remove
 		if (widgetIndex > -1)
 			$.PALM.options.registeredWidget.splice(widgetIndex, 1);
+	},
+	removeRegisteredWidgetByGroup : function( groupName ) {
+		for(var i = $.PALM.options.registeredWidget.length -1; i >= 0 ; i--){
+		    if($.PALM.options.registeredWidget[i].group === groupName){
+		    	$.PALM.options.registeredWidget.splice(i, 1);
+		    }
+		}
 	}
 };
 
@@ -1227,8 +1237,16 @@ $.PALM.popUpAjaxModal = {
 $.PALM.callout = {
 	generate : function(containerElement, type, title, content) {
 		var calloutClass = "callout";
-		if (type == "warning")
+		if (type == "normal")
+			calloutClass += "";
+		else if (type == "warning")
 			calloutClass += " callout-warning";
+		else if (type == "info")
+			calloutClass += " callout-info";
+		else if (type == "danger")
+			calloutClass += " callout-danger";
+		else if (type == "success")
+			calloutClass += " callout-success";
 
 		var callOutBlock = $('<div/>').addClass(calloutClass).append(
 				$('<h4/>').html(title)).append($('<p/>').html(content));
