@@ -893,7 +893,12 @@ div.d3-tooltip {
 .min-w-75{
 	min-width:75px;
 }
-
+.btn-group-xs>.btn, .btn-xxs {
+    padding: 1px 5px;
+    font-size: 12px;
+    line-height: 1;
+    border-radius: 3px;
+}
 /* Circle style */
 .circle-input-container{
 	float:left;
@@ -1031,4 +1036,14 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 .separator{
 	padding-bottom: 9px;
     border-bottom: 1px solid #eee;
+}
+.abstractSection{
+	  font-size: 85%!important;
+	  line-height:1;
+}
+.keywordSection{
+	  font-size: 85%!important;
+	  line-height:1;
+	  font-style: italic;
+	  padding-top:3px;
 }
