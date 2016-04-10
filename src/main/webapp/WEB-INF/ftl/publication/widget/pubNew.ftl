@@ -70,7 +70,7 @@
 	      <div id="keywords" class="palm-tagsinput" tabindex="-1">
 	      		<input type="text" value="" placeholder="Keywords, separated by comma" />
 	      </div>
-	      <input type="hidden" id="keyword-list" name="keyword-list" value="">
+	      <input type="hidden" id="keywordList" name="keywordList" value="">
 	    </div>
 	    
 
@@ -192,14 +192,25 @@
 		
 		$( "#venue-type" ).change( function(){
 			var selectionValue = $(this).val();
+			$( "#venue-title" ).show();
+			$( "#volume" ).parent().show();
+			$( "#pages" ).parent().show();
 			if( selectionValue == "conference" ){
 				$( "#venue-title>label>span" ).html( "Conference" );
 				<#--$( "#volume-container,#issue-container" ).hide();-->
-			} else if( selectionValue == "journal" || selectionValue == "book"){
+			} else if( selectionValue == "workshop" ){
+				$( "#venue-title>label>span" ).html( "Workshop" );
+			} else if( selectionValue == "journal"){
 				$( "#venue-title>label>span" ).html( "Journal" );
 				<#--$( "#volume-container,#issue-container" ).show();-->
+			} else {
+				$( "#venue-title" ).hide();
+				$( "#volume" ).parent().hide();
+				$( "#pages" ).parent().hide();
 			}
 		});
+		
+		$( "#venue-type" ).change();
 		
 		$("#venue").autocomplete({
 		    source: function (request, response) {
@@ -301,7 +312,7 @@
 			$.each( inputKeywords.split(","), function(index, inputKeyword ){
 	    		<#-- remove multiple spaces -->
 				inputKeyword = inputKeyword.replace(/ +(?= )/g,'').trim();
-				if( inputKeyword.length > 2 && !isTagDuplicated( '#keyword-list', inputKeyword )) {
+				if( inputKeyword.length > 2 && !isTagDuplicated( '#keywordList', inputKeyword )) {
 	      			$( inputElem ).before(
 	      				$( '<span/>' )
 	      					.addClass( "tag-item" )

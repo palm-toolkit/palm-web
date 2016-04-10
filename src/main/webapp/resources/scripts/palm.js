@@ -1042,7 +1042,12 @@ $.PALM.popUpMessage = {
 		// scroll to bottom
 		logMessageContainer.scrollTop(logMessageContainer.prop("scrollHeight"));
 	},
-	remove : function(objectId) {
+	remove : function(objectId, pollingOptions) {
+		var o = $.PALM.options.popUpMessageOptions;
+		
+		if (typeof pollingOptions != "undefined")
+			o = $.extend(o, pollingOptions);
+		
 		// get the object and remove from document
 		var targetElement = $.PALM.popUpMessage.getPopUpObject(objectId);
 
@@ -1051,11 +1056,15 @@ $.PALM.popUpMessage = {
 			return false;
 
 		// update with fading efect
-		$(targetElement.element).fadeOut("fast");
+		$(targetElement.element).fadeOut("slow");
 
 		// if target element is polling, stop polling
-		if (targetElement.polling)
-			clearInterval(targetElement.pollingObject);
+		if (targetElement.polling){
+			setTimeout(function(){
+				clearInterval(targetElement.pollingObject);
+			}, o.pollingTime);
+		}
+			
 
 		// remove from list
 		$(targetElement.element).promise().done(
@@ -1486,6 +1495,29 @@ $.PALM.utility = {
 	},
 	validateUrl: function (value){
   		return /^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(value);
+	},
+	showErrorTimeout: function( container, message, options){
+		var o = {
+			timeout:5000,
+			errorClass:"errorStyle",
+			writeMode:"replace"
+		}
+		o = $.extend(o, options);
+		
+		var errorElem = $( '<span/>' )
+						.addClass( o.errorClass )
+						.html( message )
+		
+		if( o.writeMode == "replace"){
+			container.html( errorElem );
+		} else {
+			container.append( errorElem );
+		}
+		
+		setTimeout(function(){
+			errorElem.remove();
+		}, o.timeout);
+		
 	}
 };
 

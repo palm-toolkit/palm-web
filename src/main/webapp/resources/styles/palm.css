@@ -950,6 +950,10 @@ div.d3-tooltip {
 	display:block;
 	width:110px;
 }
+.width220px{
+	display:block;
+	width:220px;
+}
 
 /* manage widget style */
 .palm-table{
@@ -1039,11 +1043,14 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 }
 .abstractSection{
 	  font-size: 85%!important;
-	  line-height:1;
+	  line-height:1.2;
 }
 .keywordSection{
 	  font-size: 85%!important;
 	  line-height:1;
 	  font-style: italic;
 	  padding-top:3px;
+}
+.errorStyle{
+	color:#f00;
 }
