@@ -1060,9 +1060,9 @@ $.PALM.popUpMessage = {
 
 		// if target element is polling, stop polling
 		if (targetElement.polling){
-			setTimeout(function(){
+			//setTimeout(function(){
 				clearInterval(targetElement.pollingObject);
-			}, o.pollingTime);
+			//}, o.pollingTime);
 		}
 			
 
