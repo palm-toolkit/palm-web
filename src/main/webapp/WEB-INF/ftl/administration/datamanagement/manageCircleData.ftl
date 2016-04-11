@@ -10,7 +10,7 @@
 	    </div>
   	</div>
   	
-  	<div class="content-list">
+  	<div class="content-list height610px">
     </div>
 </div>
 
@@ -20,50 +20,33 @@
 			<ul id="circlePaging" class="pagination marginBottom0">
 				<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
 				<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
-				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">20</span></span></li>
+				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>
 				<li class="paginate_button toNext"><a href="#"><i class="fa fa-caret-right"></i></a></li>
 				<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
 			</ul>
 		</div>
-		<span class="paging-info">Displaying circles 1 - 50 of 462</span>
+		<span class="paging-info">Displaying circles 0 - 0 of 0</span>
 	</div>
 </div>
 
 <script>
 	$( function(){
-		<#-- set target circle id -->
-		<#if targetId??>
-			var targetId = "${targetId!''}";
-		<#else>
-			var targetId = "";
-		</#if>
-	
-		<#-- add slim scroll -->
-	      $(".content-list").slimscroll({
-				height: "100%",
-		        size: "3px",
-	        	allowPageScroll: true,
-	   			touchScrollStep: 50
-		  });
-		  <#--
-		   $(".content-wrapper>.content").slimscroll({
-				height: "100%",
-		        size: "8px",
-	        	allowPageScroll: true,
-	   			touchScrollStep: 50,
-	   			railVisible: true,
-    			alwaysVisible: true
-		  });
-	    -->
+
 	    <#-- event for searching researcher -->
+	   	var tempInput = $( "#circle_search_field" ).val();
 	    $( "#circle_search_field" )
 	    .on( "keypress", function(e) {
 			  if ( e.keyCode == 0 || e.keyCode == 13 || e.keyCode == 32 )
 			    circleSearch( $( this ).val() , "first");
+			 tempInput = $( this ).val().trim();
 		}).on( "keydown", function(e) {
-			  if( e.keyCode == 8 || e.keyCode == 46 )
-			    if( $( "#circle_search_field" ).val().length == 0 )
-			    	circleSearch( $( this ).val() , "first");
+			  if( e.keyCode == 8 || e.keyCode == 46 ){
+			    if( $( "#circle_search_field" ).val().length < 2 && tempInput != $( this ).val().trim()){
+			    	circleSearch( "" , "first");
+			    	tempInput = "";
+			    } else
+			    	tempInput = $( this ).val().trim();
+			  }
 		});
 
 		<#-- icon search presed -->
@@ -103,6 +86,9 @@
 		<#-- button search loading -->
 		$( "#circle_search_button" ).find( "i" ).removeClass( "fa-search" ).addClass( "fa-refresh fa-spin" );
 		
+		<#-- generate unique id for progress log -->
+		var uniquePidCircleWidget = $.PALM.utility.generateUniqueId();
+		
 		<#-- unique options in each widget -->
 		var options ={
 			source : "<@spring.url '/circle/search' />",
@@ -130,7 +116,7 @@
 
 									var circleItem = 
 										$('<div/>')
-										.addClass( "circle" )
+										.addClass( "circle static" )
 										.attr({ "data-id": itemCircle.id });
 										
 									<#-- circle menu -->
@@ -192,7 +178,7 @@
 									});
 									-->
 									<#-- circle detail -->
-									var circleDetail = $('<div/>').addClass( "detail" );
+									var circleDetail = $('<div/>').addClass( "detail static" );
 									<#-- title -->
 									var circleName = $('<div/>').addClass( "title" ).html( itemCircle.name );
 
@@ -226,33 +212,33 @@
 											)
 										);
 
-									<#-- append to item -->
+									<#-- circleDetailOption -->
+									var circleDetailOption = $('<div/>').addClass( "option" );
+									<#-- fill circle detail option -->
+									<#-- remove circle button -->
+									var circleDeleteButton = $('<button/>')
+										.addClass( "btn btn-danger btn-xs width130px pull-right" )
+										.attr({ "data-id": itemCircle.id, "title":"remove " + itemCircle.title + " from PALM database" })
+										.html( "delete circle" )
+										.on( "click", function( e ){
+											e.preventDefault();
+											if ( confirm("Do you really want to remove this circle?") ) {
+											    $.post( "<@spring.url '/circle/delete' />", { id:itemCircle.id }, function( data ){
+											    	if( data.status == "ok")
+											    		location.reload();
+											    } )
+											}
+										});
+									
+									circleDetailOption.append( circleDeleteButton );
+									
+									circleDetail.append( circleDetailOption );
+								
+																	<#-- append to item -->
 									circleItem.append( circleDetail );
 
-									<#-- add clcik event -->
-									circleDetail.on( "click", function(){
-										<#-- remove active class -->
-										$( this ).parent().siblings().removeClass( "active" );
-										$( this ).parent().addClass( "active" );
-										getCircleDetails( $( this ).parent().data( 'id' ));
-									});
 
 									circleListContainer.append( circleItem );
-								
-									<#-- display first circle detail -->
-									if( targetId == "" ){
-										if( index == 0 ){
-											circleDetail.parent().siblings().removeClass( "active" );
-											circleDetail.parent().addClass( "active" );
-											getCircleDetails( itemCircle.id );
-										}
-									} else {
-										if( targetId == itemCircle.id ){
-											circleDetail.parent().siblings().removeClass( "active" );
-											circleDetail.parent().addClass( "active" );
-											getCircleDetails( itemCircle.id );
-										}
-									}
 								
 								});
 								var maxPage = Math.ceil(data.count/data.maxresult);
@@ -299,7 +285,7 @@
 	function circleSearch( query , jumpTo ){
 		//find the element option
 		$.each( $.PALM.options.registeredWidget, function(index, obj){
-			if( obj.type === "CIRCLE" && obj.group === "sidebar" ){
+			if( obj.type === "ADMINISTRATION" && obj.group === "data-circle" ){
 				var maxPage = parseInt($( obj.element ).find( "span.total-page" ).html()) - 1;
 				if( jumpTo === "next")
 					obj.options.page = obj.options.page + 1;
@@ -328,42 +314,7 @@
 					obj.options.source = "<@spring.url '/circle/search?query=' />" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
 				else
 					obj.options.source = "<@spring.url '/circle/search?query=' />" + obj.options.query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
-					
-				$.PALM.boxWidget.refresh( obj.element , obj.options );
-			}
-		});
-	}
-
-	<#-- when circle list clicked --> 
-	function getCircleDetails( circleId ){
-		<#-- widget circle_interest_cloud and circle_interest_evolution can not run simultaneusly together,
-		therefore put it in order -->
-		var isInterestCloudWidgetExecuted = false;
-		var isInterestEvolutionWidgetExecuted = false;
-			
-		<#-- put loading overlay -->
-		$.each( $.PALM.options.registeredWidget, function(index, obj){
-			if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
-				obj.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
-				obj.options.queryString = "?id=" + circleId;
-				
-				<#-- check for cloud and evolution widget -->
-				if( obj.selector === "#widget-circle_interest_cloud" && isInterestEvolutionWidgetExecuted )
-					return;
-				else if( obj.selector === "#widget-circle_interest_evolution" && isInterestCloudWidgetExecuted )
-					return;
-				
-				<#-- add new flag (has been executed once)  -->
-				obj.executed = true;
-				
-				<#-- refresh widget -->
-				$.PALM.boxWidget.refresh( obj.element , obj.options );
-				
-				<#-- set flag for cloud and evolution widget -->
-				if( obj.selector === "#widget-circle_interest_cloud" )
-					isInterestCloudWidgetExecuted = true;
-				else if( obj.selector === "#widget-circle_interest_evolution" )
-					isInterestEvolutionWidgetExecuted = true;
+				$.PALM.boxWidget.refresh( obj.element , obj.options );	
 			}
 		});
 	}

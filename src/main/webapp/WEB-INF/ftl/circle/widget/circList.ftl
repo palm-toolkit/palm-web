@@ -69,7 +69,7 @@
 			  if( e.keyCode == 8 || e.keyCode == 46 ){
 			    if( $( "#circle_search_field" ).val().length < 2 && tempInput != $( this ).val().trim()){
 			    	circleSearch( "" , "first");
-			    	history.pushState( null, "Researcher page", "<@spring.url '/circle' />");
+			    	history.pushState( null, "Circle page", "<@spring.url '/circle' />");
 			    	tempInput = "";
 			    } else
 			    	tempInput = $( this ).val().trim();

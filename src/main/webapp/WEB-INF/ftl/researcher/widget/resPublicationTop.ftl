@@ -187,6 +187,48 @@
 							timelineBody.append( timeLineAuthor );
 						}
 						
+						<#-- load more button -->
+						if( item.contentExist ){
+							<#-- put container abstract and keywords -->
+							var abstractSection = $( '<div/>' ).addClass("abstractSection");
+							timelineBody.append( abstractSection );
+							
+							var keywordSection = $( '<div/>' ).addClass("keywordSection");
+							timelineBody.append( keywordSection );
+							
+							var loadMoreButton = $( '<div/>' )
+											.addClass( 'btn btn-default btn-xxs font-xs pull-right' )
+											.attr({ "data-load" : "false"})
+											.html( "load more" )
+											.click( function(){
+												if( $( this ).attr( "data-load") == "false" ){
+													var _this = this;
+													 $( this )
+													 	.attr( "data-load", "true" )
+													 	.html( "load less" );
+													 <#-- load ajax keyword and abstract -->
+													$.get( "<@spring.url '/publication/detail' />?id=" + item.id + "&section=abstract-keyword" , function( data2 ){
+														if( typeof data2.publication.abstract !== "undefined" )
+															$(_this).parent().find( ".abstractSection").html( data2.publication.abstract );
+														if( typeof data2.publication.keyword !== "undefined" )
+															$(_this).parent().find( ".keywordSection").html( data2.publication.keyword );
+													});
+												} else{
+													if( $( this ).text() == "load less" ){
+														$( this ).parent().find( ".abstractSection").hide();
+														$( this ).parent().find( ".keywordSection").hide();
+														$( this ).html( "load more" );
+													} else {
+														$( this ).parent().find( ".abstractSection").show();
+														$( this ).parent().find( ".keywordSection").show();
+														$( this ).html( "load less" );
+													}
+												}
+											});
+											
+							timelineBody.append( loadMoreButton );
+						}
+						
 						<#-- venue -->
 						if( typeof item.event !== 'undefined' ){
 							var eventElem = $( '<div/>' )
