@@ -13,6 +13,7 @@
   	</div>
   	
   	<div class="content-list height610px">
+  		Please search the user first.
     </div>
 </div>
 

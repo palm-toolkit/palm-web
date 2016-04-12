@@ -534,9 +534,6 @@
 							timelineBody.append( eventElem );
 						}
 						
-					
-
-						
 						timelineItem.append( timelineBody );
 	
 						publicationItem.append( timelineItem );

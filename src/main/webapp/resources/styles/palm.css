@@ -553,6 +553,11 @@ div.d3-tooltip {
 	display:block;
 }
 
+.content-list>.publication.static:hover,
+.content-list>.circle.static:hover{
+	background-color:#fff !important;
+}
+
 .content-list>.publication>.nav>.fa-edit,
 .content-list>.eventgroup-item>.eventgroup>.nav>.fa-edit,
 .content-list>.circle>.nav>.fa-edit{

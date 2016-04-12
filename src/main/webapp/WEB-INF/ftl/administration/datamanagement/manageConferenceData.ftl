@@ -167,7 +167,7 @@
 									var eventGroupDeleteButton = $('<button/>')
 										.addClass( "btn btn-danger btn-xs width130px pull-right" )
 										.attr({ "data-id": itemEvent.id, "title":"remove " + itemEvent.title + " from PALM database" })
-										.html( "delete eventGroup" )
+										.html( "delete " + itemEvent.type )
 										.on( "click", function( e ){
 											e.preventDefault();
 											if ( confirm("Do you really want to remove this eventGroup?") ) {
@@ -229,6 +229,10 @@
 			"element": $( "#widget-${wUniqueName}" ),
 			"options": options
 		});
+		
+		
+		<#--// first time on load, list 50 researchers-->
+		conferenceSearch( $( "#conference_search_field" ).val().trim() , "first");
 		
 		function conferenceSearch( query , jumpTo ){
 			//find the element option

@@ -175,7 +175,7 @@
 									
 									<#-- edit option -->
 									var pubEdit = $('<i/>')
-												.css({'display':'block'})
+												.css({'display':'block','cursor':'pointer'})
 												.attr({
 													'class':'fa fa-edit visible',
 													'title':'edit publication',
@@ -194,7 +194,7 @@
 									publicationItem.append( pubNav );
 
 									<#-- publication detail -->
-									var pubDetail = $('<div/>').addClass( "detail" );
+									var pubDetail = $('<div/>').addClass( "detail static" );
 									<#-- title -->
 									var pubTitle = $('<div/>').addClass( "title" ).html( itemPublication.title );
 

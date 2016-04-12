@@ -7,7 +7,7 @@
     <li class="treeview" data-link="config">
       <a href="#">
         <i class="fa fa-tasks"></i>
-        <span>Data Collections</span>
+        <span>Data Collections Configurations</span>
 		<i class="fa fa-angle-left pull-right"></i>
       </a>
       <ul class="treeview-menu">
@@ -76,6 +76,19 @@
       </a>
     </li>
     
+    <#-- PDF & HTML Extraction Test -->
+    <li class="treeview" data-link="extract">
+      <a href="#">
+        <i class="fa fa-cubes"></i>
+        <span>PDF & HTML Extraction Test</span>
+		<i class="fa fa-angle-left pull-right"></i>
+      </a>
+      <ul class="treeview-menu">
+        <li data-link="pdf"><a href="<@spring.url '/extraction/pdf' />"><i class="fa fa-file-pdf-o"></i>PDF Extraction</a></li>
+        <li data-link="html"><a href="<@spring.url '/extraction/html' />"><i class="fa fa-file-text-o"></i>Webpage Extraction</a></li>
+      </ul>
+    </li>
+    
     <#-- Topic Modeling -->
     <li class="treeview" data-link="topicmodel">
       <a href="#">
@@ -97,7 +110,22 @@
       </a>
     </li>
     
-    <#-- Data Management -->
+    <#-- API -->
+    <li class="treeview" data-link="api">
+      <a href="#">
+        <i class="fa fa-exchange"></i>
+        <span>API</span>
+		<i class="fa fa-angle-left pull-right"></i>
+      </a>
+      <ul class="treeview-menu">
+        <li data-link="researcher"><a href="<@spring.url '/api/researcher' />"><i class="fa fa-users"></i>Researcher API</a></li>
+        <li data-link="publication"><a href="<@spring.url '/api/publication' />"><i class="fa fa-file-text-o"></i>Publication API</a></li>
+        <li data-link="event"><a href="<@spring.url '/api/conference' />"><i class="fa fa-globe"></i>Conferences API</a></li>
+        <li data-link="circle"><a href="<@spring.url '/api/circle' />"><i class="fa fa-circle-o"></i>Circle API</a></li>
+      </ul>
+    </li>
+    
+    <#-- Database -->
     <li class="treeview" data-link="database">
       <a href="#">
         <i class="fa fa-database"></i>
@@ -122,34 +150,6 @@
         <li data-link="technologies"><a href="<@spring.url '/developer/technology' />"><i class="fa fa-asterisk"></i>Technologies</a></li>
         <li data-link="documentation"><a href="<@spring.url '/developer/documentation' />"><i class="fa fa-file-o"></i>Documentation</a></li>
         <li data-link="credit"><a href="<@spring.url '/developer/credit' />"><i class="fa fa-users"></i>Credit</a></li>
-      </ul>
-    </li>
-    
-    <#-- API -->
-    <li class="treeview" data-link="api">
-      <a href="#">
-        <i class="fa fa-exchange"></i>
-        <span>API</span>
-		<i class="fa fa-angle-left pull-right"></i>
-      </a>
-      <ul class="treeview-menu">
-        <li data-link="researcher"><a href="<@spring.url '/api/researcher' />"><i class="fa fa-users"></i>Researcher API</a></li>
-        <li data-link="publication"><a href="<@spring.url '/api/publication' />"><i class="fa fa-file-text-o"></i>Publication API</a></li>
-        <li data-link="event"><a href="<@spring.url '/api/conference' />"><i class="fa fa-globe"></i>Conferences API</a></li>
-        <li data-link="circle"><a href="<@spring.url '/api/circle' />"><i class="fa fa-circle-o"></i>Circle API</a></li>
-      </ul>
-    </li>
-    
-    <#-- API -->
-    <li class="treeview" data-link="extract">
-      <a href="#">
-        <i class="fa fa-cubes"></i>
-        <span>PDF & HTML Extraction Test</span>
-		<i class="fa fa-angle-left pull-right"></i>
-      </a>
-      <ul class="treeview-menu">
-        <li data-link="pdf"><a href="<@spring.url '/extraction/pdf' />"><i class="fa fa-file-pdf-o"></i>PDF Extraction</a></li>
-        <li data-link="html"><a href="<@spring.url '/extraction/html' />"><i class="fa fa-file-text-o"></i>Webpage Extraction</a></li>
       </ul>
     </li>
     

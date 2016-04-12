@@ -222,6 +222,22 @@
 								<#-- researcherDetailOption -->
 								var researcherDetailOption = $('<div/>').addClass( "option" );
 								<#-- fill researcher detail option -->
+								var reCollectPublication = $('<button/>')
+									.addClass( "btn btn-default btn-xs width130px pull-left" )
+									.attr({ "data-id": item.id, "data-name": item.name, "title":"re collect/update " + item.name + " publications" })
+									.html( "re-collect publications" )
+									.on( "click", function( e ){
+										e.preventDefault();
+										if ( confirm("Do you want to make recollect " + item.name+ "'s publications? If yes, you will redirected to researcher page") ) {
+										    $.post( "<@spring.url '/researcher/removeRequestTime' />", { id:item.id }, function( data ){
+										    	if( data.status == "ok")
+										    		window.location.href = "<@spring.url '/researcher' />?id=" + item.id + "&name=" + item.name ;
+										    } )
+										}
+									});
+								
+								researcherDetailOption.append( reCollectPublication );
+									
 								var researcherDeleteButton = $('<button/>')
 									.addClass( "btn btn-danger btn-xs width130px pull-right" )
 									.attr({ "data-id": item.id, "data-name": item.name, "title":"make author not visible from researchers page" })
