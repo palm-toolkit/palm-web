@@ -343,7 +343,7 @@ function visualizeTextCloud( words ){
 				publicationTimeLineWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 				$.PALM.boxWidget.refresh( publicationTimeLineWidget.element , publicationTimeLineWidget.options );
 			} else
-				alert( "Publication Timeline widget missing, please enable it from Researcher Widget Management" );
+				alert( "Publication Timeline widget missing, please enable it from Circle Widget Management" );
       });
 	}
 }

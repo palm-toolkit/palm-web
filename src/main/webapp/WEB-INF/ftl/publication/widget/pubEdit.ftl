@@ -5,13 +5,13 @@
 		<input type="hidden" name="publicationId" value="${publication.id}">
 		<#-- title -->
 		<div class="form-group">
-	      <label>Title</label>
+	      <label>Title *</label>
 	      <input type="text" id="title" name="title" class="form-control" placeholder="Publication" value="${publication.title}">
 	    </div>
 	    
 		<#-- author -->
 		<div class="form-group">
-	      <label>Author</label>
+	      <label>Author *</label>
 	      <div id="authors-tag" class="palm-tagsinput" tabindex="-1">
 	    <#assign authorList = "">
 	    <#assign authorListIds = "">
@@ -66,7 +66,7 @@
 
 		<#-- publication-date -->
 		<div class="form-group">
-			<label>Publication Date</label>
+			<label>Publication Date *</label>
 			<div class="input-group" style="width:140px">
 				<div class="input-group-addon">
 					<i class="fa fa-calendar"></i>
@@ -141,7 +141,11 @@
 	      <input type="text" id="venue" name="venue" class="form-control" placeholder="Venue">
 	    </div>
 -->
+<div class="pull-left">
+          * Mandatory fields
+        </div>
 	</form>
+	<div id="error-div"></div>
 </div>
 
 <div class="box-footer">
@@ -164,6 +168,11 @@
 		
 		$( "#submit" ).click( function(){
 			<#-- todo check input valid -->
+			if( $( "#title" ).val() == "" || $( "#author-list" ).val() == "" || $( "#publication-date" ).val() == "" ){
+				$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>Please fill all required fields (title, authors, date published)</strong>")
+				return false;
+			}
+			
 			$.post( $("#editPublication").attr( "action" ), $("#editPublication").serialize(), function( data ){
 				<#-- todo if error -->
 

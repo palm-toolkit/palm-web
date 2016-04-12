@@ -119,21 +119,30 @@
 											.addClass( 'photo fa fa-user' )
 										);
 									}
-									userDetail
-										.append(
-											$( '<div/>' )
-											.addClass( 'btn btn-default btn-xs pull-left visible' )
-											.attr({ "data-url":"<@spring.url '/user/edit' />?id=" + item.id, "title":"Edit " + item.name + " account"})
+									if( !item.isAdmin ){
+										userDetail
 											.append(
-												$( '<i/>' )
-													.addClass( 'fa fa-edit' )
-											).append( "Edit" )
-											.on( "click", function(e){
-												e.preventDefault;
-												$.PALM.popUpIframe.create( $(this).data("url") , {popUpHeight:"456px"}, $(this).attr("title") );
-											})
-										);
-
+												$( '<div/>' )
+												.addClass( 'btn btn-danger btn-xs pull-left visible' )
+												.attr({ "title":"Grant Administrator rights for " + item.name})
+												.append(
+													$( '<i/>' )
+														.addClass( 'fa fa-unlock' )
+												).append( "&nbsp;Grant Administrator Rights" )
+												.on( "click", function(e){
+													e.preventDefault;
+													if ( confirm("Do you really want to give administrator rights to " + item.name + "? Please be careful. To revoke this rights you need to change the user record manually in database") ) {
+														$.post( "<@spring.url '/admin/user/grantAdmin' />", { id:item.id }, function( data ){
+													    	if( data.status == "ok")
+													    		location.reload();
+													    });
+												    }
+												})
+											);
+									} else{
+										userDetail
+											.append( "User is Administrator" )
+									}
 									
 								<#-- userDetailOption -->
 								var userDetailOption = $('<div/>').addClass( "option" );

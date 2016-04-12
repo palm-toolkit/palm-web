@@ -56,6 +56,7 @@
 	    <div class="pull-left">
           * Mandatory fields
         </div>
+	<div id="error-div"></div>
 
 	</form>
 </div>
@@ -77,6 +78,10 @@
 		<#-- jquery post on button click -->
 		$( "#submit" ).click( function(){
 			<#-- todo check input valid -->
+			if( $( "#name" ).val() == "" ){
+				$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>Please fill all required field (Conference/Journal name)</strong>")
+				return false;
+			}
 			$.post( $("#addVenue").attr( "action" ), $("#addVenue").serialize(), function( data ){
 				<#-- todo for error response -->
 

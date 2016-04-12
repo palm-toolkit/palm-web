@@ -12,8 +12,8 @@
 
 		<#-- academic status -->
 		<div class="form-group">
-          <label><i style="width: 20px;" class="fa fa-graduation-cap"></i>Academic Status *</label>
-          <input type="text" id="academicStatus" name="academicStatus" class="form-control" placeholder="" />
+          <label><i style="width: 20px;" class="fa fa-graduation-cap"></i>Academic Status</label>
+          <input type="text" id="academicStatus" name="academicStatus" class="form-control" placeholder="e.g. researcher, professor, etc" />
         </div>
         
         <#-- affiliation -->
@@ -41,6 +41,7 @@
         </div>
 
 	</form>
+	<div id="error-div"></div>
 </div>
 
 <div class="box-footer">
@@ -68,6 +69,10 @@
 		<#-- jquery post on button click -->
 		$( "#submit" ).click( function(){
 			<#-- todo check input valid -->
+			if( $( "#name" ).val() == "" || $( "#affiliation" ).val() == "" ){
+				$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>Please fill all required fields (name & affiliation)</strong>")
+				return false;
+			}
 			$.post( $("#addResearcher").attr( "action" ), $("#addResearcher").serialize(), function( data ){
 				<#-- todo if error -->
 

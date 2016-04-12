@@ -14,14 +14,10 @@
 
 		<#-- abstract -->
 		<div class="form-group">
-	      <label>Description</label>
+	      <label>Description *</label>
 	      <textarea name="description" id="circleDescription" class="form-control" rows="3" placeholder="Description"></textarea>
 	    </div>
 	    
-	    <div class="pull-left">
-          * Mandatory fields
-        </div>
-        
         <br/>
         <br/>
 	    
@@ -135,6 +131,10 @@
         <input type="hidden" id="circlePublication" name="circlePublication" />
 
 	</form>
+	<div class="pull-left">
+          * Mandatory fields
+        </div>
+        <div id="error-div"></div>
 </div>
 
 <div class="box-footer">
@@ -221,6 +221,12 @@
 		  
 		<#-- jquery post on button click -->
 		$( "#submit" ).click( function(){
+			<#-- todo check input valid -->
+			if( $( "#circleName" ).val() == "" || $( "#circleDescription" ).val() == "" ){
+				$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>Please fill all required fields (title and description)</strong>")
+				return false;
+			}
+			
 			<#-- put researcher & publication on circle into hidden input -->
 			if( $.PALM.circle.circleResearcher.length > 0){
 				var circleResearcherIds = "";

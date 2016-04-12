@@ -5,13 +5,13 @@
 		<#-- hidden attribute store author id from selected autocomplete -->
 		<#-- name -->
 		<div class="form-group">
-	      <label><i style="width: 20px;" class="fa fa-user"></i>Name</label>
+	      <label><i style="width: 20px;" class="fa fa-user"></i>Name *</label>
 	      <input type="text" id="name" name="name" class="form-control" value="${author.name}" />
 	    </div>
 
 		<#-- academic status -->
 		<div class="form-group">
-          <label><i style="width: 20px;" class="fa fa-graduation-cap"></i>Academic Status *</label>
+          <label><i style="width: 20px;" class="fa fa-graduation-cap"></i>Academic Status</label>
           <input type="text" id="academicStatus" name="academicStatus" class="form-control" value="${author.academicStatus!''}" />
         </div>
         
@@ -51,7 +51,7 @@
         <div class="pull-left">
           * Mandatory fields
         </div>
-
+		<div id="error-div"></div>
 	</form>
 </div>
 
@@ -88,6 +88,10 @@
 		<#-- jquery post on button click -->
 		$( "#submit" ).click( function(){
 			<#-- todo check input valid -->
+			if( $( "#name" ).val() == "" || $( "#affiliation" ).val() == "" ){
+				$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>Please fill all required fields (name & affiliation)</strong>")
+				return false;
+			}
 			$.post( $("#addResearcher").attr( "action" ), $("#addResearcher").serialize(), function( data ){
 				<#-- todo if error -->
 
