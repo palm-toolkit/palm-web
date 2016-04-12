@@ -5,13 +5,23 @@
 	<div id="tab_publication_detail" class="nav-tabs-custom" style="display:none">
         <ul class="nav nav-tabs">
 			<li id="header_publicationresult" class="active">
-				<a href="#tab_publicationresult" data-toggle="tab" aria-expanded="true">Detail</a>
+				<a href="#tab_publicationresult" data-toggle="tab" aria-expanded="true">Details</a>
 			</li>
 			<li id="header_sources">
-				<a href="#tab_publicationsources" data-toggle="tab" aria-expanded="true">Sources</a>
+				<a href="#tab_publicationsources" data-toggle="tab" aria-expanded="true">
+					Sources
+					<span data-toggle="tooltip" data-placement="bottom" data-html="true" data-original-title="The academic networks sources of this publication, such as Google Scholar, CiteseerX, DBLP, etc.">
+						&nbsp;<i class="fa fa-info-circle"></i>
+					</span>
+				</a>
 			</li>
 			<li id="header_htmlpdf">
-				<a href="#tab_publicationhtmlpdf" data-toggle="tab" aria-expanded="true">Html&Pdf</a>
+				<a href="#tab_publicationhtmlpdf" data-toggle="tab" aria-expanded="true">
+					Web & Pdf
+					<span data-toggle="tooltip" data-placement="bottom" data-html="true" data-original-title="The links to digital libraries pages and PDF files of this publication, such as IEEE.explorer, acm.org, DOI, etc.">
+						&nbsp;<i class="fa fa-info-circle"></i>
+					</span>
+				</a>
 			</li>
 			<#--
 			<li id="header_revision">

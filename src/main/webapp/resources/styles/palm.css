@@ -893,6 +893,9 @@ div.d3-tooltip {
 .min-w-75{
 	min-width:75px;
 }
+.tooltip-inner {
+   	width: 300px;
+}
 .btn-group-xs>.btn, .btn-xxs {
     padding: 1px 5px;
     font-size: 12px;

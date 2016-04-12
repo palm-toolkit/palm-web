@@ -55,7 +55,7 @@
 	<#if author??><#-- if author not null -->
 	<#else><#-- if author null -->
 		<div id="author-selection">
-			Link me to a researcher on PALM
+			Link me to a researcher on PALM. Please be careful, you can only do this once.
 			<#-- name -->
 			<div class="form-group">
 		      <input type="text" id="name" name="name" value="" class="form-control" placeholder="researcher name" />
