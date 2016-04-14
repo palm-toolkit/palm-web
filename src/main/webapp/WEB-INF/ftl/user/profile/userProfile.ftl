@@ -172,7 +172,7 @@
 				}
 			}
 		})
-		.autocomplete( "instance" )._renderItem = function( ul, item ) {
+		.data("ui-autocomplete")._renderItem = function( ul, item ) {
 			if( typeof item.id != "undefined" ){
 				var itemElem = createAutocompleteOutput( item );
 		      	return itemElem.appendTo( ul );

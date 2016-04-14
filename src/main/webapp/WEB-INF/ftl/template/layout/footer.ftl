@@ -2,7 +2,7 @@
 	Documentation
 </span>
 
-<span class="footer-item urlstyle">
+<span id="menu-api" class="footer-item urlstyle" title="APIs" data-url="<@spring.url '/menu/api' />" >
 	APIs
 </span>
 
@@ -16,7 +16,7 @@
 
 <script>
 $(function(){
-	$( "#menu-introduction" ).click( function( event ){
+	$( "#menu-introduction,#menu-api" ).click( function( event ){
 		event.preventDefault();
 		$.PALM.popUpIframe.create( $(this).data("url") , {popUpHeight:"456px"}, $(this).attr("title") );
 	});

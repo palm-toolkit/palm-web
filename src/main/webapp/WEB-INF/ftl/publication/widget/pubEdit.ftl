@@ -154,7 +154,7 @@
 
 <script>
 	$(function(){
-	
+	<#--
 		 $(".content-wrapper>.content").slimscroll({
 				height: "100%",
 		        size: "8px",
@@ -162,7 +162,7 @@
 	   			touchScrollStep: 50,
 	   			alwaysVisible: true
 		  });
-
+-->
 		<#-- activate input mask-->
 		$( "[data-mask]" ).inputmask();
 		
@@ -263,7 +263,7 @@
 	            }
 	        }
 		})
-		.autocomplete( "instance" )._renderItem = function( ul, item ) {
+		.data("ui-autocomplete")._renderItem = function( ul, item ) {
 			if( typeof item.id != "undefined" ){
 		      	return $( "<li>" + item.label + "</li>" ).appendTo( ul );
 	      	} else{
@@ -430,7 +430,7 @@
 				}
 			}
 		})
-		.autocomplete( "instance" )._renderItem = function( ul, item ) {
+		.data("ui-autocomplete")._renderItem = function( ul, item ) {
 			if( typeof item.id != "undefined" ){
 				var itemElem = createAutocompleteOutput( item );
 		      	return itemElem.appendTo( ul );

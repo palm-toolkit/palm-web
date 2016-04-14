@@ -165,7 +165,7 @@
 				$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
 			}
 		})
-		.autocomplete( "instance" )._renderItem = function( ul, item ) {
+		.data("ui-autocomplete")._renderItem = function( ul, item ) {
 			var itemElem = $( "<li/>" )
 							.addClass( "f-a-cont" );
 			

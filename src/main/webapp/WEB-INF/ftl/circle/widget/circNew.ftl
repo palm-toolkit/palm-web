@@ -166,6 +166,7 @@
 	   			touchScrollStep: 50
 		  });
 		  -->
+<#--
 		   $(".content-wrapper>.content").slimscroll({
 				height: "100%",
 		        size: "8px",
@@ -174,7 +175,7 @@
 	   			railVisible: true,
     			alwaysVisible: true
 		  });
-		  
+		  -->
 		<#-- jquery post on button click -->
 		$( "#submit" ).click( function(){
 			<#-- todo check input valid -->

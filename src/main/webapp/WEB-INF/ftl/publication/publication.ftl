@@ -35,7 +35,7 @@
 $(function(){
 	$( "#new-publication-circle" ).click( function( event ){
 		event.preventDefault();
-		$.PALM.popUpIframe.create( $(this).data("url") , {}, "Add New Publication");
+		$.PALM.popUpIframe.create( $(this).data("url") , { "popUpHeight":"80%", "popUpWidth" : "90%", "popUpMargin": "3% auto"}, "Add New Publication");
 	});
 });
 </script>

@@ -1,38 +1,63 @@
 <div id="boxbody${wUniqueName}" class="box-body">
 
-	<div class="col-md-6">
-		<div class="box box-default box-solid">
-			<div class="box-header">
-				<h3 class="box-title">Extract publication from PDF</h3>
-				<div class="box-tools pull-right">
-	            	<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-	            	<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-	           </div>
-			</div>
-			
-			<div class="box-body">
+	 <form role="form" id="addPublication" action="<@spring.url '/publication/add' />" method="post" style="clear:both">
+		<div class="col-md-6">
+			<div class="box box-default box-solid">
+				<div class="box-header">
+					<h3 class="box-title">Extract publication from PDF</h3>
+					<div class="box-tools pull-right">
+		            	<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+		            	<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+		           </div>
+				</div>
 				
-				<table style="width:100%">
-			        <tr style="background:transparent">
-			            <td style="width:70%;padding:0">
-			            	<span style="margin-top:5px;">Upload your publication (PDF format) : </span>
-			            	<input id="fileupload" style="width:60%;max-width:none" type="file" name="files[]" data-url="<@spring.url '/publication/upload' />" multiple />
-						</td>
-			            <td style="padding:0">
-			            	<div id="progress" class="progress" style="width:70%;display:none">
-						        <div class="bar" style="width: 0%;"></div>
-						    </div>
-						</td>
-			        </tr>
-			    </table>
-	    
+				<div class="box-body">
+					
+					<table style="width:100%">
+				        <tr style="background:transparent">
+				            <td style="width:70%;padding:0">
+				            	<span style="margin-top:5px;">Upload your publication (PDF format) : </span>
+				            	<input id="fileupload" style="width:60%;max-width:none" type="file" name="files[]" data-url="<@spring.url '/publication/upload' />" multiple />
+							</td>
+				            <td style="padding:0">
+				            	<div id="progress" class="progress" style="width:70%;display:none">
+							        <div class="bar" style="width: 0%;"></div>
+							    </div>
+							</td>
+				        </tr>
+				    </table>
+		    
+				</div>
 			</div>
 		</div>
-	</div>
+		
+		<div class="col-md-6">
+			<div class="box box-default box-solid">
+				<div class="box-header">
+					<h3 class="box-title">Add resources URL</h3>
+					<div class="box-tools pull-right">
+						<button class="btn btn-box-tool" rel="tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true" data-original-title="Add either URL of PDF files or Web resource. You can add more later on Web & PDF tab"><i class="fa fa-info"></i></button>
+		            	<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+		            	<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+		           </div>
+				</div>
+				
+				<div class="box-body">
+					<div class="form-group" style="margin-bottom:8px">
+						<select id="newResourceSelect" class="form-control" style="width: 80px; float: left;">
+							<option value="web">Web</option>
+							<option value="pdf">PDF</option>
+						</select>
+						<span style="display: block; overflow: hidden; padding: 0px 5px;">
+							<input id="newResourceInput" type="text" class="form-control" placeholder="resource URL">
+						</span>
+					</div>
+					<div id="error-div"></div>
+				</div>
+			</div>
+		</div>
 	
 	 <br/>
-
-	 <form role="form" id="addPublication" action="<@spring.url '/publication/add' />" method="post" style="clear:both">
 		
 		<#-- title -->
 		<div class="form-group">
@@ -162,6 +187,55 @@
 
 <script>
 	$(function(){
+		 <#-- extract with given link -->
+		var tempUrl = "";
+		$( "#newResourceInput" ).on( "paste", function(){
+			var fileSelection = $( "#newResourceSelect" ).val();
+			var _this = $( this );
+			setTimeout(function(){
+				var sourceUrl = _this.val();
+				<#-- check for validity -->
+				if( !$.PALM.utility.validateUrl( sourceUrl ) ){
+					$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>Not a valid URL</strong>")
+					return false;
+				}
+				var $container = $( "#widget-${wUniqueName}" );
+				$container.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+			
+				if( fileSelection == "web" ){
+					if( sourceUrl.endsWith('.pdf') ){
+						fileSelection = "pdf";
+						$( "#newResourceSelect" ).val( "pdf" );
+					}
+				}
+					
+				if( fileSelection == "web" ){
+					if( tempUrl == sourceUrl )
+						return false;
+					tempUrl = sourceUrl;
+					
+					$.getJSON( "<@spring.url '/publication/htmlExtract' />" + "?url=" + encodeURIComponent( sourceUrl ) , function( data ) {
+						$container.find("#abstractText").val(data.abstract);
+						$container.find("#keywords>input").val(data.keyword).focusout();
+						$container.find( ".overlay" ).remove();
+					}).always(function() {
+					   $container.find( ".overlay" ).remove();
+					});
+				} else {
+					if( tempUrl == sourceUrl )
+						return false;
+					tempUrl = sourceUrl;
+					
+					$.getJSON( "<@spring.url '/publication/pdfExtract' />" + "?url=" + encodeURIComponent(sourceUrl) , function( data ) {
+						$container.find("#abstractText").val(data.abstract);
+						$container.find("#keywords>input").val(data.keyword).focusout();
+						$container.find("#title").val(data.title).blur();
+					}).always(function() {
+					   $container.find( ".overlay" ).remove();
+					});
+				}
+			}, 300);
+		});
 	
 		 $(".content-wrapper>.content").slimscroll({
 				height: "100%",
@@ -274,7 +348,7 @@
 	            }
 	        }
 		})
-		.autocomplete( "instance" )._renderItem = function( ul, item ) {
+		.data("ui-autocomplete")._renderItem = function( ul, item ) {
 			if( typeof item.id != "undefined" ){
 		      	return $( "<li>" + item.label + "</li>" ).appendTo( ul );
 	      	} else{
@@ -536,7 +610,7 @@
 				}
 			}
 		})
-		.autocomplete( "instance" )._renderItem = function( ul, item ) {
+		.data("ui-autocomplete")._renderItem = function( ul, item ) {
 			if( typeof item.id != "undefined" ){
 				var itemElem = createAutocompleteOutput( item );
 		      	return itemElem.appendTo( ul );

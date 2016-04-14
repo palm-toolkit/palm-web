@@ -42,7 +42,7 @@
 			
 			<div>
 				<p>
-					Other features currently also being developed encompass topics modeling by <strong>Piro Lena</strong>, recommender system and visualization improvement by <strong>Ligia Bildea</strong>, and also by others.
+					Other features currently also being developed encompasses topics modeling by <strong>Piro Lena</strong>, recommender system and visualization improvement by <strong>Ligia Bildea</strong>, and also by others.
 				</p>
 			</div>
 			

@@ -87,9 +87,19 @@
 													.addClass( "btn btn-block btn-social btn-twitter btn-sm width220px pull-right" )
 													.html( "<strong>Improve Abstract & Keywords</strong>" )
 													.click( function(){
+														<#-- change tab if necessary -->
+														$('a[href="#tab_publicationresult"]').tab('show');
 														improveAbstractAndKeyword( data.publication.id, $( this ) , isFilesAvailable);
 													})
 						boxFooter.html( improveInfoButton );
+						
+						$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+						  var target = $(e.target).attr("href") // activated tab
+						  if( target == "#tab_publicationresult")
+						  	improveInfoButton.show();
+						  else
+						  	improveInfoButton.hide();
+						});
 					}
 					
 				</#if>
@@ -305,6 +315,131 @@
 					publicationSourceInnerTabsContents.append( tabContent );
 
 				});
+				<#-- button to add new resource -->
+				var addNewResourceContainer =  $( '<div/>' )
+												.attr({"id":"add_new_resource_container"});
+												
+							
+									
+				var newResourceForm = $( '<div/>' )
+											.css({"background-color":"#efefef","padding":"5px","margin-bottom":"10px","border":"1px solid #eee"})
+											.append(
+												<#-- select and input button  -->
+												$( '<div/>' )
+													.addClass( "form-group" )
+													.append(
+														$( '<label/>' )
+														.css({"width":"100%"})
+														.html( "Add new web or PDF resource" )
+													)
+													.append(
+														$( '<select/>' )
+															.attr({"id":"newResourceSelect","class":"form-control"})
+															.css({"width":"80px","float":"left"})
+															.append(
+																$( '<option/>' )
+																.attr( "value","web" )
+																.html( "Web" )
+															)
+															.append(
+																$( '<option/>' )
+																.attr( "value","pdf" )
+																.html( "PDF" )
+															)
+													)
+													.append(
+														$( '<span/>' )
+														.css({"display":"block","overflow":"hidden","padding":"0 5px"})
+														.append(
+															$( '<input/>' )
+															.attr({"id":"newResourceInput","type":"text","class":"form-control","placeholder":"resource URL"})
+														)
+													)
+													.append(
+														$( '<div/>' )
+														.attr({"id":"error-div"})
+													)
+											)
+											.append(
+												$( '<div/>' )
+													.append(
+														$( "<a/>" )
+								        					.attr({
+								        						"class":"btn btn-block btn-default btn-sm pull-left",
+								        						"style":"width:80px"
+								        						})
+								        					.append(
+								        						"<strong>Cancel</strong>"
+								        					)
+															.click( function( event ){
+																event.preventDefault();
+																newResourceForm.slideUp();
+																newResourceButton.show();
+															})
+													)
+													.append(
+														$( "<a/>" )
+								        					.attr({
+								        						"class":"btn btn-block btn-social btn-twitter btn-sm pull-right",
+								        						"style":"width:80px;margin-top:0;padding:5px 0 !important;text-align:center"
+								        						})
+								        					.append(
+								        						"<strong>Save</strong>"
+								        					)
+															.click( function( event ){
+																event.preventDefault();
+																var sourceUrl = newResourceForm.find( "#newResourceInput" ).val();
+																<#-- check for validity -->
+																if( !$.PALM.utility.validateUrl( sourceUrl ) ){
+																	$.PALM.utility.showErrorTimeout( newResourceForm.find( "#error-div" ) , "&nbsp<strong>Not a valid URL</strong>")
+																	return false;
+																}
+																
+																var fileSelection = newResourceForm.find( "#newResourceSelect" ).val();
+																if( fileSelection == "web" ){
+																	if( sourceUrl.endsWith('.pdf') ){
+																		fileSelection = "pdf";
+																	}
+																}
+																<#-- post -->
+																<#--refresh widgets-->
+																var thisWidget = $.PALM.boxWidget.getByUniqueName( '${wUniqueName}' );
+																<#-- add overlay -->
+																thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+								
+																$.post( "<@spring.url '/publication/edit' />", { publicationId:data.publication.id,newResourceSelect:fileSelection,newResourceInput:sourceUrl  }, function( data ){
+													
+																	<#-- if status ok -->
+																	if( data.status == "ok" ){
+																		thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+					
+																		$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
+																	}
+																});
+															})
+													)
+													.append( "<br style='margin-bottom:10px;clear:both'>" )
+														 
+											).hide();
+
+				var newResourceButton = $( "<a/>" )
+					        					.attr({
+					        						"class":"btn btn-block btn-default btn-xxs pull-right",
+					        						"style":"width:160px;margin-top:0;text-align:center"
+					        						})
+					        					.append(
+					        						"<strong>+ Add new resource</strong>"
+					        					)
+												.click( function( event ){
+													event.preventDefault();
+													$( this ).hide();
+													newResourceForm.slideDown();
+												});
+						
+				addNewResourceContainer.append( newResourceButton );									
+				addNewResourceContainer.append( newResourceForm );
+				
+				tabContentPublicationHtmlPdfs.html( addNewResourceContainer );
 
 				<#-- publication htmlpdfs -->
 				var publicationHtmlPdfInnerTabs = $( '<div/>' )
@@ -319,7 +454,7 @@
 				publicationHtmlPdfInnerTabs.append( publicationHtmlPdfInnerTabsHeaders ).append( publicationHtmlPdfInnerTabsContents );
 
 				<#-- set inner tab into main tab -->
-				tabContentPublicationHtmlPdfs.html( publicationHtmlPdfInnerTabs );
+				tabContentPublicationHtmlPdfs.append( publicationHtmlPdfInnerTabs );
 
 				<#-- fill with htmlpdfs -->
 				$.each( data.publication.files , function( index, htmlpdf_item ){
@@ -345,7 +480,7 @@
 										.append(
 											$( '<dd/>' ).html( htmlpdf_item.source )
 										);
-					if( typeof htmlpdf_item.label !== "undefoned" && htmlpdf_item.label != "" )
+					if( typeof htmlpdf_item.label !== "undefined" && htmlpdf_item.label != "" )
 						contentDetail.append(
 											$( '<dt/>' ).html( "Source name:" )
 										)
