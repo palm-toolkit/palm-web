@@ -49,6 +49,7 @@
         <li data-link="circle"><a href="<@spring.url '/admin/widget/manage/circle' />"><i class="fa fa-caret-right"></i>Circle Widgets</a></li>
         <li data-link="administration"><a href="<@spring.url '/admin/widget/manage/administration' />"><i class="fa fa-caret-right"></i>Administration Widgets</a></li>
         <li data-link="user"><a href="<@spring.url '/admin/widget/manage/user' />"><i class="fa fa-caret-right"></i>User Widget</a></li>
+        <li data-link="user"><a href="<@spring.url '/admin/widget/manage/menu' />"><i class="fa fa-caret-right"></i>Menu Widget</a></li>
       </ul>
     </li>
 
