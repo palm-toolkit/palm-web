@@ -51,7 +51,7 @@
  	</@content.contentWrapper>
 
 	<@content.footerWrapper>
-		test
+		<#include "footer.ftl" />
 	</@content.footerWrapper>
  	
 </@layout.global>

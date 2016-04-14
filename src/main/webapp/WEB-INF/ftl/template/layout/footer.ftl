@@ -11,5 +11,5 @@
 </span>
 
 <span class="footer-item">
-	2016 © PALM
+	<a href="http://learntech.rwth-aachen.de/" target="_blank">i9-RWTH Aachen</a>
 </span>
