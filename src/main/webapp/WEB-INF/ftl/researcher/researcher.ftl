@@ -18,6 +18,10 @@
 		</section>
  	</@content.contentWrapper>
 
+	<@content.footerWrapper>
+		<#include "footer.ftl" />
+	</@content.footerWrapper>
+
 <@security.authorize access="isAuthenticated()">
 	<#-- add new researcher -->
 	<div id="new-author-circle" class="new-circle" title="Add a Researcher" data-url="<@spring.url '/researcher/add' />">

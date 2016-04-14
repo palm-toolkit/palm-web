@@ -49,5 +49,9 @@
           </div>
           		
  	</@content.contentWrapper>
+
+	<@content.footerWrapper>
+		test
+	</@content.footerWrapper>
  	
 </@layout.global>

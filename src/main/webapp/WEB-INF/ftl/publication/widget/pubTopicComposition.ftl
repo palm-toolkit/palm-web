@@ -42,7 +42,7 @@ if( data.status != "ok" )
 	alertCallOutWarning( "An error occurred", "Failed to show publication topic composition" );
 	
 if( typeof data.topics === "undefined" || data.topics.length == 0){
-	alertCallOutWarning( "Publication contain no topics", "Topics mining only performed on complete publication with abstract" );
+	alertCallOutWarning( "Publication contain no topics", "Topics mining only performed on complete publication with English abstract" );
 	return false;
 }
 <#-- show tab -->

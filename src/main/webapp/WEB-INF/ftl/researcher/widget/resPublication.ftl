@@ -166,6 +166,7 @@
 				var noOfWorkshopYearly;
 				var noOfJournalYearly;
 				var noOfBookYearly;
+				var noOfInformalYearly;
 				var noOfUnknownYearly;
 				<#-- timeline group -->
 				var liTimeGroup;
@@ -230,15 +231,30 @@
 												.html( noOfPublicationInfo )
 											);
 								}
+								if( noOfInformalYearly > 0){
+									var noOfPublicationInfo = "";
+									if( noOfInformalYearly == 1 )
+										noOfPublicationInfo += "1 Informal/Other";
+									else if( noOfInformalYearly > 1 )
+										noOfPublicationInfo += noOfInformalYearly + " Informal/Others";
+										
+									liTimeGroup.append( 
+												$( '<span/>' )
+												.addClass( "bg-gray" )
+												.css({ "margin-left" : "10px" })
+												.html( noOfPublicationInfo )
+											);
+								}
 								
 								var firstTimelineSpan = $( liTimeGroup) .find( "span:first" );
-								firstTimelineSpan.html( (noOfConferenceYearly + noOfWorkshopYearly + noOfJournalYearly + noOfBookYearly + noOfUnknownYearly ) + " " + firstTimelineSpan.html() );
+								firstTimelineSpan.html( (noOfConferenceYearly + noOfWorkshopYearly + noOfJournalYearly + noOfInformalYearly + noOfBookYearly + noOfUnknownYearly ) + " " + firstTimelineSpan.html() );
 							}
 							
 							noOfConferenceYearly = 0;
 							noOfWorkshopYearly = 0;
 							noOfJournalYearly = 0;
 							noOfBookYearly = 0;
+							noOfInformalYearly = 0;
 							noOfUnknownYearly = 0;
 							
 							
@@ -296,6 +312,11 @@
 								timelineDot.addClass( "fa fa-book bg-green" );
 								timelineDot.attr({ "title" : "Book" });
 								noOfBookYearly++;
+							}
+							else if( item.type == "INFORMAL" ){
+								timelineDot.addClass( "fa fa-file-text-o bg-gray" );
+								timelineDot.attr({ "title" : "Informal/other publication" });
+								noOfInformalYearly++;
 							}
 						}else{
 							timelineDot.addClass( "fa fa-question bg-purple" );

@@ -18,6 +18,10 @@
 		</section>
  	</@content.contentWrapper>
 
+	<@content.footerWrapper>
+		<#include "footer.ftl" />
+	</@content.footerWrapper>
+
 <@security.authorize access="isAuthenticated()">
 	<#-- add new publication -->
 	<div id="new-publication-circle" class="new-circle" title="Add new publication" data-url="<@spring.url '/publication/add' />">

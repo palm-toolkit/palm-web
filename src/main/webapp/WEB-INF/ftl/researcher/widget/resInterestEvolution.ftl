@@ -183,7 +183,7 @@ function getYearFromLanguage( languageIndex ){
 	<#-- loop interst years -->
 	var countYear = data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears.length;
 	
-	if( countYear > 0 ){
+	if( countYear > 1 ){
 
 		$.each( data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears , function(index, dataInterestYear){
 			var optionYearStart = $( '<option/>' )
@@ -209,6 +209,8 @@ function getYearFromLanguage( languageIndex ){
 		dataPointer.dataYearStart = 0,
 		dataPointer.dataYearEnd = countYear - 1;
 		visualizeInterest( 0, "startyear");
+	} else {
+		$("#widget-${wUniqueName}").find( ".box-content" ).append( "Insufficient data to visualze interest evolution" );
 	}
 	<#-- assign bootstrap select  -->
 	interestYearStartDropDown.selectpicker( 'refresh' );

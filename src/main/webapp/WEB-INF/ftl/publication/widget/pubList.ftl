@@ -74,7 +74,7 @@
 		<#-- add slim scroll -->
 	      $(".content-list").slimscroll({
 				height: "100%",
-		        size: "3px",
+		        size: "5px",
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50
 		  });
@@ -213,6 +213,8 @@
 											pubIcon.addClass( "fa fa-files-o bg-red" ).attr({ "title":"Journal" });
 										else if( itemPublication.type == "Book" )
 											pubIcon.addClass( "fa fa-book bg-green" ).attr({ "title":"Book" });
+										else if( itemPublication.type == "Informal" )
+											pubIcon.addClass( "fa fa-file-text-o bg-gray" ).attr({ "title":"Other/Informal" });
 									}else{
 										pubIcon.addClass( "fa fa-question bg-purple" ).attr({ "title":"Unknown publication type" });
 									}
