@@ -41,14 +41,6 @@
 					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "An error occured when accesing server" );
 					return false;
 				}
-				if ( typeof data.publications === 'undefined') {
-					<#--alert( "error, no publication found" );-->
-					if( typeof data.query === "undefined" || data.query == "" )
-						$.PALM.callout.generate( mainContainer , "warning", "Empty Publications!", "Currently no publications found on PALM database" );
-					else
-						$.PALM.callout.generate( mainContainer , "warning", "Empty search result!", "No publications found with query \"" + data.query + "\"" );
-					return false;
-				}
 				
 				var filterContainer = $( '<div/>' )
 										.css({'width':'100%','margin':'0 10px 15px 0'})
@@ -60,6 +52,19 @@
 									.append(
 										$( '<input/>' )
 										.attr({'type':'text', 'id':'publist-search', 'class':'form-control input-sm pull-right'})
+										.keyup(function(e){
+										    if(e.keyCode == 13)
+										    {
+										    	var thisWidget = $.PALM.boxWidget.getByUniqueName( '${wUniqueName}' ); 
+										        <#-- find keyword if any -->
+												var keywordText = filterSearch.find( "#publist-search" ).val();
+												//if( typeof keywordText !== "undefined" && keywordText !== "")
+												thisWidget.options.queryString = "?id=" + data.author.id + "&year=all&query=" + keywordText;
+												<#-- add overlay -->
+												thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+												$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
+										    }
+										 })
 									)
 									.append(
 										$( '<div/>' )
@@ -82,7 +87,8 @@
 											<#-- add overlay -->
 											thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 											$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
-										} )
+										})
+										
 									)
 				
 				var filterYear = $( '<div/>' ).attr({'class':'btn-group','data-toggle':'buttons'});
@@ -148,6 +154,17 @@
 				filterContainer.append( filterSearch );
 				filterContainer.append( filterYear );
 				mainContainer.append( filterContainer );
+				
+				filterSearch.find( "#publist-search" ).focus();
+				
+				if ( typeof data.publications === 'undefined') {
+					<#--alert( "error, no publication found" );-->
+					if( typeof data.query === "undefined" || data.query == "" )
+						$.PALM.callout.generate( mainContainer , "warning", "Empty Publications!", "Currently no publications found on PALM database" );
+					else
+						$.PALM.callout.generate( mainContainer , "warning", "Empty search result!", "No publications found with query \"" + data.query + "\"" );
+					return false;
+				}
 				<#-- end of filter -->
 
 				<#-- no publication found -->
