@@ -109,7 +109,8 @@
 		            dataType: "json",
 		            data: {
 						query: request.term,
-						source: "internal"
+						source: "internal",
+						addedAuthor: "yes"
 					},
 		            success: function (data) {
 		            	if( data.count == 0){

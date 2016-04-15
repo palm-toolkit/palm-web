@@ -35,8 +35,8 @@
 				<p>
 					PALM development was continued in 2015 by <strong>Sigit Nugraha</strong> as <strong>PALM Toolkit</strong> for his master thesis <i>"A Toolkit for Data Collection, Management, and Analytics in Academic Networks"</i>.
 					The aims of his work were to provide a complete and comprehensive information about researchers, publications, and conferences as well as to provide analytics tools and data management to process and to manage information from Academic Networks.
-                    In order to fulfill the requirements, PALM was redesign and redeveloped from the scratch with Java and Spring MVC framework. All of the features exist on PALM were rewritten and improved. A new layout with dashboard and widget systems were introduced and many new features were also developed, 
-                    such as Circle (where users can create their own dataset and choose available widgets to apply analytics and visualizations), PDF and digital libraries information extractors to improve the quality and completeness of collected data, user's and administration's dashboards. Furthermore, overall improvement also applied to system's usability, modularity, maintainability, and extensibility.
+                    In order to fulfill the requirements, PALM was redesign and redeveloped from the scratch, with Java and Spring MVC framework. All features existed on PALM were rewritten and improved. A new layout with dashboard and widget systems were introduced and many new features were also developed, 
+                    such as Circle (where users can create their own dataset and choose available widgets to apply analytics and visualizations), PDF and digital libraries information extractors to improve the quality and the completeness of collected data, user's dashboard, administration's dashboards, and restful APIs. Furthermore, overall improvement also applied to system's usability, modularity, maintainability, and extensibility.
 				</p>
 			</div>
 			

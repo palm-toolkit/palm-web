@@ -8,7 +8,7 @@
 <div class="form-group">
   <label>query</label>  
   <input name="query" type="text" class="form-control input-md">
-  <span class="help-block">e.g. Mohamed Amine Chatti</span>  
+  <span class="help-block">e.g. Mohamed Amine Chatti, blank input will list all researchers</span>  
 </div>
 
 <#-- Select Basic -->
@@ -16,7 +16,7 @@
 	<label>queryType</label>
 	<select name="queryType" class="form-control">
 		<option value="name">name</option>
-		<option value="affiliation">affiliation</option>
+		<option value="affiliation" disabled>affiliation</option>
 	</select>
 </div>
 
@@ -46,16 +46,32 @@
 <#-- Multiple Radios (inline) -->
 <div class="form-group">
 	<label>fulltextSearch</label>
-	<div class="radio">
+	<div class="radio" style="padding:2px 0">
 		<label class="col-md-4">
-			<input type="radio" name="fulltextSearch" value="on" checked="">
+			<input type="radio" name="fulltextSearch" value="yes" checked="">
 			Yes
 		</label>
 		<label>
-			<input type="radio" name="fulltextSearch" value="off">
+			<input type="radio" name="fulltextSearch" value="no">
 			No
 		</label>
 	</div>
+</div>
+
+<#-- Multiple Radios (inline) -->
+<div class="form-group">
+	<label>addedAuthor</label>
+	<div class="radio" style="padding:2px 0">
+		<label class="col-md-4">
+			<input type="radio" name="addedAuthor" value="yes" checked="">
+			Yes
+		</label>
+		<label>
+			<input type="radio" name="fulltextSearch" value="no">
+			No
+		</label>
+	</div>
+	<span class="help-block">Researchers which are directly added to PALM</span>
 </div>
 
 <#-- Button -->
