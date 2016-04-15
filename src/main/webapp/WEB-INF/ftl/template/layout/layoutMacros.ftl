@@ -8,6 +8,7 @@
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 		<meta name="keywords" content="Personal Academic Learner Model" />
 		<meta name="description" content="Personal Academic Learner Model" />
+		<meta http-equiv="Refresh" content="1800">
 		<#-- all styles -->
 		<#include "cssStyle.ftl" />
 
