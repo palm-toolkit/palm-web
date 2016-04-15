@@ -33,23 +33,8 @@
 					    </div>
 				  	</div>
 				  	
-				  	<div class="content-list height500px">
+				  	<div class="content-list height580px">
 				    </div>
-				</div>
-				
-				<div class="box-footer no-padding">
-					<div class="col-xs-12 no-padding alignCenter">
-						<div class="paging_simple_numbers">
-							<ul id="researcherPaging" class="pagination marginBottom0">
-								<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
-								<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
-								<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>
-								<li class="paginate_button toNext"><a href="#"><i class="fa fa-caret-right"></i></a></li>
-								<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
-							</ul>
-						</div>
-						<span class="paging-info">&nbsp;</span>
-					</div>
 				</div>
 				
 	    	</div>
@@ -96,22 +81,6 @@
 				  	<div class="content-list height580px">
 				    </div>
 				</div>
-				<#--
-				<div class="box-footer no-padding">
-					<div class="col-xs-12  no-padding alignCenter">
-						<div class="paging_simple_numbers">
-							<ul id="publicationPaging" class="pagination marginBottom0">
-								<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
-								<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
-								<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>
-								<li class="paginate_button toNext"><a href="#"><i class="fa fa-caret-right"></i></a></li>
-								<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
-							</ul>
-						</div>
-						<span class="paging-info">&nbsp;</span>
-					</div>
-				</div>
-	    		-->
 	    	</div>
 		    	        
         	<div id="circlePub" class="circle-input-column circle-input-right">
@@ -157,25 +126,6 @@
 					publicationInputList: $( "#circleAuth>.box-body>.content-list" )
 				});
 					
-		<#-- add slim scroll -->
-<#--
-	      $(".content-list").slimscroll({
-				height: "100%",
-		        size: "3px",
-	        	allowPageScroll: true,
-	   			touchScrollStep: 50
-		  });
-		  -->
-<#--
-		   $(".content-wrapper>.content").slimscroll({
-				height: "100%",
-		        size: "8px",
-	        	allowPageScroll: true,
-	   			touchScrollStep: 50,
-	   			railVisible: true,
-    			alwaysVisible: true
-		  });
-		  -->
 		<#-- jquery post on button click -->
 		$( "#submit" ).click( function(){
 			<#-- todo check input valid -->
@@ -471,7 +421,8 @@
 		<#-- related to researcher list and search -->
 
 		<#-- get publication list -->
-		researcherSearch( "" , "first" );
+		<#--researcherSearch( "" , "first" );-->
+		$.PALM.callout.generate( $( "#inputAuth" ).find( ".content-list" ) , "normal", "Please search first to get the researchers" );
 
 		<#-- event for searching researcher -->
 		
@@ -553,6 +504,12 @@
 				
 				var $pageDropdown = $( "#inputAuth" ).find( "select.page-number" );
 				$pageDropdown.find( "option" ).remove();
+				
+				if( data.count == 0 ){
+					$.PALM.callout.generate( targetContainer , "warning", "Empty search results!", "No researchers found with query \"" + data.query + "\"" );
+					return false;
+				}
+							
 				
 				if( data.count > 0 ){
 					<#-- put data into PALM.circle object -->
@@ -660,10 +617,9 @@
 								authInfo.show();
 								authInfo.find( "strong" ).html( $( this ).data( "name" ) );
 								<#-- scroll to -->
-								var scrollTo_val = $( "#inputPub" )[0].offsetTop + 'px';
-								$(".content-wrapper>.content").slimscroll({
-									scrollTo : scrollTo_val
-								});
+								$(".content-wrapper>.content").animate({
+						            scrollTop: $( "#inputPub" ).offset().top
+						        }, 500);
 							});
 						
 						researcherDetailOption.append( circlePublicationButton );
@@ -684,10 +640,9 @@
 								authInfo.show();
 								authInfo.find( "strong" ).html( $( this ).data( "name" ) );
 								<#-- scroll to -->
-								var scrollTo_val = $( "#inputPub" )[0].offsetTop + 'px';
-								$(".content-wrapper>.content").slimscroll({
-									scrollTo : scrollTo_val
-								});
+								$(".content-wrapper>.content").animate({
+						            scrollTop: $( "#inputPub" ).offset().top
+						        }, 500);
 							});
 						
 						researcherDetailOption.append( circleAddButton );
@@ -709,31 +664,12 @@
 						}, 1000);
 
 					});
-					var maxPage = Math.ceil(data.count/data.maxresult);
-					var $pageDropdown = $( "#inputAuth" ).find( "select.page-number" );
-					<#-- set dropdown page -->
-					for( var i=1;i<=maxPage;i++){
-						$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
-					}
-					<#-- //enable bootstrap tooltip -->
-					<#-- $( "#inputAuth" ).find( "[data-toggle='tooltip']" ).tooltip(); -->
 					
-					<#--// set page number-->
-					$pageDropdown.val( data.page + 1 );
-					$( "#inputAuth" ).find( "span.total-page" ).html( maxPage );
-					var endRecord = (data.page + 1) * data.maxresult;
-					if( data.page == maxPage - 1 ) 
-					endRecord = data.count;
-					$( "#inputAuth" ).find( "span.paging-info" ).html( "Displaying researchers " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.count );
 				
 					
 				}
 				else{
-					$pageDropdown.append("<option value='0'>0</option>");
-					$( "#inputAuth" ).find( "span.total-page" ).html( 0 );
-					$( "#inputAuth" ).find( "span.paging-info" ).html( "Displaying researchers 0 - 0 of 0" );
-					$( "#inputAuth" ).find( "li.toNext" ).addClass( "disabled" );
-					$( "#inputAuth" ).find( "li.toEnd" ).addClass( "disabled" );
+					
 				}
 		});
 	}

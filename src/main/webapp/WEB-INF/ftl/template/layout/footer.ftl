@@ -1,6 +1,8 @@
+<#--
 <span class="footer-item urlstyle">
 	Documentation
 </span>
+-->
 
 <span id="menu-api" class="footer-item urlstyle" title="APIs" data-url="<@spring.url '/menu/api' />" >
 	APIs
