@@ -264,7 +264,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 	}
 
 	@Bean( name = "templateService" )
-	@DependsOn( { "sessionFactory" } )
+	@DependsOn( { "transactionManager" } )
 	public TemplateService templateService()
 	{
 		return new TemplateService();
