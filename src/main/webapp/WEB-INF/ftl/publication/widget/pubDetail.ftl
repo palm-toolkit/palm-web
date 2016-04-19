@@ -51,7 +51,7 @@
 	$( function(){
 		<#-- add slimscroll to widget body -->
 		$("#boxbody${wUniqueName} #tab_publication_detail").slimscroll({
-			height: "700px",
+			height: "560px",
 	        size: "3px",
 			allowPageScroll: true,
    			touchScrollStep: 50

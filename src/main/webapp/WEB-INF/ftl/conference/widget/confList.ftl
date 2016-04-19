@@ -173,7 +173,7 @@
 									$.PALM.callout.generate( eventListContainer , "normal", "Currently no conferences/journals found on PALM database" );
 								else
 									$.PALM.callout.generate( eventListContainer , "warning", "Empty search results!", "No conferences/journals found with query \"" + data.query + "\"" );
-								return false;
+								//return false;
 							}
 							
 							if( data.count > 0 ){

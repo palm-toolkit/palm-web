@@ -92,7 +92,7 @@
 		var options ={
 			source : "<@spring.url '/researcher/search' />",
 			query: "",
-			queryString : "",
+			queryString : "&addedAuthor=yes",
 			page:0,
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
