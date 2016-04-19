@@ -136,7 +136,7 @@
 							
 												
 							var venueText = data.publication.event.name;
-							var venueHref = "<@spring.url '/venue' />?eventId=" + data.publication.event.id + "&type=" + data.publication.type.toLowerCase() + "&name=" + data.publication.event.name.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + data.publication.id;
+							var venueHref = "<@spring.url '/venue' />?eventId=" + data.publication.event.id + "&type=" + data.publication.type.toLowerCase() + "&name=" + data.publication.event.name.replace(/[^\w\s]/gi, '') + "&publicationId=" + data.publication.id;
 							
 							if( typeof data.publication.event.isGroupAdded === "undefined" || !data.publication.event.isGroupAdded )
 								venueHref += "&add=yes";
@@ -171,7 +171,7 @@
 											.addClass( 'event-detail' );
 														
 							var venueText = data.publication.venue;
-							var venueHref = "<@spring.url '/venue' />?type=" + data.publication.type.toLowerCase() + "&name=" + data.publication.venue.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + data.publication.id ;
+							var venueHref = "<@spring.url '/venue' />?type=" + data.publication.type.toLowerCase() + "&name=" + data.publication.venue.replace(/[^\w\s]/gi, '') + "&publicationId=" + data.publication.id ;
 							
 							if( typeof data.publication.volume != 'undefined' ){
 								venueText += " (" + data.publication.volume + ")";
