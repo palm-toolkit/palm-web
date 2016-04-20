@@ -8,7 +8,7 @@
 <div class="form-group">
   <label>query</label>  
   <input name="query" type="text" class="form-control input-md">
-  <span class="help-block">e.g. publication title, blank input will list all publications</span>  
+  <span class="help-block">keyword for publication's title, abstract, or keyword. Blank input will list all publications</span>  
 </div>
 
 <#-- Query name -->

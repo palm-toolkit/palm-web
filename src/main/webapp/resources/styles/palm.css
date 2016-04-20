@@ -665,6 +665,9 @@ div.d3-tooltip {
 .detail.static{
 	cursor:auto !important;
 }
+.detail>.info{
+	float:left;
+}
 .author.static:hover,.detail.static:hover{
 	background-color:#fff;
 }
