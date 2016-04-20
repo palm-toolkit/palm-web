@@ -135,7 +135,9 @@
       </a>
       <ul class="treeview-menu">
          <li data-link="index"><a href="<@spring.url '/admin/data/index' />"><i class="fa fa-table"></i>Indexing</a></li>
+         <#--
          <li data-link="migration"><a href="<@spring.url '/admin/data/migration' />"><i class="fa fa-check-circle"></i>Migration</a></li>
+         -->
       </ul>
     </li>
 
@@ -150,7 +152,7 @@
         <li data-link="architecture"><a href="<@spring.url '/developer/architecture' />"><i class="fa fa-building-o"></i>Architecture Overview</a></li>
         <li data-link="technologies"><a href="<@spring.url '/developer/technology' />"><i class="fa fa-asterisk"></i>Technologies</a></li>
         <li data-link="documentation"><a href="<@spring.url '/developer/documentation' />"><i class="fa fa-file-o"></i>Documentation</a></li>
-        <li data-link="credit"><a href="<@spring.url '/developer/credit' />"><i class="fa fa-users"></i>Credit</a></li>
+        <li data-link="credit"><a href="<@spring.url '/developer/credit' />"><i class="fa fa-users"></i>Introduction & Credit</a></li>
       </ul>
     </li>
     

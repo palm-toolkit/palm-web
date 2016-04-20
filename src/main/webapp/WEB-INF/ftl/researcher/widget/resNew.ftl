@@ -1,4 +1,4 @@
-<div id="boxbody<#--${wUniqueName}-->" class="box-body">
+<div id="boxbody${wUniqueName}" class="box-body">
 
 	 <form role="form" id="addResearcher" action="<@spring.url '/researcher/add' />" method="post">
 		
@@ -73,6 +73,8 @@
 				$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>Please fill all required fields (name & affiliation)</strong>")
 				return false;
 			}
+			$( "#widget-${wUniqueName}" ).find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+			
 			$.post( $("#addResearcher").attr( "action" ), $("#addResearcher").serialize(), function( data ){
 				<#-- todo if error -->
 
@@ -99,6 +101,7 @@
   		<#-- author -->
 		$('#name')
 		.autocomplete({
+			delay: 500,
 		    source: function (request, response) {
 		        $.ajax({
 		            url: "<@spring.url '/researcher/search' />",
@@ -265,6 +268,7 @@
 		        });
 		    },
 			minLength: 3,
+			delay: 500,
 			select: function( event, ui ) {
 
 			},
