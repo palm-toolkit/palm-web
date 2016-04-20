@@ -65,6 +65,9 @@
 			onRefreshStart: function( widgetElem ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
+				<#-- switch tab -->
+				$('a[href="#tab_publicationresult"]').tab('show');
+				
 				<#if loggedUser??>
 				<#-- box footer -->
 					var addImproveButton = true;
@@ -81,7 +84,7 @@
 					var boxFooter = $( "#boxbody${wUniqueName}" ).next();
 					boxFooter.html( "" );
 					
-					if( addImproveButton ){
+					if( isFilesAvailable ){
 						
 						var improveInfoButton = $('<a/>')
 													.addClass( "btn btn-block btn-social btn-twitter btn-sm width220px pull-right" )
@@ -91,11 +94,12 @@
 														$('a[href="#tab_publicationresult"]').tab('show');
 														improveAbstractAndKeyword( data.publication.id, $( this ) , isFilesAvailable);
 													})
+													.hide();
 						boxFooter.html( improveInfoButton );
 						
 						$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 						  var target = $(e.target).attr("href") // activated tab
-						  if( target == "#tab_publicationresult")
+						  if( target == "#tab_publicationhtmlpdf" )
 						  	improveInfoButton.show();
 						  else
 						  	improveInfoButton.hide();
@@ -633,7 +637,7 @@
 					
 					<#-- generate first tab -->
 					var dataOriginal = { "result":{ "abstract":origAbstractText, "keyword":origKeywordText } };
-					addImprovementForm( publicationId, tabContentPublicationResult, triggerElem, publicationImproveInfoInnerTabsHeaders , publicationImproveInfoInnerTabsContents, "Database", dataOriginal , true);
+					addImprovementForm( publicationId, tabContentPublicationResult, triggerElem, publicationImproveInfoInnerTabsHeaders , publicationImproveInfoInnerTabsContents, "Original", dataOriginal , true);
 		
 					<#-- generate other tabs -->
 					if( isFilesAvailable ){
