@@ -103,6 +103,39 @@
       </div>
     </div>
     
+    	<#-- PDF Extraction -->
+    <div class="panel box box-primary">
+      <div class="box-header with-border">
+        <h4 class="box-title">
+          <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSeven2" class="collapsed" aria-expanded="false">
+            Extract Publication from PDF( /publication/pdfExtract? )
+          </a>
+        </h4>
+      </div>
+      <div id="collapseSeven2" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+        <div class="box-body">
+        	<#include "apiExtractionPdf.ftl">
+        </div>
+      </div>
+    </div>
+    
+    <#-- HTML Extraction -->
+    <div class="panel box box-danger">
+      <div class="box-header with-border">
+        <h4 class="box-title">
+          <a data-toggle="collapse" data-parent="#accordion2" href="#collapseEight2" class="collapsed" aria-expanded="false">
+            Extract Publication from Webpage ( /publication/htmlExtract? )
+          </a>
+        </h4>
+      </div>
+      
+      <div id="collapseEight2" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+        <div class="box-body">
+        	<#include "apiExtractionHtml.ftl">
+        </div>
+      </div>
+    </div>
+    
     </div>
 
 </div>

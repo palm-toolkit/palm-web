@@ -229,8 +229,95 @@
     </div>
     
     <#-- Conference APIs --> 
-    <h1>Conference APIs - under construction</h1>
+    <h1>Conference APIs</h1>
     
+        <div class="box-group" id="accordion3">
+  
+  	<#-- Search Venue -->
+    <div class="panel box box-primary">
+      <div class="box-header with-border">
+        <h4 class="box-title">
+          <a data-toggle="collapse" data-parent="#accordion3" href="#collapse3One" class="collapsed" aria-expanded="false">
+            Conference/Journal Search ( /venue/search? )
+          </a>
+        </h4>
+      </div>
+      <div id="collapse3One" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+        <div class="box-body">
+        	<#include "../administration/api/apiConferenceSearch.ftl">
+        </div>
+      </div>
+    </div>
+    
+    <#-- Venue Fetch Group -->
+    <div class="panel box box-danger">
+      <div class="box-header with-border">
+        <h4 class="box-title">
+          <a data-toggle="collapse" data-parent="#accordion3" href="#collapse3Two" class="collapsed" aria-expanded="false">
+            Conference/Journal Years/Volumes ( /venue/fetchGroup? )
+          </a>
+        </h4>
+      </div>
+      
+      <div id="collapse3Two" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+        <div class="box-body">
+        	<#include "../administration/api/apiConferenceFetchGroup.ftl">
+        </div>
+      </div>
+    </div>
+    
+    <#-- Venue Conference/Journal Information -->
+    <div class="panel box box-success">
+      <div class="box-header with-border">
+        <h4 class="box-title">
+          <a data-toggle="collapse" data-parent="#accordion3" href="#collapse3Three" class="collapsed" aria-expanded="false">
+            Conference/Journal Information( /venue/basicinformation? )
+          </a>
+        </h4>
+      </div>
+      
+      <div id="collapse3Three" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+        <div class="box-body">
+        	<#include "../administration/api/apiConferenceBasicInformation.ftl">
+        </div>
+      </div>
+    </div>
+    
+        <#-- Venue Publications -->
+    <div class="panel box box-info">
+      <div class="box-header with-border">
+        <h4 class="box-title">
+          <a data-toggle="collapse" data-parent="#accordion3" href="#collapse3Four" class="collapsed" aria-expanded="false">
+            Publications on Conference/Journal on specific year/volume( /venue/publicationList? )
+          </a>
+        </h4>
+      </div>
+      
+      <div id="collapse3Four" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+        <div class="box-body">
+        	<#include "../administration/api/apiConferencePublication.ftl">
+        </div>
+      </div>
+    </div>
+    
+        <#-- Venue Interest -->
+    <div class="panel box  box-warning">
+      <div class="box-header with-border">
+        <h4 class="box-title">
+          <a data-toggle="collapse" data-parent="#accordion3" href="#collapse3Five" class="collapsed" aria-expanded="false">
+            Topics Composition on Conference/Journal on specific year/volume( /venue/interest? )
+          </a>
+        </h4>
+      </div>
+      
+      <div id="collapse3Five" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+        <div class="box-body">
+        	<#include "../administration/api/apiConferenceTopicComposition.ftl">
+        </div>
+      </div>
+    </div>
+    
+  </div>
     
     <#-- Circle APIs --> 
     <h1>Circle APIs</h1>
@@ -356,5 +443,43 @@
   </div>
     
     <#-- Extraction APIs --> 
-    <h1>Extraction APIs - under construction</h1>
+    <h1>Extraction APIs</h1>
+    <div class="box-group" id="accordion5">
+  
+  	<#-- PDF Extraction -->
+    <div class="panel box box-primary">
+      <div class="box-header with-border">
+        <h4 class="box-title">
+          <a data-toggle="collapse" data-parent="#accordion5" href="#collapse5One" class="collapsed" aria-expanded="false">
+            Extract Publication from PDF( /publication/pdfExtract? )
+          </a>
+        </h4>
+      </div>
+      <div id="collapse5One" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+        <div class="box-body">
+        	<#include "../administration/api/apiExtractionPdf.ftl">
+        </div>
+      </div>
+    </div>
+    
+    <#-- HTML Extraction -->
+    <div class="panel box box-danger">
+      <div class="box-header with-border">
+        <h4 class="box-title">
+          <a data-toggle="collapse" data-parent="#accordion5" href="#collapse5Two" class="collapsed" aria-expanded="false">
+            Extract Publication from Webpage ( /publication/htmlExtract? )
+          </a>
+        </h4>
+      </div>
+      
+      <div id="collapse5Two" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+        <div class="box-body">
+        	<#include "../administration/api/apiExtractionHtml.ftl">
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+  
 </div>
