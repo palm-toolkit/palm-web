@@ -1,5 +1,5 @@
 <#if templateService.isWidgetActive( "menu_documentation" )>
-<span class="footer-item urlstyle">
+<span id="menu-documentation" class="footer-item urlstyle" title="Documentation" data-url="<@spring.url '/menu/documentation' />" >
 	Documentation
 </span>
 </#if>
@@ -22,7 +22,7 @@
 
 <script>
 $(function(){
-	$( "#menu-introduction,#menu-api" ).click( function( event ){
+	$( "#menu-introduction,#menu-api,#menu-documentation" ).click( function( event ){
 		event.preventDefault();
 		$.PALM.popUpIframe.create( $(this).data("url") , {popUpHeight:"456px"}, $(this).attr("title") );
 	});

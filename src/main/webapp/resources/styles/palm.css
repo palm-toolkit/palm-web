@@ -919,6 +919,10 @@ div.d3-tooltip {
     line-height: 1.5;
     border-radius: 3px;
 }
+.btn-social.btn-xs>i{
+	width: 20px !important;
+	line-height: 20px !important;
+}
 /* Circle style */
 .circle-input-container{
 	float:left;

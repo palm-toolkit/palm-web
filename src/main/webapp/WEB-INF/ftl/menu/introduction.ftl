@@ -2,7 +2,7 @@
 	<div style="max-width:600px;margin:0 auto">
 		<img style="height:50px" class="site-logo" src="http://haiti.informatik.rwth-aachen.de/lufgi9/wp-content/uploads/2015/04/cropped-RZ_i9_RGB12.png" alt="i9 – Learning Technologies Research Group">
 		<br>
-		<h1><strong>PALM</strong> - Personal Academic Learner Model</h1>
+		<h1 style="text-align:center"><strong>PALM</strong> - Personal Academic Learner Model</h1>
 		<br>
 		<p><strong>PALM</strong> is a web based personal lifelong learner model developed in Learning Technologies Research Group i9 of RWTH-Aachen University. The main goal of PALM is to provide comprehensive information to researchers regarding the development of their lifelong learning. </p>
 		
