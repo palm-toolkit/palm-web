@@ -4,7 +4,7 @@
 <div class="form-group">
   <label class="info-label">Get publications in a circle</label> 
   <br/> 
-  <label class="info-label">Note:<br/>Get circle ID from first API (Circle Search). Use only ID from circle which is added to PALM (isAdded:true)</label>  
+  <label class="info-label">Note:<br/>Get circle ID from first API (Circle Search).</label>  
 </div>
 
 <#-- Circle Id -->

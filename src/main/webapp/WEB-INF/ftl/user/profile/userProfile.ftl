@@ -1,14 +1,14 @@
 <div id="boxbody-${wUniqueName}" class="box-body">
 	  <form role="form" id="profileForm" action="<@spring.url '/user/profile' />" method="post">
-		<#if author??><#-- if author not null -->
+		<#if authorMap??><#-- if author not null -->
 			<h1>
-				${author.name!''}
+				${authorMap.name!''}
 			</h1>
 			<hr style="margin-top:5px; margin-bottom:5px; margin-right:0 !important">
 			<div style="width:100%">
 				<div style="float:left;width:80px;height:120px;">
-					<#if author.photo??>
-						<img src="${author.photo}" style="width:100%">
+					<#if authorMap.photo??>
+						<img src="${authorMap.photo}" style="width:100%">
 					<#else>
 						<div class="photo fa fa-user"></div>
 					</#if>
@@ -21,14 +21,14 @@
 					</p>
 					<p>
 						<i style="width: 20px;" class="fa fa-briefcase"></i>
-						<span>${author.status}</span>
+						<span>${authorMap.status!''}</span>
 					</p>
 					<p>
 						<i style="width: 20px;" class="fa fa-institution"></i>
-						<span>${author.aff}</span>
+						<span>${authorMap.aff!''}</span>
 					</p>
 					<p>
-						<strong>Publications: ${author.publicationsNumber} || Cited By: ${author.citedBy}</strong>
+						<strong>Publications: ${authorMap.publicationsNumber!''} || Cited By: ${authorMap.citedBy!''}</strong>
 					</p>
 				</div>
 			</div>
@@ -52,7 +52,7 @@
 
 	</form>
 	
-	<#if author??><#-- if author not null -->
+	<#if authorMap??><#-- if author not null -->
 	<#else><#-- if author null -->
 		<div id="author-selection">
 			Link me to a researcher on PALM. Please be careful, you can only do this once.
@@ -75,12 +75,12 @@
 
 <script>
 	$(function(){
-		<#if author??>
+		<#if authorMap??>
 			$( "#boxbody-${wUniqueName}" )
 			.find( "h1" )
 			.css({ "cursor":"pointer"})
 			.on( "click", function(){
-				window.location.href = "<@spring.url '/researcher' />?id=${author.id}";
+				window.location.href = "<@spring.url '/researcher' />?id=${authorMap.id}";
 			});
 		
 		<#else>

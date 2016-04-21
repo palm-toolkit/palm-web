@@ -15,7 +15,7 @@
 
 		<#-- add slimscroll to widget body -->
 		$("#boxbody${wUniqueName} .box-content").slimscroll({
-			height: "630px",
+			height: "660px",
 	        size: "6px",
 			allowPageScroll: true,
    			touchScrollStep: 50,

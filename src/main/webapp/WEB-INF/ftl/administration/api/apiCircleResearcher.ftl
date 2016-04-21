@@ -1,10 +1,10 @@
-<form action="<@spring.url '/circle/publication' />" method="post" role="form">
+<form action="<@spring.url '/circle/researcherList' />" method="post" role="form">
 
 <#-- Info -->
 <div class="form-group">
   <label class="info-label">Get researchers in a circle</label> 
   <br/> 
-  <label class="info-label">Note:<br/>Get circle ID from first API (Circle Search). Use only ID from circle which is added to PALM (isAdded:true)</label>  
+  <label class="info-label">Note:<br/>Get circle ID from first API (Circle Search).</label>  
 </div>
 
 <#-- Circle Id -->
