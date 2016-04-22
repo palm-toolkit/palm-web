@@ -1,4 +1,4 @@
-<div id="boxbody<#--${wUniqueName}-->" class="box-body">
+<div id="boxbody${wUniqueName}" class="box-body">
 
 	 <form role="form" id="addResearcher" action="<@spring.url '/researcher/add' />" method="post">
 		
@@ -12,8 +12,8 @@
 
 		<#-- academic status -->
 		<div class="form-group">
-          <label><i style="width: 20px;" class="fa fa-graduation-cap"></i>Academic Status *</label>
-          <input type="text" id="academicStatus" name="academicStatus" class="form-control" placeholder="" />
+          <label><i style="width: 20px;" class="fa fa-graduation-cap"></i>Academic Status</label>
+          <input type="text" id="academicStatus" name="academicStatus" class="form-control" placeholder="e.g. researcher, professor, etc" />
         </div>
         
         <#-- affiliation -->
@@ -41,6 +41,7 @@
         </div>
 
 	</form>
+	<div id="error-div"></div>
 </div>
 
 <div class="box-footer">
@@ -68,6 +69,12 @@
 		<#-- jquery post on button click -->
 		$( "#submit" ).click( function(){
 			<#-- todo check input valid -->
+			if( $( "#name" ).val() == "" || $( "#affiliation" ).val() == "" ){
+				$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>Please fill all required fields (name & affiliation)</strong>")
+				return false;
+			}
+			$( "#widget-${wUniqueName}" ).find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+			
 			$.post( $("#addResearcher").attr( "action" ), $("#addResearcher").serialize(), function( data ){
 				<#-- todo if error -->
 
@@ -94,6 +101,7 @@
   		<#-- author -->
 		$('#name')
 		.autocomplete({
+			delay: 500,
 		    source: function (request, response) {
 		        $.ajax({
 		            url: "<@spring.url '/researcher/search' />",
@@ -160,7 +168,7 @@
 				$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
 			}
 		})
-		.autocomplete( "instance" )._renderItem = function( ul, item ) {
+		.data("ui-autocomplete")._renderItem = function( ul, item ) {
 			var itemElem = $( "<li/>" )
 							.addClass( "f-a-cont" );
 			
@@ -217,7 +225,7 @@
 			$.each( inputKeywords.split(","), function(index, inputKeyword ){
 	    		<#-- remove multiple spaces -->
 				inputKeyword = inputKeyword.replace(/ +(?= )/g,'').trim();
-				if( inputKeyword.length > 2 && !isTagDuplicated( '#keyword-list', inputKeyword )) {
+				if( inputKeyword.length > 2 && !isTagDuplicated( '#keywordList', inputKeyword )) {
 	      			$( inputElem ).before(
 	      				$( '<span/>' )
 	      					.addClass( "tag-item" )
@@ -260,6 +268,7 @@
 		        });
 		    },
 			minLength: 3,
+			delay: 500,
 			select: function( event, ui ) {
 
 			},
@@ -274,7 +283,7 @@
 		<#-- trigger autocomplete is there is value on name input -->
 		<#if author.name??>
 			$('#name').bind('focus', function(){ $(this).autocomplete("search"); } );
-			$('#name').val("${author.name}").focus();
+			$('#name').val("${author.name?capitalize}").focus();
 			var textToShow = $('#name').find(":selected").text();
    			$('#name').parent().find("span").find("input").val(textToShow);
 		</#if>

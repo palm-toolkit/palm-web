@@ -103,19 +103,19 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 				"/WEB-INF/ftl/administration/test",
 				"/WEB-INF/ftl/administration/user",
 				"/WEB-INF/ftl/administration/widget",
+				"/WEB-INF/ftl/analytics",
 				"/WEB-INF/ftl/circle",
 				"/WEB-INF/ftl/circle/widget",
 				"/WEB-INF/ftl/conference",
 				"/WEB-INF/ftl/conference/widget",
+				"/WEB-INF/ftl/dataset", "/WEB-INF/ftl/dialog",
 				"/WEB-INF/ftl/error",
+				"/WEB-INF/ftl/menu",
 				"/WEB-INF/ftl/publication",
 				"/WEB-INF/ftl/publication/widget",
 				"/WEB-INF/ftl/researcher",
 				"/WEB-INF/ftl/researcher/widget",
-				"/WEB-INF/ftl/dataset", 
 				"/WEB-INF/ftl/sparqlview", 
-				"/WEB-INF/ftl/dialog", 
-				"/WEB-INF/ftl/analytics",
 				"/WEB-INF/ftl/template",
 				"/WEB-INF/ftl/template/form",
 				"/WEB-INF/ftl/template/layout",
@@ -264,7 +264,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements AsyncConfig
 	}
 
 	@Bean( name = "templateService" )
-	@DependsOn( { "sessionFactory" } )
+	@DependsOn( { "transactionManager" } )
 	public TemplateService templateService()
 	{
 		return new TemplateService();

@@ -89,7 +89,7 @@
 
           	<#-- widget help button -->
           	<#if wParams["wInformation"]?? && wParams["wInformation"] != "">
-            	<button class="btn btn-box-tool" data-toggle="tooltip" data-placement="bottom" data-html="true" data-original-title="${wParams["wInformation"]}"><i class="fa fa-question"></i></button>
+            	<button class="btn btn-box-tool" data-toggle="tooltip" data-placement="bottom" data-html="true" data-original-title="${wParams["wInformation"]}"><i class="fa fa-info"></i></button>
             </#if>
           	
           	<#-- widget minimize button -->

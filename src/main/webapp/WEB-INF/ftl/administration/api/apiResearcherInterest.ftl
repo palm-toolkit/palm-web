@@ -14,21 +14,6 @@
   <span class="help-block">Researcher ID gathered from Researcher Search API</span>  
 </div>
 
-<#-- Multiple Radios (inline) -->
-<div class="form-group">
-	<label>updateResult</label>
-	<div class="radio">
-		<label class="col-md-4">
-			<input type="radio" name="updateResult" value="on">
-			Yes
-		</label>
-		<label>
-			<input type="radio" name="updateResult" value="off" checked="">
-			No
-		</label>
-	</div>
-</div>
-
 <#-- Button -->
 <div class="form-group">
     <button onclick="$.PALM.api.submit( $(this) ); return false;" class="btn btn-primary">Execute</button>

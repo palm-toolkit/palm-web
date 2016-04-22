@@ -22,12 +22,12 @@
 			<ul id="researcherPaging" class="pagination marginBottom0">
 				<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
 				<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
-				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">20</span></span></li>
+				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>
 				<li class="paginate_button toNext"><a href="#"><i class="fa fa-caret-right"></i></a></li>
 				<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
 			</ul>
 		</div>
-		<span class="paging-info">Displaying researchers 1 - 50 of 462</span>
+		<span class="paging-info">Displaying researchers 0 - 0 of 0</span>
 	</div>
 </div>
 
@@ -64,18 +64,23 @@
 	    -->
 	    <#-- event for searching researcher -->
 		var tempInput = $( "#researcher_search_field" ).val();
+		
 	    $( "#researcher_search_field" )
 	    .on( "keypress", function(e) {
-			  if ( e.keyCode == 0 || e.keyCode == 13 /* || e.keyCode == 32*/ )
+			  if ( e.keyCode == 0 || e.keyCode == 13 || e.keyCode == 32 )
 			    researcherSearch( $( this ).val().trim() , "first", "&addedAuthor=yes");
 			 tempInput = $( this ).val().trim();
 		})
 		<#-- when pressing backspace until -->
 		.on( "keydown", function(e) {
-			  if( e.keyCode == 8 || e.keyCode == 46 )
-			    if( $( "#researcher_search_field" ).val().length == 0 && tempInput != $( this ).val().trim())
-			    	researcherSearch( $( this ).val().trim() , "first", "&addedAuthor=yes");
-			  tempInput = $( this ).val().trim();
+			  if( e.keyCode == 8 || e.keyCode == 46 ){
+				    if( $( "#researcher_search_field" ).val().length < 2 && tempInput != $( this ).val().trim()){
+				    	researcherSearch( "", "first", "&addedAuthor=yes");
+				    	history.pushState( null, "Researcher page", "<@spring.url '/researcher' />");
+				    	tempInput = "";
+				    } else
+				    	tempInput = $( this ).val().trim();
+			  }
 		});
 		
 
@@ -114,7 +119,7 @@
 		});
 
 		<#-- generate unique id for progress log -->
-		var uniquePidResearcherWidget = $.PALM.utility.generateUniqueId();
+		//var uniquePidResearcherWidget = $.PALM.utility.generateUniqueId();
 		
 		<#-- unique options in each widget -->
 		var options ={
@@ -125,19 +130,35 @@
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
 				<#-- show pop up progress log -->
-				$.PALM.popUpMessage.create( "loading researchers...", { uniqueId:uniquePidResearcherWidget, popUpHeight:40, directlyRemove:false});
+				//$.PALM.popUpMessage.create( "loading researchers...", { uniqueId:uniquePidResearcherWidget, popUpHeight:40, directlyRemove:false});
 						},
-			onRefreshDone: function(  widgetElem , data ){
-
-							<#-- remove  pop up progress log -->
-							$.PALM.popUpMessage.remove( uniquePidResearcherWidget );
-
+			onRefreshDone: function(  widgetElem , data ){	
 							var targetContainer = $( widgetElem ).find( ".content-list" );
+							<#-- remove  pop up progress log -->
+							//$.PALM.popUpMessage.remove( uniquePidResearcherWidget );
+
+							<#-- check for error  -->
+							<#--
+							if( typeof data.researchers === "undefined"){
+								$.PALM.callout.generate( targetContainer , "warning", "Empty Researchers!", "An error occured - please try again later" );
+								return false;
+							}
+							-->
+
 							<#-- remove previous list -->
 							targetContainer.html( "" );
 							
 							var $pageDropdown = $( widgetElem ).find( "select.page-number" );
 							$pageDropdown.find( "option" ).remove();
+							
+							<#-- callout -->
+							if( data.count == 0 ){
+								if( typeof data.query === "undefined" || data.query == "" )
+									$.PALM.callout.generate( targetContainer , "normal", "Currently no researchers found on PALM database" );
+								else
+									$.PALM.callout.generate( targetContainer , "warning", "Empty search results!", "No researchers found with query \"" + data.query + "\"" );
+								return false;
+							}
 							
 							if( data.count > 0 ){
 								<#-- remove any remaing tooltip -->
@@ -404,7 +425,7 @@
 
 		<#-- show pop up progress log -->
 		var uniquePid = $.PALM.utility.generateUniqueId();
-		$.PALM.popUpMessage.create( "Collecting author publications...", { uniqueId:uniquePid, popUpHeight:150, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
+		$.PALM.popUpMessage.create( "Collecting author publications...", { uniqueId:uniquePid, popUpHeight:100, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
 		<#-- check and fetch publication from academic network if necessary -->
 		$.getJSON( "<@spring.url '/researcher/fetch?id=' />" + authorId + "&pid=" + uniquePid + "&force=false", function( data ){
 			<#-- remove  pop up progress log -->

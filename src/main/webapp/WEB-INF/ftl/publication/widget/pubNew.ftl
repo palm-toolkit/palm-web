@@ -1,42 +1,67 @@
 <div id="boxbody${wUniqueName}" class="box-body">
 
-	<div class="col-md-6">
-		<div class="box box-default box-solid">
-			<div class="box-header">
-				<h3 class="box-title">Extract publication from PDF</h3>
-				<div class="box-tools pull-right">
-	            	<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-	            	<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-	           </div>
-			</div>
-			
-			<div class="box-body">
+	 <form role="form" id="addPublication" action="<@spring.url '/publication/add' />" method="post" style="clear:both">
+		<div class="col-md-6">
+			<div class="box box-default box-solid">
+				<div class="box-header">
+					<h3 class="box-title">Extract publication from PDF</h3>
+					<div class="box-tools pull-right">
+		            	<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+		            	<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+		           </div>
+				</div>
 				
-				<table style="width:100%">
-			        <tr style="background:transparent">
-			            <td style="width:70%;padding:0">
-			            	<span style="margin-top:5px;">Upload your publication (PDF format) : </span>
-			            	<input id="fileupload" style="width:60%;max-width:none" type="file" name="files[]" data-url="<@spring.url '/publication/upload' />" multiple />
-						</td>
-			            <td style="padding:0">
-			            	<div id="progress" class="progress" style="width:70%;display:none">
-						        <div class="bar" style="width: 0%;"></div>
-						    </div>
-						</td>
-			        </tr>
-			    </table>
-	    
+				<div class="box-body">
+					
+					<table style="width:100%">
+				        <tr style="background:transparent">
+				            <td style="width:70%;padding:0">
+				            	<span style="margin-top:5px;">Upload your publication (PDF format) : </span>
+				            	<input id="fileupload" style="width:60%;max-width:none" type="file" name="files[]" data-url="<@spring.url '/publication/upload' />" multiple />
+							</td>
+				            <td style="padding:0">
+				            	<div id="progress" class="progress" style="width:70%;display:none">
+							        <div class="bar" style="width: 0%;"></div>
+							    </div>
+							</td>
+				        </tr>
+				    </table>
+		    
+				</div>
 			</div>
 		</div>
-	</div>
+		
+		<div class="col-md-6">
+			<div class="box box-default box-solid">
+				<div class="box-header">
+					<h3 class="box-title">Add resources URL</h3>
+					<div class="box-tools pull-right">
+						<button class="btn btn-box-tool" rel="tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true" data-original-title="Add either URL of PDF files or Web resource. You can add more later on Web & PDF tab"><i class="fa fa-info"></i></button>
+		            	<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+		            	<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+		           </div>
+				</div>
+				
+				<div class="box-body">
+					<div class="form-group" style="margin-bottom:8px">
+						<select id="newResourceSelect" class="form-control" style="width: 80px; float: left;">
+							<option value="web">Web</option>
+							<option value="pdf">PDF</option>
+						</select>
+						<span style="display: block; overflow: hidden; padding: 0px 5px;">
+							<input id="newResourceInput" type="text" class="form-control" placeholder="resource URL">
+						</span>
+					</div>
+					<div id="error-div"></div>
+				</div>
+			</div>
+		</div>
 	
 	 <br/>
-
-	 <form role="form" id="addPublication" action="<@spring.url '/publication/add' />" method="post" style="clear:both">
 		
 		<#-- title -->
 		<div class="form-group">
-	      <label>Title</label>
+	      <label>Title *</label>
 	      <input type="text" id="title" name="title" class="form-control" placeholder="Publication">
 	    </div>
 	    
@@ -50,7 +75,7 @@
 
 		<#-- author -->
 		<div class="form-group">
-	      <label>Author</label>
+	      <label>Author *</label>
 	      <div id="authors-tag" class="palm-tagsinput" tabindex="-1">
 	      		<input type="text" value="" placeholder="Add an author from PALM database" />
 	      </div>
@@ -70,13 +95,13 @@
 	      <div id="keywords" class="palm-tagsinput" tabindex="-1">
 	      		<input type="text" value="" placeholder="Keywords, separated by comma" />
 	      </div>
-	      <input type="hidden" id="keyword-list" name="keyword-list" value="">
+	      <input type="hidden" id="keywordList" name="keywordList" value="">
 	    </div>
 	    
 
 		<#-- publication-date -->
 		<div class="form-group">
-			<label>Publication Date</label>
+			<label>Publication Date *</label>
 			<div class="input-group" style="width:140px">
 				<div class="input-group-addon">
 					<i class="fa fa-calendar"></i>
@@ -149,7 +174,11 @@
 	      <input type="text" id="venue" name="venue" class="form-control" placeholder="Venue">
 	    </div>
 -->
+		<div class="pull-left">
+          * Mandatory fields
+        </div>
 	</form>
+	<div id="error-div"></div>
 </div>
 
 <div class="box-footer">
@@ -158,6 +187,55 @@
 
 <script>
 	$(function(){
+		 <#-- extract with given link -->
+		var tempUrl = "";
+		$( "#newResourceInput" ).on( "paste", function(){
+			var fileSelection = $( "#newResourceSelect" ).val();
+			var _this = $( this );
+			setTimeout(function(){
+				var sourceUrl = _this.val();
+				<#-- check for validity -->
+				if( !$.PALM.utility.validateUrl( sourceUrl ) ){
+					$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>Not a valid URL</strong>")
+					return false;
+				}
+				var $container = $( "#widget-${wUniqueName}" );
+				$container.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+			
+				if( fileSelection == "web" ){
+					if( sourceUrl.endsWith('.pdf') ){
+						fileSelection = "pdf";
+						$( "#newResourceSelect" ).val( "pdf" );
+					}
+				}
+					
+				if( fileSelection == "web" ){
+					if( tempUrl == sourceUrl )
+						return false;
+					tempUrl = sourceUrl;
+					
+					$.getJSON( "<@spring.url '/publication/htmlExtract' />" + "?url=" + encodeURIComponent( sourceUrl ) , function( data ) {
+						$container.find("#abstractText").val(data.abstract);
+						$container.find("#keywords>input").val(data.keyword).focusout();
+						$container.find( ".overlay" ).remove();
+					}).always(function() {
+					   $container.find( ".overlay" ).remove();
+					});
+				} else {
+					if( tempUrl == sourceUrl )
+						return false;
+					tempUrl = sourceUrl;
+					
+					$.getJSON( "<@spring.url '/publication/pdfExtract' />" + "?url=" + encodeURIComponent(sourceUrl) , function( data ) {
+						$container.find("#abstractText").val(data.abstract);
+						$container.find("#keywords>input").val(data.keyword).focusout();
+						$container.find("#title").val(data.title).blur();
+					}).always(function() {
+					   $container.find( ".overlay" ).remove();
+					});
+				}
+			}, 300);
+		});
 	
 		 $(".content-wrapper>.content").slimscroll({
 				height: "100%",
@@ -175,6 +253,11 @@
 
 		$( "#submit" ).click( function(){
 			<#-- todo check input valid -->
+			if( $( "#title" ).val() == "" || $( "#author-list" ).val() == "" || $( "#publication-date" ).val() == "" ){
+				$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>Please fill all required fields (title, authors, date published)</strong>")
+				return false;
+			}
+			
 			$.post( $("#addPublication").attr( "action" ), $("#addPublication").serialize(), function( data ){
 				<#-- todo if error -->
 
@@ -192,14 +275,25 @@
 		
 		$( "#venue-type" ).change( function(){
 			var selectionValue = $(this).val();
+			$( "#venue-title" ).show();
+			$( "#volume" ).parent().show();
+			$( "#pages" ).parent().show();
 			if( selectionValue == "conference" ){
 				$( "#venue-title>label>span" ).html( "Conference" );
 				<#--$( "#volume-container,#issue-container" ).hide();-->
-			} else if( selectionValue == "journal" || selectionValue == "book"){
+			} else if( selectionValue == "workshop" ){
+				$( "#venue-title>label>span" ).html( "Workshop" );
+			} else if( selectionValue == "journal"){
 				$( "#venue-title>label>span" ).html( "Journal" );
 				<#--$( "#volume-container,#issue-container" ).show();-->
+			} else {
+				$( "#venue-title" ).hide();
+				$( "#volume" ).parent().hide();
+				$( "#pages" ).parent().hide();
 			}
 		});
+		
+		$( "#venue-type" ).change();
 		
 		$("#venue").autocomplete({
 		    source: function (request, response) {
@@ -254,7 +348,7 @@
 	            }
 	        }
 		})
-		.autocomplete( "instance" )._renderItem = function( ul, item ) {
+		.data("ui-autocomplete")._renderItem = function( ul, item ) {
 			if( typeof item.id != "undefined" ){
 		      	return $( "<li>" + item.label + "</li>" ).appendTo( ul );
 	      	} else{
@@ -301,7 +395,7 @@
 			$.each( inputKeywords.split(","), function(index, inputKeyword ){
 	    		<#-- remove multiple spaces -->
 				inputKeyword = inputKeyword.replace(/ +(?= )/g,'').trim();
-				if( inputKeyword.length > 2 && !isTagDuplicated( '#keyword-list', inputKeyword )) {
+				if( inputKeyword.length > 2 && !isTagDuplicated( '#keywordList', inputKeyword )) {
 	      			$( inputElem ).before(
 	      				$( '<span/>' )
 	      					.addClass( "tag-item" )
@@ -516,7 +610,7 @@
 				}
 			}
 		})
-		.autocomplete( "instance" )._renderItem = function( ul, item ) {
+		.data("ui-autocomplete")._renderItem = function( ul, item ) {
 			if( typeof item.id != "undefined" ){
 				var itemElem = createAutocompleteOutput( item );
 		      	return itemElem.appendTo( ul );

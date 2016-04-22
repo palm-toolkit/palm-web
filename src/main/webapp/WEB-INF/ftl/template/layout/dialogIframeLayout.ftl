@@ -1,4 +1,4 @@
- <@layout.global classStyle="layout-top-nav skin-blue-light">
+ <@layout.global classStyle="layout-top-nav skin-blue-light overflow-visible">
 
  	<@content.contentWrapper>
  		<section class="content" style="padding:0">

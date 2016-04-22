@@ -56,8 +56,13 @@
 	        		<#assign linkLabel = "Conference">
 	        	</#if>
 		        <div class="pull-left col-xs-12 text-center">
+		        	<#if link == "circle">
+		          <a href="javascript:void(0)" id="manage-widget" class="btn btn-default btn-flat" style="width:100%;height:100%;margin-top:8px" 
+		          data-url="" data-original-url="<@spring.url '/circle/widget' />" data-title="Manage ${linkLabel?capitalize} Widgets"><i class="fa fa-th" style="margin-right:5px"></i><span style="font-weight:600;font-size:16px">${linkLabel?capitalize} Widgets</span></a>
+		        	<#else>
 		          <a href="javascript:void(0)" id="manage-widget" class="btn btn-default btn-flat" style="width:100%;height:100%;margin-top:8px" 
 		          data-url="<@spring.url '/widget' />/${link}" data-title="Manage ${linkLabel?capitalize} Widgets"><i class="fa fa-th" style="margin-right:5px"></i><span style="font-weight:600;font-size:16px">${linkLabel?capitalize} Widgets</span></a>
+		        	</#if>
 		        </div>
 		        
 <script>
@@ -82,7 +87,7 @@ $(function(){
 
 <@security.authorize access="isAnonymous()">
 	<li>	
-		<a href="javascript:void(0)" id="signin_button" title="Sign In" onclick="$.PALM.popUpAjaxModal.load( 'login?form=true' )">
+		<a href="javascript:void(0)" id="signin_button" title="Sign In" onclick="$.PALM.popUpAjaxModal.load( 'login?form=true' )"  data-toggle="tooltip" data-placement="bottom" data-original-title="Sign in">
 		<i class="fa fa-sign-in"></i>
 		<strong>Sign in</strong>
 	</a>
@@ -92,7 +97,7 @@ $(function(){
 <@security.authorize access="isAuthenticated()">
 	<#if securityService.isAuthorizedForRole( 'ADMIN' )>
 		<li<#if link?? && link == "administration"> class="open"</#if>>
-			<a href="<@spring.url '/admin' />" title="Administration">
+			<a href="<@spring.url '/admin' />" data-toggle="tooltip" data-placement="bottom" data-original-title="Admin">
 				<i class="fa fa fa-gears"></i>
 			</a>
 		</li>

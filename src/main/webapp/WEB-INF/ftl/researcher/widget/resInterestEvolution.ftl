@@ -1,24 +1,35 @@
-<div id="boxbody${wUniqueName}" class="box-body" style="height:320px;overflow:hidden">
-	researcher interest evolution
-</div>
-
-<div class="box-footer">
+<div id="boxbody${wUniqueName}" class="box-body" style="height:380px;overflow:hidden">
+	<div style="display:none" class="box-filter">
+		<div class="box-filter-option" style="display:none"></div>
+		<button class="btn btn-block btn-default box-filter-button btn-xs" onclick="$( this ).prev().slideToggle( 'slow' )">
+			<i class="fa fa-filter pull-left"></i>
+			<span>Something</span>
+		</button>
+	</div>
+	<div class="box-content">
+	</div>
 </div>
 
 <script>
 	$( function(){
 		<#-- add slimscroll to widget body -->
-//		$("#boxbody${wUniqueName}").slimscroll({
-//			height: "300px",
-//	        size: "3px"
-//	    });
-
-				<#-- set widget unique options -->
+<#--
+		$("#boxbody${wUniqueName}").slimscroll({
+			height: "300px",
+	        size: "3px"
+	    });
+-->
+		<#-- generate unique id for progress log -->
+		var uniquePidInterestEvolution = $.PALM.utility.generateUniqueId();
+		
+		<#-- set widget unique options -->
 		var options ={
 			source : "<@spring.url '/researcher/interest' />",
 			queryString : "",
 			id: "",
 			onRefreshStart: function( widgetElem ){
+				<#-- show pop up progress log -->
+				$.PALM.popUpMessage.create( "Extracting/Loading interest evolution", { uniqueId:uniquePidInterestEvolution, popUpHeight:40, directlyRemove:false , polling:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){
 			
@@ -29,11 +40,18 @@
 					$.PALM.boxWidget.refresh( interestCloudWidget.element , interestCloudWidget.options );
 				}
 				
-
-var targetContainer = $( widgetElem ).find( "#boxbody${wUniqueName}" );
+				<#-- remove  pop up progress log -->
+				$.PALM.popUpMessage.remove( uniquePidInterestEvolution );
+				
+var targetContainerContent = $( widgetElem ).find( "#boxbody${wUniqueName}" ).find( ".box-content" );
+var targetContainerFilter = $( widgetElem ).find( "#boxbody${wUniqueName}" ).find( ".box-filter" );
 
 <#-- clean target container -->
-targetContainer.html( "" );
+targetContainerContent.html( "" );
+targetContainerFilter.show();
+targetContainerFilter.find( ".box-filter-option" ).html( "" );
+targetContainerFilter.find( ".box-filter-button" ).find( "span" ).html( "" );
+
 <#-- the pointer of selected data -->
 var dataPointer = {
 	"dataProfileIndex" : 0,
@@ -45,12 +63,14 @@ var dataPointer = {
 var algorithmProfileDropDown = 
 	$( '<select/>' )
 	.attr({ "id": "algorithm_profile"})
+	.addClass( "selectpicker btn-xs" )
+	.css({ "max-width": "210px"})
 	.on( "change", function(){ getLanguagesFromProfile( $( this ).val() ) } );
 
 <#-- loop interst algorithm --> 								
 $.each( data.interest, function(index, dataAlgorithmProfile){
 	algorithmProfileDropDown.append( $( '<option/>' )
-								.attr({ "value" : index , "title" : dataAlgorithmProfile.description })
+								.attr({ "value" : index })
 								.html( (dataAlgorithmProfile.profile).replace( /\?/g,"∩") )
 							);
 });
@@ -66,37 +86,46 @@ var algorithmProfileContainer =
 	);
 
 <#-- append to container -->
-targetContainer.append( algorithmProfileContainer );
+targetContainerFilter.find( ".box-filter-option" ).append( algorithmProfileContainer );
+
+<#-- assign bootstrap select  -->
+algorithmProfileDropDown.selectpicker( 'refresh' );
 
 <#-- create dropdown interest language -->
 var interestLanguageDropDown = 
 	$( '<select/>' )
+	.css({ "max-width" : "70px" })
+	.addClass( "selectpicker btn-xs" )
 	.attr({ "id": "interest_language"})
 	.on( "change", function(){ getYearFromLanguage( $( this ).val() ) } );
 
 <#-- interest language container -->
 var interestLanguageContainer = 
-	$( "<span/>" )
+	$( "<div/>" )
 	.css({ "margin":"0 20px 0 0"})
 	.append(
-		$( "<span/>" ).html( "Language : " )
+		$( "<span/>" ).html( "Lang : " )
 	).append(
 		interestLanguageDropDown
 	);
 
 <#-- append to container -->
-targetContainer.append( interestLanguageContainer );
+targetContainerFilter.find( ".box-filter-option" ).append( interestLanguageContainer );
 
 <#-- create dropdown interest years -->
 var interestYearStartDropDown = 
 	$( '<select/>' )
+	.css({ "max-width" : "60px" })
+	.addClass( "selectpicker btn-xs" )
 	.attr({ "id": "interest_year_start"})
-	.on( "change", function(){ visualizeInterest( $( this ).val() , "startyear") } );
+	.on( "change", function(){ visualizeInterest(  $( this ).prop('selectedIndex') , "startyear") } );
 
 var interestYearEndDropDown = 
 	$( '<select/>' )
+	.css({ "max-width" : "60px" })
+	.addClass( "selectpicker btn-xs" )
 	.attr({ "id": "interest_year_end"})
-	.on( "change", function(){ visualizeInterest( $( this ).val() , "endyear") } );
+	.on( "change", function(){ visualizeInterest( $( this ).prop('selectedIndex') , "endyear") } );
 
 <#-- interest language container -->
 var interestYearContainer = 
@@ -113,7 +142,7 @@ var interestYearContainer =
 	);
 
 <#-- append to container -->
-targetContainer.append( interestYearContainer );
+targetContainerFilter.find( ".box-filter-option" ).append( interestYearContainer );
 
 <#-- on the first load, call the following functions -->
 getLanguagesFromProfile( 0 );
@@ -126,6 +155,7 @@ function getLanguagesFromProfile( profileIndex ){
 	
 	<#-- clear previous option -->
 	interestLanguageDropDown.html( "" );
+	
 	<#-- loop interst languages --> 
 	if( typeof data.interest[ dataPointer.dataProfileIndex ] != "undefined" )	{						
 		$.each( data.interest[ dataPointer.dataProfileIndex ].interestlanguages , function(index, dataInterestLanguage){
@@ -138,6 +168,8 @@ function getLanguagesFromProfile( profileIndex ){
 		<#-- call function to get the year  -->
 		getYearFromLanguage( dataPointer.dataLanguageIndex );
 	}
+	<#-- assign bootstrap select  -->
+	interestLanguageDropDown.selectpicker( 'refresh' );
 }
 
 function getYearFromLanguage( languageIndex ){
@@ -151,17 +183,25 @@ function getYearFromLanguage( languageIndex ){
 	<#-- loop interst years -->
 	var countYear = data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears.length;
 	
-	if( countYear > 0 ){
+	if( countYear > 1 ){
 
 		$.each( data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears , function(index, dataInterestYear){
-			interestYearStartDropDown.append( $( '<option/>' )
+			var optionYearStart = $( '<option/>' )
 								.attr({ "value" : index  })
-								.html( dataInterestYear.year )
-							);
-			interestYearEndDropDown.append( $( '<option/>' )
+								.html( dataInterestYear.year );
+			if( index == data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears.length - 1 )
+				optionYearStart.attr('disabled','disabled');		
+								
+			interestYearStartDropDown.append( optionYearStart );	
+			
+			var optionYearEnd = $( '<option/>' )
 								.attr({ "value" : index  })
-								.html( dataInterestYear.year )
-							);
+								.html( dataInterestYear.year );
+			
+			if( index == 0 )
+				optionYearEnd.attr('disabled','disabled');	
+								
+			interestYearEndDropDown.append( optionYearEnd );
 		});
 		<#-- change selected index of end year -->
 		interestYearEndDropDown.children().eq( countYear - 1 ).attr( 'selected',true );
@@ -169,31 +209,49 @@ function getYearFromLanguage( languageIndex ){
 		dataPointer.dataYearStart = 0,
 		dataPointer.dataYearEnd = countYear - 1;
 		visualizeInterest( 0, "startyear");
+	} else {
+		$("#widget-${wUniqueName}").find( ".box-content" ).append( "Insufficient data to visualze interest evolution" );
 	}
+	<#-- assign bootstrap select  -->
+	interestYearStartDropDown.selectpicker( 'refresh' );
+	interestYearEndDropDown.selectpicker( 'refresh' );
 }
 
 <#-- Most of this code is copied from internet -->
 <#-- forgot the source url though...  -->
 function visualizeInterest( yearIndex , yearType ){
 
-	var mainContainer = $("#widget-${wUniqueName}").find( ".box-body" );
+	var mainContainer = $("#widget-${wUniqueName}").find( ".box-content" );
 	<#-- remove previous svg if exist -->
 	mainContainer.find( ".svg-container").remove();
 	
 	if( yearType == "startyear"){
-		if( dataPointer.dataYearEnd < yearIndex ){
-			dataPointer.dataYearEnd = yearIndex;
-			interestYearEndDropDown.children().eq( dataPointer.dataYearEnd ).attr( 'selected',true );
+		if( dataPointer.dataYearEnd <= yearIndex ){
+			dataPointer.dataYearEnd = yearIndex + 1;
+			interestYearEndDropDown.val( dataPointer.dataYearEnd );
+			interestYearEndDropDown.selectpicker( 'refresh' );
 		}
 		dataPointer.dataYearStart = yearIndex;
 	}
 	else{
-		if( dataPointer.dataYearStart > yearIndex ){
-			dataPointer.dataYearStart = yearIndex;
-			interestYearStartDropDown.children().eq( dataPointer.dataYearStart ).attr( 'selected',true );
+		if( dataPointer.dataYearStart >= yearIndex ){
+			dataPointer.dataYearStart = yearIndex - 1;
+			interestYearStartDropDown.val( dataPointer.dataYearStart );
+			interestYearStartDropDown.selectpicker( 'refresh' );
 		}
 		dataPointer.dataYearEnd = yearIndex;
 	}
+	<#-- set filter button label  -->
+	targetContainerFilter
+		.find( ".box-filter-button" )
+		.find( "span" )
+		.html( 
+			(data.interest[ dataPointer.dataProfileIndex ].profile).replace( /\?/g,"∩") + ", " +
+			data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].language + ", " +
+			data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears[dataPointer.dataYearStart].year + "-" +
+			data.interest[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears[dataPointer.dataYearEnd].year
+		);
+		
 	<#-- construct the data for interest cloud -->
 	var streamChartData = [];
 	var maximumSize = 0;
@@ -261,18 +319,19 @@ var fill = d3.scale.category20();
 //    .attr("class", "d3-tooltip")				
 //    .style("opacity", 0);
 
-var tooltip = d3.select("#widget-${wUniqueName} .box-body")
+var tooltip = d3.select("#widget-${wUniqueName} .box-content")
     .append("div")
     .attr("class", "remove")
-    .style("position", "absolute")
+    .style("position", "relative")
     .style("z-index", "20")
     .style("visibility", "hidden")
-    .style("top", "80px")
-    .style("left", "80px")
+    .style("top", "0px")
+    .style("height", "0")
+    .style("left", "30px")
     .style("font-weight", "bold");
 	
 margin = {top: 20, right: 20, bottom: 20, left: 10};
-    width = $("#widget-${wUniqueName} .box-body").width() - margin.left - margin.right;
+    width = $("#widget-${wUniqueName} .box-content").width() - margin.left - margin.right;
     height = 250 - margin.top - margin.bottom;
 
     colorrange = ["#B30000", "#E34A33", "#FC8D59", "#FDBB84", "#FDD49E", "#FEF0D9"];
@@ -316,7 +375,7 @@ margin = {top: 20, right: 20, bottom: 20, left: 10};
         .y1(function(d) { return y(d.y0 + d.y); });
 
     svg = d3
-    .select("#widget-${wUniqueName} .box-body")
+    .select("#widget-${wUniqueName} .box-content")
      .append("div")
       .classed("svg-container", true) //container class to make it responsive
       .append("svg")
@@ -429,136 +488,6 @@ margin = {top: 20, right: 20, bottom: 20, left: 10};
                         })
                 });
 
-	<#-- remove previous svg if exist -->
-<#--
-	$("#widget-${wUniqueName} .box-body").find( "#streamChart").remove();
-		var format = d3.time.format("%Y");
-		
-		var margin = {top: 20, right: 25, bottom: 60, left: 25},
-		    width = 600,
-		    height = 400;
-		
-		var x = d3.time.scale()
-		    .range([0, width]);
-		
-		var y = d3.scale.linear()
-		    .range([height, 0]);
-		
-		var z = d3.scale.category20();//Constructs a new ordinal scale with a range of twenty categorical colors: #3182bd #6baed6 #9ecae1 #c6dbef #e6550d #fd8d3c #fdae6b #fdd0a2 #31a354 #74c476 #a1d99b #c7e9c0 #756bb1 #9e9ac8 #bcbddc #dadaeb #636363 #969696 #bdbdbd #d9d9d9.
-		
-		var xAxis = d3.svg.axis()
-		    .scale(x)
-		    .orient("bottom");
-		
-		var yAxis = d3.svg.axis()
-		    .scale(y)
-		    .orient("left")
-		    .tickValues();
-		    
-		
-		var stack = d3.layout.stack()
-		    .offset("zero")
-		    .values(function(d) { return d.values; })
-		    .x(function(d) { return d.date; })
-		    .y(function(d) { return d.value; });
-		
-		var nest = d3.nest()
-		    .key(function(d) { return d.key; });
-		
-		var area = d3.svg.area()
-		    .interpolate("cardinal")
-		    .x(function(d) { return x(d.date); })
-		    .y0(function(d) { return y(d.y0); })
-		    .y1(function(d) { return y(d.y0 + d.y); });
-		
-		var svg = d3
-			.select("#widget-${wUniqueName} .box-body")
-			.append("svg")
-		    .attr("width", width + margin.left + margin.right)
-		    .attr("height", height + margin.top + margin.bottom)
-			.attr( "id", "streamChart")
-		    .append("g")
-		    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-		
-		  data.forEach(function(d) {
-		    d.date = format.parse(d.date);
-		    d.value = +d.value;
-		  });
-		
-		  var layers = stack(nest.entries(data));		  				 
-		  //console.log(layers);
-		  
-		  x.domain(d3.extent(data, function(d) { return d.date; }));
-		  y.domain([0, d3.max(data, function(d) { return d.y0 + d.y; })]);
-		
-		  var dataLayerEnter = svg.selectAll(".layer")
-		      .data(layers)
-		      .enter().append("path")
-		      .attr("class", "layer")
-		      .attr("d", function(d) { return area(d.values); })
-		      .style("fill","black")
-		  
-			.on("mouseover", function(d, i) {
-			      svg.selectAll(".layer").transition()
-			      .duration(250)
-			      .attr("opacity", function(d, j) {
-			        return j != i ? 0.6 : 1;
-			    })})
-
-		    .on("mousemove", function(d, i) {
-		      mousex = d3.mouse(this);
-		      mousex = mousex[0];
-		      var invertedx = x.invert(mousex);
-		      invertedx = invertedx.getMonth() + invertedx.getDate();
-		      var selected = (d.values);
-		      for (var k = 0; k < selected.length; k++) {
-		        datearray[k] = selected[k].date
-		        datearray[k] = datearray[k].getMonth() + datearray[k].getDate();
-		      }
-		
-		      mousedate = datearray.indexOf(invertedx);
-		      pro = d.values[mousedate].value;
-		
-		      d3.select(this)
-		      .classed("hover", true)
-		      .attr("stroke", strokecolor)
-		      .attr("stroke-width", "0.5px"), 
-		      tooltip.html( "<p>" + d.key + "<br>" + pro + "</p>" ).style("visibility", "visible");
-		      
-		    })
-		    .on("mouseout", function(d, i) {
-		     svg.selectAll(".layer")
-		      .transition()
-		      .duration(250)
-		      .attr("opacity", "1");
-		      d3.select(this)
-		      .classed("hover", false)
-		      .attr("stroke-width", "0px"), tooltip.html( "<p>" + d.key + "<br>" + pro + "</p>" ).style("visibility", "hidden");
-		  });  
-				  
-				  
-				  
-			dataLayerEnter.append("title").text(function(d) {return d.key+": "+"[2008:"+d.values[0].value+"]"+"[2009:"+d.values[1].value+"]"+"[2010:"+d.values[2].value+"]"+"[2011:"+d.values[3].value+"]"+"[2012:"+d.values[4].value+"]"+"[2013:"+d.values[5].value+"]"+" papers"});	  				 
-					  		
-		
-		  			  				 
-		  svg.selectAll(".layer")
-		      .data(layers)
-		      .transition()
-		      .style("fill", function(d, i) { return z(i); })
-		      .style("opacity", 0.80)
-		      .duration(2000);
-		      
-		  svg.append("g")
-		      .attr("class", "x axis")
-		      .attr("transform", "translate(0," + height + ")")
-		      .call(xAxis);
-		
-		  svg.append("g")
-		      .attr("class", "y axis")
-		      .call(yAxis)
-		      .data(layers);
--->
 	}
 							
 			} <#-- end on refresh done -->

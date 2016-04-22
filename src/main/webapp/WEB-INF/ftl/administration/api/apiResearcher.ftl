@@ -1,6 +1,3 @@
-<@security.authorize access="isAuthenticated()">
-	<#assign loggedUser = securityService.getUser() >
-</@security.authorize>
 <div id="boxbody${wUniqueName}" class="box-body no-padding">
 
   <div class="box-group" id="accordion">

@@ -12,7 +12,7 @@
         
         <#-- Conference/Journal -->
 		<div id="venue-title" class="form-group">
-          <label><span>Conference</span> Name </label>
+          <label><span>Conference</span> Name *</label>
           <div style="width:100%">
 	          <span style="display:block;overflow:hidden;padding:0 5px">
 	          	<input type="text" id="name" name="name" class="form-control" value="${eventGroup.name}">
@@ -33,6 +33,11 @@
 	      <label>Description</label>
 	      <textarea name="description" id="description" class="form-control" rows="3" placeholder="Description"></textarea>
 	    </div>
+	    
+	    <div class="pull-left">
+          * Mandatory fields
+        </div>
+	<div id="error-div"></div>
 
 	</form>
 </div>
@@ -53,6 +58,12 @@
 		
 		<#-- jquery post on button click -->
 		$( "#submit" ).click( function(){
+			<#-- todo check input valid -->
+			if( $( "#name" ).val() == "" ){
+				$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>Please fill all required field (Conference/Journal name)</strong>")
+				return false;
+			}
+			
 			<#-- add overlay  -->
 			$( "#boxbody${wUniqueName}" ).parent().append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 			<#-- todo check input valid -->

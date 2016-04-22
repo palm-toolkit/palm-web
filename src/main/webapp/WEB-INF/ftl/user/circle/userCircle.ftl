@@ -111,6 +111,29 @@
 												.html( itemCircle.description )
 											)
 										);
+										
+								
+									<#-- circleDetailOption -->
+									var circleDetailOption = $('<div/>').addClass( "option" );
+									<#-- fill circle detail option -->
+									<#-- remove circle button -->
+									var circleDeleteButton = $('<button/>')
+										.addClass( "btn btn-danger btn-xs width130px pull-right" )
+										.attr({ "data-id": itemCircle.id, "title":"remove " + itemCircle.title + " from PALM database" })
+										.html( "delete circle" )
+										.on( "click", function( e ){
+											e.preventDefault();
+											if ( confirm("Do you really want to remove this circle?") ) {
+											    $.post( "<@spring.url '/circle/delete' />", { id:itemCircle.id }, function( data ){
+											    	if( data.status == "ok")
+											    		location.href= "<@spring.url '/user' />?page=circle";
+											    } )
+											}
+										});
+									
+									circleDetailOption.append( circleDeleteButton );
+									
+									circleDetail.append( circleDetailOption );
 
 									<#-- append to item -->
 									circleItem.append( circleDetail );

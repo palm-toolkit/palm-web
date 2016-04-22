@@ -63,6 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
             			"/api/**", 
             			"/analytics/**", 
             			"/circle/**", 
+						"/menu/**",
             			"/data/**", 
             			"/developer/**", 
             			"/extraction/**",

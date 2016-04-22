@@ -25,6 +25,7 @@
 			onRefreshStart: function( widgetElem ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
+			
 
 var calloutWarning = $( widgetElem ).find( "#boxbody${wUniqueName}" ).find( ".callout-warning" );
 var tabContainer = $( widgetElem ).find( "#boxbody${wUniqueName}" ).find( ".nav-tabs-custom" );
@@ -41,7 +42,7 @@ if( data.status != "ok" )
 	alertCallOutWarning( "An error occurred", "Failed to show publication topic composition" );
 	
 if( typeof data.topics === "undefined" || data.topics.length == 0){
-	alertCallOutWarning( "Publication contain no topics", "Topics mining only performed on complete publication with abstract" );
+	alertCallOutWarning( "Publication contain no topics", "Topics extraction only performed on complete publication with English abstract or currently the system is unable to extract topics from this publication." );
 	return false;
 }
 <#-- show tab -->
@@ -160,7 +161,6 @@ function visualizeTermValue( termValueMap, svgContainer )
 	<#-- D3 helper function to draw arcs, populates parameter "d" in path object -->
 	var arc = d3.svg.arc()
 	  .startAngle(function(d){ 
-	  		console.log( d )
 	  		return d.startAngle; 
 	  })
 	  .endAngle(function(d){ 
