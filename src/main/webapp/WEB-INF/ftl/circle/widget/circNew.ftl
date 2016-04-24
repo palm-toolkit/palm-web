@@ -202,6 +202,11 @@
 		-->
 
 		function publicationSearch( query , jumpTo ){
+			var publicationListContainer = $( "#inputPub" ).find( ".content-list" );
+			if( query.trim() == "" ){
+				publicationListContainer.html( "" );
+				return false;
+			}
 			<#--
 				var maxPage = parseInt($( obj.element ).find( "span.total-page" ).html()) - 1;
 				if( jumpTo === "next")
@@ -246,8 +251,14 @@
 				<#-- button search loading -->
 				$( "#publication_search_button" ).find( "i" ).removeClass( "fa-refresh fa-spin" ).addClass( "fa-search" );
 
+<#--
 				var $pageDropdown = $( "#inputPub" ).find( "select.page-number" );
 				$pageDropdown.find( "option" ).remove();
+-->			
+				if( data.count == 0 ){
+					$.PALM.callout.generate( publicationListContainer , "warning", "Empty search results!", "No publications found with query \"" + data.query + "\"" );
+					return false;
+				}
 				
 				if( data.count > 0 ){
 					<#-- put data into PALM.circle object -->
@@ -423,6 +434,7 @@
 		<#-- get publication list -->
 		<#--researcherSearch( "" , "first" );-->
 		$.PALM.callout.generate( $( "#inputAuth" ).find( ".content-list" ) , "normal", "Please search first to get the researchers" );
+		$.PALM.callout.generate( $( "#inputPub" ).find( ".content-list" ) , "normal", "Please search first to get the publications" );
 
 		<#-- event for searching researcher -->
 		
@@ -453,6 +465,13 @@
 		
 		
 		function researcherSearch( query , jumpTo ){
+			
+			var targetContainer = $( "#inputAuth" ).find( ".content-list" );
+			if( query.trim() == "" )
+			{
+				targetContainer.html( "" );
+				return false;
+			}
 			<#--//find the element option-->
 			<#--
 				var maxPage = parseInt($( obj.element ).find( "span.total-page" ).html()) - 1;
