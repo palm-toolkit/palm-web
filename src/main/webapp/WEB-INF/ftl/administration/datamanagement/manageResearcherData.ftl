@@ -221,6 +221,24 @@
 									
 								<#-- researcherDetailOption -->
 								var researcherDetailOption = $('<div/>').addClass( "option" );
+								
+								<#-- fill researcher detail option -->
+								var removeDuplicatedPublication = $('<button/>')
+									.addClass( "btn btn-default btn-xs width130px pull-left" )
+									.attr({ "data-id": item.id, "data-name": item.name, "title":"remove duplicated publications and researcher's sources from researcher " + item.name })
+									.html( "remove duplicated publications" )
+									.on( "click", function( e ){
+										e.preventDefault();
+										if ( confirm("Do you want to remove duplicated publications and researcher's sources from researcher " + item.name+ "? If yes, you will redirected to researcher page") ) {
+										    $.post( "<@spring.url '/researcher/removeDuplicatedPublication' />", { id:item.id }, function( data ){
+										    	if( data.status == "ok")
+										    		window.location.href = "<@spring.url '/researcher' />?id=" + item.id + "&name=" + item.name ;
+										    } )
+										}
+									});
+								
+								researcherDetailOption.append( removeDuplicatedPublication );
+								
 								<#-- fill researcher detail option -->
 								var reCollectPublication = $('<button/>')
 									.addClass( "btn btn-default btn-xs width130px pull-left" )

@@ -449,54 +449,146 @@
 					researcherListWidget.element.find( "#" + authorId ).find( ".paper" ).html( updatedPublicationNumber );
 			}
 -->			
-			<#-- widget researcher_interest_cloud and researcher_interest_evolution can not run simultaneusly together,
-			therefore put it in order -->
-			var isInterestCloudWidgetExecuted = false;
-			var isInterestEvolutionWidgetExecuted = false;
-			var isTopicModelCloudWidgetExecuted = false;
-			var isTopicModelEvolutionWidgetExecuted = false;
-			<#-- refresh registered widget -->
-			$.each( $.PALM.options.registeredWidget, function(index, obj){
-				if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
-					obj.options.queryString = "?id=" + authorId;
-					<#-- special for publication list, set only query recent 10 publication -->
-					if( obj.selector === "#widget-researcher_publication" )
-						obj.options.queryString += "&maxresult=10";
-						
-					<#-- check for cloud and evolution widget -->
-					if( obj.selector === "#widget-researcher_interest_cloud" && isInterestEvolutionWidgetExecuted )
-						return;
-					else if( obj.selector === "#widget-researcher_interest_evolution" && isInterestCloudWidgetExecuted )
-						return;
-						
-					<#-- check for cloud and evolution widget (topic model)-->
-					if( obj.selector === "#widget-researcher_topicmodel_cloud" && isTopicModelEvolutionWidgetExecuted )
-						return;
-					else if( obj.selector === "#widget-researcher_topicmodel_evolution" && isTopicModelCloudWidgetExecuted )
-						return;
+			if( data.fetchPublicationPerformed == "yes" ){
+				<#-- refresh some widgets -->
+				refreshSelectedWidget( authorId, [ "researcher_basic_information", "researcher_publication","researcher_conference_tree","researcher_publication_top","researcher_coauthor_affiliation" ] );
+				
+				<#-- get publication details -->
+				<#-- show pop up progress log -->
+				var uniquePid = $.PALM.utility.generateUniqueId();
+				
+				$.PALM.popUpMessage.create( "Extracting publication's details...", { uniqueId:uniquePid, popUpHeight:100, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
+				<#-- check and fetch publication from academic network if necessary -->
+				$.getJSON( "<@spring.url '/researcher/fetchPublicationDetail?id=' />" + authorId + "&pid=" + uniquePid + "&force=false", function( data ){
+					<#-- remove  pop up progress log -->
+					$.PALM.popUpMessage.remove( uniquePid );
 					
-					<#-- add new flag (has been executed once)  -->
-					obj.executed = true;
-					
-					<#-- refresh widget -->
-					$.PALM.boxWidget.refresh( obj.element , obj.options );
-					
-					<#-- set flag for cloud and evolution widget -->
-					if( obj.selector === "#widget-researcher_interest_cloud" )
-						isInterestCloudWidgetExecuted = true;
-					else if( obj.selector === "#widget-researcher_interest_evolution" )
-						isInterestEvolutionWidgetExecuted = true;
-						
-					<#-- set flag for cloud and evolution widget (topicmodel) -->
-					if( obj.selector === "#widget-researcher_topicmodel_cloud" )
-						isTopicModelCloudWidgetExecuted = true;
-					else if( obj.selector === "#widget-researcher_topicmodel_evolution" )
-						isTopicModelEvolutionWidgetExecuted = true;
-				}
-			});
+					if( data.fetchPublicationDetailPerformed == "yes" ){
+						refreshAllWidget( authorId );
+					} else {
+						<#-- refresh some widgets -->
+						refreshSelectedWidget( authorId, [ "researcher_interest_cloud", "researcher_interest_evolution","researcher_topicmodel_cloud","researcher_topicmodel_evolution" ] );
+					}
+				
+				}).fail(function() {
+		   	 		$.PALM.popUpMessage.remove( uniquePid );
+		  		}).always(function() {
+		   	 		$.PALM.popUpMessage.remove( uniquePid );
+		  		});
+			} else{
+				refreshAllWidget( authorId );
+			}
+
 		
 		}).fail(function() {
    	 		$.PALM.popUpMessage.remove( uniquePid );
+  		}).always(function() {
+   	 		$.PALM.popUpMessage.remove( uniquePid );
   		});
+	}
+	
+	<#-- refresh selected widget -->
+	function refreshSelectedWidget( authorId , arrayOfUniqueWidgetName){
+		
+		<#-- widget researcher_interest_cloud and researcher_interest_evolution can not run simultaneusly together,
+		therefore put it in order -->
+		var isInterestCloudWidgetExecuted = false;
+		var isInterestEvolutionWidgetExecuted = false;
+		var isTopicModelCloudWidgetExecuted = false;
+		var isTopicModelEvolutionWidgetExecuted = false;
+		
+		$.each( arrayOfUniqueWidgetName, function( index, item ){
+			var obj = $.PALM.boxWidget.getByUniqueName( item );
+			
+			<#-- if not installed just continue -->
+			if( typeof obj === "undefined" )
+				return;
+				
+			obj.options.queryString = "?id=" + authorId;
+			
+			<#-- special for publication list, set only query recent 10 publication -->
+			if( obj.selector === "#widget-researcher_publication" )
+				obj.options.queryString += "&maxresult=10";
+				
+			<#-- check for cloud and evolution widget -->
+			if( obj.selector === "#widget-researcher_interest_cloud" && isInterestEvolutionWidgetExecuted )
+				return;
+			else if( obj.selector === "#widget-researcher_interest_evolution" && isInterestCloudWidgetExecuted )
+				return;
+				
+			<#-- check for cloud and evolution widget (topic model)-->
+			if( obj.selector === "#widget-researcher_topicmodel_cloud" && isTopicModelEvolutionWidgetExecuted )
+				return;
+			else if( obj.selector === "#widget-researcher_topicmodel_evolution" && isTopicModelCloudWidgetExecuted )
+				return;
+									
+			<#-- add new flag (has been executed once)  -->
+			obj.executed = true;
+			
+			<#-- refresh widget -->
+			$.PALM.boxWidget.refresh( obj.element , obj.options );
+			
+			<#-- set flag for cloud and evolution widget -->
+			if( obj.selector === "#widget-researcher_interest_cloud" )
+				isInterestCloudWidgetExecuted = true;
+			else if( obj.selector === "#widget-researcher_interest_evolution" )
+				isInterestEvolutionWidgetExecuted = true;
+				
+			<#-- set flag for cloud and evolution widget (topicmodel) -->
+			if( obj.selector === "#widget-researcher_topicmodel_cloud" )
+				isTopicModelCloudWidgetExecuted = true;
+			else if( obj.selector === "#widget-researcher_topicmodel_evolution" )
+				isTopicModelEvolutionWidgetExecuted = true;
+		});
+		
+	}
+	
+	<#-- refresh all widget -->
+	function refreshAllWidget( authorId ) {
+		<#-- widget researcher_interest_cloud and researcher_interest_evolution can not run simultaneusly together,
+		therefore put it in order -->
+		var isInterestCloudWidgetExecuted = false;
+		var isInterestEvolutionWidgetExecuted = false;
+		var isTopicModelCloudWidgetExecuted = false;
+		var isTopicModelEvolutionWidgetExecuted = false;
+		<#-- refresh registered widget -->
+		$.each( $.PALM.options.registeredWidget, function(index, obj){
+			if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
+				obj.options.queryString = "?id=" + authorId;
+				<#-- special for publication list, set only query recent 10 publication -->
+				if( obj.selector === "#widget-researcher_publication" )
+					obj.options.queryString += "&maxresult=10";
+					
+				<#-- check for cloud and evolution widget -->
+				if( obj.selector === "#widget-researcher_interest_cloud" && isInterestEvolutionWidgetExecuted )
+					return;
+				else if( obj.selector === "#widget-researcher_interest_evolution" && isInterestCloudWidgetExecuted )
+					return;
+					
+				<#-- check for cloud and evolution widget (topic model)-->
+				if( obj.selector === "#widget-researcher_topicmodel_cloud" && isTopicModelEvolutionWidgetExecuted )
+					return;
+				else if( obj.selector === "#widget-researcher_topicmodel_evolution" && isTopicModelCloudWidgetExecuted )
+					return;
+				
+				<#-- add new flag (has been executed once)  -->
+				obj.executed = true;
+				
+				<#-- refresh widget -->
+				$.PALM.boxWidget.refresh( obj.element , obj.options );
+				
+				<#-- set flag for cloud and evolution widget -->
+				if( obj.selector === "#widget-researcher_interest_cloud" )
+					isInterestCloudWidgetExecuted = true;
+				else if( obj.selector === "#widget-researcher_interest_evolution" )
+					isInterestEvolutionWidgetExecuted = true;
+					
+				<#-- set flag for cloud and evolution widget (topicmodel) -->
+				if( obj.selector === "#widget-researcher_topicmodel_cloud" )
+					isTopicModelCloudWidgetExecuted = true;
+				else if( obj.selector === "#widget-researcher_topicmodel_evolution" )
+					isTopicModelEvolutionWidgetExecuted = true;
+			}
+		});
 	}
 </script>

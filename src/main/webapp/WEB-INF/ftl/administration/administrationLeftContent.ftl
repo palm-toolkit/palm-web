@@ -90,19 +90,6 @@
       </ul>
     </li>
     
-    <#-- Topic Modeling -->
-    <li class="treeview" data-link="topicmodel">
-      <a href="#">
-        <i class="fa fa-th"></i>
-        <span>Topic Modeling</span>
-		<i class="fa fa-angle-left pull-right"></i>
-      </a>
-      <ul class="treeview-menu">
-        <li data-link="author"><a href="<@spring.url '/admin/topicmodel/author' />"><i class="fa fa-caret-right"></i>Researcher</a></li>
-        <li data-link="circle"><a href="<@spring.url '/admin/topicmodel/circle' />"><i class="fa fa-caret-right"></i>Circle</a></li>
-      </ul>
-    </li>
-    
     <#-- User -->
     <li class="treeview" data-link="manageuser">
       <a href="<@spring.url '/admin/user' />">
@@ -127,6 +114,7 @@
     </li>
     
     <#-- Database -->
+	<#--
     <li class="treeview" data-link="database">
       <a href="#">
         <i class="fa fa-database"></i>
@@ -135,11 +123,10 @@
       </a>
       <ul class="treeview-menu">
          <li data-link="index"><a href="<@spring.url '/admin/data/index' />"><i class="fa fa-table"></i>Indexing</a></li>
-         <#--
          <li data-link="migration"><a href="<@spring.url '/admin/data/migration' />"><i class="fa fa-check-circle"></i>Migration</a></li>
-         -->
       </ul>
     </li>
+	-->
 
     <#-- Developer corner -->
     <li class="treeview" data-link="developer">
@@ -149,12 +136,28 @@
 		<i class="fa fa-angle-left pull-right"></i>
       </a>
       <ul class="treeview-menu">
+      	<#--
         <li data-link="architecture"><a href="<@spring.url '/developer/architecture' />"><i class="fa fa-building-o"></i>Architecture Overview</a></li>
         <li data-link="technologies"><a href="<@spring.url '/developer/technology' />"><i class="fa fa-asterisk"></i>Technologies</a></li>
+        -->
         <li data-link="documentation"><a href="<@spring.url '/developer/documentation' />"><i class="fa fa-file-o"></i>Documentation</a></li>
         <li data-link="credit"><a href="<@spring.url '/developer/credit' />"><i class="fa fa-users"></i>Introduction & Credit</a></li>
       </ul>
     </li>
+    
+    <#-- Topic Modeling -->
+    <li class="treeview" data-link="topicmodel" style="margin-top:30px">
+      <a href="#">
+        <i class="fa fa-th"></i>
+        <span>Topic Modeling (Piro Lena part)</span>
+		<i class="fa fa-angle-left pull-right"></i>
+      </a>
+      <ul class="treeview-menu">
+        <li data-link="author"><a href="<@spring.url '/admin/topicmodel/author' />"><i class="fa fa-caret-right"></i>Researcher</a></li>
+        <li data-link="circle"><a href="<@spring.url '/admin/topicmodel/circle' />"><i class="fa fa-caret-right"></i>Circle</a></li>
+      </ul>
+    </li>
+    
     
   </ul>
 </section>

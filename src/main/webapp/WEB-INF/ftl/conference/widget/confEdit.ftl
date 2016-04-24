@@ -1,12 +1,13 @@
 <div id="boxbody${wUniqueName}" class="box-body">
 	 <form role="form" id="editVenue" action="<@spring.url '/venue/eventGroup/edit' />" method="post">
 		
+		<input type="hidden" name="eventId" value="${eventId}" />
 		<#-- Venue -->
 		<div class="form-group">
           <label>Conference Type </label>
           <select id="type" name="type" class="form-control" style="width:120px">
             <option value="conference">Conference / Workshop</option>
-            <option value="journal"<#if eventGroup.publicationType?? && eventGroup.publicationType == "JOURNAL"> selected</#if>>Journal</option>
+            <option value="journal"<#if pubType?? && pubType == "JOURNAL"> selected</#if>>Journal</option>
           </select>
         </div>
         
@@ -15,7 +16,7 @@
           <label><span>Conference</span> Name *</label>
           <div style="width:100%">
 	          <span style="display:block;overflow:hidden;padding:0 5px">
-	          	<input type="text" id="name" name="name" class="form-control" value="${eventGroup.name}">
+	          	<input type="text" id="name" name="name" class="form-control" value="${name}">
 	          </span>
 	      </div>
         </div>
@@ -24,7 +25,7 @@
 		<div class="form-group" style="width:100%;float:left">
 			<div id="venue-abbr-container" class="col-xs-2 minwidth150Px">
 				<label><span>Conference</span> Abbr.</label>
-				<input type="text" id="notation" name="notation" class="form-control" value="${eventGroup.notation}">
+				<input type="text" id="notation" name="notation" class="form-control" value="<#if notation??>${notation}</#if>">
 			</div>
 		</div>
 
