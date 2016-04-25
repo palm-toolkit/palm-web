@@ -55,7 +55,7 @@
 	                							.attr({"class":"fa fa-user-plus"})
 	                					)
 	                					.append(
-	                						"<strong>Follow</strong>"
+	                						"<strong>Bookmark</strong>"
 	                					);
 	                			
 						targetContainer.append( butBook );
@@ -70,7 +70,7 @@
 	                							.attr({"class":"fa fa-check"})
 	                					)
 	                					.append(
-	                						"<strong>Followed</strong>"
+	                						"<strong>Booked</strong>"
 	                					);
 	                			
 						targetContainer.append( butBook );

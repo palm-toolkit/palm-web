@@ -8,6 +8,7 @@
 		<div class="form-group">
 	      <label><i style="width: 20px;" class="fa fa-user"></i>Name *</label>
 	      <input type="text" id="name" name="name" value="" class="form-control" placeholder="researcher name" />
+	      <span class="font-xs">Note: Please select researcher from the auto-complete. Auto-complete will automatically be trigerred after typing 3rd letter.
 	    </div>
 
 		<#-- academic status -->

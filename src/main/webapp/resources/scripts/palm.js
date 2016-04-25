@@ -1366,11 +1366,11 @@ $.PALM.bookmark = {
 			   	.addClass( "active" );
 			   // change label
 			   if( type == "researcher" ){
-				   bookButton.find( "i" ).removeClass( "fa-user-plus" ).addClass( "fa-check" );
-				   bookButton.find( "strong" ).html( "Followed" );
+				   bookButton.find( "i" ).removeClass( "fa-bookmark" ).addClass( "fa-check" );
+				   bookButton.find( "strong" ).html( "Booked" );
 			   } else {
 				   bookButton.find( "i" ).removeClass( "fa-bookmark" ).addClass( "fa-check" );
-				   bookButton.find( "strong" ).html( "Bookmarked" );
+				   bookButton.find( "strong" ).html( "Booked" );
 			   }
 		   }
 		   _this.ajaxRunning = false;
@@ -1386,7 +1386,7 @@ $.PALM.bookmark = {
 			   // change label
 			   if( type == "researcher" ){
 				   bookButton.find( "i" ).removeClass( "fa-check" ).addClass( "fa-user-plus" );
-				   bookButton.find( "strong" ).html( "Follow" );
+				   bookButton.find( "strong" ).html( "Bookmark" );
 			   } else {
 				   bookButton.find( "i" ).removeClass( "fa-check" ).addClass( "fa-bookmark" );
 				   bookButton.find( "strong" ).html( "Bookmark" );

@@ -39,7 +39,7 @@
     <li class="treeview" data-link="bookmarkauthor">
       <a href="<@spring.url '/user/book/author' />">
         <i class="fa fa-file-text-o"></i>
-        <span>Following Researchers</span>
+        <span>My Researcher Bookmarks</span>
       </a>
     </li>
     
