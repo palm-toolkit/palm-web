@@ -48,10 +48,26 @@
 			<#-- add slim scroll -->
 	      $(".content-list").slimscroll({
 				height: "100%",
-		        size: "3px",
+		        size: "5px",
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50
 		  });
+		  
+		  var widgetHeader = $("#widget-${wUniqueName} h3");
+		  
+		  <#if targetName??>
+		  	widgetHeader
+		  	.html( "<i class='fa fa-arrow-left'></i>&nbsp;&nbsp;All researchers" )
+		  	//.attr({ "class":"urlstyle" })
+		  	.css({ "cursor":"pointer"})
+	    	.click( function(){ window.location.href = "<@spring.url '/researcher' />"});
+	    	
+	    	widgetHeader
+	    	.parent()
+	    	.attr({ "class":"urlstyle" })
+	    	.css({ "cursor":"auto"});
+		  </#if>
+	    	
 		  <#--
 		   $(".content-wrapper>.content").slimscroll({
 				height: "100%",
@@ -119,7 +135,7 @@
 		});
 
 		<#-- generate unique id for progress log -->
-		//var uniquePidResearcherWidget = $.PALM.utility.generateUniqueId();
+		var uniquePidResearcherWidget = $.PALM.utility.generateUniqueId();
 		
 		<#-- unique options in each widget -->
 		var options ={
@@ -130,12 +146,12 @@
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
 				<#-- show pop up progress log -->
-				//$.PALM.popUpMessage.create( "loading researchers...", { uniqueId:uniquePidResearcherWidget, popUpHeight:40, directlyRemove:false});
+				$.PALM.popUpMessage.create( "loading researchers...", { uniqueId:uniquePidResearcherWidget, popUpHeight:40, directlyRemove:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){	
 							var targetContainer = $( widgetElem ).find( ".content-list" );
 							<#-- remove  pop up progress log -->
-							//$.PALM.popUpMessage.remove( uniquePidResearcherWidget );
+							$.PALM.popUpMessage.remove( uniquePidResearcherWidget );
 
 							<#-- check for error  -->
 							<#--

@@ -78,6 +78,21 @@
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50
 		  });
+		  
+		   var widgetHeader = $("#widget-${wUniqueName} h3");
+		  
+		  <#if targetTitle??>
+		  	widgetHeader
+		  	.html( "<i class='fa fa-arrow-left'></i>&nbsp;&nbsp;All publications" )
+		  	//.attr({ "class":"urlstyle" })
+		  	.css({ "cursor":"pointer"})
+	    	.click( function(){ window.location.href = "<@spring.url '/publication' />"});
+	    	
+	    	widgetHeader
+	    	.parent()
+	    	.attr({ "class":"urlstyle" })
+	    	.css({ "cursor":"auto"});
+		  </#if>
 		  <#--
 		   $(".content-wrapper>.content").slimscroll({
 				height: "100%",

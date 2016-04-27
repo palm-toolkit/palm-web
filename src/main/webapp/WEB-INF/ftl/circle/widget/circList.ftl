@@ -6,7 +6,7 @@
 	<div class="box-tools">
 		<div class="input-group" style="width: 100%;">
 	      <input type="text" id="circle_search_field" name="circle_search_field" class="form-control input-sm pull-right" 
-	      placeholder="Search circle on database"/>
+	      placeholder="Search circle on database" value="<#if targetName??>${targetName!''}</#if>"/>
 	      <div id="circle_search_button" class="input-group-btn">
 	        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
 	      </div>
@@ -48,6 +48,19 @@
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50
 		  });
+		  
+		   var widgetHeader = $("#widget-${wUniqueName} h3");
+		  <#if targetName??>
+		  	widgetHeader
+		  	.html( "<i class='fa fa-arrow-left'></i>&nbsp;&nbsp;All circles" )
+		  	.css({ "cursor":"pointer"})
+	    	.click( function(){ window.location.href = "<@spring.url '/circle' />"});
+	    	
+	    	widgetHeader
+	    	.parent()
+	    	.attr({ "class":"urlstyle" })
+	    	.css({ "cursor":"auto"});
+		  </#if>
 		  <#--
 		   $(".content-wrapper>.content").slimscroll({
 				height: "100%",
