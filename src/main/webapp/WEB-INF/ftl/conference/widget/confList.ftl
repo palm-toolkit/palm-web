@@ -151,6 +151,9 @@
 		<#-- generate unique id for progress log -->
 		var uniquePidVenueWidget = $.PALM.utility.generateUniqueId();
 		
+		<#-- flag first en´vent active  -->
+		var isFirstEventActive = false;
+		
 		var options ={
 			source : "<@spring.url '/venue/search' />",
 			query: "",
@@ -293,10 +296,18 @@
 										if( typeof eventObj.id != "undefined" && eventObj.id != "" && eventObj.id == itemEvent.id ){
 											getVenueGroupDetails( eventObj.id , eventGroup , itemEvent.name);
 											eventObj.id = "";
+											isFirstEventActive = true;
 										}
 										else{
 											//if( index == 0 )
 											//	getVenueGroupDetails( itemEvent.id , eventGroup , itemEvent.name);
+											<#-- hide others if search conference has value-->
+											<#if targetName??>
+												if( isFirstEventActive){
+													eventGroup.hide();
+													data.totalCount--;
+												}
+											</#if>
 										}
 									} else {
 										<#--if( data.count == 0 ){-->
