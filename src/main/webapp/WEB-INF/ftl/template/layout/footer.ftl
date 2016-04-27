@@ -11,7 +11,7 @@
 </#if>
 
 <#if templateService.isWidgetActive( "menu_introduction" )>
-<span id="menu-introduction" class="footer-item urlstyle" title="Introduction" data-url="<@spring.url '/menu/introduction' />" >
+<span id="menu-introduction" class="footer-item urlstyle" title="About PALM" data-url="<@spring.url '/menu/introduction' />" >
 	About PALM
 </span>
 </#if>
