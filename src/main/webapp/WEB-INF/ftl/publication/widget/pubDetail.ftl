@@ -17,7 +17,7 @@
 			</li>
 			<li id="header_htmlpdf">
 				<a href="#tab_publicationhtmlpdf" data-toggle="tab" aria-expanded="true">
-					Web & Pdf
+					Resources
 					<span data-toggle="tooltip" data-placement="bottom" data-html="true" data-original-title="The links to digital libraries pages and PDF files of this publication, such as IEEE.explorer, acm.org, DOI, etc.">
 						&nbsp;<i class="fa fa-info-circle"></i>
 					</span>
@@ -87,8 +87,9 @@
 					if( isFilesAvailable ){
 						
 						var improveInfoButton = $('<a/>')
-													.addClass( "btn btn-block btn-social btn-twitter btn-sm width220px pull-right" )
-													.html( "<strong>Improve Abstract & Keywords</strong>" )
+													.addClass( "btn btn-block btn-social btn-twitter btn-sm pull-right" )
+													.html( "<strong>Improve Abstract & Keywords by Resources</strong>" )
+													.css( "width","290px")
 													.click( function(){
 														<#-- change tab if necessary -->
 														$('a[href="#tab_publicationresult"]').tab('show');
@@ -594,7 +595,7 @@
 															.append(
 																 $( '<h3/>' )
 																 	.addClass( "box-title" )
-																	.html( "Improve Abstract and Keywords" )
+																	.html( "Improve Abstract and Keywords by Resources" )
 																)
 														);
 														

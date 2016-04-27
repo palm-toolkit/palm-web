@@ -155,7 +155,7 @@
 				filterContainer.append( filterYear );
 				mainContainer.append( filterContainer );
 				
-				filterSearch.find( "#publist-search" ).focus();
+				//filterSearch.find( "#publist-search" ).focus();
 				
 				if ( typeof data.publications === 'undefined') {
 					<#--alert( "error, no publication found" );-->

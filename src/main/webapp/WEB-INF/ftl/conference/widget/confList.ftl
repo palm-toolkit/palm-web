@@ -73,6 +73,20 @@
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50
 		  });
+		  
+		   var widgetHeader = $("#widget-${wUniqueName} h3");
+		  <#if targetName??>
+		  	widgetHeader
+		  	.html( "<i class='fa fa-arrow-left'></i>&nbsp;&nbsp;All conferences" )
+		  	//.attr({ "class":"urlstyle" })
+		  	.css({ "cursor":"pointer"})
+	    	.click( function(){ window.location.href = "<@spring.url '/venue' />"});
+	    	
+	    	widgetHeader
+	    	.parent()
+	    	.attr({ "class":"urlstyle" })
+	    	.css({ "cursor":"auto"});
+		  </#if>
 		  <#--
 		   $(".content-wrapper>.content").slimscroll({
 				height: "100%",
@@ -94,7 +108,7 @@
 			  if( e.keyCode == 8 || e.keyCode == 46 )
 			    if( $( "#conference_search_field" ).val().length < 2 && tempInput != $( this ).val().trim()){
 			    	conferenceSearch( "" , "first");
-			    	history.pushState( null, "Publication page", "<@spring.url '/publication' />");
+			    	history.pushState( null, "Conference page", "<@spring.url '/venue' />");
 			   		tempInput = "";
 			    } else
 			    	tempInput = $( this ).val().trim();
@@ -136,6 +150,9 @@
 
 		<#-- generate unique id for progress log -->
 		var uniquePidVenueWidget = $.PALM.utility.generateUniqueId();
+		
+		<#-- flag first en´vent active  -->
+		var isFirstEventActive = false;
 		
 		var options ={
 			source : "<@spring.url '/venue/search' />",
@@ -266,7 +283,8 @@
 									eventDetail.on( "click", function( e){
 										<#-- remove active class -->
 										if( $.PALM.selected.record(  "eventGroup", $( this ).parent().data( 'id' ) , $( this ).parent() )){
-											getVenueGroupDetails( $( this ).parent().data( 'id' ) , eventGroup);
+											history.pushState(null, "Venue " + itemEvent.name, "<@spring.url '/venue' />?id=" + itemEvent.id + "&name=" + itemEvent.name );
+											getVenueGroupDetails( $( this ).parent().data( 'id' ) , eventGroup, itemEvent.name);
 										}
 									});
 									
@@ -276,12 +294,20 @@
 									<#-- display first conference detail -->
 									if( <#--itemEvent.isAdded &&--> typeof eventObj.add === "undefined" ){
 										if( typeof eventObj.id != "undefined" && eventObj.id != "" && eventObj.id == itemEvent.id ){
-											getVenueGroupDetails( eventObj.id , eventGroup );
+											getVenueGroupDetails( eventObj.id , eventGroup , itemEvent.name);
 											eventObj.id = "";
+											isFirstEventActive = true;
 										}
 										else{
 											//if( index == 0 )
-											//	getVenueGroupDetails( itemEvent.id , eventGroup );
+											//	getVenueGroupDetails( itemEvent.id , eventGroup , itemEvent.name);
+											<#-- hide others if search conference has value-->
+											<#if targetName??>
+												if( isFirstEventActive){
+													eventGroup.hide();
+													data.totalCount--;
+												}
+											</#if>
 										}
 									} else {
 										<#--if( data.count == 0 ){-->
@@ -429,7 +455,7 @@
 		}
 		
 		<#-- when venue group clicked --> 
-		function getVenueGroupDetails( venueId, eventGroup ){
+		function getVenueGroupDetails( venueId, eventGroup , eventGroupName){
 	
 			<#-- show pop up progress log -->
 			var uniquePid = $.PALM.utility.generateUniqueId();
@@ -475,8 +501,11 @@
 								eventYearItem.attr({ "data-id": eventArray[0].id });
 												
 								eventYearItem.find( ".detail:first" ).on( "click", function(){
+									var eventId = $( this ).parent().parent().data( 'id' );
+									history.pushState(null, "Venue " + eventGroupName, "<@spring.url '/venue' />?eventId=" + eventId + "&name=" + eventGroupName );
+									
 									<#-- remove active class -->
-									triggerGetVenueDetails( $( this ).parent().parent().data( 'id' ), "onclick", [ eventGroup, eventYearTemp ]);
+									triggerGetVenueDetails( eventId, "onclick", [ eventGroup, eventYearTemp ]);
 								});
 
 								<#-- check if this is target item -->
@@ -577,16 +606,30 @@
 			
 									<#-- add click event -->
 									eventVolumeDetail.on( "click", function(){
-										triggerGetVenueDetails( $( this ).parent().data( 'id' ), "onclick", [ eventGroup, eventYearTemp, eventVolumeItem ]);
+										var eventId = $( this ).parent().data( 'id' );
+										history.pushState(null, "Venue " + eventGroupName, "<@spring.url '/venue' />?eventId=" + eventId + "&name=" + eventGroupName );
+										triggerGetVenueDetails( eventId, "onclick", [ eventGroup, eventYearTemp, eventVolumeItem ]);
 									});
 									
 									<#-- check if this is target item -->
 									triggerGetVenueDetails( eventVolume.id, "automatic", [ eventGroup, eventYearTemp, eventVolumeItem ] );
 									
+									if( index2 == 0 ){
+										eventYearItem
+										.find( ".eventyear:first" )
+										.on( "click", function(){
+											$( this )
+											.next()
+											.find( ".eventvolume:first" )
+											.find( ".detail" )
+											.click();
+										});
+									}
 								});<#-- end of foreach statement -->
 								
 								<#-- append event volume list to eventyear -->
-								eventYearItem.append( eventVolumeList );
+								eventYearItem
+									.append( eventVolumeList );
 							}
 							
 							<#-- reset event array -->

@@ -73,6 +73,14 @@
   
 </div>
 
+<#if authorMap??>
+	<div class="box-footer">
+		<a href="<@spring.url '/researcher' />?id=${authorMap.id}" class="btn btn-block btn-social btn-twitter btn-sm pull-right" style="width:180px;">
+		<i class="fa fa-users"></i>
+		<strong>Me on Researchers Page</strong></a>
+	</div>
+</#if>
+
 <script>
 	$(function(){
 		<#if authorMap??>

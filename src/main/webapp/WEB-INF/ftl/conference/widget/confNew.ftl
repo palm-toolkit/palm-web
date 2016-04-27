@@ -1,5 +1,8 @@
 <div id="boxbody<#--${wUniqueName}-->" class="box-body">
 	 <form role="form" id="addVenue" action="<@spring.url '/venue/add' />" method="post">
+	 
+	 	<#-- hidden attribute store eventGroup id from selected autocomplete -->
+		<input type="hidden" name="eventGroupIdTemp" id="eventGroupIdTemp" />
 		
 		<#-- Venue -->
 		<div class="form-group">
@@ -36,6 +39,10 @@
 	    
 	    
 	    <input type="hidden" id="dblpUrl" name="dblpUrl">
+	    
+	    <#if targetEventGroupId??>
+	    	<input type="hidden" id="eventGroupId" name="eventGroupId" value="${targetEventGroupId}">
+	    </#if>
 	    
 	    <#if targetEventId??>
 	    	<input type="hidden" id="eventId" name="eventId" value="${targetEventId!''}">
@@ -163,6 +170,7 @@
 			select: function( event, ui ) {
 				<#-- select appropriate vanue type -->
 				$( '#venue-type' ).val( ui.item.type ).change();
+				$( '#eventGroupIdTemp' ).val( ui.item.id );
 				$( '#dblpUrl' ).val( ui.item.url );
 				$( '#type' ).val( ui.item.type )
 				$( '#notation' ).val( ui.item.labelShort );

@@ -3,6 +3,7 @@
 </@security.authorize>
 <div id="boxbody-${wUniqueName}" class="box-body no-padding">
   	<div id="tree-container" class="tree-container" style="height:360px">
+  		No conference/journal found. Please link yourself to a researcher on PALM first.
     </div>
 </div>
 
