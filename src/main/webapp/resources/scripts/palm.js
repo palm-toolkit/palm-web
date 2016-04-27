@@ -1367,10 +1367,10 @@ $.PALM.bookmark = {
 			   // change label
 			   if( type == "researcher" ){
 				   bookButton.find( "i" ).removeClass( "fa-bookmark" ).addClass( "fa-check" );
-				   bookButton.find( "strong" ).html( "Booked" );
+				   bookButton.find( "strong" ).html( "Bookmarked" );
 			   } else {
 				   bookButton.find( "i" ).removeClass( "fa-bookmark" ).addClass( "fa-check" );
-				   bookButton.find( "strong" ).html( "Booked" );
+				   bookButton.find( "strong" ).html( "Bookmarked" );
 			   }
 		   }
 		   _this.ajaxRunning = false;
@@ -1385,7 +1385,7 @@ $.PALM.bookmark = {
 			   	.removeClass( "active" );
 			   // change label
 			   if( type == "researcher" ){
-				   bookButton.find( "i" ).removeClass( "fa-check" ).addClass( "fa-user-plus" );
+				   bookButton.find( "i" ).removeClass( "fa-check" ).addClass( "fa-bookmark" );
 				   bookButton.find( "strong" ).html( "Bookmark" );
 			   } else {
 				   bookButton.find( "i" ).removeClass( "fa-check" ).addClass( "fa-bookmark" );
@@ -1455,6 +1455,9 @@ $.PALM.utility = {
 	},
 	cutStringWithoutCutWord : function(inputText, maxLength) {
 
+		if( typeof inputText == "undefined" || inputText == "")
+			return false;
+		
 		if (inputText.length > maxLength) {
 			// trim the string to the maximum length
 			var trimmedString = inputText.substr(0, maxLength);
@@ -1515,9 +1518,9 @@ $.PALM.utility = {
 			container.append( errorElem );
 		}
 		
-		setTimeout(function(){
+		//setTimeout(function(){
 			errorElem.remove();
-		}, o.timeout);
+		//}, o.timeout);
 		
 	}
 };
