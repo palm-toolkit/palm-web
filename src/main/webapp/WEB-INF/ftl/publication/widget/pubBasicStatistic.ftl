@@ -37,7 +37,7 @@
 					if( !data.booked ){
 	                	var butBook = $( "<a/>" )
 	                					.attr({
-	                						"class":"btn btn-block btn-social btn-twitter btn-sm width110px pull-right",
+	                						"class":"btn btn-block btn-social btn-twitter btn-sm width120px pull-right",
 	                						"onclick":"$.PALM.bookmark.publication( $( this ), '${currentUser.id}', '" + data.publication.id + "' )",
 	                						"data-goal":"add"})
 	                					.append(
@@ -52,7 +52,7 @@
 					} else {
 						var butBook = $( "<a/>" )
 	                					.attr({
-	                						"class":"btn btn-block btn-social btn-twitter active btn-sm width110px pull-right",
+	                						"class":"btn btn-block btn-social btn-twitter active btn-sm width120px pull-right",
 	                						"onclick":"$.PALM.bookmark.publication( $( this ), '${currentUser.id}', '" + data.publication.id + "' )",
 	                						"data-goal":"remove"})
 	                					.append(
@@ -60,7 +60,7 @@
 	                							.attr({"class":"fa fa-check"})
 	                					)
 	                					.append(
-	                						"<strong>Booked</strong>"
+	                						"<strong>Bookmarked</strong>"
 	                					);
 	                			
 						targetContainer.append( butBook );

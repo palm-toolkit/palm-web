@@ -47,12 +47,12 @@
 					if( !data.booked ){
 	                	var butBook = $( "<a/>" )
 	                					.attr({
-	                						"class":"btn btn-block btn-social btn-twitter btn-sm width110px pull-right",
+	                						"class":"btn btn-block btn-social btn-twitter btn-sm width120px pull-right",
 	                						"onclick":"$.PALM.bookmark.author( $( this ), '${currentUser.id}', '" + data.author.id + "' )",
 	                						"data-goal":"add"})
 	                					.append(
 	                						$( "<i/>" )
-	                							.attr({"class":"fa fa-user-plus"})
+	                							.attr({"class":"fa fa-bookmark"})
 	                					)
 	                					.append(
 	                						"<strong>Bookmark</strong>"
@@ -62,7 +62,7 @@
 					} else {
 						var butBook = $( "<a/>" )
 	                					.attr({
-	                						"class":"btn btn-block btn-social btn-twitter active btn-sm width110px pull-right",
+	                						"class":"btn btn-block btn-social btn-twitter active btn-sm width120px pull-right",
 	                						"onclick":"$.PALM.bookmark.author( $( this ), '${currentUser.id}', '" + data.author.id + "' )",
 	                						"data-goal":"remove"})
 	                					.append(
@@ -70,7 +70,7 @@
 	                							.attr({"class":"fa fa-check"})
 	                					)
 	                					.append(
-	                						"<strong>Booked</strong>"
+	                						"<strong>Bookmarked</strong>"
 	                					);
 	                			
 						targetContainer.append( butBook );
@@ -139,7 +139,7 @@
 								);
 								
 							<#-- email -->
-							if( typeof data.author.email != 'undefined')
+							if( typeof data.author.email != 'undefined' && data.author.email != "" )
 								researcherDetail.append(
 									$( '<div/>' )
 									.addClass( 'affiliation' )
@@ -156,7 +156,7 @@
 								);
 								
 							<#-- homepage -->
-							if( typeof data.author.homepage != 'undefined')
+							if( typeof data.author.homepage != 'undefined' && data.author.homepage != "" )
 								researcherDetail.append(
 									$( '<div/>' )
 									.addClass( 'affiliation urlstyle' )
