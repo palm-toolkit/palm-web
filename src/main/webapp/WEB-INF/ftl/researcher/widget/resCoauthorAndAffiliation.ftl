@@ -33,6 +33,11 @@
 							<#-- remove previous list -->
 							targetContainer.html( "" );
 							
+							if( data.count == 0 ){
+								$.PALM.callout.generate( targetContainer , "warning", "Empty Co-Authors!", "Researcher does not have any co-authors on PALM (insufficient data)" );
+								return false;
+							}
+							
 							if( data.count > 0 ){
 								<#-- remove any remaing tooltip -->
 								<#-- $( "body .tooltip" ).remove(); -->

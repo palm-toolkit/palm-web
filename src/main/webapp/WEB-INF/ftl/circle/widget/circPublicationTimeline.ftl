@@ -38,7 +38,7 @@
 				<#-- check for error  -->
 				if( data.status != "ok"){
 					<#--alert( "error on publication list" );-->
-					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Sorry, an error occured, please try again" );
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Circle does not contains any publication" );
 					return false;
 				}
 				
@@ -169,7 +169,7 @@
 
 				<#-- no publication found -->
 				if ( typeof data.publications === 'undefined') {
-					mainContainer.append( "<strong>error, no publication found/match</strong>" );
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Circle does not contains any publication" );
 					return false;
 				}
 
