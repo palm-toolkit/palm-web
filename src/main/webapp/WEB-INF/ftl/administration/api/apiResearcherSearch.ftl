@@ -23,7 +23,7 @@
 <#-- Text input-->
 <div class="form-group">
 	<label>startPage</label>  
-	<input name="startPage" type="text" class="form-control" value="0">
+	<input name="page" type="text" class="form-control" value="0">
 	<span class="help-block">set the starting point of retrieved records</span>  
 </div>
 
