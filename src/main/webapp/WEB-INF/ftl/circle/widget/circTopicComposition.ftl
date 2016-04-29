@@ -19,7 +19,7 @@
 	$( function(){
 		<#-- set widget unique options -->
 		var options ={
-			source : "<@spring.url '/researcher/topicComposition' />",
+			source : "<@spring.url '/circle/topicComposition' />",
 			queryString : "",
 			id: "",
 			onRefreshStart: function( widgetElem ){
