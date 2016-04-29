@@ -87,6 +87,14 @@
 					} else {
 						window.location = "<@spring.url '/researcher' />?id=" + data.author.id  + "&name=" + data.author.name
 					}
+				} else {
+					$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>An error occured please select researcher again from auto-complete</strong>")
+					$( "#widget-${wUniqueName}" ).find( ".overlay" ).remove();
+					 
+					$('#name').bind('focus', function(){ $(this).autocomplete("search"); } );
+					$('#name').focus();
+					var textToShow = $('#name').find(":selected").text();
+		   			$('#name').parent().find("span").find("input").val(textToShow);
 				}
 			});
 		});
