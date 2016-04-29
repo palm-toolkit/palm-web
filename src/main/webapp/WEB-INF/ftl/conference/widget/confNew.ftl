@@ -133,6 +133,7 @@
 		}
 		
 		$("#name").autocomplete({
+			delay: 500,
 		    source: function (request, response) {
 		    	var _this = this;
 		        $.ajax({
