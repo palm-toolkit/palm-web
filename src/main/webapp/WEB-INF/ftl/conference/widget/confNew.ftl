@@ -142,6 +142,7 @@
 		            data: {
 						query: request.term,
 						source: "all",
+						addedVenue: "no",
 						<#if targetEventId??>
 	    					eventId: "${targetEventId!''}",
 	    				</#if>
