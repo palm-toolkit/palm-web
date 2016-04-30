@@ -96,6 +96,20 @@
 												.html( item.affiliation )
 											)
 										);
+									
+									if( typeof item.similarity != 'undefined')
+										researcherDetail.append(
+											$( '<div/>' )
+											.addClass( 'similarity' )
+											.css({ "clear" : "both"})
+											.append( 
+												$( '<i/>' )
+												.addClass( 'fa fa-share-alt icon font-xs' )
+											).append( 
+												$( '<span/>' )
+												.addClass( 'info font-xs' )
+												.html( "Degree Similarity: " + Math.round(item.similarity * 100) / 100)											)
+										);
 										
 									<#--
 									if( typeof item.citedBy != 'undefined')
