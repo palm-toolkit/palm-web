@@ -142,6 +142,9 @@
 		            data: {
 						query: request.term,
 						source: "all",
+						<#if targetEventId??>
+	    					eventId: "${targetEventId!''}",
+	    				</#if>
 						type: $( "#venue-type" ).val()
 					},
 		            success: function (data) {
