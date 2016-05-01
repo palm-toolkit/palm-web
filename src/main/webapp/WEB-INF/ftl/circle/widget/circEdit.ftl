@@ -710,7 +710,7 @@
 				.on( "click", function( e ){
 					e.preventDefault();
 					<#-- get list of publication -->
-					getPublicationList( "<@spring.url '/publication/search?authorId=' />" + $( this ).data( "id" ) + "&maxresult=300" );
+					getPublicationList( "<@spring.url '/publication/search?authorId=' />" + $( this ).data( "id" ) + "&maxresult=300&orderBy=date" );
 					<#-- show info -->
 					var authInfo = $( "#auth-info" );
 					authInfo.show();
@@ -733,7 +733,7 @@
 					
 					
 					<#-- get list of researcher -->
-					getPublicationList( "<@spring.url '/publication/search?authorId=' />" + $( this ).data( "id" ) + "&maxresult=300" );
+					getPublicationList( "<@spring.url '/publication/search?authorId=' />" + $( this ).data( "id" ) + "&maxresult=300&orderBy=date" );
 					<#-- show info -->
 					var authInfo = $( "#auth-info" );
 					authInfo.show();

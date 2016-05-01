@@ -120,9 +120,14 @@
 						source: "all"
 					},
 		            success: function (data) {
+		            	$('#name').removeClass( "ui-autocomplete-loading" );
 		            	if( data.count == 0){
-		            		$('#name').removeClass( "ui-autocomplete-loading" );
-		            		return false;
+		            		var result = [{
+       									label: 'No suggested researcher found', 
+   										value: response.term
+										}];
+										
+       						response(result);
 		            	}
 		            		
 		                response($.map(data.researchers , function(v,i){
@@ -146,6 +151,9 @@
 		                		
 		                    return researcherMap;
 		                }));
+		            },
+		            always: function(){
+		            	$('#name').removeClass( "ui-autocomplete-loading" );
 		            }
 		        });
 		    },
@@ -178,39 +186,44 @@
 			}
 		})
 		.data("ui-autocomplete")._renderItem = function( ul, item ) {
-			var itemElem = $( "<li/>" )
-							.addClass( "f-a-cont" );
-			
-			if( typeof item.photo !== "undefined" ){
-	        	itemElem.append( $( "<img/>" )
-	        						 .attr({ 'class':'author-circle-img f-a-img','src': item.photo})
-	        					);
-	        } else {
-	        	itemElem.append( $( "<i/>" )
-	        						 .attr({ 'class':'fa fa-user bg-aqua'})
-	        					);
-	        }
-	        var itemDesc = $( "<div/>" )
-        						 .attr({'class':'f-a-desc'})
-        						
-        						 
-        	itemDesc.append(
-				 		$( "<div/>" )
-    						 .attr({'class':'f-a-name'})
-    						 .html( item.label )
-					 );
-					 
-        	if( typeof item.aff !== "undefined" ){
-        		itemDesc.append(
-				 		$( "<div/>" )
-    						 .attr({'class':'f-a-aff'})
-    						 .html( item.aff )
-					 );
-        	}
-        					 
-	        itemElem.append( itemDesc );
-	      	
-	      	return itemElem.appendTo( ul );
+			if( typeof item.id != "undefined" ){
+				var itemElem = $( "<li/>" )
+								.addClass( "f-a-cont" );
+				
+				if( typeof item.photo !== "undefined" ){
+		        	itemElem.append( $( "<img/>" )
+		        						 .attr({ 'class':'author-circle-img f-a-img','src': item.photo})
+		        					);
+		        } else {
+		        	itemElem.append( $( "<i/>" )
+		        						 .attr({ 'class':'fa fa-user bg-aqua'})
+		        					);
+		        }
+		        var itemDesc = $( "<div/>" )
+	        						 .attr({'class':'f-a-desc'})
+	        						
+	        						 
+	        	itemDesc.append(
+					 		$( "<div/>" )
+	    						 .attr({'class':'f-a-name'})
+	    						 .html( item.label )
+						 );
+						 
+	        	if( typeof item.aff !== "undefined" ){
+	        		itemDesc.append(
+					 		$( "<div/>" )
+	    						 .attr({'class':'f-a-aff'})
+	    						 .html( item.aff )
+						 );
+	        	}
+	        					 
+		        itemElem.append( itemDesc );
+		      	
+		      	return itemElem.appendTo( ul );
+		      }
+		      else{
+	      			return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo( ul );
+	      	  }
 	    };
 	    
 	    $('#name')
@@ -273,6 +286,7 @@
 			                           };
 			                }));
 		                }
+		                $('#affiliation').removeClass( "ui-autocomplete-loading" );
 		            }
 		        });
 		    },
