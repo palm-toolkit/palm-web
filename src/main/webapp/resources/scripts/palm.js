@@ -1518,9 +1518,9 @@ $.PALM.utility = {
 			container.append( errorElem );
 		}
 		
-		//setTimeout(function(){
+		setTimeout(function(){
 			errorElem.remove();
-		//}, o.timeout);
+		}, o.timeout);
 		
 	}
 };

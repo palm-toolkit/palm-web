@@ -178,7 +178,7 @@
           * Mandatory fields
         </div>
 	</form>
-	<div id="error-div"></div>
+	<div id="error-div2">taek</div>
 </div>
 
 <div class="box-footer">
@@ -189,7 +189,7 @@
 	$(function(){
 		 <#-- extract with given link -->
 		var tempUrl = "";
-		$( "#newResourceInput" ).on( "paste", function(){
+		$( "#newResourceInput" ).on( "paste blur", function(){
 			var fileSelection = $( "#newResourceSelect" ).val();
 			var _this = $( this );
 			setTimeout(function(){
@@ -197,6 +197,8 @@
 				<#-- check for validity -->
 				if( !$.PALM.utility.validateUrl( sourceUrl ) ){
 					$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>Not a valid URL</strong>")
+					_this.val( "" );
+					
 					return false;
 				}
 				var $container = $( "#widget-${wUniqueName}" );
@@ -254,7 +256,7 @@
 		$( "#submit" ).click( function(){
 			<#-- todo check input valid -->
 			if( $( "#title" ).val() == "" || $( "#author-list" ).val() == "" || $( "#publication-date" ).val() == "" ){
-				$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>Please fill all required fields (title, authors, date published)</strong>")
+				$.PALM.utility.showErrorTimeout( $( "#error-div2" ) , "&nbsp<strong>Please fill all required fields (title, authors, date published)</strong>")
 				return false;
 			}
 			
