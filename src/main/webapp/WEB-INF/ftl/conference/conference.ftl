@@ -18,6 +18,10 @@
 		</section>
  	</@content.contentWrapper>
 
+	<@content.footerWrapper>
+		<#include "footer.ftl" />
+	</@content.footerWrapper>
+
 <@security.authorize access="isAuthenticated()">
 	<#-- add new event -->
 	<div id="new-event-circle" class="new-circle" title="Add Conference/Journal" data-url="<@spring.url '/venue/add' />">

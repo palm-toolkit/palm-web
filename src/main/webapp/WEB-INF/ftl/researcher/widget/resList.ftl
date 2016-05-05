@@ -22,12 +22,12 @@
 			<ul id="researcherPaging" class="pagination marginBottom0">
 				<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
 				<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
-				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">20</span></span></li>
+				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>
 				<li class="paginate_button toNext"><a href="#"><i class="fa fa-caret-right"></i></a></li>
 				<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
 			</ul>
 		</div>
-		<span class="paging-info">Displaying researchers 1 - 50 of 462</span>
+		<span class="paging-info">Displaying researchers 0 - 0 of 0</span>
 	</div>
 </div>
 
@@ -48,10 +48,26 @@
 			<#-- add slim scroll -->
 	      $(".content-list").slimscroll({
 				height: "100%",
-		        size: "3px",
+		        size: "5px",
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50
 		  });
+		  
+		  var widgetHeader = $("#widget-${wUniqueName} h3");
+		  
+		  <#if targetName??>
+		  	widgetHeader
+		  	.html( "<i class='fa fa-arrow-left'></i>&nbsp;&nbsp;All researchers" )
+		  	//.attr({ "class":"urlstyle" })
+		  	.css({ "cursor":"pointer"})
+	    	.click( function(){ window.location.href = "<@spring.url '/researcher' />"});
+	    	
+	    	widgetHeader
+	    	.parent()
+	    	.attr({ "class":"urlstyle" })
+	    	.css({ "cursor":"auto"});
+		  </#if>
+	    	
 		  <#--
 		   $(".content-wrapper>.content").slimscroll({
 				height: "100%",
@@ -64,18 +80,23 @@
 	    -->
 	    <#-- event for searching researcher -->
 		var tempInput = $( "#researcher_search_field" ).val();
+		
 	    $( "#researcher_search_field" )
 	    .on( "keypress", function(e) {
-			  if ( e.keyCode == 0 || e.keyCode == 13 /* || e.keyCode == 32*/ )
+			  if ( e.keyCode == 0 || e.keyCode == 13 || e.keyCode == 32 )
 			    researcherSearch( $( this ).val().trim() , "first", "&addedAuthor=yes");
 			 tempInput = $( this ).val().trim();
 		})
 		<#-- when pressing backspace until -->
 		.on( "keydown", function(e) {
-			  if( e.keyCode == 8 || e.keyCode == 46 )
-			    if( $( "#researcher_search_field" ).val().length == 0 && tempInput != $( this ).val().trim())
-			    	researcherSearch( $( this ).val().trim() , "first", "&addedAuthor=yes");
-			  tempInput = $( this ).val().trim();
+			  if( e.keyCode == 8 || e.keyCode == 46 ){
+				    if( $( "#researcher_search_field" ).val().length < 2 && tempInput != $( this ).val().trim()){
+				    	researcherSearch( "", "first", "&addedAuthor=yes");
+				    	history.pushState( null, "Researcher page", "<@spring.url '/researcher' />");
+				    	tempInput = "";
+				    } else
+				    	tempInput = $( this ).val().trim();
+			  }
 		});
 		
 
@@ -127,17 +148,33 @@
 				<#-- show pop up progress log -->
 				$.PALM.popUpMessage.create( "loading researchers...", { uniqueId:uniquePidResearcherWidget, popUpHeight:40, directlyRemove:false});
 						},
-			onRefreshDone: function(  widgetElem , data ){
-
+			onRefreshDone: function(  widgetElem , data ){	
+							var targetContainer = $( widgetElem ).find( ".content-list" );
 							<#-- remove  pop up progress log -->
 							$.PALM.popUpMessage.remove( uniquePidResearcherWidget );
 
-							var targetContainer = $( widgetElem ).find( ".content-list" );
+							<#-- check for error  -->
+							<#--
+							if( typeof data.researchers === "undefined"){
+								$.PALM.callout.generate( targetContainer , "warning", "Empty Researchers!", "An error occured - please try again later" );
+								return false;
+							}
+							-->
+
 							<#-- remove previous list -->
 							targetContainer.html( "" );
 							
 							var $pageDropdown = $( widgetElem ).find( "select.page-number" );
 							$pageDropdown.find( "option" ).remove();
+							
+							<#-- callout -->
+							if( data.count == 0 ){
+								if( typeof data.query === "undefined" || data.query == "" )
+									$.PALM.callout.generate( targetContainer , "normal", "Currently no researchers found on PALM database" );
+								else
+									$.PALM.callout.generate( targetContainer , "warning", "Empty search results!", "No researchers found with query \"" + data.query + "\"" );
+								return false;
+							}
 							
 							if( data.count > 0 ){
 								<#-- remove any remaing tooltip -->
@@ -324,7 +361,10 @@
 								endRecord = data.totalCount;
 								$( widgetElem ).find( "span.paging-info" ).html( "Displaying researchers " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.totalCount );
 							
-								
+								if( maxPage == 1 ){
+									$( widgetElem ).find( "li.toNext" ).addClass( "disabled" );
+									$( widgetElem ).find( "li.toEnd" ).addClass( "disabled" );
+								}
 							}
 							else{
 								$pageDropdown.append("<option value='0'>0</option>");
@@ -404,7 +444,7 @@
 
 		<#-- show pop up progress log -->
 		var uniquePid = $.PALM.utility.generateUniqueId();
-		$.PALM.popUpMessage.create( "Collecting author publications...", { uniqueId:uniquePid, popUpHeight:150, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
+		$.PALM.popUpMessage.create( "Collecting author publications...", { uniqueId:uniquePid, popUpHeight:100, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
 		<#-- check and fetch publication from academic network if necessary -->
 		$.getJSON( "<@spring.url '/researcher/fetch?id=' />" + authorId + "&pid=" + uniquePid + "&force=false", function( data ){
 			<#-- remove  pop up progress log -->
@@ -428,54 +468,146 @@
 					researcherListWidget.element.find( "#" + authorId ).find( ".paper" ).html( updatedPublicationNumber );
 			}
 -->			
-			<#-- widget researcher_interest_cloud and researcher_interest_evolution can not run simultaneusly together,
-			therefore put it in order -->
-			var isInterestCloudWidgetExecuted = false;
-			var isInterestEvolutionWidgetExecuted = false;
-			var isTopicModelCloudWidgetExecuted = false;
-			var isTopicModelEvolutionWidgetExecuted = false;
-			<#-- refresh registered widget -->
-			$.each( $.PALM.options.registeredWidget, function(index, obj){
-				if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
-					obj.options.queryString = "?id=" + authorId;
-					<#-- special for publication list, set only query recent 10 publication -->
-					if( obj.selector === "#widget-researcher_publication" )
-						obj.options.queryString += "&maxresult=10";
-						
-					<#-- check for cloud and evolution widget -->
-					if( obj.selector === "#widget-researcher_interest_cloud" && isInterestEvolutionWidgetExecuted )
-						return;
-					else if( obj.selector === "#widget-researcher_interest_evolution" && isInterestCloudWidgetExecuted )
-						return;
-						
-					<#-- check for cloud and evolution widget (topic model)-->
-					if( obj.selector === "#widget-researcher_topicmodel_cloud" && isTopicModelEvolutionWidgetExecuted )
-						return;
-					else if( obj.selector === "#widget-researcher_topicmodel_evolution" && isTopicModelCloudWidgetExecuted )
-						return;
+			if( data.fetchPublicationPerformed == "yes" ){
+				<#-- refresh some widgets -->
+				refreshSelectedWidget( authorId, [ "researcher_basic_information", "researcher_publication","researcher_conference_tree","researcher_publication_top","researcher_coauthor_affiliation" ] );
+				
+				<#-- get publication details -->
+				<#-- show pop up progress log -->
+				var uniquePid = $.PALM.utility.generateUniqueId();
+				
+				$.PALM.popUpMessage.create( "Extracting publication's details...", { uniqueId:uniquePid, popUpHeight:100, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
+				<#-- check and fetch publication from academic network if necessary -->
+				$.getJSON( "<@spring.url '/researcher/fetchPublicationDetail?id=' />" + authorId + "&pid=" + uniquePid + "&force=false", function( data ){
+					<#-- remove  pop up progress log -->
+					$.PALM.popUpMessage.remove( uniquePid );
 					
-					<#-- add new flag (has been executed once)  -->
-					obj.executed = true;
-					
-					<#-- refresh widget -->
-					$.PALM.boxWidget.refresh( obj.element , obj.options );
-					
-					<#-- set flag for cloud and evolution widget -->
-					if( obj.selector === "#widget-researcher_interest_cloud" )
-						isInterestCloudWidgetExecuted = true;
-					else if( obj.selector === "#widget-researcher_interest_evolution" )
-						isInterestEvolutionWidgetExecuted = true;
-						
-					<#-- set flag for cloud and evolution widget (topicmodel) -->
-					if( obj.selector === "#widget-researcher_topicmodel_cloud" )
-						isTopicModelCloudWidgetExecuted = true;
-					else if( obj.selector === "#widget-researcher_topicmodel_evolution" )
-						isTopicModelEvolutionWidgetExecuted = true;
-				}
-			});
+					if( data.fetchPublicationDetailPerformed == "yes" ){
+						refreshAllWidget( authorId );
+					} else {
+						<#-- refresh some widgets -->
+						refreshSelectedWidget( authorId, [ "researcher_interest_cloud", "researcher_interest_evolution","researcher_topicmodel_cloud","researcher_topicmodel_evolution" ] );
+					}
+				
+				}).fail(function() {
+		   	 		$.PALM.popUpMessage.remove( uniquePid );
+		  		}).always(function() {
+		   	 		$.PALM.popUpMessage.remove( uniquePid );
+		  		});
+			} else{
+				refreshAllWidget( authorId );
+			}
+
 		
 		}).fail(function() {
    	 		$.PALM.popUpMessage.remove( uniquePid );
+  		}).always(function() {
+   	 		$.PALM.popUpMessage.remove( uniquePid );
   		});
+	}
+	
+	<#-- refresh selected widget -->
+	function refreshSelectedWidget( authorId , arrayOfUniqueWidgetName){
+		
+		<#-- widget researcher_interest_cloud and researcher_interest_evolution can not run simultaneusly together,
+		therefore put it in order -->
+		var isInterestCloudWidgetExecuted = false;
+		var isInterestEvolutionWidgetExecuted = false;
+		var isTopicModelCloudWidgetExecuted = false;
+		var isTopicModelEvolutionWidgetExecuted = false;
+		
+		$.each( arrayOfUniqueWidgetName, function( index, item ){
+			var obj = $.PALM.boxWidget.getByUniqueName( item );
+			
+			<#-- if not installed just continue -->
+			if( typeof obj === "undefined" )
+				return;
+				
+			obj.options.queryString = "?id=" + authorId;
+			
+			<#-- special for publication list, set only query recent 10 publication -->
+			if( obj.selector === "#widget-researcher_publication" )
+				obj.options.queryString += "&maxresult=10";
+				
+			<#-- check for cloud and evolution widget -->
+			if( obj.selector === "#widget-researcher_interest_cloud" && isInterestEvolutionWidgetExecuted )
+				return;
+			else if( obj.selector === "#widget-researcher_interest_evolution" && isInterestCloudWidgetExecuted )
+				return;
+				
+			<#-- check for cloud and evolution widget (topic model)-->
+			if( obj.selector === "#widget-researcher_topicmodel_cloud" && isTopicModelEvolutionWidgetExecuted )
+				return;
+			else if( obj.selector === "#widget-researcher_topicmodel_evolution" && isTopicModelCloudWidgetExecuted )
+				return;
+									
+			<#-- add new flag (has been executed once)  -->
+			obj.executed = true;
+			
+			<#-- refresh widget -->
+			$.PALM.boxWidget.refresh( obj.element , obj.options );
+			
+			<#-- set flag for cloud and evolution widget -->
+			if( obj.selector === "#widget-researcher_interest_cloud" )
+				isInterestCloudWidgetExecuted = true;
+			else if( obj.selector === "#widget-researcher_interest_evolution" )
+				isInterestEvolutionWidgetExecuted = true;
+				
+			<#-- set flag for cloud and evolution widget (topicmodel) -->
+			if( obj.selector === "#widget-researcher_topicmodel_cloud" )
+				isTopicModelCloudWidgetExecuted = true;
+			else if( obj.selector === "#widget-researcher_topicmodel_evolution" )
+				isTopicModelEvolutionWidgetExecuted = true;
+		});
+		
+	}
+	
+	<#-- refresh all widget -->
+	function refreshAllWidget( authorId ) {
+		<#-- widget researcher_interest_cloud and researcher_interest_evolution can not run simultaneusly together,
+		therefore put it in order -->
+		var isInterestCloudWidgetExecuted = false;
+		var isInterestEvolutionWidgetExecuted = false;
+		var isTopicModelCloudWidgetExecuted = false;
+		var isTopicModelEvolutionWidgetExecuted = false;
+		<#-- refresh registered widget -->
+		$.each( $.PALM.options.registeredWidget, function(index, obj){
+			if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
+				obj.options.queryString = "?id=" + authorId;
+				<#-- special for publication list, set only query recent 10 publication -->
+				if( obj.selector === "#widget-researcher_publication" )
+					obj.options.queryString += "&maxresult=10";
+					
+				<#-- check for cloud and evolution widget -->
+				if( obj.selector === "#widget-researcher_interest_cloud" && isInterestEvolutionWidgetExecuted )
+					return;
+				else if( obj.selector === "#widget-researcher_interest_evolution" && isInterestCloudWidgetExecuted )
+					return;
+					
+				<#-- check for cloud and evolution widget (topic model)-->
+				if( obj.selector === "#widget-researcher_topicmodel_cloud" && isTopicModelEvolutionWidgetExecuted )
+					return;
+				else if( obj.selector === "#widget-researcher_topicmodel_evolution" && isTopicModelCloudWidgetExecuted )
+					return;
+				
+				<#-- add new flag (has been executed once)  -->
+				obj.executed = true;
+				
+				<#-- refresh widget -->
+				$.PALM.boxWidget.refresh( obj.element , obj.options );
+				
+				<#-- set flag for cloud and evolution widget -->
+				if( obj.selector === "#widget-researcher_interest_cloud" )
+					isInterestCloudWidgetExecuted = true;
+				else if( obj.selector === "#widget-researcher_interest_evolution" )
+					isInterestEvolutionWidgetExecuted = true;
+					
+				<#-- set flag for cloud and evolution widget (topicmodel) -->
+				if( obj.selector === "#widget-researcher_topicmodel_cloud" )
+					isTopicModelCloudWidgetExecuted = true;
+				else if( obj.selector === "#widget-researcher_topicmodel_evolution" )
+					isTopicModelEvolutionWidgetExecuted = true;
+			}
+		});
 	}
 </script>

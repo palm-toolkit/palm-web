@@ -32,6 +32,11 @@
 							var targetContainer = $( widgetElem ).find( ".tree-container" );
 							<#-- remove previous list -->
 							targetContainer.html( "" );
+							
+							if( data.count == 0 ){
+								$.PALM.callout.generate( targetContainer , "warning", "Empty Conferences!", "No conferencer/journals found (insufficient data)" );
+								return false;
+							}
 				
 				<#-- check and destroy first if exist -->
 				try {

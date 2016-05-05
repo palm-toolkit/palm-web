@@ -202,7 +202,7 @@ function getYearFromLanguage( languageIndex ){
 
 function visualizeInterest( yearIndex , yearType ){
 	if( yearType == "startyear"){
-		if( dataPointer.dataYearEnd < yearIndex ){
+		if( parseInt( dataPointer.dataYearEnd ) < parseInt( yearIndex ) ){
 			dataPointer.dataYearEnd = yearIndex;
 			interestYearEndDropDown.children().eq( dataPointer.dataYearEnd ).attr( 'selected',true );
 		}
@@ -210,7 +210,7 @@ function visualizeInterest( yearIndex , yearType ){
 		interestYearEndDropDown.selectpicker( 'refresh' );
 	}
 	else{
-		if( dataPointer.dataYearStart > yearIndex ){
+		if( parseInt( dataPointer.dataYearStart ) > parseInt( yearIndex ) ){
 			dataPointer.dataYearStart = yearIndex;
 			interestYearStartDropDown.children().eq( dataPointer.dataYearStart ).attr( 'selected',true );
 		}

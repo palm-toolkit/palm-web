@@ -24,12 +24,12 @@
 			<ul id="conferencePaging" class="pagination marginBottom0">
 				<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
 				<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
-				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">20</span></span></li>
+				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>
 				<li class="paginate_button toNext"><a href="#"><i class="fa fa-caret-right"></i></a></li>
 				<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
 			</ul>
 		</div>
-		<span class="paging-info">Displaying conferences 1 - 50 of 462</span>
+		<span class="paging-info">Displaying conferences 0 - 0 of 0</span>
 	</div>
 </div>
 
@@ -73,6 +73,20 @@
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50
 		  });
+		  
+		   var widgetHeader = $("#widget-${wUniqueName} h3");
+		  <#if targetName??>
+		  	widgetHeader
+		  	.html( "<i class='fa fa-arrow-left'></i>&nbsp;&nbsp;All conferences" )
+		  	//.attr({ "class":"urlstyle" })
+		  	.css({ "cursor":"pointer"})
+	    	.click( function(){ window.location.href = "<@spring.url '/venue' />"});
+	    	
+	    	widgetHeader
+	    	.parent()
+	    	.attr({ "class":"urlstyle" })
+	    	.css({ "cursor":"auto"});
+		  </#if>
 		  <#--
 		   $(".content-wrapper>.content").slimscroll({
 				height: "100%",
@@ -84,14 +98,20 @@
 		  });
 	  		-->
 	    <#-- event for searching conference -->
+		var tempInput = $( "#conference_search_field" ).val();
 	    $( "#conference_search_field" )
 	    .on( "keypress", function(e) {
-			  if ( e.keyCode == 0 || e.keyCode == 13 /* || e.keyCode == 32 */ )
+			  if ( e.keyCode == 0 || e.keyCode == 13  || e.keyCode == 32  )
 			    conferenceSearch( $( this ).val() , "first");
+			  tempInput = $( this ).val().trim();
 		}).on( "keydown", function(e) {
 			  if( e.keyCode == 8 || e.keyCode == 46 )
-			    if( $( "#conference_search_field" ).val().length == 0 )
-			    	conferenceSearch( $( this ).val() , "first");
+			    if( $( "#conference_search_field" ).val().length < 2 && tempInput != $( this ).val().trim()){
+			    	conferenceSearch( "" , "first");
+			    	history.pushState( null, "Conference page", "<@spring.url '/venue' />");
+			   		tempInput = "";
+			    } else
+			    	tempInput = $( this ).val().trim();
 		});
 		
 		<#-- icon search presed -->
@@ -131,6 +151,9 @@
 		<#-- generate unique id for progress log -->
 		var uniquePidVenueWidget = $.PALM.utility.generateUniqueId();
 		
+		<#-- flag first en´vent active  -->
+		var isFirstEventActive = false;
+		
 		var options ={
 			source : "<@spring.url '/venue/search' />",
 			query: "",
@@ -146,12 +169,29 @@
 							$.PALM.popUpMessage.remove( uniquePidVenueWidget );
 
 							var eventListContainer = $( widgetElem ).find( ".content-list" );
+							
+							<#-- check for error  -->
+							<#--
+							if( typeof data.eventGroups === "undefined"){
+								$.PALM.callout.generate( eventListContainer , "warning", "Empty Conference/Journal!", "An error occured - please try again later" );
+								return false;
+							}
+							-->
 							<#-- remove previous result -->
 							eventListContainer.html( "" );
 							// remove any remaing tooltip
 							$( "body .tooltip" ).remove();
 							var $pageDropdown = $( widgetElem ).find( "select.page-number" );
 							$pageDropdown.find( "option" ).remove();
+							
+							<#-- callout -->
+							if( data.count == 0 ){
+								if( typeof data.query === "undefined" || data.query == "" )
+									$.PALM.callout.generate( eventListContainer , "normal", "Currently no conferences/journals found on PALM database" );
+								else
+									$.PALM.callout.generate( eventListContainer , "warning", "Empty search results!", "No conferences/journals found with query \"" + data.query + "\"" );
+								//return false;
+							}
 							
 							if( data.count > 0 ){
 							
@@ -243,7 +283,8 @@
 									eventDetail.on( "click", function( e){
 										<#-- remove active class -->
 										if( $.PALM.selected.record(  "eventGroup", $( this ).parent().data( 'id' ) , $( this ).parent() )){
-											getVenueGroupDetails( $( this ).parent().data( 'id' ) , eventGroup);
+											history.pushState(null, "Venue " + itemEvent.name, "<@spring.url '/venue' />?id=" + itemEvent.id + "&name=" + itemEvent.name );
+											getVenueGroupDetails( $( this ).parent().data( 'id' ) , eventGroup, itemEvent.name);
 										}
 									});
 									
@@ -253,12 +294,20 @@
 									<#-- display first conference detail -->
 									if( <#--itemEvent.isAdded &&--> typeof eventObj.add === "undefined" ){
 										if( typeof eventObj.id != "undefined" && eventObj.id != "" && eventObj.id == itemEvent.id ){
-											getVenueGroupDetails( eventObj.id , eventGroup );
+											getVenueGroupDetails( eventObj.id , eventGroup , itemEvent.name);
 											eventObj.id = "";
+											isFirstEventActive = true;
 										}
 										else{
 											//if( index == 0 )
-											//	getVenueGroupDetails( itemEvent.id , eventGroup );
+											//	getVenueGroupDetails( itemEvent.id , eventGroup , itemEvent.name);
+											<#-- hide others if search conference has value-->
+											<#if targetName??>
+												if( isFirstEventActive){
+													eventGroup.hide();
+													data.totalCount--;
+												}
+											</#if>
 										}
 									} else {
 										<#--if( data.count == 0 ){-->
@@ -313,6 +362,11 @@
 								if( data.startPage == maxPage - 1 ) 
 								endRecord = data.totalCount;
 								$( widgetElem ).find( "span.paging-info" ).html( "Displaying conferences " + ((data.startPage * data.maxresult) + 1) + " - " + endRecord + " of " + data.totalCount );
+							
+								if( maxPage == 1 ){
+									$( widgetElem ).find( "li.toNext" ).addClass( "disabled" );
+									$( widgetElem ).find( "li.toEnd" ).addClass( "disabled" );
+								}
 							}
 							else{
 								$pageDropdown.append("<option value='0'>0</option>");
@@ -406,7 +460,7 @@
 		}
 		
 		<#-- when venue group clicked --> 
-		function getVenueGroupDetails( venueId, eventGroup ){
+		function getVenueGroupDetails( venueId, eventGroup , eventGroupName){
 	
 			<#-- show pop up progress log -->
 			var uniquePid = $.PALM.utility.generateUniqueId();
@@ -452,8 +506,11 @@
 								eventYearItem.attr({ "data-id": eventArray[0].id });
 												
 								eventYearItem.find( ".detail:first" ).on( "click", function(){
+									var eventId = $( this ).parent().parent().data( 'id' );
+									history.pushState(null, "Venue " + eventGroupName, "<@spring.url '/venue' />?eventId=" + eventId + "&name=" + eventGroupName );
+									
 									<#-- remove active class -->
-									triggerGetVenueDetails( $( this ).parent().parent().data( 'id' ), "onclick", [ eventGroup, eventYearTemp ]);
+									triggerGetVenueDetails( eventId, "onclick", [ eventGroup, eventYearTemp ]);
 								});
 
 								<#-- check if this is target item -->
@@ -554,16 +611,30 @@
 			
 									<#-- add click event -->
 									eventVolumeDetail.on( "click", function(){
-										triggerGetVenueDetails( $( this ).parent().data( 'id' ), "onclick", [ eventGroup, eventYearTemp, eventVolumeItem ]);
+										var eventId = $( this ).parent().data( 'id' );
+										history.pushState(null, "Venue " + eventGroupName, "<@spring.url '/venue' />?eventId=" + eventId + "&name=" + eventGroupName );
+										triggerGetVenueDetails( eventId, "onclick", [ eventGroup, eventYearTemp, eventVolumeItem ]);
 									});
 									
 									<#-- check if this is target item -->
 									triggerGetVenueDetails( eventVolume.id, "automatic", [ eventGroup, eventYearTemp, eventVolumeItem ] );
 									
+									if( index2 == 0 ){
+										eventYearItem
+										.find( ".eventyear:first" )
+										.on( "click", function(){
+											$( this )
+											.next()
+											.find( ".eventvolume:first" )
+											.find( ".detail" )
+											.click();
+										});
+									}
 								});<#-- end of foreach statement -->
 								
 								<#-- append event volume list to eventyear -->
-								eventYearItem.append( eventVolumeList );
+								eventYearItem
+									.append( eventVolumeList );
 							}
 							
 							<#-- reset event array -->

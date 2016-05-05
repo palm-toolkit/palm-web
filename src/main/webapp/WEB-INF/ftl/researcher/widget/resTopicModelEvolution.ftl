@@ -181,14 +181,14 @@ function visualizeInterest( yearIndex , yearType ){
 	mainContainer.find( ".svg-container").remove();
 	
 	if( yearType == "startyear"){
-		if( dataPointer.dataYearEnd < yearIndex ){
+		if( parseInt( dataPointer.dataYearEnd ) < parseInt( yearIndex ) ){
 			dataPointer.dataYearEnd = yearIndex;
 			interestYearEndDropDown.children().eq( dataPointer.dataYearEnd ).attr( 'selected',true );
 		}
 		dataPointer.dataYearStart = yearIndex;
 	}
 	else{
-		if( dataPointer.dataYearStart > yearIndex ){
+		if( parseInt( dataPointer.dataYearStart ) > parseInt( yearIndex ) ){
 			dataPointer.dataYearStart = yearIndex;
 			interestYearStartDropDown.children().eq( dataPointer.dataYearStart ).attr( 'selected',true );
 		}

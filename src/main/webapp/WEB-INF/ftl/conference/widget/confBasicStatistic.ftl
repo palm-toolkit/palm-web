@@ -36,7 +36,7 @@
 					if( !data.booked ){
 	                	var butBook = $( "<a/>" )
 	                					.attr({
-	                						"class":"btn btn-block btn-social btn-twitter btn-sm width110px pull-right",
+	                						"class":"btn btn-block btn-social btn-twitter btn-sm width120px pull-right",
 	                						"onclick":"$.PALM.bookmark.eventGroup( $( this ), '${currentUser.id}', '" + data.eventGroup.id + "' )",
 	                						"data-goal":"add"})
 	                					.append(
@@ -51,7 +51,7 @@
 					} else {
 						var butBook = $( "<a/>" )
 	                					.attr({
-	                						"class":"btn btn-block btn-social btn-twitter active btn-sm width110px pull-right",
+	                						"class":"btn btn-block btn-social btn-twitter active btn-sm width120px pull-right",
 	                						"onclick":"$.PALM.bookmark.eventGroup( $( this ), '${currentUser.id}', '" + data.eventGroup.id + "' )",
 	                						"data-goal":"remove"})
 	                					.append(

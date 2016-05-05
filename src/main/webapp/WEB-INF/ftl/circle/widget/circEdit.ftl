@@ -14,14 +14,10 @@
 
 		<#-- abstract -->
 		<div class="form-group">
-	      <label>Description</label>
+	      <label>Description *</label>
 	      <textarea name="description" id="circleDescription" class="form-control" rows="3" placeholder="Description"></textarea>
 	    </div>
 	    
-	    <div class="pull-left">
-          * Mandatory fields
-        </div>
-        
         <br/>
         <br/>
 	    
@@ -41,23 +37,8 @@
 					    </div>
 				  	</div>
 				  	
-				  	<div class="content-list height500px">
+				  	<div class="content-list height580px">
 				    </div>
-				</div>
-				
-				<div class="box-footer no-padding">
-					<div class="col-xs-12 no-padding alignCenter">
-						<div class="paging_simple_numbers">
-							<ul id="researcherPaging" class="pagination marginBottom0">
-								<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
-								<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
-								<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>
-								<li class="paginate_button toNext"><a href="#"><i class="fa fa-caret-right"></i></a></li>
-								<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
-							</ul>
-						</div>
-						<span class="paging-info">&nbsp;</span>
-					</div>
 				</div>
 				
 	    	</div>
@@ -86,7 +67,7 @@
 					      <input type="text" id="publication_search_field" name="publication_search_field" class="form-control input-sm pull-right" 
 					      placeholder="Search publication on database" />
 					      <div id="publication_search_button" class="input-group-btn">
-					        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
+					        <button class="btn btn-sm btn-default btn-search"><i class="fa fa-search"></i></button>
 					      </div>
 					    </div>
 					    <#-- add note -->
@@ -104,22 +85,6 @@
 				  	<div class="content-list height580px">
 				    </div>
 				</div>
-				<#--
-				<div class="box-footer no-padding">
-					<div class="col-xs-12  no-padding alignCenter">
-						<div class="paging_simple_numbers">
-							<ul id="publicationPaging" class="pagination marginBottom0">
-								<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
-								<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
-								<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>
-								<li class="paginate_button toNext"><a href="#"><i class="fa fa-caret-right"></i></a></li>
-								<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
-							</ul>
-						</div>
-						<span class="paging-info">&nbsp;</span>
-					</div>
-				</div>
-	    		-->
 	    	</div>
 		    	        
         	<div id="circlePub" class="circle-input-column circle-input-right">
@@ -135,6 +100,10 @@
         <input type="hidden" id="circlePublication" name="circlePublication" />
 
 	</form>
+	<div class="pull-left">
+          * Mandatory fields
+        </div>
+        <div id="error-div"></div>
 </div>
 
 <div class="box-footer">
@@ -168,17 +137,18 @@
 					printResearcherList( data.circle , targetContainer )
 					<#-- add all publication to circle author -->
 					$.each( targetContainer.find( 'button' ), function(){
-						$( this ).click();
+						if( $( this ).addClass( "btn-success" ) )
+							$( this ).click();
 					});
 					
 					<#-- fill author list -->
-					researcherSearch( "" , "first" );
+					<#--researcherSearch( "" , "first" );-->
 					
 					<#-- hide add all publications option -->
 					$( "#auth-info" ).hide();
 				} else{
 					<#-- fill author list -->
-					researcherSearch( "" , "first" );
+					<#--researcherSearch( "" , "first" );-->
 				}
 						
 				<#--publications on circle -->
@@ -187,10 +157,21 @@
 					printPublicationList( data.circle , publicationListContainer );
 					
 					<#-- add all publication to circle publication -->
+					
 					$.each( publicationListContainer.find( 'button' ), function(){
+						if( $( this ).hasClass( "btn-search" ) )
+							return;
 						$( this ).click();
 					});
+					
 				}
+				
+				setTimeout( function(){
+					var inputPub = $( "#inputPub" ).find( ".content-list" );
+					inputPub.html( "" );
+					$.PALM.callout.generate( inputPub , "normal", "Please search first to get the publications" );
+				}, 1000);
+				
 			});
 		</#if>
 	
@@ -200,27 +181,15 @@
 					researcherInputList: $( "#circleAuth>.box-body>.content-list" ),
 					publicationInputList: $( "#circleAuth>.box-body>.content-list" )
 				});
-					
-		<#-- add slim scroll -->
-<#--
-	      $(".content-list").slimscroll({
-				height: "100%",
-		        size: "3px",
-	        	allowPageScroll: true,
-	   			touchScrollStep: 50
-		  });
-		  -->
-		   $(".content-wrapper>.content").slimscroll({
-				height: "100%",
-		        size: "8px",
-	        	allowPageScroll: true,
-	   			touchScrollStep: 50,
-	   			railVisible: true,
-    			alwaysVisible: true
-		  });
 		  
 		<#-- jquery post on button click -->
 		$( "#submit" ).click( function(){
+			<#-- todo check input valid -->
+			if( $( "#circleName" ).val() == "" || $( "#circleDescription" ).val() == "" ){
+				$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>Please fill all required fields (title and description)</strong>")
+				return false;
+			}
+			
 			<#-- put researcher & publication on circle into hidden input -->
 			if( $.PALM.circle.circleResearcher.length > 0){
 				var circleResearcherIds = "";
@@ -288,6 +257,11 @@
 		});
 		-->
 		function publicationSearch( query , jumpTo ){
+			var publicationListContainer = $( "#inputPub" ).find( ".content-list" );
+			if( query.trim() == "" ){
+				publicationListContainer.html( "" );
+				return false;
+			}
 			<#--
 				var maxPage = parseInt($( obj.element ).find( "span.total-page" ).html()) - 1;
 				if( jumpTo === "next")
@@ -336,6 +310,11 @@
 				var $pageDropdown = $( "#inputPub" ).find( "select.page-number" );
 				$pageDropdown.find( "option" ).remove();
 -->				
+				if( data.count == 0 ){
+					$.PALM.callout.generate( publicationListContainer , "warning", "Empty search results!", "No publications found with query \"" + data.query + "\"" );
+					return false;
+				}
+				
 				if( data.count > 0 ){
 					
 					printPublicationList( data, publicationListContainer);
@@ -516,6 +495,12 @@
 
 		<#-- related to researcher list and search -->
 
+		<#-- get publication list -->
+		<#--researcherSearch( "" , "first" );-->
+		$.PALM.callout.generate( $( "#inputAuth" ).find( ".content-list" ) , "normal", "Please search first to get the researchers" );
+		$.PALM.callout.generate( $( "#inputPub" ).find( ".content-list" ) , "normal", "Please search first to get the publications" );
+		
+
 		<#-- event for searching researcher -->
 		
 		var tempInput = $( "#researcher_search_field" ).val();
@@ -545,6 +530,13 @@
 		
 		<#-- search researcher -->
 		function researcherSearch( query , jumpTo ){
+		
+			var targetContainer = $( "#inputAuth" ).find( ".content-list" );
+			if( query.trim() == "" )
+			{
+				targetContainer.html( "" );
+				return false;
+			}
 			<#--//find the element option-->
 			<#--
 				var maxPage = parseInt($( obj.element ).find( "span.total-page" ).html()) - 1;
@@ -596,6 +588,11 @@
 				
 				var $pageDropdown = $( "#inputAuth" ).find( "select.page-number" );
 				$pageDropdown.find( "option" ).remove();
+				
+				if( data.count == 0 ){
+					$.PALM.callout.generate( targetContainer , "warning", "Empty search results!", "No researchers found with query \"" + data.query + "\"" );
+					return false;
+				}
 				
 				if( data.count > 0 ){
 					
@@ -713,16 +710,15 @@
 				.on( "click", function( e ){
 					e.preventDefault();
 					<#-- get list of publication -->
-					getPublicationList( "<@spring.url '/publication/search?authorId=' />" + $( this ).data( "id" ) + "&maxresult=300" );
+					getPublicationList( "<@spring.url '/publication/search?authorId=' />" + $( this ).data( "id" ) + "&maxresult=300&orderBy=date" );
 					<#-- show info -->
 					var authInfo = $( "#auth-info" );
 					authInfo.show();
 					authInfo.find( "strong" ).html( $( this ).data( "name" ) );
 					<#-- scroll to -->
-					var scrollTo_val = $( "#inputPub" )[0].offsetTop + 'px';
-					$(".content-wrapper>.content").slimscroll({
-						scrollTo : scrollTo_val
-					});
+					$(".content-wrapper>.content").animate({
+			            scrollTop: $( "#inputPub" ).offset().top
+			        }, 500);
 				});
 			
 			researcherDetailOption.append( circlePublicationButton );
@@ -737,16 +733,15 @@
 					
 					
 					<#-- get list of researcher -->
-					getPublicationList( "<@spring.url '/publication/search?authorId=' />" + $( this ).data( "id" ) + "&maxresult=300" );
+					getPublicationList( "<@spring.url '/publication/search?authorId=' />" + $( this ).data( "id" ) + "&maxresult=300&orderBy=date" );
 					<#-- show info -->
 					var authInfo = $( "#auth-info" );
 					authInfo.show();
 					authInfo.find( "strong" ).html( $( this ).data( "name" ) );
 					<#-- scroll to -->
-					var scrollTo_val = $( "#inputPub" )[0].offsetTop + 'px';
-					$(".content-wrapper>.content").slimscroll({
-						scrollTo : scrollTo_val
-					});
+					$(".content-wrapper>.content").animate({
+			            scrollTop: $( "#inputPub" ).offset().top
+			        }, 500);
 				});
 			
 			researcherDetailOption.append( circleAddButton );
@@ -768,22 +763,20 @@
 			}, 1000);
 
 		});
+		<#--
 		var maxPage = Math.ceil(data.count/data.maxresult);
 		var $pageDropdown = $( "#inputAuth" ).find( "select.page-number" );
-		<#-- set dropdown page -->
 		for( var i=1;i<=maxPage;i++){
 			$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
 		}
-		<#-- //enable bootstrap tooltip -->
-		<#-- $( "#inputAuth" ).find( "[data-toggle='tooltip']" ).tooltip(); -->
 		
-		<#--// set page number-->
 		$pageDropdown.val( data.page + 1 );
 		$( "#inputAuth" ).find( "span.total-page" ).html( maxPage );
 		var endRecord = (data.page + 1) * data.maxresult;
 		if( data.page == maxPage - 1 ) 
 		endRecord = data.count;
 		$( "#inputAuth" ).find( "span.paging-info" ).html( "Displaying researchers " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.count );
+		-->
 	}
 
 		

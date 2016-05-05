@@ -18,6 +18,10 @@
 		</section>
  	</@content.contentWrapper>
 
+	<@content.footerWrapper>
+		<#include "footer.ftl" />
+	</@content.footerWrapper>
+
 <@security.authorize access="isAuthenticated()">
 	<#-- add new publication -->
 	<div id="new-publication-circle" class="new-circle" title="Add new publication" data-url="<@spring.url '/publication/add' />">
@@ -31,7 +35,7 @@
 $(function(){
 	$( "#new-publication-circle" ).click( function( event ){
 		event.preventDefault();
-		$.PALM.popUpIframe.create( $(this).data("url") , {}, "Add New Publication");
+		$.PALM.popUpIframe.create( $(this).data("url") , { "popUpHeight":"80%", "popUpWidth" : "90%", "popUpMargin": "3% auto"}, "Add New Publication");
 	});
 });
 </script>

@@ -1,14 +1,27 @@
+<@security.authorize access="isAuthenticated()">
+	<#assign loggedUser = securityService.getUser() >
+</@security.authorize>
 <div id="boxbody${wUniqueName}" class="box-body">
 	<div id="tab_publication_detail" class="nav-tabs-custom" style="display:none">
         <ul class="nav nav-tabs">
 			<li id="header_publicationresult" class="active">
-				<a href="#tab_publicationresult" data-toggle="tab" aria-expanded="true">Detail</a>
+				<a href="#tab_publicationresult" data-toggle="tab" aria-expanded="true">Details</a>
 			</li>
 			<li id="header_sources">
-				<a href="#tab_publicationsources" data-toggle="tab" aria-expanded="true">Sources</a>
+				<a href="#tab_publicationsources" data-toggle="tab" aria-expanded="true">
+					Sources
+					<span data-toggle="tooltip" data-placement="bottom" data-html="true" data-original-title="The academic networks sources of this publication, such as Google Scholar, CiteseerX, DBLP, etc.">
+						&nbsp;<i class="fa fa-info-circle"></i>
+					</span>
+				</a>
 			</li>
 			<li id="header_htmlpdf">
-				<a href="#tab_publicationhtmlpdf" data-toggle="tab" aria-expanded="true">Html&Pdf</a>
+				<a href="#tab_publicationhtmlpdf" data-toggle="tab" aria-expanded="true">
+					Resources
+					<span data-toggle="tooltip" data-placement="bottom" data-html="true" data-original-title="The links to digital libraries pages and PDF files of this publication, such as IEEE.explorer, acm.org, DOI, etc.">
+						&nbsp;<i class="fa fa-info-circle"></i>
+					</span>
+				</a>
 			</li>
 			<#--
 			<li id="header_revision">
@@ -38,7 +51,7 @@
 	$( function(){
 		<#-- add slimscroll to widget body -->
 		$("#boxbody${wUniqueName} #tab_publication_detail").slimscroll({
-			height: "550px",
+			height: "500px",
 	        size: "3px",
 			allowPageScroll: true,
    			touchScrollStep: 50
@@ -52,6 +65,49 @@
 			onRefreshStart: function( widgetElem ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
+				<#-- switch tab -->
+				$('a[href="#tab_publicationresult"]').tab('show');
+				
+				<#if loggedUser??>
+				<#-- box footer -->
+					var addImproveButton = true;
+					var isFilesAvailable = true;
+					
+					if( typeof data.publication.abstractStatus !== "undefined" && data.publication.abstractStatus == "complete" && 
+						typeof data.publication.keywordStatus !== "undefined" && data.publication.keywordStatus == "complete")
+						addImproveButton = false;
+						
+					<#-- check publication.files -->
+					if( typeof data.publication.files === "undefined" || data.publication.files.length == 0 )
+						isFilesAvailable = false;
+					
+					var boxFooter = $( "#boxbody${wUniqueName}" ).next();
+					boxFooter.html( "" );
+					
+					if( isFilesAvailable ){
+						
+						var improveInfoButton = $('<a/>')
+													.addClass( "btn btn-block btn-social btn-twitter btn-sm pull-right" )
+													.html( "<strong>Improve Abstract & Keywords by Resources</strong>" )
+													.css( "width","290px")
+													.click( function(){
+														<#-- change tab if necessary -->
+														$('a[href="#tab_publicationresult"]').tab('show');
+														improveAbstractAndKeyword( data.publication.id, $( this ) , isFilesAvailable);
+													})
+													.hide();
+						boxFooter.html( improveInfoButton );
+						
+						$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+						  var target = $(e.target).attr("href") // activated tab
+						  if( target == "#tab_publicationhtmlpdf" )
+						  	improveInfoButton.show();
+						  else
+						  	improveInfoButton.hide();
+						});
+					}
+					
+				</#if>
 				<#-- show tab -->
 				var tabPublicationDetail = $( widgetElem ).find( "#tab_publication_detail" ).first();
 				tabPublicationDetail.show();
@@ -141,11 +197,30 @@
 					.append( pubTitle )
 					.append( pubCoauthor );
 
+				<#-- abstract -->
+				if( typeof data.publication.abstract != 'undefined'){
+					var pubAbstract = 
+						$('<dl/>')
+						.addClass( "palm_section abstractSec" )
+						.append(
+							$('<dt/>')
+							.addClass( "palm_label" )
+							.html( "Abstract :" )
+						).append(
+							$('<dd/>')
+							.addClass( "palm_content" )
+							.html( data.publication.abstract )
+						);
+							
+				tabContentPublicationResult
+					.append( pubAbstract );
+				}
+				
 				<#-- keywords -->
 				if( typeof data.publication.keyword != 'undefined'){
 					var pubKeyword = 
 						$('<dl/>')
-						.addClass( "palm_section" )
+						.addClass( "palm_section keywordSec" )
 						.append(
 							$('<dt/>')
 							.addClass( "palm_label" )
@@ -159,25 +234,7 @@
 				tabContentPublicationResult
 					.append( pubKeyword );
 				}	
-
-				<#-- abstract -->
-				if( typeof data.publication.abstract != 'undefined'){
-					var pubAbstract = 
-						$('<dl/>')
-						.addClass( "palm_section" )
-						.append(
-							$('<dt/>')
-							.addClass( "palm_label" )
-							.html( "Abstract :" )
-						).append(
-							$('<dd/>')
-							.addClass( "palm_content" )
-							.html( data.publication.abstract )
-						);
-							
-				tabContentPublicationResult
-					.append( pubAbstract );
-				}	
+				
 
 				<#-- content -->
 				if( typeof data.publication.content != 'undefined'){
@@ -263,6 +320,131 @@
 					publicationSourceInnerTabsContents.append( tabContent );
 
 				});
+				<#-- button to add new resource -->
+				var addNewResourceContainer =  $( '<div/>' )
+												.attr({"id":"add_new_resource_container"});
+												
+							
+									
+				var newResourceForm = $( '<div/>' )
+											.css({"background-color":"#efefef","padding":"5px","margin-bottom":"10px","border":"1px solid #eee"})
+											.append(
+												<#-- select and input button  -->
+												$( '<div/>' )
+													.addClass( "form-group" )
+													.append(
+														$( '<label/>' )
+														.css({"width":"100%"})
+														.html( "Add new web or PDF resource" )
+													)
+													.append(
+														$( '<select/>' )
+															.attr({"id":"newResourceSelect","class":"form-control"})
+															.css({"width":"80px","float":"left"})
+															.append(
+																$( '<option/>' )
+																.attr( "value","web" )
+																.html( "Web" )
+															)
+															.append(
+																$( '<option/>' )
+																.attr( "value","pdf" )
+																.html( "PDF" )
+															)
+													)
+													.append(
+														$( '<span/>' )
+														.css({"display":"block","overflow":"hidden","padding":"0 5px"})
+														.append(
+															$( '<input/>' )
+															.attr({"id":"newResourceInput","type":"text","class":"form-control","placeholder":"resource URL"})
+														)
+													)
+													.append(
+														$( '<div/>' )
+														.attr({"id":"error-div"})
+													)
+											)
+											.append(
+												$( '<div/>' )
+													.append(
+														$( "<a/>" )
+								        					.attr({
+								        						"class":"btn btn-block btn-default btn-sm pull-left",
+								        						"style":"width:80px"
+								        						})
+								        					.append(
+								        						"<strong>Cancel</strong>"
+								        					)
+															.click( function( event ){
+																event.preventDefault();
+																newResourceForm.slideUp();
+																newResourceButton.show();
+															})
+													)
+													.append(
+														$( "<a/>" )
+								        					.attr({
+								        						"class":"btn btn-block btn-social btn-twitter btn-sm pull-right",
+								        						"style":"width:80px;margin-top:0;padding:5px 0 !important;text-align:center"
+								        						})
+								        					.append(
+								        						"<strong>Save</strong>"
+								        					)
+															.click( function( event ){
+																event.preventDefault();
+																var sourceUrl = newResourceForm.find( "#newResourceInput" ).val();
+																<#-- check for validity -->
+																if( !$.PALM.utility.validateUrl( sourceUrl ) ){
+																	$.PALM.utility.showErrorTimeout( newResourceForm.find( "#error-div" ) , "&nbsp<strong>Not a valid URL</strong>")
+																	return false;
+																}
+																
+																var fileSelection = newResourceForm.find( "#newResourceSelect" ).val();
+																if( fileSelection == "web" ){
+																	if( sourceUrl.endsWith('.pdf') ){
+																		fileSelection = "pdf";
+																	}
+																}
+																<#-- post -->
+																<#--refresh widgets-->
+																var thisWidget = $.PALM.boxWidget.getByUniqueName( '${wUniqueName}' );
+																<#-- add overlay -->
+																thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+								
+																$.post( "<@spring.url '/publication/edit' />", { publicationId:data.publication.id,newResourceSelect:fileSelection,newResourceInput:sourceUrl  }, function( data ){
+													
+																	<#-- if status ok -->
+																	if( data.status == "ok" ){
+																		thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+					
+																		$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
+																	}
+																});
+															})
+													)
+													.append( "<br style='margin-bottom:10px;clear:both'>" )
+														 
+											).hide();
+
+				var newResourceButton = $( "<a/>" )
+					        					.attr({
+					        						"class":"btn btn-block btn-default btn-xxs pull-right",
+					        						"style":"width:160px;margin-top:0;text-align:center"
+					        						})
+					        					.append(
+					        						"<strong>+ Add new resource</strong>"
+					        					)
+												.click( function( event ){
+													event.preventDefault();
+													$( this ).hide();
+													newResourceForm.slideDown();
+												});
+						
+				addNewResourceContainer.append( newResourceButton );									
+				addNewResourceContainer.append( newResourceForm );
+				
+				tabContentPublicationHtmlPdfs.html( addNewResourceContainer );
 
 				<#-- publication htmlpdfs -->
 				var publicationHtmlPdfInnerTabs = $( '<div/>' )
@@ -277,7 +459,7 @@
 				publicationHtmlPdfInnerTabs.append( publicationHtmlPdfInnerTabsHeaders ).append( publicationHtmlPdfInnerTabsContents );
 
 				<#-- set inner tab into main tab -->
-				tabContentPublicationHtmlPdfs.html( publicationHtmlPdfInnerTabs );
+				tabContentPublicationHtmlPdfs.append( publicationHtmlPdfInnerTabs );
 
 				<#-- fill with htmlpdfs -->
 				$.each( data.publication.files , function( index, htmlpdf_item ){
@@ -295,20 +477,22 @@
 					<#-- content detail -->
 					var contentDetail = $( '<dl/>' )
 										.addClass( "dl-horizontal" )
-										.css( "clean","both" )
-										.append(
+										.css( "clean","both" );
+										
+					contentDetail.append(
 											$( '<dt/>' ).html( "Obtained from : " )
 										)
 										.append(
 											$( '<dd/>' ).html( htmlpdf_item.source )
-										)
-										.append(
+										);
+					if( typeof htmlpdf_item.label !== "undefined" && htmlpdf_item.label != "" )
+						contentDetail.append(
 											$( '<dt/>' ).html( "Source name:" )
 										)
 										.append(
 											$( '<dd/>' ).html( htmlpdf_item.label )
 										)
-										.append(
+					contentDetail.append(
 											$( '<dt/>' ).html( "Source url:" )
 										)
 										.append(
@@ -320,7 +504,7 @@
 													.attr({ "id" : "result" + tabHeaderTextShort })
 													.css({ "width" : "100%" });
 													
-					if( data.publication.type !== "BOOK" )
+					<#--if( data.publication.type !== "BOOK" )-->
 						contentExtractedResult.html( 'Please press "Extract ' + htmlpdf_item.type + '" button to see the extracted result here'  );
 
 					<#-- content navigation -->
@@ -336,7 +520,7 @@
 						.click( function( event ){ event.preventDefault();window.open( htmlpdf_item.url , tabHeaderText ,'scrollbars=yes,width=650,height=500')})
 					)
 					
-					if( data.publication.type !== "BOOK" )
+					<#--if( data.publication.type !== "BOOK" ) -->
 						contentNavigation.append(
 							$('<button/>')
 							.addClass( "btn btn-default btn-sm pull-right" )
@@ -369,6 +553,9 @@
 					$.each( jsObject , function( k, v){
 						if( k == "source" )
 							return;
+							
+						if( typeof v == "string")
+							v = v.replace(/(?:\r\n|\r|\n)/g, '<br />');
 						descriptionList.append(
 											$( '<dt/>' ).addClass( "capitalize" ).html( k )
 										)
@@ -386,16 +573,263 @@
 				function extractHtmlOrPublication( sourceUrl , targetType, contentExtractedResult ){
 					contentExtractedResult.html( "Extracting " + targetType + " from " + sourceUrl + " ..."  );
 					if( targetType == "PDF" ){
-						$.getJSON( "<@spring.url '/publication/pdfExtractTest' />" + "?url=" + encodeURIComponent(sourceUrl) , function( data ) {
+						$.getJSON( "<@spring.url '/publication/pdfExtract' />" + "?url=" + encodeURIComponent(sourceUrl) , function( data ) {
   							contentExtractedResult.html( printKeyValue( data ));
   						});
 					} else if( targetType == "HTML" ){
-						$.getJSON( "<@spring.url '/publication/htmlExtractTest' />" + "?url=" + encodeURIComponent(sourceUrl) , function( data ) {
+						$.getJSON( "<@spring.url '/publication/htmlExtract' />" + "?url=" + encodeURIComponent(sourceUrl) , function( data ) {
   							contentExtractedResult.html( printKeyValue( data ));
   						});
 					}
 				}
-
+				
+				function improveAbstractAndKeyword( publicationId, triggerElem , isFilesAvailable ){
+					<#-- publication improveinfo -->
+					<#-- container -->
+					var publicationImproveContainer = $( '<div/>' )
+														.addClass( "box box-default box-solid" )
+														.attr({"id":"improveBox"})
+														.append(
+															 $( '<div/>' )
+															.addClass( "box-header" )
+															.append(
+																 $( '<h3/>' )
+																 	.addClass( "box-title" )
+																	.html( "Improve Abstract and Keywords by Resources" )
+																)
+														);
+														
+					var publicationImproveBody = $( '<div/>' )
+													.addClass( "box-body" )
+													.append("Please select one of the following options. Please check the correctness of abstract and keywords before submitting. You may edit the content if it is necessary.");
+					publicationImproveContainer.append( publicationImproveBody );
+					
+					var publicationImproveInfoInnerTabs = $( '<div/>' )
+														.attr({"id":"tab_inner_publication_improveinfo"})
+														.addClass( "nav-tabs-custom" );
+					var publicationImproveInfoInnerTabsHeaders = $( '<ul/>' )
+														.addClass( "nav nav-tabs" );
+					var publicationImproveInfoInnerTabsContents = $( '<div/>' )
+														.addClass( "tab-content" );
+	
+					<#-- append tab header and content -->
+					publicationImproveInfoInnerTabs.append( publicationImproveInfoInnerTabsHeaders ).append( publicationImproveInfoInnerTabsContents );
+	
+					<#-- set inner tab into main tab -->
+					publicationImproveContainer.append( publicationImproveInfoInnerTabs );
+					tabContentPublicationResult.append( publicationImproveContainer );
+					
+					<#-- get original value -->
+					var origAbstractElem = tabContentPublicationResult.find( ".abstractSec" );
+					var origKeywordElem = tabContentPublicationResult.find( ".keywordSec" );
+					var origAbstractText = "";
+					var origKeywordText = "";
+					
+					if( origAbstractElem.length ){
+						origAbstractText = origAbstractElem.find( ".palm_content" ).text();
+						origAbstractElem.hide();
+					}
+					if( origAbstractElem.length ){
+						origKeywordText = origKeywordElem.find( ".palm_content" ).text();
+						origKeywordElem.hide();
+					}
+					<#-- hide button -->
+					triggerElem.hide();
+					
+					<#-- generate first tab -->
+					var dataOriginal = { "result":{ "abstract":origAbstractText, "keyword":origKeywordText } };
+					addImprovementForm( publicationId, tabContentPublicationResult, triggerElem, publicationImproveInfoInnerTabsHeaders , publicationImproveInfoInnerTabsContents, "Original", dataOriginal , true);
+		
+					<#-- generate other tabs -->
+					if( isFilesAvailable ){
+						<#-- show pop up progress log -->
+						var uniquePid = $.PALM.utility.generateUniqueId();
+						$.PALM.popUpMessage.create( "Trying to extract information from PDF or digital libraries...", { uniqueId:uniquePid, popUpHeight:150, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid, pollingTime:500} );
+		
+						$.getJSON( "<@spring.url '/publication/pdfHtmlExtract' />" + "?id=" + data.publication.id + "&pid=" + uniquePid, function( dataFiles ) {
+							
+							<#-- remove  pop up progress log -->
+							$.PALM.popUpMessage.remove( uniquePid, { pollingTime:500} );
+			
+							$.each( dataFiles.files , function( index, dataFile ){
+								var tableHeader = ( index + 1) + "_" + dataFile.type;
+								addImprovementForm( publicationId, tabContentPublicationResult, triggerElem, publicationImproveInfoInnerTabsHeaders , publicationImproveInfoInnerTabsContents, tableHeader, dataFile);
+							});
+						});
+					}
+				}
+				
+				function addImprovementForm( publicationId, tabContentPublicationResult, triggerElem, publicationImproveInfoInnerTabsHeaders , publicationImproveInfoInnerTabsContents, tabTitleText, tabContentObj , isActive){
+					var tabHeader = $( '<li/>' )
+						.append(
+							$( '<a/>' )
+							.attr({ "href": "#tabs_" + tabTitleText, "data-toggle":"tab" , "aria-expanded" : "true"})
+							.html( tabTitleText )
+						);
+						
+					<#-- tab content -->
+					var tabContent = $( '<div/>' )
+						.attr({ "id" : "tabs_" + tabTitleText })
+						.addClass( "tab-pane" )
+	
+					
+					
+					<#-- source detail -->
+					if( typeof tabContentObj.url !== "undefined" ){
+						var sourceElem = $( '<div/>' )
+											.append( "Source: (click to view)" )
+											.append(
+												$( '<div/>' )
+													.addClass( "font-xs urlstyle" )
+													.append( 
+														tabContentObj.url 
+													)
+													.click( function( event ){ event.preventDefault();window.open( tabContentObj.url, "link to source" ,'scrollbars=yes,width=650,height=500')})
+											);
+						
+						tabContent.append( sourceElem );
+					}
+					
+					<#-- abstract detail -->
+					
+					var abstractElem = $( '<div/>' )
+										.append( "Abstract*:" );
+										
+					
+					tabContent.append( abstractElem );
+					if( typeof tabContentObj.result.abstract !== "undefined" ){
+						abstractElem.append(
+											$( '<textarea/>' )
+											.addClass("abstractText")
+											.attr({"placeholder":"abstract, minimal 200 characters length"})
+											.css({ "width":"100%","height":"140px"})
+											.val( tabContentObj.result.abstract )
+										);
+					} else {
+						abstractElem.append(
+											$( '<textarea/>' )
+											.addClass("abstractText")
+											.attr({"placeholder":"abstract, minimal 200 characters length"})
+											.css({ "width":"100%","height":"140px"})
+										);
+					}
+					
+					<#-- keywords detail -->
+					
+					var keywordElem = $( '<div/>' )
+										.append( "Keywords:" );
+										
+					
+					tabContent.append( keywordElem );
+					
+					if( typeof tabContentObj.result.keyword !== "undefined" ){
+						keywordElem.append(
+							$( '<textarea/>' )
+							.addClass("keywordText")
+							.css({ "width":"100%","height":"40px"})
+							.attr({"placeholder":"keywords, separated by comma"})
+							.val( tabContentObj.result.keyword )
+						);
+					} else {
+						keywordElem.append(
+							$( '<textarea/>' )
+							.addClass("keywordText")
+							.css({ "width":"100%","height":"40px"})
+							.attr({"placeholder":"keywords, separated by comma"})
+						);
+					}
+					
+					<#-- required field -->
+					var infoElem = $( '<div/>' )
+										.append( "* required field" );
+					tabContent.append( infoElem );
+					
+					<#-- required field -->
+					var errorElem = $( '<div/>' )
+										.addClass(".errorBlock");
+					tabContent.append( errorElem );			
+					
+					<#-- cancel button -->
+					var cancelButton = $( "<a/>" )
+        					.attr({
+        						"class":"btn btn-block btn-default btn-sm pull-left",
+        						"style":"width:80px"
+        						})
+        					.append(
+        						"<strong>Cancel</strong>"
+        					)
+							.click( function( event ){
+								event.preventDefault();
+								triggerElem.show();
+								var origAbstractElem = tabContentPublicationResult.find( ".abstractSec" );
+								var origKeywordElem = tabContentPublicationResult.find( ".keywordSec" );
+								if( origAbstractElem.length )
+									origAbstractElem.show();
+								if( origAbstractElem.length )
+									origKeywordElem.show();
+								tabContentPublicationResult.find( "#improveBox" ).remove();
+							});
+					tabContent.append( cancelButton );
+					
+				
+					
+					<#-- submit button -->
+					var saveButton = $( "<a/>" )
+        					.attr({
+        						"class":"btn btn-block btn-social btn-twitter btn-sm pull-right",
+        						"style":"width:80px;margin-top:0;padding:5px 0 !important;text-align:center"
+        						})
+        					.append(
+        						"<strong>Save</strong>"
+        					)
+							.click( function( event ){
+								event.preventDefault();
+								<#-- validation -->
+								var abstractText = tabContent.find( ".abstractText" ).val();
+								var keywordText = tabContent.find( ".keywordText" ).val();
+								if( abstractText.length < 200 ){
+									$.PALM.utility.showErrorTimeout( errorElem , "Abstract is empty or too short")
+									return false;
+								}
+								<#-- save changes -->
+								<#--refresh widgets-->
+								var thisWidget = $.PALM.boxWidget.getByUniqueName( '${wUniqueName}' );
+								<#-- add overlay -->
+								thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+					
+								$.post("<@spring.url '/publication/edit' />", { publicationId:publicationId, abstractText:abstractText,keywordList:keywordText}, function( dataSave ) {
+									if( dataSave.status == "ok" ){
+										<#-- add overlay -->
+										thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+					
+										$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
+										
+										<#-- topic widget-->
+										
+										var widgetTopicComposition = $.PALM.boxWidget.getByUniqueName( 'publication_topic_composition' );
+										<#-- add overlay -->
+										widgetTopicComposition.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+					
+										$.PALM.boxWidget.refresh( widgetTopicComposition.element , widgetTopicComposition.options );
+									}
+								});
+									
+							});
+					tabContent.append( saveButton );
+					
+					<#-- container closing -->
+					tabContent.append( "<br class='clear'>" );
+									
+					if( isActive ){
+						tabHeader.addClass( "active" );
+						tabContent.addClass( "active" );
+					}
+	
+					<#-- append tab header and content -->
+					publicationImproveInfoInnerTabsHeaders.append( tabHeader );
+					publicationImproveInfoInnerTabsContents.append( tabContent );
+				}
+			
 			}
 		};
 

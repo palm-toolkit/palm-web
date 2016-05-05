@@ -158,7 +158,8 @@ $.PALM.options = {
 	registeredWidget : [],
 	xhrPool : [],
 	// main nav menu selector
-	navMenuSelector : ".navbar-custom-menu"
+	navMenuSelector : ".navbar-custom-menu",
+	navMenuHomeSelector: ".navbar-nav"
 };
 
 /*
@@ -184,31 +185,12 @@ $(function() {
 			size : "3px"
 		}).css("width", "100%");
 	}
-
-	// Activate sidebar push menu
-	if (o.sidebarPushMenu) {
-		$.PALM.pushMenu(o.sidebarToggleSelector);
-		// for small screen
-		if ($(window).width() <= $.PALM.options.screenSizes.md) {
-			$(o.sidebarToggleSelector).click();
-			// add bootstrap tooltip
-			$.each($(o.navMenuSelector).find("a"), function(index, elem) {
-				$(elem).find("strong").hide();
-				if (typeof $(elem).attr("title") != "undefined")
-					$(elem).attr({
-						"data-toggle" : "tooltip",
-						"data-placement" : "bottom",
-						"data-original-title" : $(elem).attr("title")
-					});
-			});
-		}
-
-	}
-
+	
 	// Activate Bootstrap tooltip
 	if (o.enableBSToppltip) {
 		$(o.BSTooltipSelector).tooltip();
 	}
+
 
 	// Activate box widget
 	if (o.enableBoxWidget) {
@@ -227,7 +209,7 @@ $(function() {
 			box.toggleClass('direct-chat-contacts-open');
 		});
 	}
-
+	
 	/*
 	 * INITIALIZE BUTTON TOGGLE ------------------------
 	 */
@@ -240,6 +222,35 @@ $(function() {
 		});
 
 	});
+	
+	// Activate sidebar push menu
+	if (o.sidebarPushMenu) {
+		$.PALM.pushMenu(o.sidebarToggleSelector);
+		// for small screen
+		if ($(window).width() <= $.PALM.options.screenSizes.xs) {
+			$(o.sidebarToggleSelector).click();
+			// add bootstrap tooltip
+			$.each($(o.navMenuSelector).find("a"), function(index, elem) {
+				$(elem).find("strong").hide();
+			});
+		} else if( $(window).width() <= $.PALM.options.screenSizes.md){
+			$(o.sidebarToggleSelector).click();
+			// add bootstrap tooltip
+			$.each($(o.navMenuSelector).find("a"), function(index, elem) {
+				$(elem).find("strong").hide();
+			});
+		} else{
+			$.each($(o.navMenuSelector).find("a"), function(index, elem) {
+				$(elem).tooltip('destroy');
+			});
+			$.each($(o.navMenuHomeSelector).find("a"), function(index, elem) {
+				$(elem).tooltip('destroy');
+			});
+		}
+
+	}
+
+
 });
 
 /*
@@ -326,6 +337,9 @@ $.PALM.selected = {
 		});
 		// reset popup messages
 		$.PALM.options.popUpMessageOptions.popUpElement = [];
+		// if circle remove widget group content
+		if (typeSelected == "circle")
+			$.PALM.boxWidget.removeRegisteredWidgetByGroup( "content" );
 		return false;
 	},
 	reset : function() {
@@ -574,9 +588,21 @@ $.PALM.layout = {
 					if ($(window).width() < $.PALM.options.screenSizes.sm)
 						listHeightOffset += 50;
 					$(".content-list:first").height(bodyheight - listHeightOffset);
+					$(".content-wrapper").height(bodyheight - 25);
 					$("#left-menu-sidebar").parent().height(
 							bodyheight - listHeightOffset + 150);
-
+					// navigation menu
+					if ($(window).width() <= $.PALM.options.screenSizes.md) {
+						$.each($(o.navMenuSelector).find("a"), function(index, elem) {
+							$(elem).find("strong").hide();
+							$(elem).tooltip();
+						});
+					} else{
+						$.each($(o.navMenuSelector).find("a"), function(index, elem) {
+							$(elem).find("strong").show();
+							$(elem).tooltip('destroy');
+						});
+					}
 				});
 	},
 	fix : function() {
@@ -638,7 +664,7 @@ $.PALM.layout = {
 		if ($(window).width() < $.PALM.options.screenSizes.sm)
 			listHeightOffset += 50;
 		$(".content-list:first").height(bodyheight - listHeightOffset);
-		$(".content-wrapper").height(bodyheight - 50);
+		$(".content-wrapper").height(bodyheight - 25);
 		$("#left-menu-sidebar").parent().height(
 				bodyheight - listHeightOffset + 150);
 	}
@@ -661,6 +687,15 @@ $.PALM.pushMenu = function(toggleBtn) {
 		// Enable sidebar push menu
 		if ($(window).width() > screenSizes.md) {
 			$("body").toggleClass('sidebar-collapse');
+		}
+		else if ($(window).width() > screenSizes.xs) {
+			if ($("body").hasClass('sidebar-open')) {
+				$("body").removeClass('sidebar-open');
+				$("body").addClass('sidebar-collapse')
+			} else {
+				$("body").addClass('sidebar-open');
+				$("body").removeClass('sidebar-collapse')
+			}
 		}
 		// Handle sidebar push menu for small screens
 		else {
@@ -894,6 +929,13 @@ $.PALM.boxWidget = {
 		// remove
 		if (widgetIndex > -1)
 			$.PALM.options.registeredWidget.splice(widgetIndex, 1);
+	},
+	removeRegisteredWidgetByGroup : function( groupName ) {
+		for(var i = $.PALM.options.registeredWidget.length -1; i >= 0 ; i--){
+		    if($.PALM.options.registeredWidget[i].group === groupName){
+		    	$.PALM.options.registeredWidget.splice(i, 1);
+		    }
+		}
 	}
 };
 
@@ -1000,7 +1042,12 @@ $.PALM.popUpMessage = {
 		// scroll to bottom
 		logMessageContainer.scrollTop(logMessageContainer.prop("scrollHeight"));
 	},
-	remove : function(objectId) {
+	remove : function(objectId, pollingOptions) {
+		var o = $.PALM.options.popUpMessageOptions;
+		
+		if (typeof pollingOptions != "undefined")
+			o = $.extend(o, pollingOptions);
+		
 		// get the object and remove from document
 		var targetElement = $.PALM.popUpMessage.getPopUpObject(objectId);
 
@@ -1009,11 +1056,15 @@ $.PALM.popUpMessage = {
 			return false;
 
 		// update with fading efect
-		$(targetElement.element).fadeOut("fast");
+		$(targetElement.element).fadeOut("slow");
 
 		// if target element is polling, stop polling
-		if (targetElement.polling)
-			clearInterval(targetElement.pollingObject);
+		if (targetElement.polling){
+			//setTimeout(function(){
+				clearInterval(targetElement.pollingObject);
+			//}, o.pollingTime);
+		}
+			
 
 		// remove from list
 		$(targetElement.element).promise().done(
@@ -1195,8 +1246,16 @@ $.PALM.popUpAjaxModal = {
 $.PALM.callout = {
 	generate : function(containerElement, type, title, content) {
 		var calloutClass = "callout";
-		if (type == "warning")
+		if (type == "normal")
+			calloutClass += "";
+		else if (type == "warning")
 			calloutClass += " callout-warning";
+		else if (type == "info")
+			calloutClass += " callout-info";
+		else if (type == "danger")
+			calloutClass += " callout-danger";
+		else if (type == "success")
+			calloutClass += " callout-success";
 
 		var callOutBlock = $('<div/>').addClass(calloutClass).append(
 				$('<h4/>').html(title)).append($('<p/>').html(content));
@@ -1307,8 +1366,8 @@ $.PALM.bookmark = {
 			   	.addClass( "active" );
 			   // change label
 			   if( type == "researcher" ){
-				   bookButton.find( "i" ).removeClass( "fa-user-plus" ).addClass( "fa-check" );
-				   bookButton.find( "strong" ).html( "Followed" );
+				   bookButton.find( "i" ).removeClass( "fa-bookmark" ).addClass( "fa-check" );
+				   bookButton.find( "strong" ).html( "Bookmarked" );
 			   } else {
 				   bookButton.find( "i" ).removeClass( "fa-bookmark" ).addClass( "fa-check" );
 				   bookButton.find( "strong" ).html( "Bookmarked" );
@@ -1326,8 +1385,8 @@ $.PALM.bookmark = {
 			   	.removeClass( "active" );
 			   // change label
 			   if( type == "researcher" ){
-				   bookButton.find( "i" ).removeClass( "fa-check" ).addClass( "fa-user-plus" );
-				   bookButton.find( "strong" ).html( "Follow" );
+				   bookButton.find( "i" ).removeClass( "fa-check" ).addClass( "fa-bookmark" );
+				   bookButton.find( "strong" ).html( "Bookmark" );
 			   } else {
 				   bookButton.find( "i" ).removeClass( "fa-check" ).addClass( "fa-bookmark" );
 				   bookButton.find( "strong" ).html( "Bookmark" );
@@ -1396,6 +1455,9 @@ $.PALM.utility = {
 	},
 	cutStringWithoutCutWord : function(inputText, maxLength) {
 
+		if( typeof inputText == "undefined" || inputText == "")
+			return false;
+		
 		if (inputText.length > maxLength) {
 			// trim the string to the maximum length
 			var trimmedString = inputText.substr(0, maxLength);
@@ -1433,6 +1495,33 @@ $.PALM.utility = {
 	        	url += "?";
 	        return url;
 	    }
+	},
+	validateUrl: function ( textval ){
+		 var urlregex = new RegExp( "^(http|https|ftp)\://([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(\:[0-9]+)*(/($|[a-zA-Z0-9\.\,\?\'\\\+&amp;%\$#\=~_\-]+))*$");
+		 return urlregex.test( textval );
+	},
+	showErrorTimeout: function( container, message, options){
+		var o = {
+			timeout:5000,
+			errorClass:"errorStyle",
+			writeMode:"replace"
+		}
+		o = $.extend(o, options);
+		
+		var errorElem = $( '<span/>' )
+						.addClass( o.errorClass )
+						.html( message )
+		
+		if( o.writeMode == "replace"){
+			container.html( errorElem );
+		} else {
+			container.append( errorElem );
+		}
+		
+		setTimeout(function(){
+			errorElem.remove();
+		}, o.timeout);
+		
 	}
 };
 
@@ -1796,6 +1885,7 @@ function convertToAjaxMultipleFileUpload($inputFile, $progressBar,
 		$container = $resultContainer;
 	else
 		$container = $($resultContainer);
+	
 
 	$inputFile.fileupload({
 		dataType : 'json',
@@ -1807,9 +1897,11 @@ function convertToAjaxMultipleFileUpload($inputFile, $progressBar,
 			$container.find("#keywords").val(data.result.keyword);
 			$container.find("#contentText").val(data.result.content);
 			$container.find("#referenceText").val(data.result.reference);
+			$container.closest( ".box" ).find( ".overlay" ).remove();
 		},
 
 		progressall : function(e, data) {
+			$container.closest( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 			var progress = parseInt(data.loaded / data.total * 100, 10);
 			$progressBar.find('.bar').css('width', progress + '%').html(
 					progress + '%');

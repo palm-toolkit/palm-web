@@ -1,5 +1,8 @@
 <div id="boxbody<#--${wUniqueName}-->" class="box-body">
 	 <form role="form" id="addVenue" action="<@spring.url '/venue/add' />" method="post">
+	 
+	 	<#-- hidden attribute store eventGroup id from selected autocomplete -->
+		<input type="hidden" name="eventGroupIdTemp" id="eventGroupIdTemp" />
 		
 		<#-- Venue -->
 		<div class="form-group">
@@ -37,6 +40,10 @@
 	    
 	    <input type="hidden" id="dblpUrl" name="dblpUrl">
 	    
+	    <#if targetEventGroupId??>
+	    	<input type="hidden" id="eventGroupId" name="eventGroupId" value="${targetEventGroupId}">
+	    </#if>
+	    
 	    <#if targetEventId??>
 	    	<input type="hidden" id="eventId" name="eventId" value="${targetEventId!''}">
 	    </#if>
@@ -56,6 +63,7 @@
 	    <div class="pull-left">
           * Mandatory fields
         </div>
+	<div id="error-div"></div>
 
 	</form>
 </div>
@@ -77,6 +85,10 @@
 		<#-- jquery post on button click -->
 		$( "#submit" ).click( function(){
 			<#-- todo check input valid -->
+			if( $( "#name" ).val() == "" ){
+				$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>Please fill all required field (Conference/Journal name)</strong>")
+				return false;
+			}
 			$.post( $("#addVenue").attr( "action" ), $("#addVenue").serialize(), function( data ){
 				<#-- todo for error response -->
 
@@ -121,6 +133,7 @@
 		}
 		
 		$("#name").autocomplete({
+			delay: 500,
 		    source: function (request, response) {
 		    	var _this = this;
 		        $.ajax({
@@ -129,6 +142,10 @@
 		            data: {
 						query: request.term,
 						source: "all",
+						addedVenue: "no",
+						<#if targetEventId??>
+	    					eventId: "${targetEventId!''}",
+	    				</#if>
 						type: $( "#venue-type" ).val()
 					},
 		            success: function (data) {
@@ -158,6 +175,7 @@
 			select: function( event, ui ) {
 				<#-- select appropriate vanue type -->
 				$( '#venue-type' ).val( ui.item.type ).change();
+				$( '#eventGroupIdTemp' ).val( ui.item.id );
 				$( '#dblpUrl' ).val( ui.item.url );
 				$( '#type' ).val( ui.item.type )
 				$( '#notation' ).val( ui.item.labelShort );

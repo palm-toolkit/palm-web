@@ -1,4 +1,4 @@
-<div id="boxbody<#--${wUniqueName}-->" class="box-body">
+<div id="boxbody${wUniqueName}" class="box-body">
 
 	 <form role="form" id="addResearcher" action="<@spring.url '/researcher/add' />" method="post">
 		
@@ -8,12 +8,13 @@
 		<div class="form-group">
 	      <label><i style="width: 20px;" class="fa fa-user"></i>Name *</label>
 	      <input type="text" id="name" name="name" value="" class="form-control" placeholder="researcher name" />
+	      <span class="font-xs">Note: Please select researcher from the auto-complete. Auto-complete will automatically be trigerred after typing 3rd letter.
 	    </div>
 
 		<#-- academic status -->
 		<div class="form-group">
-          <label><i style="width: 20px;" class="fa fa-graduation-cap"></i>Academic Status *</label>
-          <input type="text" id="academicStatus" name="academicStatus" class="form-control" placeholder="" />
+          <label><i style="width: 20px;" class="fa fa-graduation-cap"></i>Academic Status</label>
+          <input type="text" id="academicStatus" name="academicStatus" class="form-control" placeholder="e.g. researcher, professor, etc" />
         </div>
         
         <#-- affiliation -->
@@ -41,6 +42,7 @@
         </div>
 
 	</form>
+	<div id="error-div"></div>
 </div>
 
 <div class="box-footer">
@@ -68,6 +70,12 @@
 		<#-- jquery post on button click -->
 		$( "#submit" ).click( function(){
 			<#-- todo check input valid -->
+			if( $( "#name" ).val() == "" || $( "#affiliation" ).val() == "" ){
+				$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>Please fill all required fields (name & affiliation)</strong>")
+				return false;
+			}
+			$( "#widget-${wUniqueName}" ).find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+			
 			$.post( $("#addResearcher").attr( "action" ), $("#addResearcher").serialize(), function( data ){
 				<#-- todo if error -->
 
@@ -79,6 +87,14 @@
 					} else {
 						window.location = "<@spring.url '/researcher' />?id=" + data.author.id  + "&name=" + data.author.name
 					}
+				} else {
+					$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>An error occured please select researcher again from auto-complete</strong>")
+					$( "#widget-${wUniqueName}" ).find( ".overlay" ).remove();
+					 
+					$('#name').bind('focus', function(){ $(this).autocomplete("search"); } );
+					$('#name').focus();
+					var textToShow = $('#name').find(":selected").text();
+		   			$('#name').parent().find("span").find("input").val(textToShow);
 				}
 			});
 		});
@@ -94,6 +110,7 @@
   		<#-- author -->
 		$('#name')
 		.autocomplete({
+			delay: 500,
 		    source: function (request, response) {
 		        $.ajax({
 		            url: "<@spring.url '/researcher/search' />",
@@ -103,9 +120,14 @@
 						source: "all"
 					},
 		            success: function (data) {
+		            	$('#name').removeClass( "ui-autocomplete-loading" );
 		            	if( data.count == 0){
-		            		$('#name').removeClass( "ui-autocomplete-loading" );
-		            		return false;
+		            		var result = [{
+       									label: 'No suggested researcher found', 
+   										value: response.term
+										}];
+										
+       						response(result);
 		            	}
 		            		
 		                response($.map(data.researchers , function(v,i){
@@ -129,6 +151,9 @@
 		                		
 		                    return researcherMap;
 		                }));
+		            },
+		            always: function(){
+		            	$('#name').removeClass( "ui-autocomplete-loading" );
 		            }
 		        });
 		    },
@@ -160,40 +185,45 @@
 				$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
 			}
 		})
-		.autocomplete( "instance" )._renderItem = function( ul, item ) {
-			var itemElem = $( "<li/>" )
-							.addClass( "f-a-cont" );
-			
-			if( typeof item.photo !== "undefined" ){
-	        	itemElem.append( $( "<img/>" )
-	        						 .attr({ 'class':'author-circle-img f-a-img','src': item.photo})
-	        					);
-	        } else {
-	        	itemElem.append( $( "<i/>" )
-	        						 .attr({ 'class':'fa fa-user bg-aqua'})
-	        					);
-	        }
-	        var itemDesc = $( "<div/>" )
-        						 .attr({'class':'f-a-desc'})
-        						
-        						 
-        	itemDesc.append(
-				 		$( "<div/>" )
-    						 .attr({'class':'f-a-name'})
-    						 .html( item.label )
-					 );
-					 
-        	if( typeof item.aff !== "undefined" ){
-        		itemDesc.append(
-				 		$( "<div/>" )
-    						 .attr({'class':'f-a-aff'})
-    						 .html( item.aff )
-					 );
-        	}
-        					 
-	        itemElem.append( itemDesc );
-	      	
-	      	return itemElem.appendTo( ul );
+		.data("ui-autocomplete")._renderItem = function( ul, item ) {
+			if( typeof item.id != "undefined" ){
+				var itemElem = $( "<li/>" )
+								.addClass( "f-a-cont" );
+				
+				if( typeof item.photo !== "undefined" ){
+		        	itemElem.append( $( "<img/>" )
+		        						 .attr({ 'class':'author-circle-img f-a-img','src': item.photo})
+		        					);
+		        } else {
+		        	itemElem.append( $( "<i/>" )
+		        						 .attr({ 'class':'fa fa-user bg-aqua'})
+		        					);
+		        }
+		        var itemDesc = $( "<div/>" )
+	        						 .attr({'class':'f-a-desc'})
+	        						
+	        						 
+	        	itemDesc.append(
+					 		$( "<div/>" )
+	    						 .attr({'class':'f-a-name'})
+	    						 .html( item.label )
+						 );
+						 
+	        	if( typeof item.aff !== "undefined" ){
+	        		itemDesc.append(
+					 		$( "<div/>" )
+	    						 .attr({'class':'f-a-aff'})
+	    						 .html( item.aff )
+						 );
+	        	}
+	        					 
+		        itemElem.append( itemDesc );
+		      	
+		      	return itemElem.appendTo( ul );
+		      }
+		      else{
+	      			return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo( ul );
+	      	  }
 	    };
 	    
 	    $('#name')
@@ -217,7 +247,7 @@
 			$.each( inputKeywords.split(","), function(index, inputKeyword ){
 	    		<#-- remove multiple spaces -->
 				inputKeyword = inputKeyword.replace(/ +(?= )/g,'').trim();
-				if( inputKeyword.length > 2 && !isTagDuplicated( '#keyword-list', inputKeyword )) {
+				if( inputKeyword.length > 2 && !isTagDuplicated( '#keywordList', inputKeyword )) {
 	      			$( inputElem ).before(
 	      				$( '<span/>' )
 	      					.addClass( "tag-item" )
@@ -256,10 +286,12 @@
 			                           };
 			                }));
 		                }
+		                $('#affiliation').removeClass( "ui-autocomplete-loading" );
 		            }
 		        });
 		    },
 			minLength: 3,
+			delay: 500,
 			select: function( event, ui ) {
 
 			},
@@ -274,7 +306,7 @@
 		<#-- trigger autocomplete is there is value on name input -->
 		<#if author.name??>
 			$('#name').bind('focus', function(){ $(this).autocomplete("search"); } );
-			$('#name').val("${author.name}").focus();
+			$('#name').val("${author.name?capitalize}").focus();
 			var textToShow = $('#name').find(":selected").text();
    			$('#name').parent().find("span").find("input").val(textToShow);
 		</#if>

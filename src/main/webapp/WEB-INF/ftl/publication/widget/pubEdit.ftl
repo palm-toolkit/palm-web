@@ -2,16 +2,16 @@
 
 	 <form role="form" id="editPublication" action="<@spring.url '/publication/edit' />" method="post">
 		<#-- hidden publication id -->
-		<input type="hidden" name="publication-id" value="${publication.id}">
+		<input type="hidden" name="publicationId" value="${publication.id}">
 		<#-- title -->
 		<div class="form-group">
-	      <label>Title</label>
+	      <label>Title *</label>
 	      <input type="text" id="title" name="title" class="form-control" placeholder="Publication" value="${publication.title}">
 	    </div>
 	    
 		<#-- author -->
 		<div class="form-group">
-	      <label>Author</label>
+	      <label>Author *</label>
 	      <div id="authors-tag" class="palm-tagsinput" tabindex="-1">
 	    <#assign authorList = "">
 	    <#assign authorListIds = "">
@@ -61,12 +61,12 @@
 	      <div id="keywords" class="palm-tagsinput" tabindex="-1">
 	      		<input type="text" value="${publication.keywordText!''}" placeholder="Keywords, separated by comma" />
 	      </div>
-	      <input type="hidden" id="keyword-list" name="keyword-list" value="">
+	      <input type="hidden" id="keywordList" name="keywordList" value="">
 	    </div>  
 
 		<#-- publication-date -->
 		<div class="form-group">
-			<label>Publication Date</label>
+			<label>Publication Date *</label>
 			<div class="input-group" style="width:140px">
 				<div class="input-group-addon">
 					<i class="fa fa-calendar"></i>
@@ -141,7 +141,11 @@
 	      <input type="text" id="venue" name="venue" class="form-control" placeholder="Venue">
 	    </div>
 -->
+<div class="pull-left">
+          * Mandatory fields
+        </div>
 	</form>
+	<div id="error-div"></div>
 </div>
 
 <div class="box-footer">
@@ -150,7 +154,7 @@
 
 <script>
 	$(function(){
-	
+	<#--
 		 $(".content-wrapper>.content").slimscroll({
 				height: "100%",
 		        size: "8px",
@@ -158,12 +162,17 @@
 	   			touchScrollStep: 50,
 	   			alwaysVisible: true
 		  });
-
+-->
 		<#-- activate input mask-->
 		$( "[data-mask]" ).inputmask();
 		
 		$( "#submit" ).click( function(){
 			<#-- todo check input valid -->
+			if( $( "#title" ).val() == "" || $( "#author-list" ).val() == "" || $( "#publication-date" ).val() == "" ){
+				$.PALM.utility.showErrorTimeout( $( "#error-div" ) , "&nbsp<strong>Please fill all required fields (title, authors, date published)</strong>")
+				return false;
+			}
+			
 			$.post( $("#editPublication").attr( "action" ), $("#editPublication").serialize(), function( data ){
 				<#-- todo if error -->
 
@@ -181,14 +190,25 @@
 		
 		$( "#venue-type" ).change( function(){
 			var selectionValue = $(this).val();
+			$( "#venue-title" ).show();
+			$( "#volume" ).parent().show();
+			$( "#pages" ).parent().show();
 			if( selectionValue == "conference" ){
 				$( "#venue-title>label>span" ).html( "Conference" );
 				<#--$( "#volume-container,#issue-container" ).hide();-->
-			} else if( selectionValue == "journal" || selectionValue == "book"){
+			} else if( selectionValue == "workshop" ){
+				$( "#venue-title>label>span" ).html( "Workshop" );
+			} else if( selectionValue == "journal"){
 				$( "#venue-title>label>span" ).html( "Journal" );
 				<#--$( "#volume-container,#issue-container" ).show();-->
+			} else {
+				$( "#venue-title" ).hide();
+				$( "#volume" ).parent().hide();
+				$( "#pages" ).parent().hide();
 			}
 		});
+		
+		$( "#venue-type" ).change();
 		
 		$("#venue").autocomplete({
 		    source: function (request, response) {
@@ -243,7 +263,7 @@
 	            }
 	        }
 		})
-		.autocomplete( "instance" )._renderItem = function( ul, item ) {
+		.data("ui-autocomplete")._renderItem = function( ul, item ) {
 			if( typeof item.id != "undefined" ){
 		      	return $( "<li>" + item.label + "</li>" ).appendTo( ul );
 	      	} else{
@@ -290,7 +310,7 @@
 			$.each( inputKeywords.split(","), function(index, inputKeyword ){
 	    		<#-- remove multiple spaces -->
 				inputKeyword = inputKeyword.replace(/ +(?= )/g,'').trim();
-				if( inputKeyword.length > 2 && !isTagDuplicated( '#keyword-list', inputKeyword )) {
+				if( inputKeyword.length > 2 && !isTagDuplicated( '#keywordList', inputKeyword )) {
 	      			$( inputElem ).before(
 	      				$( '<span/>' )
 	      					.addClass( "tag-item" )
@@ -410,7 +430,7 @@
 				}
 			}
 		})
-		.autocomplete( "instance" )._renderItem = function( ul, item ) {
+		.data("ui-autocomplete")._renderItem = function( ul, item ) {
 			if( typeof item.id != "undefined" ){
 				var itemElem = createAutocompleteOutput( item );
 		      	return itemElem.appendTo( ul );

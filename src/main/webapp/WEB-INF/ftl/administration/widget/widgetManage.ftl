@@ -65,7 +65,7 @@
 							</span>
 							<span>
 				            	<div class="btn-group" data-toggle="buttons">
-				            	 <#if !(widgetType == 'administration' || widgetType == 'user')>
+				            	 <#if !(widgetType == 'administration' || widgetType == 'user' || widgetType == 'menu')>
 		                          <label class="btn btn-sm btn-default<#if eachWidget.widgetStatus == 'DEFAULT'> active</#if>">
 		                          		<input type="radio" name="widgets[${eachWidget_index}].status" value="default" <#if eachWidget.widgetStatus == 'DEFAULT'> checked</#if>>Default
 		                          </label>

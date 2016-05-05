@@ -9,9 +9,9 @@ PALM collects academic publications from many sources, then combines and filters
 Moreover, PALM not only provides comprehensive information about researchers, but also their publications and venues (conferences / journal) where those publications published. In the future, PALM will also offer recommendation and prediction systems that related to researcher interests. 
 
 
-## PALM web application module
+## PALM Web module
 
-This project is one of PALM module that responsible for view, visualization and interactivity.
+This project is one of PALM module that contains the web resources, the system configurations, and the view templates. And it is responsible for view and visualization.
 
 ## Documentation
 

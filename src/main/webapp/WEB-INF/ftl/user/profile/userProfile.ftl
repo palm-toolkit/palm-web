@@ -1,14 +1,14 @@
 <div id="boxbody-${wUniqueName}" class="box-body">
 	  <form role="form" id="profileForm" action="<@spring.url '/user/profile' />" method="post">
-		<#if author??><#-- if author not null -->
+		<#if authorMap??><#-- if author not null -->
 			<h1>
-				${author.name!''}
+				${authorMap.name!''}
 			</h1>
 			<hr style="margin-top:5px; margin-bottom:5px; margin-right:0 !important">
 			<div style="width:100%">
 				<div style="float:left;width:80px;height:120px;">
-					<#if author.photo??>
-						<img src="${author.photo}" style="width:100%">
+					<#if authorMap.photo??>
+						<img src="${authorMap.photo}" style="width:100%">
 					<#else>
 						<div class="photo fa fa-user"></div>
 					</#if>
@@ -21,14 +21,14 @@
 					</p>
 					<p>
 						<i style="width: 20px;" class="fa fa-briefcase"></i>
-						<span>${author.status}</span>
+						<span>${authorMap.status!''}</span>
 					</p>
 					<p>
 						<i style="width: 20px;" class="fa fa-institution"></i>
-						<span>${author.aff}</span>
+						<span>${authorMap.aff!''}</span>
 					</p>
 					<p>
-						<strong>Publications: ${author.publicationsNumber} || Cited By: ${author.citedBy}</strong>
+						<strong>Publications: ${authorMap.publicationsNumber!''} || Cited By: ${authorMap.citedBy!''}</strong>
 					</p>
 				</div>
 			</div>
@@ -52,10 +52,10 @@
 
 	</form>
 	
-	<#if author??><#-- if author not null -->
+	<#if authorMap??><#-- if author not null -->
 	<#else><#-- if author null -->
 		<div id="author-selection">
-			Link me to a researcher on PALM
+			Link me to a researcher on PALM. Please be careful, you can only do this once.
 			<#-- name -->
 			<div class="form-group">
 		      <input type="text" id="name" name="name" value="" class="form-control" placeholder="researcher name" />
@@ -73,14 +73,22 @@
   
 </div>
 
+<#if authorMap??>
+	<div class="box-footer">
+		<a href="<@spring.url '/researcher' />?id=${authorMap.id}" class="btn btn-block btn-social btn-twitter btn-sm pull-right" style="width:180px;">
+		<i class="fa fa-users"></i>
+		<strong>Me on Researchers Page</strong></a>
+	</div>
+</#if>
+
 <script>
 	$(function(){
-		<#if author??>
+		<#if authorMap??>
 			$( "#boxbody-${wUniqueName}" )
 			.find( "h1" )
 			.css({ "cursor":"pointer"})
 			.on( "click", function(){
-				window.location.href = "<@spring.url '/researcher' />?id=${author.id}";
+				window.location.href = "<@spring.url '/researcher' />?id=${authorMap.id}";
 			});
 		
 		<#else>
@@ -109,7 +117,8 @@
 		            dataType: "json",
 		            data: {
 						query: request.term,
-						source: "internal"
+						source: "internal",
+						addedAuthor: "yes"
 					},
 		            success: function (data) {
 		            	if( data.count == 0){
@@ -172,7 +181,7 @@
 				}
 			}
 		})
-		.autocomplete( "instance" )._renderItem = function( ul, item ) {
+		.data("ui-autocomplete")._renderItem = function( ul, item ) {
 			if( typeof item.id != "undefined" ){
 				var itemElem = createAutocompleteOutput( item );
 		      	return itemElem.appendTo( ul );

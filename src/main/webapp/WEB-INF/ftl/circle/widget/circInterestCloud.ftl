@@ -44,6 +44,14 @@
 				$.PALM.popUpMessage.remove( uniquePidInterestCloud );
 
 var targetContainerContent = $( widgetElem ).find( "#boxbody${wUniqueName}" ).find( ".box-content" );
+
+<#-- in case interest is not present -->
+if( typeof data.interest == "undefined" ){
+	$.PALM.callout.generate( targetContainerContent , "warning", "Unable to extract interests!", "Due to insufficient data" );
+	return false;
+}
+
+
 var targetContainerFilter = $( widgetElem ).find( "#boxbody${wUniqueName}" ).find( ".box-filter" );
 
 <#-- clean target container -->
@@ -63,7 +71,7 @@ var dataPointer = {
 var algorithmProfileDropDown = 
 	$( '<select/>' )
 	.attr({ "id": "algorithm_profile"})
-	.addClass( "selectpicker" )
+	.addClass( "selectpicker btn-xs" )
 	.css({ "max-width": "210px"})
 	.on( "change", function(){ getLanguagesFromProfile( $( this ).val() ) } );
 
@@ -95,7 +103,7 @@ algorithmProfileDropDown.selectpicker( 'refresh' );
 var interestLanguageDropDown = 
 	$( '<select/>' )
 	.css({ "max-width" : "70px" })
-	.addClass( "selectpicker" )
+	.addClass( "selectpicker btn-xs" )
 	.attr({ "id": "interest_language"})
 	.on( "change", function(){ getYearFromLanguage( $( this ).val() ) } );
 
@@ -116,16 +124,16 @@ targetContainerFilter.find( ".box-filter-option" ).append( interestLanguageConta
 var interestYearStartDropDown = 
 	$( '<select/>' )
 	.css({ "max-width" : "60px" })
-	.addClass( "selectpicker" )
+	.addClass( "selectpicker btn-xs" )
 	.attr({ "id": "interest_year_start"})
-	.on( "change", function(){ visualizeInterest( $( this ).val() , "startyear") } );
+	.on( "change", function(){ visualizeInterest(  $( this ).prop('selectedIndex') , "startyear") } );
 
 var interestYearEndDropDown = 
 	$( '<select/>' )
 	.css({ "max-width" : "60px" })
-	.addClass( "selectpicker" )
+	.addClass( "selectpicker btn-xs" )
 	.attr({ "id": "interest_year_end"})
-	.on( "change", function(){ visualizeInterest( $( this ).val() , "endyear") } );
+	.on( "change", function(){ visualizeInterest( $( this ).prop('selectedIndex') , "endyear") } );
 
 <#-- interest language container -->
 var interestYearContainer = 
@@ -211,18 +219,18 @@ function visualizeInterest( yearIndex , yearType ){
 	if( yearType == "startyear"){
 		if( dataPointer.dataYearEnd < yearIndex ){
 			dataPointer.dataYearEnd = yearIndex;
-			interestYearEndDropDown.children().eq( dataPointer.dataYearEnd ).attr( 'selected',true );
+			interestYearEndDropDown.val( dataPointer.dataYearEnd );
+			interestYearEndDropDown.selectpicker( 'refresh' );
 		}
 		dataPointer.dataYearStart = yearIndex;
-		interestYearEndDropDown.selectpicker( 'refresh' );
 	}
 	else{
 		if( dataPointer.dataYearStart > yearIndex ){
 			dataPointer.dataYearStart = yearIndex;
-			interestYearStartDropDown.children().eq( dataPointer.dataYearStart ).attr( 'selected',true );
+			interestYearStartDropDown.val( dataPointer.dataYearStart );
+			interestYearStartDropDown.selectpicker( 'refresh' );
 		}
 		dataPointer.dataYearEnd = yearIndex;
-		interestYearStartDropDown.selectpicker( 'refresh' );
 	}
 	<#-- set filter button label  -->
 	targetContainerFilter
@@ -343,7 +351,7 @@ function visualizeTextCloud( words ){
 				publicationTimeLineWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 				$.PALM.boxWidget.refresh( publicationTimeLineWidget.element , publicationTimeLineWidget.options );
 			} else
-				alert( "Publication Timeline widget missing, please enable it from Researcher Widget Management" );
+				alert( "Publication Timeline widget missing, please enable it from Circle Widget Management" );
       });
 	}
 }

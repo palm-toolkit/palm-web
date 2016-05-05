@@ -12,11 +12,15 @@
  	
  	<@content.contentWrapper>
  		<section class="content">
-			<div class ="row">
- 			<#include "widgetLayoutMainContent.ftl" />
+			<div id="row" class ="row">
 			</div>
 		</section>
  	</@content.contentWrapper>
+
+	<@content.footerWrapper>
+		<#include "footer.ftl" />
+	</@content.footerWrapper>
+
 <@security.authorize access="isAuthenticated()">
 	<#-- add new event -->
 	<div id="new-circle" class="new-circle" title="Add New Circle" data-url="<@spring.url '/circle/add' />">

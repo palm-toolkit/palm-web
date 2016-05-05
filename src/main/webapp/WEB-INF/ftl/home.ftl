@@ -49,5 +49,9 @@
           </div>
           		
  	</@content.contentWrapper>
+
+	<@content.footerWrapper>
+		<#include "footer.ftl" />
+	</@content.footerWrapper>
  	
 </@layout.global>

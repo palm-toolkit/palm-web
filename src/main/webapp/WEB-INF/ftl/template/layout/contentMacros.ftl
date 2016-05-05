@@ -18,3 +18,10 @@
 		<#nested />
 	</div>
 </#macro>
+
+<#-- FooterWrapper. Contains footer -->
+<#macro footerWrapper>
+    <div class="footer-wrapper">
+		<#nested />
+	</div>
+</#macro>

@@ -15,7 +15,7 @@
 
 		<#-- add slimscroll to widget body -->
 		$("#boxbody${wUniqueName} .box-content").slimscroll({
-			height: "630px",
+			height: "660px",
 	        size: "6px",
 			allowPageScroll: true,
    			touchScrollStep: 50,
@@ -38,12 +38,7 @@
 				<#-- check for error  -->
 				if( data.status != "ok"){
 					<#--alert( "error on publication list" );-->
-					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher doesn't ave any publications" );
-					return false;
-				}
-				if ( typeof data.publications === 'undefined') {
-					<#--alert( "error, no publication found" );-->
-					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher doesn't ave any publications" );
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher does not have any publication on PALM database" );
 					return false;
 				}
 				
@@ -57,6 +52,19 @@
 									.append(
 										$( '<input/>' )
 										.attr({'type':'text', 'id':'publist-search', 'class':'form-control input-sm pull-right'})
+										.keyup(function(e){
+										    if(e.keyCode == 13)
+										    {
+										    	var thisWidget = $.PALM.boxWidget.getByUniqueName( '${wUniqueName}' ); 
+										        <#-- find keyword if any -->
+												var keywordText = filterSearch.find( "#publist-search" ).val();
+												//if( typeof keywordText !== "undefined" && keywordText !== "")
+												thisWidget.options.queryString = "?id=" + data.author.id + "&year=all&query=" + keywordText;
+												<#-- add overlay -->
+												thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+												$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
+										    }
+										 })
 									)
 									.append(
 										$( '<div/>' )
@@ -79,7 +87,8 @@
 											<#-- add overlay -->
 											thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 											$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
-										} )
+										})
+										
 									)
 				
 				var filterYear = $( '<div/>' ).attr({'class':'btn-group','data-toggle':'buttons'});
@@ -145,11 +154,22 @@
 				filterContainer.append( filterSearch );
 				filterContainer.append( filterYear );
 				mainContainer.append( filterContainer );
+				
+				//filterSearch.find( "#publist-search" ).focus();
+				
+				if ( typeof data.publications === 'undefined') {
+					<#--alert( "error, no publication found" );-->
+					if( typeof data.query === "undefined" || data.query == "" )
+						$.PALM.callout.generate( mainContainer , "warning", "Empty Publications!", "Currently no publications found on PALM database" );
+					else
+						$.PALM.callout.generate( mainContainer , "warning", "Empty search result!", "No publications found with query \"" + data.query + "\"" );
+					return false;
+				}
 				<#-- end of filter -->
 
 				<#-- no publication found -->
 				if ( typeof data.publications === 'undefined') {
-					mainContainer.append( "<strong>error, no publication found/match</strong>" );
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher does not have any publication on PALM" );
 					return false;
 				}
 
@@ -163,6 +183,7 @@
 				var noOfWorkshopYearly;
 				var noOfJournalYearly;
 				var noOfBookYearly;
+				var noOfInformalYearly;
 				var noOfUnknownYearly;
 				<#-- timeline group -->
 				var liTimeGroup;
@@ -227,15 +248,30 @@
 												.html( noOfPublicationInfo )
 											);
 								}
+								if( noOfInformalYearly > 0){
+									var noOfPublicationInfo = "";
+									if( noOfInformalYearly == 1 )
+										noOfPublicationInfo += "1 Informal/Other";
+									else if( noOfInformalYearly > 1 )
+										noOfPublicationInfo += noOfInformalYearly + " Informal/Others";
+										
+									liTimeGroup.append( 
+												$( '<span/>' )
+												.addClass( "bg-gray" )
+												.css({ "margin-left" : "10px" })
+												.html( noOfPublicationInfo )
+											);
+								}
 								
 								var firstTimelineSpan = $( liTimeGroup) .find( "span:first" );
-								firstTimelineSpan.html( (noOfConferenceYearly + noOfWorkshopYearly + noOfJournalYearly + noOfBookYearly + noOfUnknownYearly ) + " " + firstTimelineSpan.html() );
+								firstTimelineSpan.html( (noOfConferenceYearly + noOfWorkshopYearly + noOfJournalYearly + noOfInformalYearly + noOfBookYearly + noOfUnknownYearly ) + " " + firstTimelineSpan.html() );
 							}
 							
 							noOfConferenceYearly = 0;
 							noOfWorkshopYearly = 0;
 							noOfJournalYearly = 0;
 							noOfBookYearly = 0;
+							noOfInformalYearly = 0;
 							noOfUnknownYearly = 0;
 							
 							
@@ -294,6 +330,11 @@
 								timelineDot.attr({ "title" : "Book" });
 								noOfBookYearly++;
 							}
+							else if( item.type == "INFORMAL" ){
+								timelineDot.addClass( "fa fa-file-text-o bg-gray" );
+								timelineDot.attr({ "title" : "Informal/other publication" });
+								noOfInformalYearly++;
+							}
 						}else{
 							timelineDot.addClass( "fa fa-question bg-purple" );
 							timelineDot.attr({ "title" : "Unknown" });
@@ -346,7 +387,7 @@
 						if( typeof item.coauthor !== 'undefined' ){
 							
 							<#-- authors -->
-							var timeLineAuthor = $( '<div/>' );
+							var timeLineAuthor = $( '<div/>' ).addClass("authorSection");
 	
 							$.each( item.coauthor, function( index, authorItem ){
 								var eachAuthor = $( '<span/>' );
@@ -396,6 +437,48 @@
 							timelineBody.append( timeLineAuthor );
 						}
 						
+						<#-- load more button -->
+						if( item.contentExist ){
+							<#-- put container abstract and keywords -->
+							var abstractSection = $( '<div/>' ).addClass("abstractSection");
+							timelineBody.append( abstractSection );
+							
+							var keywordSection = $( '<div/>' ).addClass("keywordSection");
+							timelineBody.append( keywordSection );
+							
+							var loadMoreButton = $( '<div/>' )
+											.addClass( 'btn btn-default btn-xxs font-xs pull-right' )
+											.attr({ "data-load" : "false"})
+											.html( "load more" )
+											.click( function(){
+												if( $( this ).attr( "data-load") == "false" ){
+													var _this = this;
+													 $( this )
+													 	.attr( "data-load", "true" )
+													 	.html( "load less" );
+													 <#-- load ajax keyword and abstract -->
+													$.get( "<@spring.url '/publication/detail' />?id=" + item.id + "&section=abstract-keyword" , function( data2 ){
+														if( typeof data2.publication.abstract !== "undefined" )
+															$(_this).parent().find( ".abstractSection").html( data2.publication.abstract );
+														if( typeof data2.publication.keyword !== "undefined" )
+															$(_this).parent().find( ".keywordSection").html( data2.publication.keyword );
+													});
+												} else{
+													if( $( this ).text() == "load less" ){
+														$( this ).parent().find( ".abstractSection").hide();
+														$( this ).parent().find( ".keywordSection").hide();
+														$( this ).html( "load more" );
+													} else {
+														$( this ).parent().find( ".abstractSection").show();
+														$( this ).parent().find( ".keywordSection").show();
+														$( this ).html( "load less" );
+													}
+												}
+											});
+											
+							timelineBody.append( loadMoreButton );
+						}
+						
 						<#-- venue -->
 						if( typeof item.event !== 'undefined' ){
 							var eventElem = $( '<div/>' )
@@ -408,7 +491,7 @@
 								venueText += " - " + item.event.abbr;
 								venueHref += "&abbr=" + item.event.abbr;
 							}
-							venueHref += "&name=" + item.event.name.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id ;
+							venueHref += "&name=" + item.event.name.replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id ;
 							
 							if( typeof item.event.isGroupAdded === "undefined" || !item.event.isGroupAdded )
 								venueHref += "&add=yes";
@@ -462,7 +545,7 @@
 											.addClass( 'event-detail font-xs' );
 														
 							var venueText = item.venue;
-							var venueHref = "<@spring.url '/venue' />?type=" + item.type.toLowerCase() + "&name=" + item.venue.toLowerCase().replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id + "&add=yes";
+							var venueHref = "<@spring.url '/venue' />?type=" + item.type.toLowerCase() + "&name=" + item.venue.replace(/[^\w\s]/gi, '') + "&publicationId=" + item.id + "&add=yes";
 							
 							if( typeof item.volume != 'undefined' ){
 								venueText += " (" + item.volume + ")";
@@ -489,17 +572,6 @@
 							timelineBody.append( eventElem );
 						}
 						
-					
-						<#-- abstract -->
-						<#--
-						if( typeof item.abstract !== 'undefined' )
-							timelineBody.append( '<strong>Abstract</strong><br/>' + item.abstract + '<br/>');
-						-->
-						<#-- keyword -->
-						<#--
-						if( typeof item.keyword !== 'undefined' )
-							timelineBody.append( '<strong>Keyword</strong><br/>' + item.keyword.replace(/,/g, ', ') + '<br/>');
-						-->
 						timelineItem.append( timelineBody );
 	
 						publicationItem.append( timelineItem );
