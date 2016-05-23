@@ -23,3 +23,9 @@
 		<strong> Circles</strong>
 	</a>
 </li>
+<li<#if link?? && link == "explore"> class="open"</#if>>
+	<a href="<@spring.url '/explore' />"  data-toggle="tooltip" data-placement="bottom" data-original-title="Explore">
+		<i class="fa fa-th-large"></i>
+		<strong> Explore</strong>
+	</a>
+</li>
