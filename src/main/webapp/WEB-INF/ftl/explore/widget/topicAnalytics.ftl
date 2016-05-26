@@ -2,461 +2,139 @@
 	<#assign loggedUser = securityService.getUser() >
 </@security.authorize>
 <div id="boxbody-${wUniqueName}" class="box-body no-padding" style="height:40vh;overflow:hidden">
-  	
-  	<div class="callout callout-warning" style="display:none">
-	    <h4></h4>
-	    <p></p>
-	</div>
-	
-  	<div class="nav-tabs-custom" style="display:none">
-        <li id="header_publicationresult" class="active">
-				<a href="#tab_publicationresult" data-toggle="tab" aria-expanded="true">Details</a>
+  	<div id="tab_va_topics" class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+			<li id="header_bubble" class="active">
+				<a href="#tab_bubble" data-toggle="tab" aria-expanded="true">
+					Bubbles
+				</a>
 			</li>
-     </div>
+			<li id="header_evolution">
+				<a href="#tab_evolution" data-toggle="tab" aria-expanded="true">
+					Evolution
+				</a>
+			</li>
+			<li id="header_topic_list">
+				<a href="#tab_topic_list" data-toggle="tab" aria-expanded="true">
+					List
+				</a>
+			</li>
+			<li id="header_topic_comparison">
+				<a href="#tab_topic_comparison" data-toggle="tab" aria-expanded="true">
+					Comparison
+				</a>
+			</li>
+        </ul>
+        <div class="tab-content">
+			<div id="tab_bubble" class="tab-pane">
+			</div>
+			<div id="tab_evolution" class="tab-pane">
+			</div>
+			<div id="tab_topic_list" class="tab-pane" active>
+			</div>
+			<div id="tab_topic_comparison" class="tab-pane">
+			</div>
+        </div>
+	</div>
 </div>
 
 <script>
 	$( function(){
+		
+		<#-- add slimscroll to widget body -->
+		$("#boxbody-${wUniqueName} #tab_va_topics").slimscroll({
+			height: "500px",
+	        size: "5px",
+			allowPageScroll: true,
+   			touchScrollStep: 50
+	    });
+<#-- set target author id -->
+		<#if targetId??>
+			var targetId = "${targetId!''}";
+		<#else>
+			var targetId = "";
+		</#if>
+		<#if targetAdd??>
+			var targetAdd = "${targetAdd!''}";
+		<#else>
+			var targetAdd = "";
+		</#if>
+
+		<#-- generate unique id for progress log -->
+		var uniquePidResearcherWidget = $.PALM.utility.generateUniqueId();
 
 		var options ={
-			source : "<@spring.url '/explore/topic' />",
+			source : "<@spring.url '/explore/researchers' />",
+			query: "",
 			queryString : "",
-			id: "",
-			onRefreshStart: function( widgetElem ){
+			page:0,
+			maxresult:50,
+			onRefreshStart: function(  widgetElem  ){
+				<#-- show pop up progress log -->
+				$.PALM.popUpMessage.create( "loading resksdfhSDJHGFearchers...", { uniqueId:uniquePidResearcherWidget, popUpHeight:40, directlyRemove:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){
+			<#-- switch tab -->
+			$('a[href="#tab_topic_list"]').tab('show');
+				
+				<#-- remove  pop up progress log -->
+							$.PALM.popUpMessage.remove( uniquePidResearcherWidget );
+				
+				
+				<#-- Bubble tab -->
+				var tabHeaderBubble = $( widgetElem ).find( "#header_bubble" ).first();
+				var tabContentBubble = $( widgetElem ).find( "#tab_bubble" ).first();
+
+				<#-- Evolution tab -->
+				var tabHeaderEvolution = $( widgetElem ).find( "#header_evolution" ).first();
+				var tabContentEvolution = $( widgetElem ).find( "#tab_evolution" ).first();
+
+				<#-- List tab -->
+				var tabHeaderTopicList = $( widgetElem ).find( "#header_topic_list" ).first();
+				var tabContentTopicList = $( widgetElem ).find( "#tab_topic_list" ).first();
+
+				<#-- Comparison tab -->
+				var tabHeaderTopicComparison = $( widgetElem ).find( "#header_topic_comparison" ).first();
+				var tabContentTopicComparison = $( widgetElem ).find( "#tab_topic_comparison" ).first();
+
+
+			<#-- build the researcher list -->
+								$.each( data.researchers, function( index, item){
+									var researcherDiv = 
+									$( '<div/>' )
+										.addClass( 'author' )
+										.attr({ 'name' : item.name });
+										
+									var researcherDetail =
+									$( '<div/>' )
+										.addClass( 'detail' )
+										.append(
+											$( '<div/>' )
+												.addClass( 'name' )
+												.html( item.name )
+										);
+										
+									researcherDiv
+										.append(
+											researcherDetail
+										);
+										
+									if( !item.isAdded ){
+										researcherDiv.css("display","none");
+										data.count--;
+									}
+									
+
+									tabContentTopicList
+										.append( 
+											researcherDiv
+										);
 			
-
-var calloutWarning = $( widgetElem ).find( "#boxbody${wUniqueName}" ).find( ".callout-warning" );
-var tabContainer = $( widgetElem ).find( "#boxbody${wUniqueName}" ).find( ".nav-tabs-custom" );
-var tabHeaderContainer = tabContainer.find( ".nav" ).first();
-var tabContentContainer = tabContainer.find( ".tab-content" ).first();
-
-<#-- clean target container -->
-calloutWarning.hide();
-tabContainer.hide();
-tabHeaderContainer.html( "" );
-tabContentContainer.html( "" );
-
-if( data.status != "ok" )
-	alertCallOutWarning( "An error occurred", "Failed to show publication topic composition" );
-	
-if( typeof data.topics === "undefined" || data.topics.length == 0){
-	alertCallOutWarning( "Publication contain no topics", "Topics extraction only performed on complete publication with English abstract or currently the system is unable to extract topics from this publication." );
-	return false;
-}
-<#-- show tab -->
-tabContainer.show();}
-			
-$.each( data.topics, function( index, item){
-	<#-- tab header -->
-	var tabHeaderText = capitalizeFirstLetter( item.extractor );
-	var tabHeader = $( '<li/>' )
-						.append(
-							$( '<a/>' )
-							.attr({ "href": "#tab_" + tabHeaderText, "data-toggle":"tab" , "aria-expanded" : "true"})
-							.html( tabHeaderText )
-						);
+								});
+						}
+		};
 		
-	<#-- tab content -->
-	var tabContent = $( '<div/>' )
-						.attr({ "id" : "tab_" + tabHeaderText })
-						.addClass( "tab-pane" );
-
-	if( index == 0 ){
-		tabHeader.addClass( "active" );
-		tabContent.addClass( "active" );
-	}
-		
-	<#-- append tab header and content -->
-	tabHeaderContainer.append( tabHeader );
-	tabContentContainer.append( tabContent );
-	
-	<#-- add service logo -->
-<#--
-	if( tabHeaderText === "Alchemy")
-		tabContent.append( 
-				$('<div/>')
-				.css({"position":"relative","bottom":"10px"})
-				.append(
-					$('<div/>')
-					.css({"position":"relative","bottom":"10px"})
-					.append(
-						$('<img/>').attr({"src":"http://www.alchemyapi.com/sites/default/files/Logo60Height.png"})
-					)
-				)
-			);
--->
-	if( tabHeaderText === "Opencalais")
-		tabContent.append( 
-				$('<div/>')
-				.css({"position":"relative","height":"0","width":"100%"})
-				.append(
-					$('<div/>')
-					.css({"position":"absolute","top":"0","right":"0","z-index":"5000"})
-					.append(
-						$('<a/>')
-						.attr({"href":"http://opencalais.com","target":"_blank"})
-						.append(
-							$('<img/>')
-							.css({"width":"250px"})
-							.attr({"src":"http://www.opencalais.com/wp-content/themes/Frank-master/images/calais-logo.png"})
-						)
-					)
-				)
-			);
-	
-	<#-- add visualization -->
-	visualizeTermValue( item.termvalues, "#tab_" + tabHeaderText );
-	
-	
-});
-
-function capitalizeFirstLetter(string) {
-	if( string.lastIndexOf("YAHOO", 0) === 0 )
-		return "Yahoo";
-    return string.charAt(0).toUpperCase() + string.toLowerCase().slice(1);
-}
-
-<#-- show callout if error happened -->
-function alertCallOutWarning( titleCallOut, messageCallout ){
-	tabContainer.hide();
-	calloutWarning.show();
-	
-	calloutWarning.find( "h4" ).html( titleCallOut );
-	calloutWarning.find( "p" ).html( messageCallout );
-	
-	return false;
-}
-
-function visualizeTermValue( termValueMap, svgContainer )
-{
-	var w = tabContainer.width();
-	var h = 1/2 * w;
-	var r = 1/3 * h;
-	var ir = 1/3 * r;
-	var textOffset = 14;
-	var tweenDuration = 250;
-	
-	<#-- set max height -->
-	var widgetHeight = w * 2 / 3;
-	if( widgetHeight < 300)
-		widgetHeight = 300;
-	$("#boxbody${wUniqueName}").css( "max-height" , widgetHeight + "px" );
-	
-	<#-- OBJECTS TO BE POPULATED WITH DATA LATER -->
-	var lines, valueLabels, nameLabels;
-	var pieData = [];    
-	var oldPieData = [];
-	var filteredPieData = [];
-	
-	<#-- D3 helper function to populate pie slice parameters from array data -->
-	var donut = d3.layout.pie().value(function(d){
-	  return d.value;
-	});
-	
-	<#-- D3 helper function to create colors from an ordinal scale -->
-	var color = d3.scale.category20();
-	
-	<#-- D3 helper function to draw arcs, populates parameter "d" in path object -->
-	var arc = d3.svg.arc()
-	  .startAngle(function(d){ 
-	  		return d.startAngle; 
-	  })
-	  .endAngle(function(d){ 
-	  		return d.endAngle; 
-	  })
-	  .innerRadius(ir)
-	  .outerRadius(r);
-	  
-	<#-- // CREATE VIS & GROUPS // -->
-	var vis = d3.select( svgContainer )
-	  .append("div")
-      .classed("svg-container", true) //container class to make it responsive
-	  .append("svg:svg")
-	  //.attr("width", w)
-	  //.attr("height", h)
-	  //responsive SVG needs these 2 attributes and no width and height attr
-   	  .attr("preserveAspectRatio", "xMinYMin meet")
-      .attr("viewBox", "0 0 " + w + " " + h)
-      //class to make it responsive
-      .classed("svg-content-responsive", true)
-	  .classed( "d3-pie-chart", true);
-	
-	<#-- GROUP FOR ARCS/PATHS -->
-	var arc_group = vis.append("svg:g")
-	  .attr("class", "arc")
-	  .attr("transform", "translate(" + (w/2) + "," + (h/2) + ")");
-	
-	<#-- GROUP FOR LABELS -->
-	var label_group = vis.append("svg:g")
-	  .attr("class", "label_group")
-	  .attr("transform", "translate(" + (w/2) + "," + (h/2) + ")");
-	
-	<#-- GROUP FOR CENTER TEXT -->  
-	var center_group = vis.append("svg:g")
-	  .attr("class", "center_group")
-	  .attr("transform", "translate(" + (w/2) + "," + (h/2) + ")");
-	
-	<#-- PLACEHOLDER GRAY CIRCLE -->
-	var paths = arc_group.append("svg:circle")
-	    .attr("fill", "#EFEFEF")
-	    .attr("r", r);
-	    
-	<#-- // CENTER TEXT // -->
-
-	<#-- WHITE CIRCLE BEHIND LABELS -->
-	var whiteCircle = center_group.append("svg:circle")
-	  .attr("fill", "white")
-	  .attr("r", ir);
-	
-	<#-- "TOTAL" LABEL -->
-<#--
-	var totalLabel = center_group.append("svg:text")
-	  .attr("class", "label")
-	  .attr("dy", -5)
-	  .attr("text-anchor", "middle") // text-align: right
-	  .text("TOTAL");
--->
-	<#-- TOTAL TRAFFIC VALUE -->
-<#--
-	var totalValue = center_group.append("svg:text")
-	  .attr("class", "total")
-	  .attr("dy", 7)
-	  .attr("text-anchor", "middle") // text-align: right
-	  .text("No Data");
--->
-	<#-- run the visualization, due to bug must run it twice -->
-	update();
-	update();
-	  
-	<#-- to run each time data is generated -->
-	function update() {
-	
-	  streakerDataAdded = termValueMap;
-	
-	  oldPieData = filteredPieData;
-	  pieData = donut(streakerDataAdded);
-	
-	  var totalOctets = 0;
-	  filteredPieData = pieData.filter(filterData);
-	  function filterData(element, index, array) {
-	    element.name = streakerDataAdded[index].term;
-	    element.value = streakerDataAdded[index].value;
-	    totalOctets += element.value;
-	    return (element.value > 0);
-	  }
-	
-	  if(filteredPieData.length > 0 && oldPieData.length > 0){
-	
-	    <#-- REMOVE PLACEHOLDER CIRCLE -->
-	    arc_group.selectAll("circle").remove();
-		<#--
-	    totalValue.text(function(){
-	      var kb = totalOctets;
-	      return kb.toFixed(2);
-	      //return bchart.label.abbreviated(totalOctets*8);
-	    });
-		-->
-	    <#-- DRAW ARC PATHS -->
-	    paths = arc_group.selectAll("path").data(filteredPieData);
-	    paths.enter().append("svg:path")
-	      .attr("stroke", "white")
-	      .attr("stroke-width", 0.5)
-	      .attr("fill", function(d, i) { return color(i); })
-	      .transition()
-	        .duration(tweenDuration)
-	        .attrTween("d", pieTween);
-	    paths
-	      .transition()
-	        .duration(tweenDuration)
-	        .attrTween("d", pieTween);
-	    paths.exit()
-	      .transition()
-	        .duration(tweenDuration)
-	        .attrTween("d", removePieTween)
-	      .remove();
-	
-	    <#-- DRAW TICK MARK LINES FOR LABELS -->
-	    lines = label_group.selectAll("line").data(filteredPieData);
-	    lines.enter().append("svg:line")
-	      .attr("x1", 0)
-	      .attr("x2", 0)
-	      .attr("y1", -r-3)
-	      .attr("y2", -r-8)
-	      .attr("stroke", "gray")
-	      .attr("transform", function(d) {
-	        return "rotate(" + (d.startAngle+d.endAngle)/2 * (180/Math.PI) + ")";
-	      });
-	    lines.transition()
-	      .duration(tweenDuration)
-	      .attr("transform", function(d) {
-	        return "rotate(" + (d.startAngle+d.endAngle)/2 * (180/Math.PI) + ")";
-	      });
-	    lines.exit().remove();
-	
-	    <#-- DRAW LABELS WITH VALUES -->
-	    valueLabels = label_group.selectAll("text.value").data(filteredPieData)
-	      .attr("dy", function(d){
-	        if ((d.startAngle+d.endAngle)/2 > Math.PI/2 && (d.startAngle+d.endAngle)/2 < Math.PI*1.5 ) {
-	          return 5;
-	        } else {
-	          return -7;
-	        }
-	      })
-	      .attr("text-anchor", function(d){
-	        if ( (d.startAngle+d.endAngle)/2 < Math.PI ){
-	          return "beginning";
-	        } else {
-	          return "end";
-	        }
-	      })
-	      .text(function(d){
-	        var percentage = d.value;
-	        return percentage.toFixed(2);
-	      });
-	
-	    valueLabels.enter().append("svg:text")
-	      .attr("class", "value")
-	      .attr("transform", function(d) {
-	        return "translate(" + Math.cos(((d.startAngle+d.endAngle - Math.PI)/2)) * (r+textOffset) + "," + Math.sin((d.startAngle+d.endAngle - Math.PI)/2) * (r+textOffset) + ")";
-	      })
-	      .attr("dy", function(d){
-	        if ((d.startAngle+d.endAngle)/2 > Math.PI/2 && (d.startAngle+d.endAngle)/2 < Math.PI*1.5 ) {
-	          return 5;
-	        } else {
-	          return -7;
-	        }
-	      })
-	      .attr("text-anchor", function(d){
-	        if ( (d.startAngle+d.endAngle)/2 < Math.PI ){
-	          return "beginning";
-	        } else {
-	          return "end";
-	        }
-	      }).text(function(d){
-	        var percentage = d.value;
-	        return percentage.toFixed(2);
-	      });
-	
-	    valueLabels.transition().duration(tweenDuration).attrTween("transform", textTween);
-	
-	    valueLabels.exit().remove();
-	
-	
-	    <#-- DRAW LABELS WITH ENTITY NAMES -->
-	    nameLabels = label_group.selectAll("text.units").data(filteredPieData)
-	      .attr("dy", function(d){
-	        if ((d.startAngle+d.endAngle)/2 > Math.PI/2 && (d.startAngle+d.endAngle)/2 < Math.PI*1.5 ) {
-	          return 17;
-	        } else {
-	          return 5;
-	        }
-	      })
-	      .attr("text-anchor", function(d){
-	        if ((d.startAngle+d.endAngle)/2 < Math.PI ) {
-	          return "beginning";
-	        } else {
-	          return "end";
-	        }
-	      }).text(function(d){
-	        return d.name;
-	      });
-	
-	    nameLabels.enter().append("svg:text")
-	      .attr("class", "units")
-	      .attr("transform", function(d) {
-	        return "translate(" + Math.cos(((d.startAngle+d.endAngle - Math.PI)/2)) * (r+textOffset) + "," + Math.sin((d.startAngle+d.endAngle - Math.PI)/2) * (r+textOffset) + ")";
-	      })
-	      .attr("dy", function(d){
-	        if ((d.startAngle+d.endAngle)/2 > Math.PI/2 && (d.startAngle+d.endAngle)/2 < Math.PI*1.5 ) {
-	          return 17;
-	        } else {
-	          return 5;
-	        }
-	      })
-	      .attr("text-anchor", function(d){
-	        if ((d.startAngle+d.endAngle)/2 < Math.PI ) {
-	          return "beginning";
-	        } else {
-	          return "end";
-	        }
-	      }).text(function(d){
-	        return d.name;
-	      });
-	
-	    nameLabels.transition().duration(tweenDuration).attrTween("transform", textTween);
-	
-	    nameLabels.exit().remove();
-	  }  
-	}
-	  
-  	<#-- // FUNCTIONS // -->
-	<#-- Interpolate the arcs in data space -->
-	function pieTween(d, i) {
-	  var s0;
-	  var e0;
-	  if(oldPieData[i]){
-	    s0 = oldPieData[i].startAngle;
-	    e0 = oldPieData[i].endAngle;
-	  } else if (!(oldPieData[i]) && oldPieData[i-1]) {
-	    s0 = oldPieData[i-1].endAngle;
-	    e0 = oldPieData[i-1].endAngle;
-	  } else if(!(oldPieData[i-1]) && oldPieData.length > 0){
-	    s0 = oldPieData[oldPieData.length-1].endAngle;
-	    e0 = oldPieData[oldPieData.length-1].endAngle;
-	  } else {
-	    s0 = 0;
-	    e0 = 0;
-	  }
-	  var i = d3.interpolate({startAngle: s0, endAngle: e0}, {startAngle: d.startAngle, endAngle: d.endAngle});
-	  return function(t) {
-	    var b = i(t);
-	    return arc(b);
-	  };
-	}
-	
-	function removePieTween(d, i) {
-	  s0 = 2 * Math.PI;
-	  e0 = 2 * Math.PI;
-	  var i = d3.interpolate({startAngle: d.startAngle, endAngle: d.endAngle}, {startAngle: s0, endAngle: e0});
-	  return function(t) {
-	    var b = i(t);
-	    return arc(b);
-	  };
-	}
-	
-	function textTween(d, i) {
-	  var a;
-	  if(oldPieData[i]){
-	    a = (oldPieData[i].startAngle + oldPieData[i].endAngle - Math.PI)/2;
-	  } else if (!(oldPieData[i]) && oldPieData[i-1]) {
-	    a = (oldPieData[i-1].startAngle + oldPieData[i-1].endAngle - Math.PI)/2;
-	  } else if(!(oldPieData[i-1]) && oldPieData.length > 0) {
-	    a = (oldPieData[oldPieData.length-1].startAngle + oldPieData[oldPieData.length-1].endAngle - Math.PI)/2;
-	  } else {
-	    a = 0;
-	  }
-	  var b = (d.startAngle + d.endAngle - Math.PI)/2;
-	
-	  var fn = d3.interpolateNumber(a, b);
-	  return function(t) {
-	    var val = fn(t);
-	    return "translate(" + Math.cos(val) * (r+textOffset) + "," + Math.sin(val) * (r+textOffset) + ")";
-	  };
-	}
-	
-}
-
-	
-		
-
-
-
-			}<#-- end of onrefresh done -->
-		};<#-- end of options -->
-		
-		<#-- register the widget -->
+		<#--// register the widget-->
 		$.PALM.options.registeredWidget.push({
 			"type":"${wType}",
 			"group": "${wGroup}",
@@ -465,6 +143,9 @@ function visualizeTermValue( termValueMap, svgContainer )
 			"element": $( "#widget-${wUniqueName}" ),
 			"options": options
 		});
-	    
-	});<#-- end document ready -->
+		
+		<#--// first time on load, list 50 researchers-->
+		$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) , options );
+		
+	});
 </script>

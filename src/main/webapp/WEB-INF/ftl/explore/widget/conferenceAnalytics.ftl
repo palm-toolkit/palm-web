@@ -2,16 +2,34 @@
 	<#assign loggedUser = securityService.getUser() >
 </@security.authorize>
 <div id="boxbody-${wUniqueName}" class="box-body no-padding" style="height:40vh;overflow:hidden">
-  	<div class="conference-list">
-    </div>
-    
-    <div id="authBasicSvg" class="authBasicSvg" style="width:100%;height:100%">
-    <svg>
-    </svg>
-    </div>
-    
-    <div id="autOtherInfo" style="width:100%;overflow:hidden"></div>
-</div>
+  	<div id="tab_va_conferences" class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+			<li id="header_locations" class="active">
+				<a href="#tab_locations" data-toggle="tab" aria-expanded="true">
+					Locations
+				</a>
+			</li>
+			<li id="header_conference_list">
+				<a href="#tab_conference_list" data-toggle="tab" aria-expanded="true">
+					List
+				</a>
+			</li>
+			<li id="header_conference_comparison">
+				<a href="#tab_conference_comparison" data-toggle="tab" aria-expanded="true">
+					Comparison
+				</a>
+			</li>
+        </ul>
+        <div class="tab-content">
+			<div id="tab_locations" class="tab-pane" active>
+			</div>
+			<div id="tab_conference_list" class="tab-pane">
+			</div>
+			<div id="tab_conference_comparison" class="tab-pane" >
+			</div>
+        </div>
+	</div>
+	</div>
 
 <script>
 	$( function(){

@@ -2,15 +2,33 @@
 	<#assign loggedUser = securityService.getUser() >
 </@security.authorize>
 <div id="boxbody-${wUniqueName}" class="box-body no-padding" style="height:40vh;overflow:hidden">
-  	<div class="conference-list">
-    </div>
-    
-    <div id="authBasicSvg" class="authBasicSvg" style="width:100%;height:100%">
-    <svg>
-    </svg>
-    </div>
-    
-    <div id="autOtherInfo" style="width:100%;overflow:hidden"></div>
+  	  	<div id="tab_va_publications" class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+			<li id="header_timeline">
+				<a href="#tab_timeline" data-toggle="tab" aria-expanded="true">
+					Timeline
+				</a>
+			</li>
+			<li id="header_publication_list">
+				<a href="#tab_publication_list" data-toggle="tab" aria-expanded="true">
+					List
+				</a>
+			</li>
+			<li id="header_publication_comparison"  class="active">
+				<a href="#tab_publication_comparison" data-toggle="tab" aria-expanded="true">
+					Comparison
+				</a>
+			</li>
+        </ul>
+        <div class="tab-content">
+			<div id="tab_timeline" class="tab-pane">
+			</div>
+			<div id="tab_publication_list" class="tab-pane">
+			</div>
+			<div id="tab_publication_comparison" class="tab-pane" >
+			</div>
+        </div>
+	</div>
 </div>
 
 <script>

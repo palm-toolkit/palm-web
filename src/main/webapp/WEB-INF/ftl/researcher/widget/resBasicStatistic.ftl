@@ -29,7 +29,7 @@
 -->		
 		<#-- unique options in each widget -->
 		var options ={
-			source : "<@spring.url '/researcher/basicInformation' />",
+			source : "<@spring.url '/researcher/basicInformation?id=114b11c1-3f38-4348-b6ad-34ae7cdfc903' />",
 			query: "",
 			queryString : "",
 			onRefreshStart: function(  widgetElem  ){
