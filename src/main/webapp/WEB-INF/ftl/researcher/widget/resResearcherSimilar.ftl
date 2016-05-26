@@ -119,7 +119,7 @@
 											.html( "Publications: " + item.publicationsNumber + " || Cited by: " + item.citedBy)
 										);
 									-->
-									if( typeof item.photo != 'undefined'){
+								<#--	if( typeof item.photo != 'undefined'){
 										researcherNav
 											.append(
 											$( '<div/>' )
@@ -130,13 +130,13 @@
 														.attr({ 'src' : item.photo })
 												)
 											);
-									} else {
+									} else {-->
 										researcherNav
 										.append(
 											$( '<div/>' )
 											.addClass( 'photo fa fa-user' )
 										);
-									}
+									<#--}-->
 									<#-- add click event -->
 									researcherDetail
 										.on( "click", function(){

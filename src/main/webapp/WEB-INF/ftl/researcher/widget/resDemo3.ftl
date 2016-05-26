@@ -2,7 +2,7 @@
   	<div class="coauthor-list">
     </div>
     
-    <div id="chart" style="width:1000px;height:400px">
+    <div id="chart1" style="width:1000px;height:400px">
     <svg>
     </svg>
     </div>
@@ -16,7 +16,7 @@
 		      t4 = [],
 		      t5 = [];
 		 
-		    t1.push({x: 2005, y: 0.459});
+		    t1.push({x: 2005, y: 0.4597701132297516});
 		    t1.push({x: 2006, y: 0.15613383054733276});
 		    t1.push({x: 2007, y: 0.17970401048660278});
 		    t1.push({x: 2008, y: 0.0984455943107605});
@@ -79,31 +79,31 @@
 		  var data =  [
 		    {
 		      values: t1,
-		      key: 'technology learner provide based enhanced ',
+		      key: 'evaluation_details learner_models model_management professional_learning personal_knowledge_network  ',
 		      color: '#ff7f0e'
 		    },
 		    {
 		      values: t2,
-		      key: 'moocs tel support learners context ',
+		      key: 'learning_analytics enhanced_learning unique_features knowledge_overload technology_enhanced_learning  ',
 		      color: '#77ff33'
 		    },
 		    {
 		      values: t3,
-		      key: 'learning social web la km',
+		      key: ' learning_process personal_knowledge based_learning technology_enhanced learning_model ',
 		      color: '#8800cc'
 		    },
 		    {
 		      values: t4,
-		      key: 'learning knowledge paper personal mobile ',
+		      key: 'personal_learning_environment social_software knowledge_management learning_content primary_aim  ',
 		      color: '#0080c1'
 		    },
 		    {
 		      values: t5,
-		      key: 'driven ple explore framework community',
+		      key: ' personal_learning_environments personal_learning_environment_framework rapid_development increasing_focus long_learning ',
 		      color: '#00f892'
 		    },
 		  ];
-
+		
 		nv.addGraph(function() {
 		  var chart = nv.models.lineChart()
 		    .useInteractiveGuideline(true)
@@ -119,7 +119,7 @@
 		    .tickFormat(d3.format('.02f'))
 		    ;
 		
-		  d3.select('#chart svg')
+		  d3.select('#chart1 svg')
 		    .datum(data)
 		    .transition().duration(500)
 		    .call(chart)
