@@ -68,7 +68,7 @@
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
 				<#-- show pop up progress log -->
-				$.PALM.popUpMessage.create( "loading ERTEesearchers...", { uniqueId:uniquePidResearcherWidget, popUpHeight:40, directlyRemove:false});
+				$.PALM.popUpMessage.create( "loading Researchers...", { uniqueId:uniquePidResearcherWidget, popUpHeight:40, directlyRemove:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){	
 			<#-- switch tab -->

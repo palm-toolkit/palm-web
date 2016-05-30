@@ -64,14 +64,14 @@
 		var uniquePidResearcherWidget = $.PALM.utility.generateUniqueId();
 
 		var options ={
-			source : "<@spring.url '/explore/researchers' />",
+			source : "<@spring.url '/explore/topic' />",
 			query: "",
 			queryString : "",
 			page:0,
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
 				<#-- show pop up progress log -->
-				$.PALM.popUpMessage.create( "loading resksdfhSDJHGFearchers...", { uniqueId:uniquePidResearcherWidget, popUpHeight:40, directlyRemove:false});
+				$.PALM.popUpMessage.create( "loading topics/interests...", { uniqueId:uniquePidResearcherWidget, popUpHeight:40, directlyRemove:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){
 			<#-- switch tab -->
@@ -99,37 +99,31 @@
 
 
 			<#-- build the researcher list -->
-								$.each( data.researchers, function( index, item){
-									var researcherDiv = 
-									$( '<div/>' )
-										.addClass( 'author' )
-										.attr({ 'name' : item.name });
-										
-									var researcherDetail =
-									$( '<div/>' )
-										.addClass( 'detail' )
+								$.each( data.topics, function( index, item){
+								
+								var topicExtractor = $( '<div/>' )
 										.append(
 											$( '<div/>' )
-												.addClass( 'name' )
-												.html( item.name )
+												.html( item.extractor)
 										);
-										
-									researcherDiv
+								
+								tabContentTopicList
+										.append( 
+											topicExtractor
+										);
+								for (i = 0, len = item.termvalues.length, text = ""; i < len; i++) {
+									topicNames =
+									$( '<div/>' )
 										.append(
-											researcherDetail
+											$( '<div/>' )
+												.html( item.termvalues[i].term )
 										);
 										
-									if( !item.isAdded ){
-										researcherDiv.css("display","none");
-										data.count--;
-									}
-									
-
 									tabContentTopicList
 										.append( 
-											researcherDiv
+											topicNames
 										);
-			
+								}
 								});
 						}
 		};
