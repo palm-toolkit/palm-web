@@ -408,6 +408,11 @@ iframe.externalContent{
 	padding: 6px 12px;
 }
 
+/* Bubble Chart style */
+.bubble-chart .value{
+  font-size: 16px;
+}
+
 /* Pie Chart style */
 .d3-pie-chart .total{
   font-size: 18px;
