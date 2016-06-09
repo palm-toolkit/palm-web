@@ -97,7 +97,9 @@
 											)
 										);
 									
-									if( typeof item.similarity != 'undefined')
+									var similarity_topic_list = [{"name":"word_1", value:2.3}, {"name":"word_12322 ", value:2.3}, {"name":"word_dgagadfgadfg", value:2.2},{"name":"word_agadgadfvadfgrtrt", value:2.0},{"name":"word_fagartgaebadfb", value:2.0}];
+									
+									if( typeof item.similarity != 'undefined'){
 										researcherDetail.append(
 											$( '<div/>' )
 											.addClass( 'similarity' )
@@ -108,8 +110,40 @@
 											).append( 
 												$( '<span/>' )
 												.addClass( 'info font-xs' )
-												.html( "Degree Similarity: " + Math.round(item.similarity * 100) / 100)											)
+												.attr('data-toggle', 'collapse')
+												.attr('href', '#similarity_topics_list_' + index)
+												.html( "Degree Similarity: " + Math.round(item.similarity * 100) / 100))
 										);
+										researcherDetail.append(
+													$('<div/>')
+													.attr('id', 'similarity_topics_list_' + index)
+													.addClass('panel-collapse collapse')
+													.append(
+														$('<ul/>')														
+														.addClass('list-group  font-xs similarity_topics_list_' + index)
+													)
+													,
+													function(iiii, html){
+												
+													}
+												);
+												
+										<#-- this function populates the list of similar topics in the similar authors list !! it is called too soon and the list ul is not there when trying to add the li element -->
+										addSimilary_Topics_list();	
+										function addSimilary_Topics_list(){
+														$.each( similarity_topic_list, function( ind, similarTopic){
+															var current_list = $('.similarity_topics_list_' + index);
+															current_list.append(
+																$('<li/>')
+																.addClass('list-group-item')
+																.html(similarTopic.name + " " + similarTopic.value)
+															);		
+														});	
+													}
+										
+										
+									}
+								
 										
 									<#--
 									if( typeof item.citedBy != 'undefined')
@@ -138,7 +172,7 @@
 										);
 									<#--}-->
 									<#-- add click event -->
-									researcherDetail
+									$(".detail .name")
 										.on( "click", function(){
 											if( item.isAdded ){
 												window.location = "<@spring.url '/researcher' />?id=" + item.id + "&name=" + item.name;

@@ -1,10 +1,6 @@
 <div id="boxbody${wUniqueName}" class="box-body">
 	<div style="display:none" class="box-filter">
-		<div class="box-filter-option" style="display:none"></div>
-		<button class="btn btn-block btn-default box-filter-button btn-xs" onclick="$( this ).prev().slideToggle( 'slow' )">
-			<i class="fa fa-filter pull-left"></i>
-			<span>Something</span>
-		</button>
+		
 	</div>
 	<div class="box-content">
 	</div>
@@ -17,12 +13,12 @@
 
 		<#-- set widget unique options -->
 		var options ={
-			source : "<@spring.url '/researcher/topicModel' />",
+			source : "<@spring.url '/researcher/topicCompositionUniCloud' />",
 			queryString : "",
 			id: "",
 			onRefreshStart: function( widgetElem ){
 				<#-- show pop up progress log -->
-				$.PALM.popUpMessage.create( "Extracting author interest with dynamic topic model", { uniqueId:uniquePidInterestCloud, popUpHeight:40, directlyRemove:false , polling:false});
+				$.PALM.popUpMessage.create( "Extracting author topic composition", { uniqueId:uniquePidInterestCloud, popUpHeight:40, directlyRemove:false , polling:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){
 			
@@ -31,7 +27,6 @@
 				if( typeof topicModelEvolutionWidget !== "undefined" && !topicModelEvolutionWidget.executed){
 					$.PALM.boxWidget.refresh( topicModelEvolutionWidget.element , topicModelEvolutionWidget.options );
 				}
-			
 
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniquePidInterestCloud );
@@ -45,222 +40,59 @@ targetContainerFilter.show();
 targetContainerFilter.find( ".box-filter-option" ).html( "" );
 targetContainerFilter.find( ".box-filter-button" ).find( "span" ).html( "" );
 
-<#-- the pointer of selected data -->
-var dataPointer = {
-	"dataProfileIndex" : 0,
-	"dataLanguageIndex" : 0,
-	"dataYearStart" : 0,
-    "dataYearEnd" : 0
-};
-<#-- create dropdown algorithm profile -->
-var algorithmProfileDropDown = 
-	$( '<select/>' )
-	.attr({ "id": "algorithm_profile"})
-	.addClass( "selectpicker" )
-	.css({ "max-width": "210px"})
-	.on( "change", function(){ getLanguagesFromProfile( $( this ).val() ) } );
-
-<#-- loop interst algorithm --> 								
-$.each( data.topicModel, function(index, dataAlgorithmProfile){
-	algorithmProfileDropDown.append( $( '<option/>' )
-								.attr({ "value" : index })
-								.html( (dataAlgorithmProfile.profile).replace( /\?/g,"∩") )
-							);
-});
-
-<#-- interest algorithm profile container -->
-var algorithmProfileContainer = 
-	$( "<div/>" )
-	.css({ "margin":"0 10px 0 0"})
-	.append(
-		$( "<span/>" ).html( "Algorithm : " )
-	).append(
-		algorithmProfileDropDown
-	);
-
-<#-- append to container -->
-targetContainerFilter.find( ".box-filter-option" ).append( algorithmProfileContainer );
-
-<#-- assign bootstrap select  -->
-algorithmProfileDropDown.selectpicker( 'refresh' );
-
-<#-- create dropdown interest language -->
-var interestLanguageDropDown = 
-	$( '<select/>' )
-	.css({ "max-width" : "70px" })
-	.addClass( "selectpicker" )
-	.attr({ "id": "interest_language"})
-	.on( "change", function(){ getYearFromLanguage( $( this ).val() ) } );
-
-<#-- interest language container -->
-var interestLanguageContainer = 
-	$( "<div/>" )
-	.css({ "margin":"0 20px 0 0"})
-	.append(
-		$( "<span/>" ).html( "Lang : " )
-	).append(
-		interestLanguageDropDown
-	);
-
-<#-- append to container -->
-targetContainerFilter.find( ".box-filter-option" ).append( interestLanguageContainer );
-
-<#-- create dropdown interest years -->
-var interestYearStartDropDown = 
-	$( '<select/>' )
-	.css({ "max-width" : "60px" })
-	.addClass( "selectpicker" )
-	.attr({ "id": "interest_year_start"})
-	.on( "change", function(){ visualizeInterest( $( this ).val() , "startyear") } );
-
-var interestYearEndDropDown = 
-	$( '<select/>' )
-	.css({ "max-width" : "60px" })
-	.addClass( "selectpicker" )
-	.attr({ "id": "interest_year_end"})
-	.on( "change", function(){ visualizeInterest( $( this ).val() , "endyear") } );
-
-<#-- interest language container -->
-var interestYearContainer = 
-	$( "<div/>" ) 
-	.append(
-		$( "<span/>" ).html( "Start : " )
-	).append(
-		interestYearStartDropDown
-	)
-	.append(
-		$( "<span/>" ).html( "End : " )
-	).append(
-		interestYearEndDropDown
-	);
-
-<#-- append to container -->
-targetContainerFilter.find( ".box-filter-option" ).append( interestYearContainer );
-
-<#-- on the first load, call the following functions -->
-getLanguagesFromProfile( 0 );
 
 <#-- functions -->
-function getLanguagesFromProfile( profileIndex ){
-	<#-- set index profile and other to 0 -->
-	dataPointer.dataProfileIndex = profileIndex;
-	dataPointer.dataLanguageIndex = 0;
-
-	<#-- clear previous option -->
-	interestLanguageDropDown.html( "" );
-
-	<#-- loop interst languages --> 
-	if( typeof data.topicModel[ dataPointer.dataProfileIndex ] != "undefined" )	{						
-		$.each( data.topicModel[ dataPointer.dataProfileIndex ].interestlanguages , function(index, dataInterestLanguage){
-			interestLanguageDropDown.append( $( '<option/>' )
-								.attr({ "value" : index  })
-								.html( dataInterestLanguage.language )
-							);
-		});
-
-		<#-- call function to get the year  -->
-		getYearFromLanguage( dataPointer.dataLanguageIndex );
-	}
-	<#-- assign bootstrap select  -->
-	interestLanguageDropDown.selectpicker( 'refresh' );
-}
-
-function getYearFromLanguage( languageIndex ){
-	<#-- set data language index -->
-	dataPointer.dataLanguageIndex = languageIndex;
-
-	<#-- clear previous year option -->
-	interestYearStartDropDown.html( "" );
-	interestYearEndDropDown.html( "" );
-
-	<#-- loop interst years -->
-	var countYear = data.topicModel[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears.length;
-	
-	if( countYear > 0 ){
-
-		$.each( data.topicModel[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears , function(index, dataInterestYear){
-			interestYearStartDropDown.append( $( '<option/>' )
-								.attr({ "value" : index  })
-								.html( dataInterestYear.year )
-							);
-			interestYearEndDropDown.append( $( '<option/>' )
-								.attr({ "value" : index  })
-								.html( dataInterestYear.year )
-							);
-		});
-		<#-- change selected index of end year -->
-		interestYearEndDropDown.children().eq( countYear - 1 ).attr( 'selected',true );
-		<#-- reset -->
-		dataPointer.dataYearStart = 0,
-		dataPointer.dataYearEnd = countYear - 1;
-		visualizeInterest( 0, "startyear");
-	}
-	<#-- assign bootstrap select  -->
-	interestYearStartDropDown.selectpicker( 'refresh' );
-	interestYearEndDropDown.selectpicker( 'refresh' );
-}
-
-function visualizeInterest( yearIndex , yearType ){
-	if( yearType == "startyear"){
-		if( parseInt( dataPointer.dataYearEnd ) < parseInt( yearIndex ) ){
-			dataPointer.dataYearEnd = yearIndex;
-			interestYearEndDropDown.children().eq( dataPointer.dataYearEnd ).attr( 'selected',true );
-		}
-		dataPointer.dataYearStart = yearIndex;
-		interestYearEndDropDown.selectpicker( 'refresh' );
-	}
-	else{
-		if( parseInt( dataPointer.dataYearStart ) > parseInt( yearIndex ) ){
-			dataPointer.dataYearStart = yearIndex;
-			interestYearStartDropDown.children().eq( dataPointer.dataYearStart ).attr( 'selected',true );
-		}
-		dataPointer.dataYearEnd = yearIndex;
-		interestYearStartDropDown.selectpicker( 'refresh' );
-	}
-	<#-- set filter button label  -->
-	targetContainerFilter
-		.find( ".box-filter-button" )
-		.find( "span" )
-		.html( 
-			(data.topicModel[ dataPointer.dataProfileIndex ].profile).replace( /\?/g,"∩") + ", " +
-			data.topicModel[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].language + ", " +
-			data.topicModel[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears[dataPointer.dataYearStart].year + "-" +
-			data.topicModel[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears[dataPointer.dataYearEnd].year
-		);
-
-	<#-- construct the data for interest cloud -->
+<#-- construct the data for interest cloud -->
 	var uniqueWordsHelperMap ={};
 	var uniqueWords = [];
 	var maximumSize = 0;
 	var minimumSIze = 0; 
 
-	for( var i = dataPointer.dataYearStart ; i <= dataPointer.dataYearEnd ; i++ ){
-		$.each( data.topicModel[ dataPointer.dataProfileIndex ].interestlanguages[dataPointer.dataLanguageIndex].interestyears[i].termvalue, function( index, item ){
-			if( uniqueWordsHelperMap[ item[1] ] != null){
-				uniqueWords[ uniqueWordsHelperMap[ item[1] ] ].size = uniqueWords[ uniqueWordsHelperMap[ item[1] ] ].size + item[2];
-			} else{
-				var termValue={
-					"text" : item[0],
-					"size" : item[1]
-				}
-				uniqueWords.push( termValue );
-				uniqueWordsHelperMap[ item[0] ] = uniqueWords.length - 1;
-			}
-		});
+
+<#--	$.each( data.termvalue, function( index, item ){
+		
+		var termValue={
+			"text" : item[0],
+			"size" : parseFloatitem[1]
+		}
+		console.log(termValue);
+		uniqueWords.push( termValue );
+	});
+	
+	console.log(uniqueWords);
+-->
+
+for ( var i = 0; i < data.termvalue.length; i++){
+
+	for (var k in data.termvalue[i]){
+		var termValue = {
+			"text" : k,
+			"size" : data.termvalue[i][k]
+		}
+		uniqueWords.push({"text" : k, "size" : parseFloat(data.termvalue[i][k])});
+		//uniqueWords.push(termValue);
 	}
+}
+console.log(uniqueWords);
+
+<#--
+for (var i = 0; i < termvalue.length; i++){
+	uniquewords.push(termvalue[0]
+}-->
 
 	<#-- sort lagrgerst to smallest -->
 	uniqueWords.sort( compareTermWord );
 
-	<#-- cut to maximum 50 -->
+	<#-- cut to maximum 50 
 	if( uniqueWords.length > 20 )
 		 uniqueWords =  uniqueWords.slice(0,20);
+	-->
 
 	visualizeTextCloud( uniqueWords );
 
 	<#-- activate bootstrap select -->
 	//targetContainerFilter.find( ".box-filter-option" ).find('.selectpicker').selectpicker();
-}
+
 
 <#-- comparator for sorting weight of terms -->
 function compareTermWord( a, b){
@@ -291,9 +123,9 @@ function visualizeTextCloud( words ){
   .font("Impact")
   .fontSize(function(d) {
 		var fontsize = d.size * maxFontSize;
-		if( fontsize < 12 )
-			fontsize = 12;
-		if( fontsize > 18 )
+		if( fontsize < 10 )
+			fontsize = 8;
+		if( fontsize > 14 )
 			fontsize = 20;
 		return fontsize;
 	})
