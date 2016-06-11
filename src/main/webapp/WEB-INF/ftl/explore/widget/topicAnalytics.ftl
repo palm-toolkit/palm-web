@@ -121,9 +121,9 @@
 								});
 								
 								
-		visualizeBubbles(data.topics, tabContainer);								
+				visualizeBubbles(data.topics, tabContainer);								
 								
-						}
+			}
 		};
 		
 		
@@ -166,46 +166,46 @@
 						    .style("pointer-events", "all");
 		
 			var node = vis.selectAll(".node")
-      			.data(bubble.nodes(topics(data))
-      			.filter(function(d) { return !d.children; }))
-    			.enter().append("g")
-      			.attr("class", "node")
-      			.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+		      			.data(bubble.nodes(topics(data))
+		      			.filter(function(d) { return !d.children; }))
+		    			.enter().append("g")
+		      			.attr("class", "node")
+		      			.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
-				  node.append("title")
-		      	  .text(function(d) { return d.className + ": " + d.packageName; });
+			 node.append("title")
+		      	  	.text(function(d) { return d.className + ": " + d.packageName; });
 		
-		  		 node.append("circle")
-		      	.attr("r", function(d) { return d.r; })
-		        .style("fill", function(d) { return color(d.value); });
+		  	 node.append("circle")
+			      	.attr("r", function(d) { return d.r; })
+			        .style("fill", function(d) { return color(d.value); });
 		
-		  node.append("text")
-		      .attr("dy", ".3em")
-		      .style("text-anchor", "middle")
-		      .text(function(d) { return d.className.substring(0, d.r / 4); })
-      		  .style( "cursor", "default" )
-      		  .attr("class", "value")
+		  	 node.append("text")
+				      .attr("dy", ".3em")
+				      .style("text-anchor", "middle")
+				      .text(function(d) { return d.className.substring(0, d.r / 4); })
+		      		  .style( "cursor", "default" )
+		      		  .attr("class", "value")
       		  
-
-	}
-function topics(data) {
-	var topiccs = [];
-
-	for(var i=0; i<data.length; i++) {
-		console.log(data[i].extractor);
-		for(var j=0; j<data[i].termvalues.length;j++) {
-			topiccs.push({packageName: data[i].extractor, className: data[i].termvalues[j].term, value: data[i].termvalues[j].value});
 		}
-
-	}
-
-	console.log(topiccs);
-	return {children: topiccs};
-}
+	
+	function topics(data) {
+			var topiccs = [];
 		
-function zoomed() {
-  vis.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-}
+			for(var i=0; i<data.length; i++) {
+				console.log(data[i].extractor);
+				for(var j=0; j<data[i].termvalues.length;j++) {
+					topiccs.push({packageName: data[i].extractor, className: data[i].termvalues[j].term, value: data[i].termvalues[j].value});
+				}
+		
+			}
+		
+			console.log(topiccs);
+			return {children: topiccs};
+	}
+		
+	function zoomed() {
+	  	vis.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+	}
 		
 		
 		<#--// register the widget-->

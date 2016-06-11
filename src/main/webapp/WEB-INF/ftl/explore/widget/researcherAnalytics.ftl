@@ -77,14 +77,7 @@
 		</#if>
 
 	
-	
-	s = new sigma({
-            renderer: {
-              container: document.getElementById('canvas'),
-              type: 'canvas'
-            },
-            settings: sigma.setting
-          });
+		
 	
 
 		<#-- generate unique id for progress log -->
@@ -106,22 +99,35 @@
 			$('a[href="#tab_network"]').tab('show');
 				
 
-				<#-- gephi network -->
-			   sigma.parsers.gexf('<@spring.url '/resources/gexf/co-authors.gexf' />',s,function() {
-			    s.refresh();
-			  }); 
-			   s.refresh();
+			<#-- initialize sigma.js renderer for gephi-->
+			s = new sigma({
+	            renderer: {
+	              container: document.getElementById('canvas'),
+	              type: 'canvas'
+	            },
+	            settings: sigma.setting
+	        });
+
+			<#-- gephi network -->
+			sigma.parsers.gexf('<@spring.url '/resources/gexf/co-authors.gexf' />',s,function() {
+				s.refresh();
+			}); 
+			s.refresh();
 
 
-							var targetContainer = $( widgetElem ).find( ".content-list" );
+				<#-- List Tab -->
+				$.getJSON( "<@spring.url '/explore/researchers' />" , function( data ) {
+  							
+  							
+  							var targetContainer = $( widgetElem ).find( ".content-list" );
 							<#-- remove  pop up progress log -->
 							$.PALM.popUpMessage.remove( uniquePidResearcherWidget );
 
 							<#-- remove previous list -->
 							targetContainer.html( "" );
-							
+  							
 							<#-- callout -->
-						<#--	if( data.count == 0 ){
+							if( data.count == 0 ){
 								if( typeof data.query === "undefined" || data.query == "" )
 									$.PALM.callout.generate( targetContainer , "normal", "Currently no researchers found on PALM database" );
 								else
@@ -134,7 +140,7 @@
 								<#-- $( "body .tooltip" ).remove(); -->
 
 								<#-- build the researcher list -->
-						<#--		$.each( data.researchers, function( index, item){
+								$.each( data.researchers, function( index, item){
 									var researcherDiv = 
 									$( '<div/>' )
 										.addClass( 'author' )
@@ -226,7 +232,7 @@
 											researcherDiv
 										);
 									<#-- put image position in center -->
-								<#--	setTimeout(function() {
+									setTimeout(function() {
 										if( typeof item.photo != 'undefined'){
 											var imageAuthor = researcherDiv.find( "img:first" );
 											if( imageAuthor.width() > 30 )
@@ -235,9 +241,10 @@
 									}, 1000);
 									
 
-								});
-							}-->
-						}
+								}); <#-- for each-->
+							} <#-- if-->
+						}); <#-- json-->
+				}
 		};
 		
 		<#--// register the widget-->
