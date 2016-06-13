@@ -1,5 +1,5 @@
 <div id="boxbody-${wUniqueName}" class="box-body no-padding">
-  	<div class="similarauthor-list">
+  	<div class="similarpublication-list">
     </div>
 </div>
 
@@ -7,7 +7,7 @@
 	$( function(){
 
 		<#-- add slim scroll -->
-       $("#boxbody-${wUniqueName}>.similarauthor-list").slimscroll({
+       $("#boxbody-${wUniqueName}>.similarpublication-list").slimscroll({
 			height: "300px",
 	        size: "6px",
 			allowPageScroll: true,
@@ -18,18 +18,18 @@
 		
 		<#-- unique options in each widget -->
 		var options ={
-			source : "<@spring.url '/researcher/similarAuthorList' />",
+			source : "<@spring.url '/publication/similarPublicationsList' />",
 			query: "",
 			queryString : "",
 			page:0,
 			maxresult:20,
 			onRefreshStart: function(  widgetElem  ){
 				<#-- show pop up progress log -->
-				<#--$.PALM.popUpMessage.create( "loading similarauthor list" );-->
+				<#--$.PALM.popUpMessage.create( "loading similarpublication list" );-->
 						},
 			onRefreshDone: function(  widgetElem , data ){
 
-							var targetContainer = $( widgetElem ).find( ".similarauthor-list" );
+							var targetContainer = $( widgetElem ).find( ".similarpublication-list" );
 							<#-- remove previous list -->
 							targetContainer.html( "" );
 							
@@ -38,10 +38,10 @@
 								<#-- $( "body .tooltip" ).remove(); -->
 
 								<#-- build the researcher list -->
-								$.each( data.similarAuthors, function( index, item){
+								$.each( data.similarPublications, function( index, item){
 									var researcherDiv = 
 									$( '<div/>' )
-										.addClass( 'author' )
+										.addClass( 'publication' )
 										.attr({ 'id' : item.id });
 										
 									var researcherNav =
@@ -82,22 +82,7 @@
 											)
 										);
 									-->
-									<#-- affiliation -->
-									if( typeof item.affiliation != 'undefined')
-										researcherDetail.append(
-											$( '<div/>' )
-											.addClass( 'affiliation' )
-											.append( 
-												$( '<i/>' )
-												.addClass( 'fa fa-institution icon font-xs' )
-											).append( 
-												$( '<span/>' )
-												.addClass( 'info font-xs' )
-												.html( item.affiliation )
-											)
-										);
 									
-									var similarity_topic_list = [{"name":"word_1", value:2.3}, {"name":"word_12322 ", value:2.3}, {"name":"word_dgagadfgadfg", value:2.2},{"name":"word_agadgadfvadfgrtrt", value:2.0},{"name":"word_fagartgaebadfb", value:2.0}];
 									
 									if( typeof item.similarity != 'undefined'){
 										researcherDetail.append(
@@ -110,38 +95,8 @@
 											).append( 
 												$( '<span/>' )
 												.addClass( 'info font-xs' )
-												.attr('data-toggle', 'collapse')
-												.attr('href', '#similarity_topics_list_' + index)
 												.html( "Degree Similarity: " + Math.round(item.similarity * 100) / 100))
-										);
-										researcherDetail.append(
-													$('<div/>')
-													.attr('id', 'similarity_topics_list_' + index)
-													.addClass('panel-collapse collapse')
-													.append(
-														$('<ul/>')														
-														.addClass('list-group  font-xs similarity_topics_list_' + index)
-													)
-													,
-													function(iiii, html){
-												
-													}
-												);
-												
-										<#-- this function populates the list of similar topics in the similar authors list !! it is called too soon and the list ul is not there when trying to add the li element -->
-										addSimilary_Topics_list();	
-										function addSimilary_Topics_list(){
-														$.each( similarity_topic_list, function( ind, similarTopic){
-															var current_list = $('.similarity_topics_list_' + index);
-															current_list.append(
-																$('<li/>')
-																.addClass('list-group-item')
-																.html(similarTopic.name + " " + similarTopic.value)
-															);		
-														});	
-													}
-										
-										
+												);	
 									}
 								
 										
@@ -171,7 +126,7 @@
 											.addClass( 'photo fa fa-user' )
 										);
 									<#--}-->
-									<#-- add click event -->
+									<#-- add click event 
 									$(".detail .name")
 										.on( "click", function(){
 											if( item.isAdded ){
@@ -184,12 +139,12 @@
 									targetContainer
 										.append( 
 											researcherDiv
-										);
+										);-->
 								});						
 								
 							}
 							else{
-							<#-- no coauthor -->
+							<#-- no copublication -->
 							<#--
 								$pageDropdown.append("<option value='0'>0</option>");
 								$( widgetElem ).find( "span.total-page" ).html( 0 );
