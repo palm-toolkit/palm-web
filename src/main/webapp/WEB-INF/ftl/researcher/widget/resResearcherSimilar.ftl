@@ -18,7 +18,7 @@
 		
 		<#-- unique options in each widget -->
 		var options ={
-			source : "<@spring.url '/researcher/similarAuthorList' />",
+			source : "<@spring.url '/researcher/similarAuthorListTopicLevel' />",
 			query: "",
 			queryString : "",
 			page:0,
@@ -97,7 +97,8 @@
 											)
 										);
 									
-									var similarity_topic_list = [{"name":"word_1", value:2.3}, {"name":"word_12322 ", value:2.3}, {"name":"word_dgagadfgadfg", value:2.2},{"name":"word_agadgadfvadfgrtrt", value:2.0},{"name":"word_fagartgaebadfb", value:2.0}];
+									<#-- List of objects name and value -->
+									var similarity_topic_list = item.topicdetail;
 									
 									if( typeof item.similarity != 'undefined'){
 										researcherDetail.append(
@@ -112,37 +113,26 @@
 												.addClass( 'info font-xs' )
 												.attr('data-toggle', 'collapse')
 												.attr('href', '#similarity_topics_list_' + index)
-												.html( "Degree Similarity: " + Math.round(item.similarity * 100) / 100))
+												.html( "Degree Similarity: " + (1 - (Math.round(item.similarity * 100) / 100))*100 + "%"))
 										);
 										researcherDetail.append(
 													$('<div/>')
 													.attr('id', 'similarity_topics_list_' + index)
 													.addClass('panel-collapse collapse')
-													.append(
-														$('<ul/>')														
-														.addClass('list-group  font-xs similarity_topics_list_' + index)
-													)
-													,
-													function(iiii, html){
-												
-													}
+													.append(function(){															
+														var list = $('<ul/>')
+																		.addClass('list-group  font-xs similarity_topics_list_' + index);																										
+														$.each( similarity_topic_list, function( ind, similarTopic){																										
+																var element_list = $('<li/>')
+																						.addClass('list-group-item')
+																						.html(similarTopic.name + " " + similarTopic.value);
+																list.append(element_list);
+																
+														});		
+														return list;													
+													})													
 												);
-												
-										<#-- this function populates the list of similar topics in the similar authors list !! it is called too soon and the list ul is not there when trying to add the li element -->
-										addSimilary_Topics_list();	
-										function addSimilary_Topics_list(){
-														$.each( similarity_topic_list, function( ind, similarTopic){
-															var current_list = $('.similarity_topics_list_' + index);
-															current_list.append(
-																$('<li/>')
-																.addClass('list-group-item')
-																.html(similarTopic.name + " " + similarTopic.value)
-															);		
-														});	
-													}
-										
-										
-									}
+								}
 								
 										
 									<#--
