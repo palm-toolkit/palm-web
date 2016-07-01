@@ -41,6 +41,7 @@
 							var targetContainer = $( widgetElem ).find( ".coauthor-list" );
 							<#-- remove previous list -->
 							targetContainer.html( "" );
+							 $( widgetElem ).find( "#autOtherInfo" ).html( "" );
 							
 							<#-- bookmark button -->
 				<#if currentUser??>

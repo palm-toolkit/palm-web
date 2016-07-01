@@ -66,6 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 						"/menu/**",
             			"/data/**", 
             			"/developer/**", 
+						"/explore/**",
             			"/extraction/**",
             			"/home", 
             			"/login", 
@@ -77,7 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
             			"/publication/**",
             			"/institution/**", 
             			"/sparqlview/**",
-            			"/userapi/**"// ,
+						"/userapi/**" // ,
             			)
                 	.permitAll()
                 .anyRequest()

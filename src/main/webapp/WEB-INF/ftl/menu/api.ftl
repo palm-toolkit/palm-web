@@ -356,6 +356,23 @@
       </div>
     </div>
     
+    <#-- Circle Details -->
+    <div class="panel box box-danger">
+      <div class="box-header with-border">
+        <h4 class="box-title">
+          <a data-toggle="collapse" data-parent="#accordion4" href="#collapse4Ten" class="collapsed" aria-expanded="false">
+            Circle Details ( /circle/detail? )
+          </a>
+        </h4>
+      </div>
+      
+      <div id="collapse4Ten" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+        <div class="box-body">
+        	<#include "../administration/api/apiCircleDetail.ftl">
+        </div>
+      </div>
+    </div>
+    
     <#-- Circle Publication List -->
     <div class="panel box box-success">
       <div class="box-header with-border">

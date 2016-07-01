@@ -361,7 +361,10 @@
 								endRecord = data.totalCount;
 								$( widgetElem ).find( "span.paging-info" ).html( "Displaying researchers " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.totalCount );
 							
-								
+								if( maxPage == 1 ){
+									$( widgetElem ).find( "li.toNext" ).addClass( "disabled" );
+									$( widgetElem ).find( "li.toEnd" ).addClass( "disabled" );
+								}
 							}
 							else{
 								$pageDropdown.append("<option value='0'>0</option>");

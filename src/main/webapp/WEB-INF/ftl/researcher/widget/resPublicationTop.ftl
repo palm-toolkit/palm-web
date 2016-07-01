@@ -30,8 +30,6 @@
 			onRefreshStart: function( widgetElem ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
-				<#--remove everything -->
-				$("#widget-${wUniqueName} .box-content").html( "" );
 				
 				<#--
 				if( data.status != "ok"){
@@ -46,9 +44,14 @@
 				}
 				-->
 
+				var mainContainer = $("#widget-${wUniqueName} .box-content");
+				
+				<#--remove everything -->
+				mainContainer.html( "" );
+
 				<#-- no publication found -->
 				if ( typeof data.publications === 'undefined') {
-					$("#widget-${wUniqueName} .box-content").append( "<strong>error, no publication found/match</strong>" );
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher does not have any publication on PALM" );
 					return false;
 				}
 
@@ -342,7 +345,7 @@
 				});
 
 				<#-- append everything to  -->
-				$("#widget-${wUniqueName} .box-content").append( timeLineContainer );
+				mainContainer.append( timeLineContainer );
 			}
 		};
 		

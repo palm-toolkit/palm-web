@@ -41,6 +41,57 @@
 <script src="<@spring.url '/resources/plugins/fancytree/jquery.fancytree.js' />" type="text/javascript"></script>
 <script src="<@spring.url '/resources/plugins/fancytree/src/jquery.fancytree.childcounter.js' />" type="text/javascript"></script>
 
+<#-- Sigma.js -->
+<script src="<@spring.url '/resources/sigma/src/sigma.core.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/conrad.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/utils/sigma.utils.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/utils/sigma.polyfills.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/sigma.settings.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/classes/sigma.classes.dispatcher.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/classes/sigma.classes.configurable.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/classes/sigma.classes.graph.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/classes/sigma.classes.camera.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/classes/sigma.classes.quad.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/classes/sigma.classes.edgequad.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/captors/sigma.captors.mouse.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/captors/sigma.captors.touch.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/sigma.renderers.canvas.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/sigma.renderers.webgl.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/sigma.renderers.svg.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/sigma.renderers.def.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/webgl/sigma.webgl.nodes.def.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/webgl/sigma.webgl.nodes.fast.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/webgl/sigma.webgl.edges.def.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/webgl/sigma.webgl.edges.fast.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/webgl/sigma.webgl.edges.arrow.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/canvas/sigma.canvas.labels.def.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/canvas/sigma.canvas.hovers.def.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/canvas/sigma.canvas.nodes.def.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/canvas/sigma.canvas.edges.def.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/canvas/sigma.canvas.edges.curve.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/canvas/sigma.canvas.edges.arrow.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/canvas/sigma.canvas.edges.curvedArrow.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/canvas/sigma.canvas.edgehovers.def.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/canvas/sigma.canvas.edgehovers.curve.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/canvas/sigma.canvas.edgehovers.arrow.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/canvas/sigma.canvas.extremities.def.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/svg/sigma.svg.utils.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/svg/sigma.svg.nodes.def.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/svg/sigma.svg.edges.def.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/svg/sigma.svg.edges.curve.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/svg/sigma.svg.labels.def.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/renderers/svg/sigma.svg.hovers.def.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/middlewares/sigma.middlewares.rescale.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/middlewares/sigma.middlewares.copy.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/misc/sigma.misc.animation.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/misc/sigma.misc.bindEvents.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/misc/sigma.misc.bindDOMEvents.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/sigma/src/misc/sigma.misc.drawHovers.js' />" type="text/javascript"></script>
+<#-- END SIGMA IMPORTS -->
+<script src="<@spring.url '/resources/plugins/sigma/parsers/gexf/gexf-parser.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/plugins/sigma/parsers/gexf/sigma.parsers.gexf.js' />" type="text/javascript"></script>
+
 
 <#-- d3 layout for maps - currently unused -->
 <#--

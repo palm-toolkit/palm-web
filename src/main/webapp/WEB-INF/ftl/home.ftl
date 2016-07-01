@@ -46,6 +46,15 @@
               </div>
             </a>
             
+            <a href="<@spring.url '/explore' />" class="col-md-3 col-sm-6 col-xs-12 box-home">
+              <div class="info-box">
+                <span class="info-box-icon info-box-home-icon bg-black"><i class="fa fa-2x fa-th-large"></i></span>
+                <div class="info-box-content info-box-home-text">
+                  <span class="info-box-number fontsize24">EXPLORE</span>
+                </div>
+              </div>
+            </a>
+            
           </div>
           		
  	</@content.contentWrapper>

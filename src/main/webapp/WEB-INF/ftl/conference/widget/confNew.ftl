@@ -133,6 +133,7 @@
 		}
 		
 		$("#name").autocomplete({
+			delay: 500,
 		    source: function (request, response) {
 		    	var _this = this;
 		        $.ajax({
@@ -141,6 +142,10 @@
 		            data: {
 						query: request.term,
 						source: "all",
+						addedVenue: "no",
+						<#if targetEventId??>
+	    					eventId: "${targetEventId!''}",
+	    				</#if>
 						type: $( "#venue-type" ).val()
 					},
 		            success: function (data) {

@@ -25,7 +25,7 @@
 $(function(){
 	$( "#menu-introduction,#menu-api,#menu-documentation" ).click( function( event ){
 		event.preventDefault();
-		$.PALM.popUpIframe.create( $(this).data("url") , {popUpHeight:"456px"}, $(this).attr("title") );
+		$.PALM.popUpIframe.create( $(this).data("url") , {popUpHeight:"480px"}, $(this).attr("title") );
 	});
 });
 </script>

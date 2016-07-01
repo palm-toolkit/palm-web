@@ -44,6 +44,14 @@
 				$.PALM.popUpMessage.remove( uniquePidInterestEvolution );
 				
 var targetContainerContent = $( widgetElem ).find( "#boxbody${wUniqueName}" ).find( ".box-content" );
+
+<#-- in case interest is not present -->
+if( typeof data.interest == "undefined" ){
+	$.PALM.callout.generate( targetContainerContent , "warning", "Unable to extract interests!", "Due to insufficient data" );
+	return false;
+}
+
+
 var targetContainerFilter = $( widgetElem ).find( "#boxbody${wUniqueName}" ).find( ".box-filter" );
 
 <#-- clean target container -->

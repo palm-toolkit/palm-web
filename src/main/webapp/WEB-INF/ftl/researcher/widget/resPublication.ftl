@@ -38,7 +38,7 @@
 				<#-- check for error  -->
 				if( data.status != "ok"){
 					<#--alert( "error on publication list" );-->
-					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "An error occured when accesing server" );
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher does not have any publication on PALM database" );
 					return false;
 				}
 				
@@ -169,7 +169,7 @@
 
 				<#-- no publication found -->
 				if ( typeof data.publications === 'undefined') {
-					mainContainer.append( "<strong>error, no publication found/match</strong>" );
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher does not have any publication on PALM" );
 					return false;
 				}
 

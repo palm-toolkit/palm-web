@@ -149,7 +149,7 @@
 
 				<#-- no publication found -->
 				if ( typeof data.publications === 'undefined') {
-					mainContainer.append( "<strong>error, no publication found/match</strong>" );
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher does not have any publication on PALM" );
 					return false;
 				}
 
