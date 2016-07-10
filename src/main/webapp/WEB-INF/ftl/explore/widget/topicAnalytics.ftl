@@ -51,9 +51,9 @@
 
 
 		<#-- generate unique id for progress log -->
-		var uniquePidResearcherWidget = $.PALM.utility.generateUniqueId();
+		var uniquePidTopicWidget = $.PALM.utility.generateUniqueId();
 
-
+		id="none";
 
 		var options ={
 			source : "<@spring.url '/explore/topic' />",
@@ -63,14 +63,14 @@
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
 				<#-- show pop up progress log -->
-				$.PALM.popUpMessage.create( "loading topics/interests...", { uniqueId:uniquePidResearcherWidget, popUpHeight:40, directlyRemove:false});
+				$.PALM.popUpMessage.create( "loading topics/interests...", { uniqueId:uniquePidTopicWidget, popUpHeight:40, directlyRemove:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){
 			<#-- switch tab -->
 			$('a[href="#tab_bubble"]').tab('show');
 				
 				<#-- remove  pop up progress log -->
-							$.PALM.popUpMessage.remove( uniquePidResearcherWidget );
+				$.PALM.popUpMessage.remove( uniquePidTopicWidget );
 				
 				
 				var tabContainer = $( widgetElem ).find( "#boxbody-${wUniqueName}" ).find( ".nav-tabs-custom" );
@@ -78,23 +78,31 @@
 				<#-- Bubble tab -->
 				var tabHeaderBubble = $( widgetElem ).find( "#header_bubble" ).first();
 				var tabContentBubble = $( widgetElem ).find( "#tab_bubble" ).first();
+				tabContentBubble.html( "" );
 
 				<#-- Evolution tab -->
 				var tabHeaderEvolution = $( widgetElem ).find( "#header_evolution" ).first();
 				var tabContentEvolution = $( widgetElem ).find( "#tab_evolution" ).first();
+				tabContentEvolution.html("");
 
 				<#-- List tab -->
 				var tabHeaderTopicList = $( widgetElem ).find( "#header_topic_list" ).first();
 				var tabContentTopicList = $( widgetElem ).find( "#tab_topic_list" ).first();
+				tabContentTopicList.html("");
 
 				<#-- Comparison tab -->
 				var tabHeaderTopicComparison = $( widgetElem ).find( "#header_topic_comparison" ).first();
 				var tabContentTopicComparison = $( widgetElem ).find( "#tab_topic_comparison" ).first();
+				tabContentTopicComparison.html("");
 
+				<#-- build the topic list -->
+				var url1 = "<@spring.url '/explore/topic' />"+"?id="+id;
 
-			<#-- build the topic list -->
-								$.each( data.topics, function( index, item){
-								
+				$.getJSON( url1 , function( data ) {
+  					
+							$.each( data.topics, function( index, item){
+							<#--	console.log(data.topics[1].termvalues.length); -->
+
 								var topicExtractor = $( '<div/>' )
 										.append(
 											$( '<div/>' )
@@ -119,19 +127,35 @@
 										);
 								}
 								});
-								
-								
-				visualizeBubbles(data.topics, tabContainer);								
-								
+					});			
+			<#-- Bubbles Tab -->
+			<#--var url;
+			if(id !== "none"){
+				url = "<@spring.url '/explore/topicList' />"+"?id="+id;
+			}
+			else{
+				url = "<@spring.url '/explore/topicList' />"+"?id=a5c7cc6d-4c6d-42a1-a85e-c5d68a768730";
+			}	-->
+
+			var url2 = "<@spring.url '/explore/topicList' />"+"?id="+id;
+				$.getJSON( url2 , function( data ) {
+  					console.log("topic data:");		
+  					console.log(data);
+  													
+					<#--vis_topicualizeBubbles(data.topics, tabContainer);-->								
+					vis_topicualizeBubbles(data.interest, tabContainer);								
+					
+				});				
 			}
 		};
 		
 		
-		function visualizeBubbles(data,tabContainer){
+		function vis_topicualizeBubbles(data,tabContainer){
 		
 			var margin = {top: -5, right: -5, bottom: -5, left: -5};
 			
-			var color = d3.scale.category20();
+			var color = d3.scale.ordinal()
+    						.range(customColors);
 			var width = tabContainer.width()* 2;
 			var height = width/1.5;
 		
@@ -147,10 +171,10 @@
 						.scaleExtent([1, 10])
 						.on("zoom", zoomed);
 						
-			vis = d3.select("#tab_bubble")
+			vis_topic = d3.select("#tab_bubble")
 					  .append("div")
 				      .classed("svg-container", true)
-				      .call(zoom) //container class to make it responsive
+				      .call(zoom, function(){console.log("topic")}) //container class to make it responsive
 					  .append("svg:svg")
 				   	  .attr("preserveAspectRatio", "xMinYMin meet")
 				      .attr("viewBox", "0 0 " + width + " " + height)
@@ -159,36 +183,52 @@
 			
 			
 				     
-			var rect = vis.append("rect")
+			var rect = vis_topic.append("rect")
 						    .attr("width", width)
 						    .attr("height", height)
 						    .style("fill", "none")
 						    .style("pointer-events", "all");
 		
-			var node = vis.selectAll(".node")
+			var node = vis_topic.selectAll(".node")
 		      			.data(bubble.nodes(topics(data))
 		      			.filter(function(d) { return !d.children; }))
 		    			.enter().append("g")
 		      			.attr("class", "node")
-		      			.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+		      			.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+		      			.on("contextmenu", Color)
+		      			.on("click", function(d){
+			        	var researcherPublicationWidget = $.PALM.boxWidget.getByUniqueName( 'explore_topics' ); 
+						
+						researcherPublicationWidget.options.queryString = "?id=fa5c5575-9f7c-4495-b625-4b26698ec86e";
+						<#-- add overlay -->
+						researcherPublicationWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+						
+						$.PALM.boxWidget.refresh( researcherPublicationWidget.element , researcherPublicationWidget.options );
+						
+						console.log(d.className);
+						
+						id = "fa5c5575-9f7c-4495-b625-4b26698ec86e";
+			        });
 
 			 node.append("title")
-		      	  	.text(function(d) { return d.className + ": " + d.packageName; });
+		      	  	.text(function(d) { return d.className; });
 		
 		  	 node.append("circle")
 			      	.attr("r", function(d) { return d.r; })
 			        .style("fill", function(d) { return color(d.value); });
+			        
 		
 		  	 node.append("text")
 				      .attr("dy", ".3em")
 				      .style("text-anchor", "middle")
-				      .text(function(d) { return d.className.substring(0, d.r / 4); })
+				      .text(function(d) { return d.className; })
+				      .style("font-size", function(d) { return Math.min(2 * d.r, (2 * d.r - 1) / this.getComputedTextLength() * 10) + "px"; })
 		      		  .style( "cursor", "default" )
 		      		  .attr("class", "value")
       		  
 		}
 	
-	function topics(data) {
+	<#--function topics(data) {
 			var topiccs = [];
 		
 			for(var i=0; i<data.length; i++) {
@@ -201,12 +241,45 @@
 		
 			console.log(topiccs);
 			return {children: topiccs};
+	}-->
+
+	function topics(data) {
+		var topiccs = [];
+		var temp = [];
+		for(var i=0; i<data.length; i++) {
+		console.log(data[i].interestlanguages);
+			for(var j=0; j<data[i].interestlanguages.length; j++){
+			console.log(data[i].interestlanguages);
+				for(var k=0; k<data[i].interestlanguages[j].interestyears.length; k++){
+					for(var l=0; l<data[i].interestlanguages[j].interestyears[k].termvalue.length; l++){
+						var item = data[i].interestlanguages[j].interestyears[k].termvalue[l];
+						if(temp.indexOf(item[1]) == -1 && item[2]>0.20) 
+						{
+							temp.push(item[1]);
+							topiccs.push({className: item[1], value: item[2]});
+						}	
+					}
+				}
+			}
+		}
+		console.log(topiccs);
+		temp = [];
+		return {children: topiccs};
 	}
+
 		
 	function zoomed() {
-	  	vis.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+	  	vis_topic.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 	}
 		
+	var Color = (function(){
+   var current = "white";
+    return function(){
+        current = current == "white" ? "blue" : "white";
+        d3.select(this).style("fill", current);
+        d3.event.preventDefault();
+    }
+})();	
 		
 		<#--// register the widget-->
 		$.PALM.options.registeredWidget.push({
