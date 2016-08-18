@@ -123,10 +123,16 @@ function visualizeTextCloud( words ){
   .font("Impact")
   .fontSize(function(d) {
 		var fontsize = d.size * maxFontSize;
-		if( fontsize < 10 )
-			fontsize = 8;
-		if( fontsize > 14 )
-			fontsize = 20;
+		if( fontsize < 1000 )
+			fontsize = 10;
+		else if( fontsize < 3000 && fontsize >= 1000 )
+			fontsize = 16;
+		else if( fontsize < 5000 && fontsize >= 3000 )
+			fontsize = 18;
+		else if( fontsize < 6000 && fontsize >= 5000 )
+			fontsize = 20;	
+		else 
+			fontsize = 22;
 		return fontsize;
 	})
   .on("end", draw)
