@@ -788,7 +788,7 @@
 				<#-- trigger conference group basic statistic -->
 				$.each( $.PALM.options.registeredWidget, function(index, obj){
 					if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
-						if( obj.selector === "#widget-conference_event_group_top_composition" || obj.selector === "#widget-conference_event_group_top_evolution" ){
+						if( obj.selector === "#widget-conference_event_group_top_composition" || obj.selector === "#widget-conference_event_group_top_evolution" || obj.selector === "#widget-conference_event_group_unigrams"  || obj.selector === "#widget-conference_event_group_ngrams" ){
 							obj.options.queryString = "?id=" + venueId + "&type=eventGroup"
 							$.PALM.boxWidget.refresh( obj.element , obj.options );
 						} else {
