@@ -18,7 +18,7 @@
 		
 		<#-- unique options in each widget -->
 		var options ={
-			source : "<@spring.url '/researcher/similarAuthorListTopicLevel' />",
+			source : "<@spring.url '/researcher/similarAuthorListTopicLevelRevised' />",
 			query: "",
 			queryString : "",
 			page:0,
