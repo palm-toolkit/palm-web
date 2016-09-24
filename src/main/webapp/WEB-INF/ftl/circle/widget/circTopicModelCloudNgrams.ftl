@@ -122,11 +122,21 @@ function visualizeTextCloud( words ){
   .rotate(function() { return 0; })
   .font("Impact")
   .fontSize(function(d) {
-		var fontsize = d.size * maxFontSize;
-		if( fontsize < 10 )
-			fontsize = 8;
-		if( fontsize > 14 )
+		var fontsize = d.size;
+		if( fontsize < 20 )
+			fontsize = 10;
+		else if( fontsize < 30 && fontsize >= 20 )
+			fontsize = 12;
+		else if( fontsize < 40 && fontsize >= 30 )
+			fontsize = 14;
+		else if( fontsize < 60 && fontsize >= 40 )
+			fontsize = 16;	
+		else if( fontsize < 80 && fontsize >= 60 )
+			fontsize = 18;
+		else if( fontsize < 100 && fontsize >= 80 )
 			fontsize = 20;
+		else 
+			fontsize = 22;
 		return fontsize;
 	})
   .on("end", draw)
