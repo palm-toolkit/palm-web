@@ -41,7 +41,7 @@ if( data.status != "ok" )
 	alertCallOutWarning( "An error occurred", "Failed to show publication topic composition" );
 	
 if( typeof data.topicModel === "undefined" || data.topicModel.length == 0){
-	alertCallOutWarning( "Circle contain no topicModel", "Topic mining is only performed on correctly created circles" );
+	alertCallOutWarning( "Publication contain no topicModel", "Topics mining only performed on complete publication with abstract" );
 	return false;
 }
 <#-- show tab -->
@@ -126,8 +126,12 @@ function visualizeTermValue( termValueMap, svgContainer )
 {
 		nv.addGraph(function() {
   		var chart = nv.models.pieChart()
-	      .x(function(d) { return d.d[0] })
-	      .y(function(d) { return d.d[1] })
+	      .x(function(d) { 
+	      	return d[0]
+	      })
+	      .y(function(d) { 
+	      	return d[1] 
+	      })
 	      .showLabels(true)     //Display pie labels
 	      .labelThreshold(.00)  //Configure the minimum slice size for labels to show up
 	      .labelType("percent") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
