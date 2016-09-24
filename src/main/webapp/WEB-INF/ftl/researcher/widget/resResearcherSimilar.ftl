@@ -113,7 +113,7 @@
 												.addClass( 'info font-xs' )
 												.attr('data-toggle', 'collapse')
 												.attr('href', '#similarity_topics_list_' + index)
-												.html( "Degree Similarity: " + (1 - (Math.round(item.similarity * 100) / 100))*100 + "%"))
+												.html( "Degree Similarity: " + ((Math.round(item.similarity * 100) / 100))*100 + "%"))
 										);
 										researcherDetail.append(
 													$('<div/>')
