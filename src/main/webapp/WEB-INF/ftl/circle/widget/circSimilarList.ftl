@@ -1,5 +1,5 @@
 <div id="boxbody-${wUniqueName}" class="box-body no-padding">
-  	<div class="similarcircle-list">
+  	<div class="similarauthor-list">
     </div>
 </div>
 
@@ -7,7 +7,7 @@
 	$( function(){
 
 		<#-- add slim scroll -->
-       $("#boxbody-${wUniqueName}>.similarcircle-list").slimscroll({
+       $("#boxbody-${wUniqueName}>.similarauthor-list").slimscroll({
 			height: "300px",
 	        size: "6px",
 			allowPageScroll: true,
@@ -25,11 +25,11 @@
 			maxresult:20,
 			onRefreshStart: function(  widgetElem  ){
 				<#-- show pop up progress log -->
-				<#--$.PALM.popUpMessage.create( "loading similarcircle list" );-->
+				<#--$.PALM.popUpMessage.create( "loading similarauthor list" );-->
 						},
 			onRefreshDone: function(  widgetElem , data ){
 
-							var targetContainer = $( widgetElem ).find( ".similarcircle-list" );
+							var targetContainer = $( widgetElem ).find( ".similarauthor-list" );
 							<#-- remove previous list -->
 							targetContainer.html( "" );
 							
@@ -37,18 +37,18 @@
 								<#-- remove any remaing tooltip -->
 								<#-- $( "body .tooltip" ).remove(); -->
 
-								<#-- build the circle list -->
+								<#-- build the researcher list -->
 								$.each( data.similarCircles, function( index, item){
-									var circleDiv = 
+									var researcherDiv = 
 									$( '<div/>' )
-										.addClass( 'circle' )
+										.addClass( 'author' )
 										.attr({ 'id' : item.id });
 										
-									var circleNav =
+									var researcherNav =
 									$( '<div/>' )
 										.addClass( 'nav' );
 										
-									var circleDetail =
+									var researcherDetail =
 									$( '<div/>' )
 										.addClass( 'detail' )
 										.append(
@@ -57,16 +57,19 @@
 												.html( item.name )
 										);
 										
-									circleDiv
+									researcherDiv
 										.append(
-											circleNav
+											researcherNav
 										).append(
-											circleDetail
+											researcherDetail
 										);
 										
+									if( !item.isAdded ){
+										researcherDetail.addClass( "text-gray" );
+									}
 									<#--
 									if( typeof item.status != 'undefined')
-										circleDetail.append(
+										researcherDetail.append(
 											$( '<div/>' )
 											.addClass( 'status' )
 											.append( 
@@ -79,12 +82,26 @@
 											)
 										);
 									-->
+									<#-- affiliation -->
+									if( typeof item.affiliation != 'undefined')
+										researcherDetail.append(
+											$( '<div/>' )
+											.addClass( 'affiliation' )
+											.append( 
+												$( '<i/>' )
+												.addClass( 'fa fa-institution icon font-xs' )
+											).append( 
+												$( '<span/>' )
+												.addClass( 'info font-xs' )
+												.html( item.affiliation )
+											)
+										);
 									
 									<#-- List of objects name and value -->
-									var similarity_topic_list = [{"name":"word_1", value:2.3}, {"name":"word_12322 ", value:2.3}, {"name":"word_dgagadfgadfg", value:2.2},{"name":"word_agadgadfvadfgrtrt", value:2.0},{"name":"word_fagartgaebadfb", value:2.0}];
+									var similarity_topic_list = item.topicdetail;
 									
 									if( typeof item.similarity != 'undefined'){
-										circleDetail.append(
+										researcherDetail.append(
 											$( '<div/>' )
 											.addClass( 'similarity' )
 											.css({ "clear" : "both"})
@@ -96,9 +113,9 @@
 												.addClass( 'info font-xs' )
 												.attr('data-toggle', 'collapse')
 												.attr('href', '#similarity_topics_list_' + index)
-												.html( "Degree Similarity: " + Math.round(item.similarity * 100) / 100))
+												.html( "Degree Similarity: " + ( (Math.round(item.similarity * 100) / 100))*100 + "%"))
 										);
-										circleDetail.append(
+										researcherDetail.append(
 													$('<div/>')
 													.attr('id', 'similarity_topics_list_' + index)
 													.addClass('panel-collapse collapse')
@@ -115,33 +132,19 @@
 														return list;													
 													})													
 												);
-												
-										<#-- this function populates the list of similar topics in the similar circles list !! it is called too soon and the list ul is not there when trying to add the li element -->										
-										function addSimilary_Topics_list(){
-														$.each( similarity_topic_list, function( ind, similarTopic){
-															var current_list = $('.similarity_topics_list_' + index);
-															current_list.append(
-																$('<li/>')
-																.addClass('list-group-item')
-																.html(similarTopic.name + " " + similarTopic.value)
-															);		
-														});	
-													}
-										
-										
-									}
+								}
 								
 										
 									<#--
 									if( typeof item.citedBy != 'undefined')
-										circleDetail.append(
+										researcherDetail.append(
 											$( '<div/>' )
 											.addClass( 'paper font-xs' )
 											.html( "Publications: " + item.publicationsNumber + " || Cited by: " + item.citedBy)
 										);
 									-->
 								<#--	if( typeof item.photo != 'undefined'){
-										circleNav
+										researcherNav
 											.append(
 											$( '<div/>' )
 												.addClass( 'photo round' )
@@ -152,7 +155,7 @@
 												)
 											);
 									} else {-->
-										circleNav
+										researcherNav
 										.append(
 											$( '<div/>' )
 											.addClass( 'photo fa fa-user' )
@@ -162,25 +165,25 @@
 									$(".detail .name")
 										.on( "click", function(){
 											if( item.isAdded ){
-												window.location = "<@spring.url '/circle' />?id=" + item.id + "&name=" + item.name;
+												window.location = "<@spring.url '/researcher' />?id=" + item.id + "&name=" + item.name;
 											} else {
-												$.PALM.popUpIframe.create( "<@spring.url '/circle/add' />?id=" + item.id + "&name=" + item.name , {popUpHeight:"416px"}, "Add " + item.name + " to PALM");
+												$.PALM.popUpIframe.create( "<@spring.url '/researcher/add' />?id=" + item.id + "&name=" + item.name , {popUpHeight:"416px"}, "Add " + item.name + " to PALM");
 											}
 										} );
 									
 									targetContainer
 										.append( 
-											circleDiv
+											researcherDiv
 										);
 								});						
 								
 							}
 							else{
-							<#-- no cocircle -->
+							<#-- no coauthor -->
 							<#--
 								$pageDropdown.append("<option value='0'>0</option>");
 								$( widgetElem ).find( "span.total-page" ).html( 0 );
-								$( widgetElem ).find( "span.paging-info" ).html( "Displaying circles 0 - 0 of 0" );
+								$( widgetElem ).find( "span.paging-info" ).html( "Displaying researchers 0 - 0 of 0" );
 								$( widgetElem ).find( "li.toNext" ).addClass( "disabled" );
 								$( widgetElem ).find( "li.toEnd" ).addClass( "disabled" );
 								-->
