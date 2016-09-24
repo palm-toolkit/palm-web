@@ -116,12 +116,6 @@ function visualizeTermValue( termValueMap, svgContainer )
     });
 	
 }
-
-	
-		
-
-
-
 			}<#-- end of onrefresh done -->
 		};<#-- end of options -->
 		
