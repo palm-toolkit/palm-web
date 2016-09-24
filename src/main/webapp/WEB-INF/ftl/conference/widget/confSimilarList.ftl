@@ -37,18 +37,18 @@
 								<#-- remove any remaing tooltip -->
 								<#-- $( "body .tooltip" ).remove(); -->
 
-								<#-- build the event list -->
+								<#-- build the researcher list -->
 								$.each( data.similarEvents, function( index, item){
-									var eventDiv = 
+									var researcherDiv = 
 									$( '<div/>' )
 										.addClass( 'event' )
 										.attr({ 'id' : item.id });
 										
-									var eventNav =
+									var researcherNav =
 									$( '<div/>' )
 										.addClass( 'nav' );
 										
-									var eventDetail =
+									var researcherDetail =
 									$( '<div/>' )
 										.addClass( 'detail' )
 										.append(
@@ -57,16 +57,19 @@
 												.html( item.name )
 										);
 										
-									eventDiv
+									researcherDiv
 										.append(
-											eventNav
+											researcherNav
 										).append(
-											eventDetail
+											researcherDetail
 										);
 										
+									if( !item.isAdded ){
+										researcherDetail.addClass( "text-gray" );
+									}
 									<#--
 									if( typeof item.status != 'undefined')
-										eventDetail.append(
+										researcherDetail.append(
 											$( '<div/>' )
 											.addClass( 'status' )
 											.append( 
@@ -79,12 +82,26 @@
 											)
 										);
 									-->
+									<#-- affiliation -->
+									if( typeof item.affiliation != 'undefined')
+										researcherDetail.append(
+											$( '<div/>' )
+											.addClass( 'affiliation' )
+											.append( 
+												$( '<i/>' )
+												.addClass( 'fa fa-institution icon font-xs' )
+											).append( 
+												$( '<span/>' )
+												.addClass( 'info font-xs' )
+												.html( item.affiliation )
+											)
+										);
 									
 									<#-- List of objects name and value -->
-									var similarity_topic_list = [{"name":"word_1", value:2.3}, {"name":"word_12322 ", value:2.3}, {"name":"word_dgagadfgadfg", value:2.2},{"name":"word_agadgadfvadfgrtrt", value:2.0},{"name":"word_fagartgaebadfb", value:2.0}];
+									var similarity_topic_list = item.topicdetail;
 									
 									if( typeof item.similarity != 'undefined'){
-										eventDetail.append(
+										researcherDetail.append(
 											$( '<div/>' )
 											.addClass( 'similarity' )
 											.css({ "clear" : "both"})
@@ -96,9 +113,9 @@
 												.addClass( 'info font-xs' )
 												.attr('data-toggle', 'collapse')
 												.attr('href', '#similarity_topics_list_' + index)
-												.html( "Degree Similarity: " + Math.round(item.similarity * 100) / 100))
+												.html( "Degree Similarity: " + ((Math.round(item.similarity * 100) / 100))*100 + "%"))
 										);
-										eventDetail.append(
+										researcherDetail.append(
 													$('<div/>')
 													.attr('id', 'similarity_topics_list_' + index)
 													.addClass('panel-collapse collapse')
@@ -115,33 +132,19 @@
 														return list;													
 													})													
 												);
-												
-										<#-- this function populates the list of similar topics in the similar events list !! it is called too soon and the list ul is not there when trying to add the li element -->										
-										function addSimilary_Topics_list(){
-														$.each( similarity_topic_list, function( ind, similarTopic){
-															var current_list = $('.similarity_topics_list_' + index);
-															current_list.append(
-																$('<li/>')
-																.addClass('list-group-item')
-																.html(similarTopic.name + " " + similarTopic.value)
-															);		
-														});	
-													}
-										
-										
-									}
+								}
 								
 										
 									<#--
 									if( typeof item.citedBy != 'undefined')
-										eventDetail.append(
+										researcherDetail.append(
 											$( '<div/>' )
 											.addClass( 'paper font-xs' )
 											.html( "Publications: " + item.publicationsNumber + " || Cited by: " + item.citedBy)
 										);
 									-->
 								<#--	if( typeof item.photo != 'undefined'){
-										eventNav
+										researcherNav
 											.append(
 											$( '<div/>' )
 												.addClass( 'photo round' )
@@ -152,7 +155,7 @@
 												)
 											);
 									} else {-->
-										eventNav
+										researcherNav
 										.append(
 											$( '<div/>' )
 											.addClass( 'photo fa fa-user' )
@@ -162,15 +165,15 @@
 									$(".detail .name")
 										.on( "click", function(){
 											if( item.isAdded ){
-												window.location = "<@spring.url '/event' />?id=" + item.id + "&name=" + item.name;
+												window.location = "<@spring.url '/researcher' />?id=" + item.id + "&name=" + item.name;
 											} else {
-												$.PALM.popUpIframe.create( "<@spring.url '/event/add' />?id=" + item.id + "&name=" + item.name , {popUpHeight:"416px"}, "Add " + item.name + " to PALM");
+												$.PALM.popUpIframe.create( "<@spring.url '/researcher/add' />?id=" + item.id + "&name=" + item.name , {popUpHeight:"416px"}, "Add " + item.name + " to PALM");
 											}
 										} );
 									
 									targetContainer
 										.append( 
-											eventDiv
+											researcherDiv
 										);
 								});						
 								
@@ -180,7 +183,7 @@
 							<#--
 								$pageDropdown.append("<option value='0'>0</option>");
 								$( widgetElem ).find( "span.total-page" ).html( 0 );
-								$( widgetElem ).find( "span.paging-info" ).html( "Displaying events 0 - 0 of 0" );
+								$( widgetElem ).find( "span.paging-info" ).html( "Displaying researchers 0 - 0 of 0" );
 								$( widgetElem ).find( "li.toNext" ).addClass( "disabled" );
 								$( widgetElem ).find( "li.toEnd" ).addClass( "disabled" );
 								-->
