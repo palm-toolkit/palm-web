@@ -788,14 +788,12 @@
 				<#-- trigger conference group basic statistic -->
 				$.each( $.PALM.options.registeredWidget, function(index, obj){
 					if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
-						if( obj.selector === "#widget-conference_topic_composition_general" || obj.selector === "#widget-conference_topic_cloud_unigrams_general" || obj.selector === "#widget-conference_topic_cloud_ngrams_general"  || obj.selector === "#widget-conference_topic_evolution" || obj.selector === "#widget-conference_topic_similarity_general" ){
-							obj.options.queryString = "?id=" + venueId + "&type=eventGroup"
-							$.PALM.boxWidget.refresh( obj.element , obj.options );
-						} else {
+						obj.options.queryString = "?id=" + venueId + "&type=eventGroup"
+						$.PALM.boxWidget.refresh( obj.element , obj.options );
+					}else {
 						<#-- clear other widget -->
 							obj.element.find( ".box-content" ).html( "" );
 						}
-					}
 				});
 			}).fail(function() {
 	   	 		$.PALM.popUpMessage.remove( uniquePid );
