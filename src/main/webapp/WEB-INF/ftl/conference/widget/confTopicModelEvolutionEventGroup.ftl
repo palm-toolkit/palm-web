@@ -40,10 +40,11 @@ tabContentContainer.html( "" );
 //if( data.status != "ok" )
 //	alertCallOutWarning( "An error occurred", "Failed to show publication topic composition" );
 	
-if( typeof data.termvalues === "undefined" || data.termvalues.length == 0){
-	alertCallOutWarning( "Event contain no topicModel", "Topics mining only performed on complete publication with abstract" );
-	return false;
-}
+//if( typeof data.termvalues === "undefined" || data.termvalues.length == 0){
+//	alertCallOutWarning( "Event contain no topicModel", "Topics mining only performed on complete publication with abstract" );
+//	return false;
+//}
+
 <#-- show tab -->
 tabContainer.show();
 
