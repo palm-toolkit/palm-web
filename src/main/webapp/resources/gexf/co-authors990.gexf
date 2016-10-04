@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://www.gexf.net/1.3" version="1.3" xmlns:viz="http://www.gexf.net/1.3/viz" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.3 http://www.gexf.net/1.3/gexf.xsd">
+  <meta lastmodifieddate="2016-10-03">
+    <creator>Gephi 0.9</creator>
+    <description></description>
+  </meta>
+  <graph defaultedgetype="undirected" mode="static">
+    <attributes class="node" mode="static">
+      <attribute id="isadded" title="isAdded" type="boolean"></attribute>
+    </attributes>
+    <nodes>
+      <node id="Vlatko Lukarov" label="Vlatko Lukarov">
+        <attvalues>
+          <attvalue for="isadded" value="true"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="6.6942315" y="23.889315"></viz:position>
+        <viz:color r="208" g="80" b="103"></viz:color>
+      </node>
+      <node id="Mohamed Amine Chatti" label="Mohamed Amine Chatti">
+        <attvalues>
+          <attvalue for="isadded" value="true"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-4.0704923" y="-8.830149"></viz:position>
+        <viz:color r="229" g="61" b="86"></viz:color>
+      </node>
+      <node id="Hendrik Thüs" label="Hendrik Thüs">
+        <attvalues>
+          <attvalue for="isadded" value="true"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="27.623653" y="-6.889116"></viz:position>
+        <viz:color r="188" g="99" b="120"></viz:color>
+      </node>
+      <node id="fatemeh salehian kia" label="fatemeh salehian kia">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="5.694248" y="64.67474"></viz:position>
+        <viz:color r="128" g="156" b="171"></viz:color>
+      </node>
+      <node id="Arham Muslim" label="Arham Muslim">
+        <attvalues>
+          <attvalue for="isadded" value="true"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-20.309301" y="18.656206"></viz:position>
+        <viz:color r="229" g="61" b="86"></viz:color>
+      </node>
+      <node id="Christoph Greven" label="Christoph Greven">
+        <attvalues>
+          <attvalue for="isadded" value="true"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="36.901585" y="20.416769"></viz:position>
+        <viz:color r="188" g="99" b="120"></viz:color>
+      </node>
+      <node id="Ulrik Schroeder" label="Ulrik Schroeder">
+        <attvalues>
+          <attvalue for="isadded" value="true"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-27.43788" y="-8.15033"></viz:position>
+        <viz:color r="229" g="61" b="86"></viz:color>
+      </node>
+      <node id="tanmaya mahapatra" label="tanmaya mahapatra">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-73.03727" y="-14.387434"></viz:position>
+        <viz:color r="68" g="213" b="223"></viz:color>
+      </node>
+      <node id="Anna Lea Dyckhoff" label="Anna Lea Dyckhoff">
+        <attvalues>
+          <attvalue for="isadded" value="true"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-61.397335" y="35.294807"></viz:position>
+        <viz:color r="88" g="194" b="205"></viz:color>
+      </node>
+      <node id="Ahmed Mohamed Fahmy Yousef" label="Ahmed Mohamed Fahmy Yousef">
+        <attvalues>
+          <attvalue for="isadded" value="true"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="6.102434" y="-56.153465"></viz:position>
+        <viz:color r="168" g="118" b="137"></viz:color>
+      </node>
+      <node id="Usman Wahid" label="Usman Wahid">
+        <attvalues>
+          <attvalue for="isadded" value="true"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="40.13172" y="-48.934727"></viz:position>
+        <viz:color r="168" g="118" b="137"></viz:color>
+      </node>
+      <node id="arnab chakrabarti" label="arnab chakrabarti">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="63.10435" y="-19.586735"></viz:position>
+        <viz:color r="168" g="118" b="137"></viz:color>
+      </node>
+    </nodes>
+    <edges>
+      <edge id="0" source="Vlatko Lukarov" target="Mohamed Amine Chatti" weight="0.30000000000000004"></edge>
+      <edge id="1" source="Vlatko Lukarov" target="Hendrik Thüs" weight="0.2"></edge>
+      <edge id="2" source="Mohamed Amine Chatti" target="Hendrik Thüs" weight="0.2"></edge>
+      <edge id="3" source="Vlatko Lukarov" target="fatemeh salehian kia" weight="0.1"></edge>
+      <edge id="4" source="Mohamed Amine Chatti" target="fatemeh salehian kia" weight="0.1"></edge>
+      <edge id="5" source="Hendrik Thüs" target="fatemeh salehian kia" weight="0.1"></edge>
+      <edge id="6" source="Vlatko Lukarov" target="Arham Muslim" weight="0.30000000000000004"></edge>
+      <edge id="7" source="Mohamed Amine Chatti" target="Arham Muslim" weight="0.4"></edge>
+      <edge id="8" source="Hendrik Thüs" target="Arham Muslim" weight="0.2"></edge>
+      <edge id="9" source="fatemeh salehian kia" target="Arham Muslim" weight="0.1"></edge>
+      <edge id="10" source="Vlatko Lukarov" target="Christoph Greven" weight="0.2"></edge>
+      <edge id="11" source="Mohamed Amine Chatti" target="Christoph Greven" weight="0.2"></edge>
+      <edge id="12" source="Hendrik Thüs" target="Christoph Greven" weight="0.2"></edge>
+      <edge id="13" source="fatemeh salehian kia" target="Christoph Greven" weight="0.1"></edge>
+      <edge id="14" source="Arham Muslim" target="Christoph Greven" weight="0.2"></edge>
+      <edge id="15" source="Vlatko Lukarov" target="Ulrik Schroeder" weight="0.30000000000000004"></edge>
+      <edge id="16" source="Mohamed Amine Chatti" target="Ulrik Schroeder" weight="0.4"></edge>
+      <edge id="17" source="Hendrik Thüs" target="Ulrik Schroeder" weight="0.2"></edge>
+      <edge id="18" source="fatemeh salehian kia" target="Ulrik Schroeder" weight="0.1"></edge>
+      <edge id="19" source="Arham Muslim" target="Ulrik Schroeder" weight="0.4"></edge>
+      <edge id="20" source="Christoph Greven" target="Ulrik Schroeder" weight="0.2"></edge>
+      <edge id="21" source="Arham Muslim" target="tanmaya mahapatra" weight="0.1"></edge>
+      <edge id="22" source="Mohamed Amine Chatti" target="tanmaya mahapatra" weight="0.1"></edge>
+      <edge id="23" source="tanmaya mahapatra" target="Ulrik Schroeder" weight="0.1"></edge>
+      <edge id="24" source="Anna Lea Dyckhoff" target="Vlatko Lukarov" weight="0.1"></edge>
+      <edge id="25" source="Anna Lea Dyckhoff" target="Arham Muslim" weight="0.1"></edge>
+      <edge id="26" source="Anna Lea Dyckhoff" target="Mohamed Amine Chatti" weight="0.1"></edge>
+      <edge id="27" source="Anna Lea Dyckhoff" target="Ulrik Schroeder" weight="0.1"></edge>
+      <edge id="28" source="Mohamed Amine Chatti" target="Ahmed Mohamed Fahmy Yousef" weight="0.1"></edge>
+      <edge id="29" source="Vlatko Lukarov" target="Ahmed Mohamed Fahmy Yousef" weight="0.1"></edge>
+      <edge id="30" source="Hendrik Thüs" target="Ahmed Mohamed Fahmy Yousef" weight="0.1"></edge>
+      <edge id="31" source="Arham Muslim" target="Ahmed Mohamed Fahmy Yousef" weight="0.1"></edge>
+      <edge id="32" source="Mohamed Amine Chatti" target="Usman Wahid" weight="0.1"></edge>
+      <edge id="33" source="Vlatko Lukarov" target="Usman Wahid" weight="0.1"></edge>
+      <edge id="34" source="Hendrik Thüs" target="Usman Wahid" weight="0.1"></edge>
+      <edge id="35" source="Arham Muslim" target="Usman Wahid" weight="0.1"></edge>
+      <edge id="36" source="Ahmed Mohamed Fahmy Yousef" target="Usman Wahid" weight="0.1"></edge>
+      <edge id="37" source="Ahmed Mohamed Fahmy Yousef" target="Christoph Greven" weight="0.1"></edge>
+      <edge id="38" source="Usman Wahid" target="Christoph Greven" weight="0.1"></edge>
+      <edge id="39" source="Mohamed Amine Chatti" target="arnab chakrabarti" weight="0.1"></edge>
+      <edge id="40" source="Vlatko Lukarov" target="arnab chakrabarti" weight="0.1"></edge>
+      <edge id="41" source="Hendrik Thüs" target="arnab chakrabarti" weight="0.1"></edge>
+      <edge id="42" source="Arham Muslim" target="arnab chakrabarti" weight="0.1"></edge>
+      <edge id="43" source="Ahmed Mohamed Fahmy Yousef" target="arnab chakrabarti" weight="0.1"></edge>
+      <edge id="44" source="Usman Wahid" target="arnab chakrabarti" weight="0.1"></edge>
+      <edge id="45" source="Christoph Greven" target="arnab chakrabarti" weight="0.1"></edge>
+      <edge id="46" source="Ahmed Mohamed Fahmy Yousef" target="Ulrik Schroeder" weight="0.1"></edge>
+      <edge id="47" source="Usman Wahid" target="Ulrik Schroeder" weight="0.1"></edge>
+      <edge id="48" source="arnab chakrabarti" target="Ulrik Schroeder" weight="0.1"></edge>
+    </edges>
+  </graph>
+</gexf>

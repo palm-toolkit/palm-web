@@ -7,6 +7,16 @@
 <#-- Combodate - used to generate date combobox -->
 <script src="<@spring.url '/resources/scripts/combodate.js' />" type="text/javascript"></script>
 
+
+<#-- range selector -->
+<script src="<@spring.url '/resources/scripts/ion.rangeSlider.js' />" type="text/javascript"></script>
+
+<#-- floating menu -->
+<script src="<@spring.url '/resources/plugins/floatingmenu/floating-menu.min.js' />" type="text/javascript"></script>
+
+<#-- venn js -->
+<script src="<@spring.url '/resources/scripts/visualization/venn.js' />" type="text/javascript"></script>
+
 <#-- Bootstrap 3.3.2 JS -->
 <script src="<@spring.url '/resources/bootstrap/js/bootstrap.min.js' />" type="text/javascript"></script>
 
@@ -36,6 +46,17 @@
 <script src="<@spring.url '/resources/plugins/nv3d/nv.d3.js' />" type="text/javascript"></script>
 <#-- d3 layout for text cloud -->
 <script src="<@spring.url '/resources/scripts/visualization/d3.layout.cloud.js' />" type="text/javascript"></script>
+
+<#-- leaflet -->
+ <script src="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.js"></script>
+<script src="<@spring.url '/resources/geojson/geojson-tiles.js' />" type="text/javascript"></script>
+
+<#-- timeline -->
+<script src="<@spring.url '/resources/plugins/timeline/main.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/plugins/timeline/modernizr.js' />" type="text/javascript"></script>
+
+<#-- Dimple js -->
+<script src="http://dimplejs.org/dist/dimple.v1.1.5.min.js"></script>
 
 <#-- used to provide rich tree visualization -->
 <script src="<@spring.url '/resources/plugins/fancytree/jquery.fancytree.js' />" type="text/javascript"></script>
@@ -91,7 +112,10 @@
 <#-- END SIGMA IMPORTS -->
 <script src="<@spring.url '/resources/plugins/sigma/parsers/gexf/gexf-parser.js' />" type="text/javascript"></script>
 <script src="<@spring.url '/resources/plugins/sigma/parsers/gexf/sigma.parsers.gexf.js' />" type="text/javascript"></script>
-
+<script src="<@spring.url '/resources/plugins/sigma/renderers/edgeLabels/settings.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/plugins/sigma/renderers/edgeLabels/sigma.canvas.edges.labels.def.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/plugins/sigma/renderers/edgeLabels/sigma.canvas.edges.labels.curve.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/plugins/sigma/renderers/edgeLabels/sigma.canvas.edges.labels.curvedArrow.js' />" type="text/javascript"></script>
 
 <#-- d3 layout for maps - currently unused -->
 <#--

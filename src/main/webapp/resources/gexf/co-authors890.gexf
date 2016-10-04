@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://www.gexf.net/1.3" version="1.3" xmlns:viz="http://www.gexf.net/1.3/viz" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.3 http://www.gexf.net/1.3/gexf.xsd">
+  <meta lastmodifieddate="2016-10-03">
+    <creator>Gephi 0.9</creator>
+    <description></description>
+  </meta>
+  <graph defaultedgetype="directed" mode="static">
+    <attributes class="node" mode="static">
+      <attribute id="isadded" title="isAdded" type="boolean"></attribute>
+    </attributes>
+    <nodes>
+      <node id="Jan Borchers" label="Jan Borchers">
+        <attvalues></attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="5.2549157" y="-6.2492013"></viz:position>
+        <viz:color r="229" g="61" b="86"></viz:color>
+      </node>
+      <node id="Bastian Leibe" label="Bastian Leibe">
+        <attvalues></attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-5.2549157" y="6.2492013"></viz:position>
+        <viz:color r="229" g="61" b="86"></viz:color>
+      </node>
+    </nodes>
+    <edges></edges>
+  </graph>
+</gexf>

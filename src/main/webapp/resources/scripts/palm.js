@@ -1025,7 +1025,10 @@ $.PALM.popUpMessage = {
 						"height" : o.popUpHeight + "px",
 						"top" : popUpTop + "px"
 					}).append($('<div/>').addClass("icon").addClass(popUpIcon))
-					.append($('<div/>').addClass("inner").html(popUpMessage))
+					.append($('<div/>').addClass("inner").html(popUpMessage).append(
+							$('<i/>').addClass("dialog-close-button fa fa-times").click(function() {
+								$(this).parent().parent().remove();
+							})))
 					.hide()
 		}
 		// for polling message

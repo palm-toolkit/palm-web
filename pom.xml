@@ -60,6 +60,7 @@
 	        <artifactId>tomcat7-maven-plugin</artifactId>
 	        <version>${tomcat7.maven.plugin.version}</version>
 	        <configuration>
+	        	<contextReloadable>false</contextReloadable>
 	            <url>http://localhost:8081/${project.name}</url>
 	            <server>localhost</server>
 	            <path>/${project.name}</path>

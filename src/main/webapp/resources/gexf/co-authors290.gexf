@@ -1,0 +1,900 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://www.gexf.net/1.3" version="1.3" xmlns:viz="http://www.gexf.net/1.3/viz" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.3 http://www.gexf.net/1.3/gexf.xsd">
+  <meta lastmodifieddate="2016-10-04">
+    <creator>Gephi 0.9</creator>
+    <description></description>
+  </meta>
+  <graph defaultedgetype="undirected" mode="static">
+    <attributes class="node" mode="static">
+      <attribute id="isadded" title="isAdded" type="boolean"></attribute>
+      <attribute id="authorid" title="authorId" type="string"></attribute>
+    </attributes>
+    <nodes>
+      <node id="Richard Socher" label="Richard Socher">
+        <attvalues>
+          <attvalue for="isadded" value="true"></attvalue>
+          <attvalue for="authorid" value="2559d24c-a92f-4634-8286-f33e2a889a5a"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-1.0278385" y="16.369179"></viz:position>
+        <viz:color r="229" g="61" b="86"></viz:color>
+      </node>
+      <node id="brody huval" label="brody huval">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="25dc4e40-27c0-4ab5-b6ab-9c5537e4a7c9"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="117.87569" y="73.62587"></viz:position>
+        <viz:color r="74" g="206" b="217"></viz:color>
+      </node>
+      <node id="bharath putta bath" label="bharath putta bath">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="cb41c71c-4325-457f-979d-0698836d6c88"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="157.94533" y="92.76244"></viz:position>
+        <viz:color r="74" g="206" b="217"></viz:color>
+      </node>
+      <node id="Christopher D Manning" label="Christopher D Manning">
+        <attvalues>
+          <attvalue for="isadded" value="true"></attvalue>
+          <attvalue for="authorid" value="88267d19-2ec7-4076-9aa0-bbffbf1235f9"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="83.2768" y="44.823097"></viz:position>
+        <viz:color r="132" g="152" b="168"></viz:color>
+      </node>
+      <node id="andrew y ng" label="andrew y ng">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="f6787dfd-4eb3-44a3-a742-9468a6cb61e9"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="115.75826" y="32.032223"></viz:position>
+        <viz:color r="107" g="176" b="189"></viz:color>
+      </node>
+      <node id="yoshua bengio" label="yoshua bengio">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="070e3dbd-77f2-46b8-b42e-fdbbc128e67f"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-19.344704" y="69.99052"></viz:position>
+        <viz:color r="72" g="208" b="219"></viz:color>
+      </node>
+      <node id="milind ganjoo" label="milind ganjoo">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="e9d0cdfd-0e69-407d-b8ac-16bb1adda6f5"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="197.29237" y="-38.49043"></viz:position>
+        <viz:color r="77" g="204" b="215"></viz:color>
+      </node>
+      <node id="hamsa sridhar" label="hamsa sridhar">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="8734757e-8d2f-494a-afa6-8c364f2f2974"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="193.32538" y="-14.743095"></viz:position>
+        <viz:color r="77" g="204" b="215"></viz:color>
+      </node>
+      <node id="osbert bastani" label="osbert bastani">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="6fd020a3-959f-4847-b92b-220c410945e2"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="173.10495" y="-40.252502"></viz:position>
+        <viz:color r="77" g="204" b="215"></viz:color>
+      </node>
+      <node id="james bradbury" label="james bradbury">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="fffb59eb-4c66-43e0-9668-d19dadf3093d"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-180.65312" y="-117.56649"></viz:position>
+        <viz:color r="91" g="191" b="203"></viz:color>
+      </node>
+      <node id="jeffrey pennington" label="jeffrey pennington">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="d5a0900b-d3dc-41fb-8a9d-7e3359e666c3"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="72.94201" y="1.5577749"></viz:position>
+        <viz:color r="74" g="206" b="217"></viz:color>
+      </node>
+      <node id="eric h huang" label="eric h huang">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="8bdf2f65-d6e2-4be1-8b04-f3e9d3d8a4bd"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="87.73259" y="2.8192637"></viz:position>
+        <viz:color r="74" g="206" b="217"></viz:color>
+      </node>
+      <node id="jason chuang" label="jason chuang">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="6b6f9258-e7bd-49d0-822c-e492a3e568e4"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="170.64491" y="35.97898"></viz:position>
+        <viz:color r="79" g="202" b="213"></viz:color>
+      </node>
+      <node id="danqi chen" label="danqi chen">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="c99dc315-9785-44fb-8516-b8de1f7d2a81"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="65.282364" y="69.84392"></viz:position>
+        <viz:color r="72" g="208" b="219"></viz:color>
+      </node>
+      <node id="thang luong" label="thang luong">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="51044a83-a2c2-493b-ac39-c76810331f22"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="29.453943" y="103.1587"></viz:position>
+        <viz:color r="70" g="210" b="221" a="0.99607843"></viz:color>
+      </node>
+      <node id="andrej karpathy" label="andrej karpathy">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="807e5a11-79d8-4613-a609-c539cb38a5fa"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="161.87668" y="126.32901"></viz:position>
+        <viz:color r="74" g="206" b="217"></viz:color>
+      </node>
+      <node id="quoc v le" label="quoc v le">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="8ca0aa8d-3273-4a97-b452-9126384b8a4e"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="143.74144" y="140.08409"></viz:position>
+        <viz:color r="74" g="206" b="217"></viz:color>
+      </node>
+      <node id="jia deng" label="jia deng">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="c987adfb-3a60-4aae-bd0a-e77521287363"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-135.8448" y="132.12758"></viz:position>
+        <viz:color r="79" g="202" b="213"></viz:color>
+      </node>
+      <node id="wei dong" label="wei dong">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="aa32f424-f67c-4c4f-aa98-a5ff33181a75"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-133.2922" y="110.09688"></viz:position>
+        <viz:color r="79" g="202" b="213"></viz:color>
+      </node>
+      <node id="li-jia li" label="li-jia li">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="c189e8bd-3192-4c99-a6bc-c11d120a778d"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-100.49551" y="101.19733"></viz:position>
+        <viz:color r="79" g="202" b="213"></viz:color>
+      </node>
+      <node id="kai li" label="kai li">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="e6a903bc-33e0-44bb-af5a-fc58e6fca296"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-114.51522" y="128.82329"></viz:position>
+        <viz:color r="79" g="202" b="213"></viz:color>
+      </node>
+      <node id="li fei-fei" label="li fei-fei">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="22aebb2e-c89b-47c5-8583-6af12c289c9c"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-90.950455" y="81.579956"></viz:position>
+        <viz:color r="77" g="204" b="215"></viz:color>
+      </node>
+      <node id="ankit kumar" label="ankit kumar">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="c52e94ec-96b5-4a50-8d75-4ce5e2c27281"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-188.40582" y="-155.20332"></viz:position>
+        <viz:color r="91" g="191" b="203"></viz:color>
+      </node>
+      <node id="ozan irsoy" label="ozan irsoy">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="3f5a75dc-2cb5-447b-9979-bb52b2a8e77a"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-238.66423" y="-118.32571"></viz:position>
+        <viz:color r="91" g="191" b="203"></viz:color>
+      </node>
+      <node id="peter ondruska" label="peter ondruska">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="f09a4579-52c4-4a48-9a5f-1497a0dda01b"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-212.78397" y="-107.83015"></viz:position>
+        <viz:color r="91" g="191" b="203"></viz:color>
+      </node>
+      <node id="mohit iyyer" label="mohit iyyer">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="d989c693-288e-4c14-9111-ea424c1304c2"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-123.60877" y="-106.84374"></viz:position>
+        <viz:color r="91" g="191" b="203"></viz:color>
+      </node>
+      <node id="ishaan gulrajani" label="ishaan gulrajani">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="d4287b8c-0e92-4e1f-8b75-05a92b3463db"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-215.65587" y="-143.56165"></viz:position>
+        <viz:color r="91" g="191" b="203"></viz:color>
+      </node>
+      <node id="victor zhong" label="victor zhong">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="4cc200e7-dc2e-42d3-96d1-c0a545c406db"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-234.20485" y="-70.24424"></viz:position>
+        <viz:color r="84" g="197" b="209"></viz:color>
+      </node>
+      <node id="romain paulus" label="romain paulus">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="fecaae0a-8522-4cbe-89a6-140159040a43"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-162.2509" y="-64.217514"></viz:position>
+        <viz:color r="86" g="195" b="207"></viz:color>
+      </node>
+      <node id="himabindu lakkaraju" label="himabindu lakkaraju">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="865672bb-741f-49cc-984a-9e57e474cdc2"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-66.06686" y="41.777203"></viz:position>
+        <viz:color r="70" g="210" b="221" a="0.99607843"></viz:color>
+      </node>
+      <node id="chris manning" label="chris manning">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="bb235c7c-6387-4d18-bdac-b7332c61111b"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-46.46034" y="52.079895"></viz:position>
+        <viz:color r="72" g="208" b="219"></viz:color>
+      </node>
+      <node id="adrian barbu" label="adrian barbu">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="6e5e3ba1-0021-4aad-a56e-dbd6617ee00e"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-25.661858" y="154.27742"></viz:position>
+        <viz:color r="79" g="202" b="213"></viz:color>
+      </node>
+      <node id="dorin comaniciu" label="dorin comaniciu">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="e6ce5175-3d4a-4ff1-9a4b-c623ddc452c6"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-25.39346" y="116.35517"></viz:position>
+        <viz:color r="70" g="210" b="221" a="0.99607843"></viz:color>
+      </node>
+      <node id="cliff chiung-yu lin" label="cliff chiung-yu lin">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="ef0e5d6e-8b9e-42be-8357-097f45c929ab"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="153.12369" y="60.415424"></viz:position>
+        <viz:color r="72" g="208" b="219"></viz:color>
+      </node>
+      <node id="chinmay kulkarni" label="chinmay kulkarni">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="e7ad31f8-6adb-4450-922b-fc43cf847464"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="14.997314" y="-102.52359"></viz:position>
+        <viz:color r="72" g="208" b="219"></viz:color>
+      </node>
+      <node id="michael s bernstein" label="michael s bernstein">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="0c2fd60e-4ab8-405b-8a7f-51d0d5ef90dd"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="25.555546" y="-92.07697"></viz:position>
+        <viz:color r="72" g="208" b="219"></viz:color>
+      </node>
+      <node id="scott r klemmer" label="scott r klemmer">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="269acbbc-828b-46fa-aac0-b77b1a81e5b7"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="9.589309" y="-88.79228"></viz:position>
+        <viz:color r="72" g="208" b="219"></viz:color>
+      </node>
+      <node id="caiming xiong" label="caiming xiong">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="12d0f09f-4965-4888-966e-020a3228647c"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-75.26301" y="-0.41293734"></viz:position>
+        <viz:color r="70" g="210" b="221" a="0.99607843"></viz:color>
+      </node>
+      <node id="stephen merity" label="stephen merity">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="bfaaf9df-e667-435b-846d-d85cbf658d67"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-69.15108" y="-11.2624"></viz:position>
+        <viz:color r="70" g="210" b="221" a="0.99607843"></viz:color>
+      </node>
+      <node id="matthias hein" label="matthias hein">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="674476d9-52ab-45be-a371-38ff96cf2122"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-16.443537" y="-40.004562"></viz:position>
+        <viz:color r="68" g="213" b="223"></viz:color>
+      </node>
+      <node id="John Bauer" label="John Bauer">
+        <attvalues>
+          <attvalue for="isadded" value="true"></attvalue>
+          <attvalue for="authorid" value="103f16bc-ba9a-4eca-839f-5b9fa0ac79ef"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="124.37243" y="103.511604"></viz:position>
+        <viz:color r="72" g="208" b="219"></viz:color>
+      </node>
+      <node id="samuel gershman" label="samuel gershman">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="c9c2355a-3749-4781-a3f0-737e17231fe5"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="112.57211" y="-264.166"></viz:position>
+        <viz:color r="79" g="202" b="213"></viz:color>
+      </node>
+      <node id="samuel j gershman" label="samuel j gershman">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="1d1e40ff-3231-4e08-954c-db576363767c"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="117.942406" y="-237.97629"></viz:position>
+        <viz:color r="79" g="202" b="213"></viz:color>
+      </node>
+      <node id="adler j perotte" label="adler j perotte">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="a0b18c5c-01a1-4fc0-8e81-5cc95f238eda"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="139.07506" y="-269.73727"></viz:position>
+        <viz:color r="79" g="202" b="213"></viz:color>
+      </node>
+      <node id="per b sederberg" label="per b sederberg">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="45056ae7-0378-45cc-a456-549a08441097"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="162.46724" y="-257.84354"></viz:position>
+        <viz:color r="79" g="202" b="213"></viz:color>
+      </node>
+      <node id="David M Blei" label="David M Blei">
+        <attvalues>
+          <attvalue for="isadded" value="true"></attvalue>
+          <attvalue for="authorid" value="34897615-b042-4e56-88cb-9948fca68363"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="168.4338" y="-231.20253"></viz:position>
+        <viz:color r="79" g="202" b="213"></viz:color>
+      </node>
+      <node id="kenneth a norman" label="kenneth a norman">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="9e83c0fc-6a02-499d-83dc-30d791485b23"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="141.91104" y="-227.18968"></viz:position>
+        <viz:color r="79" g="202" b="213"></viz:color>
+      </node>
+      <node id="jordan l boyd-graber" label="jordan l boyd-graber">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="28872f0d-41a0-4d69-95b7-db660be006b3"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-68.54677" y="-105.80699"></viz:position>
+        <viz:color r="74" g="206" b="217"></viz:color>
+      </node>
+      <node id="leonardo max batista claudino" label="leonardo max batista claudino">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="78224b9f-40c2-4a41-ba32-0835c879a978"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-62.305546" y="-91.95105"></viz:position>
+        <viz:color r="74" g="206" b="217"></viz:color>
+      </node>
+      <node id="hal daume iii" label="hal daume iii">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="da1703e4-6861-4ecb-949a-6eeab305e72d"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-77.25822" y="-85.37589"></viz:position>
+        <viz:color r="74" g="206" b="217"></viz:color>
+      </node>
+      <node id="david mcclosky" label="david mcclosky">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="0715c202-8d32-4be3-9e49-6f456a127103"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="67.90359" y="144.7901"></viz:position>
+        <viz:color r="77" g="204" b="215"></viz:color>
+      </node>
+      <node id="wanxiang che" label="wanxiang che">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="952bb10d-2292-470d-8873-d62a96943334"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="72.64316" y="120.93818"></viz:position>
+        <viz:color r="77" g="204" b="215"></viz:color>
+      </node>
+      <node id="marta recasens" label="marta recasens">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="7d61ec23-895c-437c-b217-4ad31ca387c4"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="84.30765" y="135.60558"></viz:position>
+        <viz:color r="77" g="204" b="215"></viz:color>
+      </node>
+      <node id="mengqiu wang" label="mengqiu wang">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="86702b92-3eec-4fd0-a89d-cacd6a17dbe7"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="56.128452" y="129.92459"></viz:position>
+        <viz:color r="77" g="204" b="215"></viz:color>
+      </node>
+      <node id="chris biemann" label="chris biemann">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="594f80b4-2363-42bf-9e91-6310b7bc6b5d"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-198.31761" y="96.273796"></viz:position>
+        <viz:color r="72" g="208" b="219"></viz:color>
+      </node>
+      <node id="nlp ifi" label="nlp ifi">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="5a069c65-70cb-4b09-a804-b8abb579539a"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-211.32944" y="110.098045"></viz:position>
+        <viz:color r="72" g="208" b="219"></viz:color>
+      </node>
+      <node id="rainer osswald" label="rainer osswald">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="91cba527-5ede-442f-8d3b-cebd4b985aac"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-198.0343" y="124.92498"></viz:position>
+        <viz:color r="72" g="208" b="219"></viz:color>
+      </node>
+      <node id="andrew l maas" label="andrew l maas">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="8e5ea501-74bd-4d78-9a90-db2f2f36d2b8"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="89.294495" y="-42.07884"></viz:position>
+        <viz:color r="70" g="210" b="221" a="0.99607843"></viz:color>
+      </node>
+      <node id="fei-fei li" label="fei-fei li">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="26eaa973-5820-46f9-8097-564c77671898"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-115.52773" y="155.00417"></viz:position>
+        <viz:color r="77" g="204" b="215"></viz:color>
+      </node>
+      <node id="b georgescu" label="b georgescu">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="51e7ff50-102b-4327-a9c3-fef961814960"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-12.748511" y="196.04327"></viz:position>
+        <viz:color r="77" g="204" b="215"></viz:color>
+      </node>
+      <node id="weiyu zhang" label="weiyu zhang">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="0a34739d-2463-45dd-ac22-f980a9eae244"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-24.753746" y="182.65477"></viz:position>
+        <viz:color r="77" g="204" b="215"></viz:color>
+      </node>
+      <node id="p durlak" label="p durlak">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="96b46f02-6c59-4062-9cef-b3bc71c43338"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-43.680958" y="187.4328"></viz:position>
+        <viz:color r="77" g="204" b="215"></viz:color>
+      </node>
+      <node id="s bohm" label="s bohm">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="1ad554a9-c6ef-4296-9d4d-86ca71490085"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-31.862925" y="202.70093"></viz:position>
+        <viz:color r="77" g="204" b="215"></viz:color>
+      </node>
+      <node id="will y zou" label="will y zou">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="23970184-c5f2-4f9e-9eca-da4bcbc5ceef"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="121.52376" y="-65.79882"></viz:position>
+        <viz:color r="72" g="208" b="219"></viz:color>
+      </node>
+      <node id="daniel m cer" label="daniel m cer">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="f267c641-2a09-4296-8492-1408124be7dc"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="105.37505" y="-76.92533"></viz:position>
+        <viz:color r="72" g="208" b="219"></viz:color>
+      </node>
+      <node id="kai sheng tai" label="kai sheng tai">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="747b078f-5356-4500-941b-7a318c61cc47"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="68.46098" y="-50.91734"></viz:position>
+        <viz:color r="70" g="210" b="221" a="0.99607843"></viz:color>
+      </node>
+      <node id="alex perelygin" label="alex perelygin">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="14da1814-1b8b-41a6-80b5-724887912c40"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="221.93907" y="35.852184"></viz:position>
+        <viz:color r="79" g="202" b="213"></viz:color>
+      </node>
+      <node id="jean wu" label="jean wu">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="129dead6-0803-4a11-92d2-734df9363937"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="214.43265" y="81.96301"></viz:position>
+        <viz:color r="79" g="202" b="213"></viz:color>
+      </node>
+      <node id="christopher potts" label="christopher potts">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="3c03d8c5-edd0-4262-be1b-618db20d7394"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="227.9597" y="60.431118"></viz:position>
+        <viz:color r="79" g="202" b="213"></viz:color>
+      </node>
+      <node id="jonathan su" label="jonathan su">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="682a1c93-7f1c-4d78-abda-2445678c3ec2"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-272.6857" y="-154.92"></viz:position>
+        <viz:color r="84" g="197" b="209"></viz:color>
+      </node>
+      <node id="robert english" label="robert english">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="02a2b559-c7bf-4f8c-8c1f-6f5f9b5e3218"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-223.48445" y="-198.47609"></viz:position>
+        <viz:color r="84" g="197" b="209"></viz:color>
+      </node>
+      <node id="brian pierce" label="brian pierce">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+          <attvalue for="authorid" value="8f532d42-dc18-4945-be38-ae96127aa052"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-253.66077" y="-183.55621"></viz:position>
+        <viz:color r="84" g="197" b="209"></viz:color>
+      </node>
+    </nodes>
+    <edges>
+      <edge id="0" source="Richard Socher" target="brody huval" weight="0.2"></edge>
+      <edge id="1" source="Richard Socher" target="bharath putta bath" weight="0.1"></edge>
+      <edge id="2" source="brody huval" target="bharath putta bath" weight="0.1"></edge>
+      <edge id="3" source="Richard Socher" target="Christopher D Manning" weight="2.2000000000000006"></edge>
+      <edge id="4" source="brody huval" target="Christopher D Manning" weight="0.2"></edge>
+      <edge id="5" source="bharath putta bath" target="Christopher D Manning" weight="0.1"></edge>
+      <edge id="6" source="Richard Socher" target="andrew y ng" weight="1.3"></edge>
+      <edge id="7" source="brody huval" target="andrew y ng" weight="0.2"></edge>
+      <edge id="8" source="bharath putta bath" target="andrew y ng" weight="0.1"></edge>
+      <edge id="9" source="Christopher D Manning" target="andrew y ng" weight="1.3"></edge>
+      <edge id="10" source="Richard Socher" target="yoshua bengio" weight="0.30000000000000004"></edge>
+      <edge id="11" source="yoshua bengio" target="Christopher D Manning" weight="0.1"></edge>
+      <edge id="12" source="Richard Socher" target="milind ganjoo" weight="0.1"></edge>
+      <edge id="13" source="milind ganjoo" target="Christopher D Manning" weight="0.1"></edge>
+      <edge id="14" source="Richard Socher" target="hamsa sridhar" weight="0.1"></edge>
+      <edge id="15" source="milind ganjoo" target="hamsa sridhar" weight="0.1"></edge>
+      <edge id="16" source="Christopher D Manning" target="hamsa sridhar" weight="0.1"></edge>
+      <edge id="17" source="milind ganjoo" target="andrew y ng" weight="0.1"></edge>
+      <edge id="18" source="hamsa sridhar" target="andrew y ng" weight="0.1"></edge>
+      <edge id="19" source="Richard Socher" target="osbert bastani" weight="0.1"></edge>
+      <edge id="20" source="milind ganjoo" target="osbert bastani" weight="0.1"></edge>
+      <edge id="21" source="Christopher D Manning" target="osbert bastani" weight="0.1"></edge>
+      <edge id="22" source="hamsa sridhar" target="osbert bastani" weight="0.1"></edge>
+      <edge id="23" source="andrew y ng" target="osbert bastani" weight="0.1"></edge>
+      <edge id="24" source="Richard Socher" target="james bradbury" weight="0.30000000000000004"></edge>
+      <edge id="25" source="Richard Socher" target="jeffrey pennington" weight="0.30000000000000004"></edge>
+      <edge id="26" source="Richard Socher" target="eric h huang" weight="0.30000000000000004"></edge>
+      <edge id="27" source="jeffrey pennington" target="eric h huang" weight="0.2"></edge>
+      <edge id="28" source="jeffrey pennington" target="andrew y ng" weight="0.2"></edge>
+      <edge id="29" source="eric h huang" target="andrew y ng" weight="0.30000000000000004"></edge>
+      <edge id="30" source="jeffrey pennington" target="Christopher D Manning" weight="0.30000000000000004"></edge>
+      <edge id="31" source="eric h huang" target="Christopher D Manning" weight="0.30000000000000004"></edge>
+      <edge id="32" source="Richard Socher" target="jason chuang" weight="0.30000000000000004"></edge>
+      <edge id="33" source="Richard Socher" target="danqi chen" weight="0.2"></edge>
+      <edge id="34" source="danqi chen" target="Christopher D Manning" weight="0.2"></edge>
+      <edge id="35" source="danqi chen" target="andrew y ng" weight="0.2"></edge>
+      <edge id="36" source="thang luong" target="Richard Socher" weight="0.1"></edge>
+      <edge id="37" source="thang luong" target="Christopher D Manning" weight="0.1"></edge>
+      <edge id="38" source="Richard Socher" target="andrej karpathy" weight="0.1"></edge>
+      <edge id="39" source="Richard Socher" target="quoc v le" weight="0.1"></edge>
+      <edge id="40" source="andrej karpathy" target="quoc v le" weight="0.1"></edge>
+      <edge id="41" source="andrej karpathy" target="Christopher D Manning" weight="0.1"></edge>
+      <edge id="42" source="quoc v le" target="Christopher D Manning" weight="0.1"></edge>
+      <edge id="43" source="andrej karpathy" target="andrew y ng" weight="0.1"></edge>
+      <edge id="44" source="quoc v le" target="andrew y ng" weight="0.1"></edge>
+      <edge id="45" source="Richard Socher" target="jia deng" weight="0.2"></edge>
+      <edge id="46" source="Richard Socher" target="wei dong" weight="0.2"></edge>
+      <edge id="47" source="jia deng" target="wei dong" weight="0.2"></edge>
+      <edge id="48" source="Richard Socher" target="li-jia li" weight="0.4"></edge>
+      <edge id="49" source="jia deng" target="li-jia li" weight="0.2"></edge>
+      <edge id="50" source="wei dong" target="li-jia li" weight="0.2"></edge>
+      <edge id="51" source="Richard Socher" target="kai li" weight="0.2"></edge>
+      <edge id="52" source="jia deng" target="kai li" weight="0.2"></edge>
+      <edge id="53" source="wei dong" target="kai li" weight="0.2"></edge>
+      <edge id="54" source="li-jia li" target="kai li" weight="0.2"></edge>
+      <edge id="55" source="Richard Socher" target="li fei-fei" weight="0.4"></edge>
+      <edge id="56" source="jia deng" target="li fei-fei" weight="0.1"></edge>
+      <edge id="57" source="wei dong" target="li fei-fei" weight="0.1"></edge>
+      <edge id="58" source="li-jia li" target="li fei-fei" weight="0.30000000000000004"></edge>
+      <edge id="59" source="kai li" target="li fei-fei" weight="0.1"></edge>
+      <edge id="60" source="Richard Socher" target="ankit kumar" weight="0.2"></edge>
+      <edge id="61" source="Richard Socher" target="ozan irsoy" weight="0.2"></edge>
+      <edge id="62" source="ankit kumar" target="ozan irsoy" weight="0.2"></edge>
+      <edge id="63" source="Richard Socher" target="peter ondruska" weight="0.2"></edge>
+      <edge id="64" source="ankit kumar" target="peter ondruska" weight="0.2"></edge>
+      <edge id="65" source="ozan irsoy" target="peter ondruska" weight="0.2"></edge>
+      <edge id="66" source="Richard Socher" target="mohit iyyer" weight="0.30000000000000004"></edge>
+      <edge id="67" source="ankit kumar" target="mohit iyyer" weight="0.1"></edge>
+      <edge id="68" source="ozan irsoy" target="mohit iyyer" weight="0.1"></edge>
+      <edge id="69" source="peter ondruska" target="mohit iyyer" weight="0.1"></edge>
+      <edge id="70" source="ankit kumar" target="james bradbury" weight="0.2"></edge>
+      <edge id="71" source="ozan irsoy" target="james bradbury" weight="0.2"></edge>
+      <edge id="72" source="peter ondruska" target="james bradbury" weight="0.2"></edge>
+      <edge id="73" source="mohit iyyer" target="james bradbury" weight="0.1"></edge>
+      <edge id="74" source="Richard Socher" target="ishaan gulrajani" weight="0.2"></edge>
+      <edge id="75" source="ankit kumar" target="ishaan gulrajani" weight="0.2"></edge>
+      <edge id="76" source="ozan irsoy" target="ishaan gulrajani" weight="0.2"></edge>
+      <edge id="77" source="peter ondruska" target="ishaan gulrajani" weight="0.2"></edge>
+      <edge id="78" source="mohit iyyer" target="ishaan gulrajani" weight="0.1"></edge>
+      <edge id="79" source="james bradbury" target="ishaan gulrajani" weight="0.2"></edge>
+      <edge id="80" source="Richard Socher" target="victor zhong" weight="0.1"></edge>
+      <edge id="81" source="ankit kumar" target="victor zhong" weight="0.1"></edge>
+      <edge id="82" source="ozan irsoy" target="victor zhong" weight="0.1"></edge>
+      <edge id="83" source="peter ondruska" target="victor zhong" weight="0.1"></edge>
+      <edge id="84" source="mohit iyyer" target="victor zhong" weight="0.1"></edge>
+      <edge id="85" source="james bradbury" target="victor zhong" weight="0.1"></edge>
+      <edge id="86" source="ishaan gulrajani" target="victor zhong" weight="0.1"></edge>
+      <edge id="87" source="Richard Socher" target="romain paulus" weight="0.2"></edge>
+      <edge id="88" source="ankit kumar" target="romain paulus" weight="0.1"></edge>
+      <edge id="89" source="ozan irsoy" target="romain paulus" weight="0.1"></edge>
+      <edge id="90" source="peter ondruska" target="romain paulus" weight="0.1"></edge>
+      <edge id="91" source="mohit iyyer" target="romain paulus" weight="0.1"></edge>
+      <edge id="92" source="james bradbury" target="romain paulus" weight="0.1"></edge>
+      <edge id="93" source="ishaan gulrajani" target="romain paulus" weight="0.1"></edge>
+      <edge id="94" source="victor zhong" target="romain paulus" weight="0.1"></edge>
+      <edge id="95" source="himabindu lakkaraju" target="Richard Socher" weight="0.2"></edge>
+      <edge id="96" source="himabindu lakkaraju" target="chris manning" weight="0.2"></edge>
+      <edge id="97" source="Richard Socher" target="chris manning" weight="0.4"></edge>
+      <edge id="98" source="Richard Socher" target="adrian barbu" weight="0.4"></edge>
+      <edge id="99" source="Richard Socher" target="dorin comaniciu" weight="0.2"></edge>
+      <edge id="100" source="adrian barbu" target="dorin comaniciu" weight="0.2"></edge>
+      <edge id="101" source="Richard Socher" target="cliff chiung-yu lin" weight="0.1"></edge>
+      <edge id="102" source="cliff chiung-yu lin" target="andrew y ng" weight="0.1"></edge>
+      <edge id="103" source="cliff chiung-yu lin" target="Christopher D Manning" weight="0.1"></edge>
+      <edge id="104" source="yoshua bengio" target="chris manning" weight="0.2"></edge>
+      <edge id="105" source="Richard Socher" target="chinmay kulkarni" weight="0.2"></edge>
+      <edge id="106" source="Richard Socher" target="michael s bernstein" weight="0.2"></edge>
+      <edge id="107" source="chinmay kulkarni" target="michael s bernstein" weight="0.2"></edge>
+      <edge id="108" source="Richard Socher" target="scott r klemmer" weight="0.2"></edge>
+      <edge id="109" source="chinmay kulkarni" target="scott r klemmer" weight="0.2"></edge>
+      <edge id="110" source="michael s bernstein" target="scott r klemmer" weight="0.2"></edge>
+      <edge id="111" source="caiming xiong" target="Richard Socher" weight="0.2"></edge>
+      <edge id="112" source="caiming xiong" target="stephen merity" weight="0.2"></edge>
+      <edge id="113" source="Richard Socher" target="stephen merity" weight="0.2"></edge>
+      <edge id="114" source="Richard Socher" target="matthias hein" weight="0.2"></edge>
+      <edge id="115" source="Richard Socher" target="John Bauer" weight="0.1"></edge>
+      <edge id="116" source="John Bauer" target="Christopher D Manning" weight="0.1"></edge>
+      <edge id="117" source="John Bauer" target="andrew y ng" weight="0.1"></edge>
+      <edge id="118" source="Richard Socher" target="samuel gershman" weight="0.1"></edge>
+      <edge id="119" source="Richard Socher" target="samuel j gershman" weight="0.1"></edge>
+      <edge id="120" source="samuel gershman" target="samuel j gershman" weight="0.1"></edge>
+      <edge id="121" source="Richard Socher" target="adler j perotte" weight="0.1"></edge>
+      <edge id="122" source="samuel gershman" target="adler j perotte" weight="0.1"></edge>
+      <edge id="123" source="samuel j gershman" target="adler j perotte" weight="0.1"></edge>
+      <edge id="124" source="Richard Socher" target="per b sederberg" weight="0.1"></edge>
+      <edge id="125" source="samuel gershman" target="per b sederberg" weight="0.1"></edge>
+      <edge id="126" source="samuel j gershman" target="per b sederberg" weight="0.1"></edge>
+      <edge id="127" source="adler j perotte" target="per b sederberg" weight="0.1"></edge>
+      <edge id="128" source="Richard Socher" target="David M Blei" weight="0.1"></edge>
+      <edge id="129" source="samuel gershman" target="David M Blei" weight="0.1"></edge>
+      <edge id="130" source="samuel j gershman" target="David M Blei" weight="0.1"></edge>
+      <edge id="131" source="adler j perotte" target="David M Blei" weight="0.1"></edge>
+      <edge id="132" source="per b sederberg" target="David M Blei" weight="0.1"></edge>
+      <edge id="133" source="Richard Socher" target="kenneth a norman" weight="0.1"></edge>
+      <edge id="134" source="samuel gershman" target="kenneth a norman" weight="0.1"></edge>
+      <edge id="135" source="samuel j gershman" target="kenneth a norman" weight="0.1"></edge>
+      <edge id="136" source="adler j perotte" target="kenneth a norman" weight="0.1"></edge>
+      <edge id="137" source="per b sederberg" target="kenneth a norman" weight="0.1"></edge>
+      <edge id="138" source="David M Blei" target="kenneth a norman" weight="0.1"></edge>
+      <edge id="139" source="Richard Socher" target="jordan l boyd-graber" weight="0.2"></edge>
+      <edge id="140" source="mohit iyyer" target="jordan l boyd-graber" weight="0.2"></edge>
+      <edge id="141" source="Richard Socher" target="leonardo max batista claudino" weight="0.2"></edge>
+      <edge id="142" source="mohit iyyer" target="leonardo max batista claudino" weight="0.2"></edge>
+      <edge id="143" source="jordan l boyd-graber" target="leonardo max batista claudino" weight="0.2"></edge>
+      <edge id="144" source="Richard Socher" target="hal daume iii" weight="0.2"></edge>
+      <edge id="145" source="mohit iyyer" target="hal daume iii" weight="0.2"></edge>
+      <edge id="146" source="jordan l boyd-graber" target="hal daume iii" weight="0.2"></edge>
+      <edge id="147" source="leonardo max batista claudino" target="hal daume iii" weight="0.2"></edge>
+      <edge id="148" source="Richard Socher" target="david mcclosky" weight="0.2"></edge>
+      <edge id="149" source="Richard Socher" target="wanxiang che" weight="0.2"></edge>
+      <edge id="150" source="david mcclosky" target="wanxiang che" weight="0.2"></edge>
+      <edge id="151" source="Richard Socher" target="marta recasens" weight="0.2"></edge>
+      <edge id="152" source="david mcclosky" target="marta recasens" weight="0.2"></edge>
+      <edge id="153" source="wanxiang che" target="marta recasens" weight="0.2"></edge>
+      <edge id="154" source="Richard Socher" target="mengqiu wang" weight="0.2"></edge>
+      <edge id="155" source="david mcclosky" target="mengqiu wang" weight="0.2"></edge>
+      <edge id="156" source="wanxiang che" target="mengqiu wang" weight="0.2"></edge>
+      <edge id="157" source="marta recasens" target="mengqiu wang" weight="0.2"></edge>
+      <edge id="158" source="david mcclosky" target="Christopher D Manning" weight="0.2"></edge>
+      <edge id="159" source="wanxiang che" target="Christopher D Manning" weight="0.2"></edge>
+      <edge id="160" source="marta recasens" target="Christopher D Manning" weight="0.2"></edge>
+      <edge id="161" source="mengqiu wang" target="Christopher D Manning" weight="0.2"></edge>
+      <edge id="162" source="Richard Socher" target="chris biemann" weight="0.1"></edge>
+      <edge id="163" source="Richard Socher" target="nlp ifi" weight="0.1"></edge>
+      <edge id="164" source="chris biemann" target="nlp ifi" weight="0.1"></edge>
+      <edge id="165" source="Richard Socher" target="rainer osswald" weight="0.1"></edge>
+      <edge id="166" source="chris biemann" target="rainer osswald" weight="0.1"></edge>
+      <edge id="167" source="nlp ifi" target="rainer osswald" weight="0.1"></edge>
+      <edge id="168" source="Richard Socher" target="andrew l maas" weight="0.1"></edge>
+      <edge id="169" source="andrew l maas" target="Christopher D Manning" weight="0.1"></edge>
+      <edge id="170" source="romain paulus" target="Christopher D Manning" weight="0.1"></edge>
+      <edge id="171" source="jia deng" target="fei-fei li" weight="0.1"></edge>
+      <edge id="172" source="Richard Socher" target="fei-fei li" weight="0.2"></edge>
+      <edge id="173" source="wei dong" target="fei-fei li" weight="0.1"></edge>
+      <edge id="174" source="li-jia li" target="fei-fei li" weight="0.1"></edge>
+      <edge id="175" source="kai li" target="fei-fei li" weight="0.1"></edge>
+      <edge id="176" source="Richard Socher" target="b georgescu" weight="0.2"></edge>
+      <edge id="177" source="adrian barbu" target="b georgescu" weight="0.2"></edge>
+      <edge id="178" source="Richard Socher" target="weiyu zhang" weight="0.2"></edge>
+      <edge id="179" source="adrian barbu" target="weiyu zhang" weight="0.2"></edge>
+      <edge id="180" source="b georgescu" target="weiyu zhang" weight="0.2"></edge>
+      <edge id="181" source="Richard Socher" target="p durlak" weight="0.2"></edge>
+      <edge id="182" source="adrian barbu" target="p durlak" weight="0.2"></edge>
+      <edge id="183" source="b georgescu" target="p durlak" weight="0.2"></edge>
+      <edge id="184" source="weiyu zhang" target="p durlak" weight="0.2"></edge>
+      <edge id="185" source="Richard Socher" target="s bohm" weight="0.2"></edge>
+      <edge id="186" source="adrian barbu" target="s bohm" weight="0.2"></edge>
+      <edge id="187" source="b georgescu" target="s bohm" weight="0.2"></edge>
+      <edge id="188" source="weiyu zhang" target="s bohm" weight="0.2"></edge>
+      <edge id="189" source="p durlak" target="s bohm" weight="0.2"></edge>
+      <edge id="190" source="will y zou" target="Richard Socher" weight="0.1"></edge>
+      <edge id="191" source="will y zou" target="daniel m cer" weight="0.1"></edge>
+      <edge id="192" source="Richard Socher" target="daniel m cer" weight="0.1"></edge>
+      <edge id="193" source="will y zou" target="Christopher D Manning" weight="0.1"></edge>
+      <edge id="194" source="daniel m cer" target="Christopher D Manning" weight="0.1"></edge>
+      <edge id="195" source="kai sheng tai" target="Richard Socher" weight="0.1"></edge>
+      <edge id="196" source="kai sheng tai" target="Christopher D Manning" weight="0.1"></edge>
+      <edge id="197" source="Christopher D Manning" target="alex perelygin" weight="0.1"></edge>
+      <edge id="198" source="Richard Socher" target="alex perelygin" weight="0.1"></edge>
+      <edge id="199" source="Christopher D Manning" target="jean wu" weight="0.1"></edge>
+      <edge id="200" source="Richard Socher" target="jean wu" weight="0.1"></edge>
+      <edge id="201" source="alex perelygin" target="jean wu" weight="0.1"></edge>
+      <edge id="202" source="Christopher D Manning" target="jason chuang" weight="0.1"></edge>
+      <edge id="203" source="alex perelygin" target="jason chuang" weight="0.1"></edge>
+      <edge id="204" source="jean wu" target="jason chuang" weight="0.1"></edge>
+      <edge id="205" source="alex perelygin" target="andrew y ng" weight="0.1"></edge>
+      <edge id="206" source="jean wu" target="andrew y ng" weight="0.1"></edge>
+      <edge id="207" source="jason chuang" target="andrew y ng" weight="0.1"></edge>
+      <edge id="208" source="Christopher D Manning" target="christopher potts" weight="0.1"></edge>
+      <edge id="209" source="Richard Socher" target="christopher potts" weight="0.1"></edge>
+      <edge id="210" source="alex perelygin" target="christopher potts" weight="0.1"></edge>
+      <edge id="211" source="jean wu" target="christopher potts" weight="0.1"></edge>
+      <edge id="212" source="jason chuang" target="christopher potts" weight="0.1"></edge>
+      <edge id="213" source="andrew y ng" target="christopher potts" weight="0.1"></edge>
+      <edge id="214" source="ankit kumar" target="jonathan su" weight="0.1"></edge>
+      <edge id="215" source="Richard Socher" target="jonathan su" weight="0.1"></edge>
+      <edge id="216" source="ozan irsoy" target="jonathan su" weight="0.1"></edge>
+      <edge id="217" source="jonathan su" target="james bradbury" weight="0.1"></edge>
+      <edge id="218" source="ankit kumar" target="robert english" weight="0.1"></edge>
+      <edge id="219" source="Richard Socher" target="robert english" weight="0.1"></edge>
+      <edge id="220" source="ozan irsoy" target="robert english" weight="0.1"></edge>
+      <edge id="221" source="jonathan su" target="robert english" weight="0.1"></edge>
+      <edge id="222" source="james bradbury" target="robert english" weight="0.1"></edge>
+      <edge id="223" source="ankit kumar" target="brian pierce" weight="0.1"></edge>
+      <edge id="224" source="Richard Socher" target="brian pierce" weight="0.1"></edge>
+      <edge id="225" source="ozan irsoy" target="brian pierce" weight="0.1"></edge>
+      <edge id="226" source="jonathan su" target="brian pierce" weight="0.1"></edge>
+      <edge id="227" source="james bradbury" target="brian pierce" weight="0.1"></edge>
+      <edge id="228" source="robert english" target="brian pierce" weight="0.1"></edge>
+      <edge id="229" source="jonathan su" target="peter ondruska" weight="0.1"></edge>
+      <edge id="230" source="robert english" target="peter ondruska" weight="0.1"></edge>
+      <edge id="231" source="brian pierce" target="peter ondruska" weight="0.1"></edge>
+      <edge id="232" source="jonathan su" target="ishaan gulrajani" weight="0.1"></edge>
+      <edge id="233" source="robert english" target="ishaan gulrajani" weight="0.1"></edge>
+      <edge id="234" source="brian pierce" target="ishaan gulrajani" weight="0.1"></edge>
+    </edges>
+  </graph>
+</gexf>

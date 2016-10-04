@@ -2001,7 +2001,7 @@ a:focus {
 }
 .timeline:before {
     content: '';
-    position: absolute;
+    position: relative;
     top: 0px;
     bottom: 0;
     width: 4px;

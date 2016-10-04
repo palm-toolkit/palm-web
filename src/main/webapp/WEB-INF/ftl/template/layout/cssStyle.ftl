@@ -1,3 +1,7 @@
+<#-- range selector -->
+<link href="<@spring.url '/resources/styles/ion.rangeSlider.css' />" rel="stylesheet" type="text/css" />
+<link href="<@spring.url '/resources/styles/ion.rangeSlider.skinFlat.css' />" rel="stylesheet" type="text/css" />
+
 <#--Bootstrap 3.3.2 -->
 <link href="<@spring.url '/resources/bootstrap/css/bootstrap.min.css' />" rel="stylesheet" type="text/css" />
 
@@ -42,3 +46,13 @@
 
 <#--internal palm css definition -->
 <link href="<@spring.url '/resources/styles/palm.css' />" rel="stylesheet" type="text/css" />
+
+<#-- leaflet -->
+ <link rel="stylesheet" href="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.css" />
+
+<#-- timeline -->
+<link href="<@spring.url '/resources/plugins/timeline/style.css' />" rel="stylesheet" type="text/css" />
+
+<#-- timeline -->
+<link href="<@spring.url '/resources/plugins/floatingmenu/floating-menu.min.css' />" rel="stylesheet" type="text/css" />
+

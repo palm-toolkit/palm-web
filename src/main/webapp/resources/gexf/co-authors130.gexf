@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://www.gexf.net/1.3" version="1.3" xmlns:viz="http://www.gexf.net/1.3/viz" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.3 http://www.gexf.net/1.3/gexf.xsd">
+  <meta lastmodifieddate="2016-10-03">
+    <creator>Gephi 0.9</creator>
+    <description></description>
+  </meta>
+  <graph defaultedgetype="undirected" mode="static">
+    <attributes class="node" mode="static">
+      <attribute id="isadded" title="isAdded" type="boolean"></attribute>
+    </attributes>
+    <nodes>
+      <node id="Mohamed Amine Chatti" label="Mohamed Amine Chatti">
+        <attvalues>
+          <attvalue for="isadded" value="true"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-3.924908" y="3.3460581"></viz:position>
+        <viz:color r="229" g="61" b="86"></viz:color>
+      </node>
+      <node id="Simon Buckingham Shum" label="Simon Buckingham Shum">
+        <attvalues>
+          <attvalue for="isadded" value="true"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="3.9249039" y="-3.3460634"></viz:position>
+        <viz:color r="229" g="61" b="86"></viz:color>
+      </node>
+      <node id="effie law" label="effie law">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="3.3460646" y="3.9249158"></viz:position>
+        <viz:color r="229" g="61" b="86"></viz:color>
+      </node>
+      <node id="danius t michaelides" label="danius t michaelides">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-3.346066" y="-3.9249"></viz:position>
+        <viz:color r="229" g="61" b="86"></viz:color>
+      </node>
+    </nodes>
+    <edges>
+      <edge id="0" source="effie law" target="Mohamed Amine Chatti"></edge>
+      <edge id="1" source="effie law" target="Simon Buckingham Shum"></edge>
+      <edge id="2" source="danius t michaelides" target="Mohamed Amine Chatti"></edge>
+      <edge id="3" source="danius t michaelides" target="Simon Buckingham Shum"></edge>
+    </edges>
+  </graph>
+</gexf>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://www.gexf.net/1.3" version="1.3" xmlns:viz="http://www.gexf.net/1.3/viz" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.3 http://www.gexf.net/1.3/gexf.xsd">
+  <meta lastmodifieddate="2016-10-04">
+    <creator>Gephi 0.9</creator>
+    <description></description>
+  </meta>
+  <graph defaultedgetype="undirected" mode="static">
+    <attributes class="node" mode="static">
+      <attribute id="isadded" title="isAdded" type="boolean"></attribute>
+    </attributes>
+    <nodes>
+      <node id="Rebecca J Passonneau" label="Rebecca J Passonneau">
+        <attvalues>
+          <attvalue for="isadded" value="true"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-2.0388615" y="-13.76909"></viz:position>
+        <viz:color r="148" g="137" b="154"></viz:color>
+      </node>
+      <node id="Ryan S J D Baker" label="Ryan S J D Baker">
+        <attvalues>
+          <attvalue for="isadded" value="true"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="2.1423073" y="10.674786"></viz:position>
+        <viz:color r="148" g="137" b="154"></viz:color>
+      </node>
+      <node id="diane j litman" label="diane j litman">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-7.8747883" y="-6.0477824"></viz:position>
+        <viz:color r="229" g="61" b="86"></viz:color>
+      </node>
+      <node id="Neil T Heffernan" label="Neil T Heffernan">
+        <attvalues>
+          <attvalue for="isadded" value="true"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-6.8671308" y="10.104463"></viz:position>
+        <viz:color r="68" g="213" b="223"></viz:color>
+      </node>
+      <node id="vincent aleven" label="vincent aleven">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-10.78928" y="4.88118"></viz:position>
+        <viz:color r="68" g="213" b="223"></viz:color>
+      </node>
+      <node id="kenneth r koedinger" label="kenneth r koedinger">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="-0.475082" y="2.5748591"></viz:position>
+        <viz:color r="68" g="213" b="223"></viz:color>
+      </node>
+      <node id="stephanie seneff" label="stephanie seneff">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="11.86488" y="-10.040863"></viz:position>
+        <viz:color r="68" g="213" b="223"></viz:color>
+      </node>
+      <node id="joseph e beck" label="joseph e beck">
+        <attvalues>
+          <attvalue for="isadded" value="false"></attvalue>
+        </attvalues>
+        <viz:size value="0.1"></viz:size>
+        <viz:position x="14.0387535" y="1.617071"></viz:position>
+        <viz:color r="68" g="213" b="223"></viz:color>
+      </node>
+    </nodes>
+    <edges>
+      <edge id="0" source="diane j litman" target="Neil T Heffernan"></edge>
+      <edge id="1" source="Rebecca J Passonneau" target="diane j litman"></edge>
+      <edge id="2" source="Ryan S J D Baker" target="Neil T Heffernan"></edge>
+      <edge id="3" source="diane j litman" target="vincent aleven"></edge>
+      <edge id="4" source="Rebecca J Passonneau" target="diane j litman"></edge>
+      <edge id="5" source="Ryan S J D Baker" target="vincent aleven"></edge>
+      <edge id="6" source="diane j litman" target="kenneth r koedinger"></edge>
+      <edge id="7" source="Rebecca J Passonneau" target="diane j litman"></edge>
+      <edge id="8" source="Ryan S J D Baker" target="kenneth r koedinger"></edge>
+      <edge id="9" source="stephanie seneff" target="joseph e beck"></edge>
+      <edge id="10" source="Rebecca J Passonneau" target="stephanie seneff"></edge>
+      <edge id="11" source="Ryan S J D Baker" target="joseph e beck"></edge>
+    </edges>
+  </graph>
+</gexf>

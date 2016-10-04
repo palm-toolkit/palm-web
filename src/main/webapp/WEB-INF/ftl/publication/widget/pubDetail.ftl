@@ -563,6 +563,7 @@
 											$( '<dd/>' ).html( v )
 										);
 					});
+					console.log(descriptionList)
 					return descriptionList;
 				} 
 
