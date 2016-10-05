@@ -116,6 +116,26 @@ function showmenudiv(e,divid){
     div.style.top = top;
 	div.style.display = "block";
 	
+	console.log("names in here:  " + names)
+	console.log("vis TYPE: " + visType.substring(0,visType.length-1));
+	console.log("object TYPE: " + objectType);
+	
+	<#-- do not show menu if the object is there in the setup already -->
+	if(names.indexOf(e.data.node.label) != -1){
+		$(".menu").hide();
+		console.log(e.data.node.label + " has been clicked no menu!!")
+	}
+	else
+	{
+		$(".menu").show();
+		console.log(e.data.node.label + " has been clicked no menu!!")
+		
+		<#-- append is invalid if the types are different -->
+		if(visType.substring(0,visType.length-1)!=objectType)
+			$("#append").hide();
+		
+	}	
+		
 	<#-- set the value of clicked node in the menu -->
 	div.value = e;
     return false;
@@ -136,9 +156,26 @@ function hidemenudiv(e,divid){
 	 return false;
 	});
 	
+	$('#replace').click(function(e){
+	var targetVal = $(this).parent().parent()[0].value.data.node.attributes.authorid;
+	 console.log(targetVal);
+	 hidemenudiv(e,'menu');
+	 itemReplace(targetVal,"researcher");
+	 return false;
+	});
+	
 	function itemAppend(id, type){
-		console.log("type here: "+ type)
 		var queryString = "?id="+id+"&type="+type;
+		
+		<#-- update setup widget -->
+		var stageWidget = $.PALM.boxWidget.getByUniqueName( 'explore_setup' ); 
+		stageWidget.options.queryString = queryString;
+		$.PALM.boxWidget.refresh( stageWidget.element , stageWidget.options );
+	}
+	
+	function itemReplace(id, type){
+		var replace = true;
+		var queryString = "?id="+id+"&type="+type+"&replace="+replace;
 		
 		<#-- update setup widget -->
 		var stageWidget = $.PALM.boxWidget.getByUniqueName( 'explore_setup' ); 
@@ -174,6 +211,7 @@ function hidemenudiv(e,divid){
 				var targetContainer = $( widgetElem ).find( ".visualize_widget" );
 				
 				targetContainer.html("");			
+
 
 				<#-- update type of visualization depending on selection-->
 				if(objectType == ""){
