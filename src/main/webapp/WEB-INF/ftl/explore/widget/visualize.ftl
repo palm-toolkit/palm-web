@@ -11,7 +11,7 @@
  <ul>
  <a id="append" href="#"><li>Append</li></a>
  <a id="replace" href="#"><li>Replace</li></a>
- <a id="new" href="#"><li>New Tab</li></a>
+ <a id="coauthors" href="#"><li>Add Co-Authors</li></a>
  </ul>
 </div>
 </div>
@@ -85,72 +85,77 @@ g.arc path {
 </style>
 
 <script>
-function showhoverdiv(e,divid, text){
-	document.getElementById(divid).innerHTML = text;
-    var left  = e.data.captor.clientX + 10 + "px";
-    var top  = e.data.captor.clientY  + 10 + "px";
 
-    var div = document.getElementById(divid);
-
-    div.style.left = left;
-    div.style.top = top;
-	div.style.display = "inline"
-    return false;
-}
-function hidehoverdiv(e,divid, text){
-    var left  = e.data.captor.clientX + 10 + "px";
-    var top  = e.data.captor.clientY  + 10 + "px";
-
-    var div = document.getElementById(divid);
-
-    div.style.left = left;
-    div.style.top = top;
-	div.style.display = "none"
-    return false;
-}
-function showmenudiv(e,divid){
-    var left  = (e.data.captor.clientX - 350) + "px";
-    var top  = (e.data.captor.clientY  - 140) + "px";
-    var div = document.getElementById(divid);
-    div.style.left = left;
-    div.style.top = top;
-	div.style.display = "block";
-	
-	console.log("names in here:  " + names)
-	console.log("vis TYPE: " + visType.substring(0,visType.length-1));
-	console.log("object TYPE: " + objectType);
-	
-	<#-- do not show menu if the object is there in the setup already -->
-	if(names.indexOf(e.data.node.label) != -1){
-		$(".menu").hide();
-		console.log(e.data.node.label + " has been clicked no menu!!")
-	}
-	else
-	{
-		$(".menu").show();
-		console.log(e.data.node.label + " has been clicked no menu!!")
+		<#-- javascript -->
+		function showhoverdiv(e,divid, text){
+			document.getElementById(divid).innerHTML = text;
+		    var left  = e.data.captor.clientX + 10 + "px";
+		    var top  = e.data.captor.clientY  + 10 + "px";
 		
-		<#-- append is invalid if the types are different -->
-		if(visType.substring(0,visType.length-1)!=objectType)
-			$("#append").hide();
+		    var div = document.getElementById(divid);
 		
-	}	
+		    div.style.left = left;
+		    div.style.top = top;
+			div.style.display = "inline"
+		    return false;
+		}
+		function hidehoverdiv(e,divid, text){
+		    var left  = e.data.captor.clientX + 10 + "px";
+		    var top  = e.data.captor.clientY  + 10 + "px";
 		
-	<#-- set the value of clicked node in the menu -->
-	div.value = e;
-    return false;
-}
-function hidemenudiv(e,divid){
-	var div = document.getElementById(divid);
-	div.style.display = "none"
-    return false;
-}
+		    var div = document.getElementById(divid);
+		
+		    div.style.left = left;
+		    div.style.top = top;
+			div.style.display = "none"
+		    return false;
+		}
+		function showmenudiv(e,divid){
+		    var left  = (e.data.captor.clientX - 350) + "px";
+		    var top  = (e.data.captor.clientY  - 140) + "px";
+		    var div = document.getElementById(divid);
+		    div.style.left = left;
+		    div.style.top = top;
+			div.style.display = "block";
+			
+			console.log("names in here:  " + names)
+			console.log("vis TYPE: " + visType.substring(0,visType.length-1));
+			console.log("object TYPE: " + objectType);
+			
+			<#-- do not show menu if the object is there in the setup already -->
+			if(names.indexOf(e.data.node.label) != -1){
+				$(".menu").hide();
+				console.log(e.data.node.label + " has been clicked no menu!!")
+			}
+			else
+			{
+				$(".menu").show();
+				
+				<#-- append is invalid if the types are different -->
+				if(visType.substring(0,visType.length-1)!=objectType)
+				{
+					console.log("why coming in to this baby?")
+					$("#append").hide();
+				}
+				else
+					$("#append").show();
+			}	
+				
+			<#-- set the value of clicked node in the menu -->
+			div.value = e;
+		    return false;
+		}
+		function hidemenudiv(e,divid){
+			var div = document.getElementById(divid);
+			div.style.display = "none"
+		    return false;
+		}
 
-	$( function(){
+<#-- jquery -->
+$( function(){
 
 	$('#append').click(function(e){
 	var targetVal = $(this).parent().parent()[0].value.data.node.attributes.authorid;
-	 console.log(targetVal);
 	 hidemenudiv(e,'menu');
 	 itemAppend(targetVal,"researcher");
 	 return false;
@@ -158,9 +163,15 @@ function hidemenudiv(e,divid){
 	
 	$('#replace').click(function(e){
 	var targetVal = $(this).parent().parent()[0].value.data.node.attributes.authorid;
-	 console.log(targetVal);
 	 hidemenudiv(e,'menu');
 	 itemReplace(targetVal,"researcher");
+	 return false;
+	});
+	
+	$('#coauthors').click(function(e){
+	var targetVal = $(this).parent().parent()[0].value.data.node.attributes.authorid;
+	 hidemenudiv(e,'menu');
+	 itemCoAuthors(targetVal,"researcher");
 	 return false;
 	});
 	
@@ -182,6 +193,18 @@ function hidemenudiv(e,divid){
 		stageWidget.options.queryString = queryString;
 		$.PALM.boxWidget.refresh( stageWidget.element , stageWidget.options );
 	}
+	
+	function itemCoAuthors(id, type){
+		dataTransfer = "true";
+		authoridForCoAuthors = id;
+		var updateString = "?type="+type+"&dataList="+names+"&idList="+ids+"&visType="+visType+"&dataTransfer="+dataTransfer+"&authoridForCoAuthors="+authoridForCoAuthors;
+					
+			<#-- update visualize widget -->
+			var visualizeWidget = $.PALM.boxWidget.getByUniqueName( 'explore_visualize' ); 
+			visualizeWidget.options.queryString = updateString;
+			$.PALM.boxWidget.refresh( visualizeWidget.element , visualizeWidget.options );
+			
+	}	
 
 		var visType = "";
 		var defaultVisType = "";
@@ -337,7 +360,7 @@ function hidemenudiv(e,divid){
 						);
 						
 				 	tabHeader.on("click",function(e){
-						loadVis(data.type, visType, e.target.title, widgetElem, names, ids, tabContent);
+						loadVis(data.type, visType, e.target.title, widgetElem, names, ids, tabContent, data.authoridForCoAuthors);
 					});
 
 					if( index == 0 ){
@@ -351,7 +374,7 @@ function hidemenudiv(e,divid){
 					visualizationTabsContents.append( tabContent );
 
 					if(item == visList[0]){
-						loadVis(data.type, visType, item, widgetElem, names, ids, tabContent);
+						loadVis(data.type, visType, item, widgetElem, names, ids, tabContent, data.authoridForCoAuthors);
 					}
 				});
 				
@@ -359,7 +382,7 @@ function hidemenudiv(e,divid){
 		};
 		
 		<#-- load data n visualization only when that tab shows up, not before -->
-		function loadVis(type, visType, visItem, widgetElem, names, ids, tabContent){
+		function loadVis(type, visType, visItem, widgetElem, names, ids, tabContent, authoridForCoAuthors){
 		
 				<#-- generate unique id for progress log -->
 				var uniqueVisWidget = $.PALM.utility.generateUniqueId();
@@ -372,7 +395,7 @@ function hidemenudiv(e,divid){
 				
 					<#-- show pop up progress log -->
 					$.PALM.popUpMessage.create( "Loading "+visItem, { uniqueId:uniqueVisWidget, popUpHeight:40, directlyRemove:false , polling:false});
-					var url = "<@spring.url '/explore/visualize' />"+"?visTab="+visItem+"&type="+type+"&visType="+visType+"&dataList="+names+"&idList="+ids+"&checkedPubValues="+checkedPubValues+"&checkedConfValues="+checkedConfValues+"&checkedTopValues="+checkedTopValues+"&checkedCirValues="+checkedCirValues+"&startYear="+startYear+"&endYear="+endYear+"&yearFilterPresent="+yearFilterPresent+"&deleteFlag="+deleteFlag;
+					var url = "<@spring.url '/explore/visualize' />"+"?visTab="+visItem+"&type="+type+"&visType="+visType+"&dataList="+names+"&idList="+ids+"&checkedPubValues="+checkedPubValues+"&checkedConfValues="+checkedConfValues+"&checkedTopValues="+checkedTopValues+"&checkedCirValues="+checkedCirValues+"&startYear="+startYear+"&endYear="+endYear+"&yearFilterPresent="+yearFilterPresent+"&deleteFlag="+deleteFlag+"&authoridForCoAuthors="+authoridForCoAuthors;
 		
 					if(visItem == "Network"){
 						tabVisNetwork(uniqueVisWidget, url, widgetElem, tabContent, false);
