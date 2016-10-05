@@ -84,7 +84,7 @@
 						filterList = ["Time","Publications", "Conferences", "Circles"];
 					}
 					if(visType=="conferences"){
-						filterList = ["Time","Topics"];
+						filterList = ["Time","Topics", "Conferences"];
 					}		
 					if(visType=="publications"){
 						filterList = ["Time","Topics", "Researchers", "Conferences"];

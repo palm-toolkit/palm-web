@@ -132,9 +132,19 @@ function hidemenudiv(e,divid){
 	var targetVal = $(this).parent().parent()[0].value.data.node.attributes.authorid;
 	 console.log(targetVal);
 	 hidemenudiv(e,'menu');
-	 window.open('http://localhost:8081/palm/explore#','_parent') 
+	 itemAppend(targetVal,"researcher");
 	 return false;
 	});
+	
+	function itemAppend(id, type){
+		console.log("type here: "+ type)
+		var queryString = "?id="+id+"&type="+type;
+		
+		<#-- update setup widget -->
+		var stageWidget = $.PALM.boxWidget.getByUniqueName( 'explore_setup' ); 
+		stageWidget.options.queryString = queryString;
+		$.PALM.boxWidget.refresh( stageWidget.element , stageWidget.options );
+	}
 
 		var visType = "";
 		var defaultVisType = "";
@@ -1091,14 +1101,15 @@ function hidemenudiv(e,divid){
 							
 							if(visType == "conferences")
 							{
+									var sortedList = data.map.events.sort();
 									<#-- build the conference list -->
-									$.each( data.map.events, function( index, item){
+									$.each( sortedList, function( index, item){
 										if(type=="researcher")
 										{
 											conferenceDiv = 
 											$( '<div/>' )
 												.addClass( 'author' )
-												.attr({ 'id' : item.location.id });
+												<#--.attr({ 'id' : item.location.id });-->
 										}
 										if(type=="conference")
 										{
