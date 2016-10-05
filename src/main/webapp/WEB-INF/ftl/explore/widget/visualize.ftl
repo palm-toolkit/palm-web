@@ -121,25 +121,43 @@ g.arc path {
 			console.log("names in here:  " + names)
 			console.log("vis TYPE: " + visType.substring(0,visType.length-1));
 			console.log("object TYPE: " + objectType);
+			console.log(e)
 			
-			<#-- do not show menu if the object is there in the setup already -->
-			if(names.indexOf(e.data.node.label) != -1){
-				$(".menu").hide();
-				console.log(e.data.node.label + " has been clicked no menu!!")
-			}
-			else
-			{
-				$(".menu").show();
-				
-				<#-- append is invalid if the types are different -->
-				if(visType.substring(0,visType.length-1)!=objectType)
-				{
-					console.log("why coming in to this baby?")
-					$("#append").hide();
+			if(e.type == "clickNode"){
+				$("#coauthors").show();
+				<#-- do not show menu if the object is there in the setup already -->
+				if(names.indexOf(e.data.node.label) != -1){
+					$(".menu").hide();
+					console.log(e.data.node.label + " has been clicked no menu!!")
 				}
 				else
-					$("#append").show();
-			}	
+				{
+					$(".menu").show();
+					
+					<#-- append is invalid if the types are different -->
+					if(visType.substring(0,visType.length-1)!=objectType)
+					{
+						console.log("why coming in to this baby?")
+						$("#append").hide();
+					}
+					else
+						$("#append").show();
+				}	
+			}
+			
+			if(e.type == "clickEdge"){
+				<#-- do not show menu if the object is there in the setup already -->
+					$("#coauthors").hide();
+				
+					<#-- append is invalid if the types are different -->
+					if(visType.substring(0,visType.length-1)!=objectType)
+					{
+						$("#append").hide();
+					}
+					else
+						$("#append").show();
+					
+			}
 				
 			<#-- set the value of clicked node in the menu -->
 			div.value = e;
@@ -155,17 +173,43 @@ g.arc path {
 $( function(){
 
 	$('#append').click(function(e){
-	var targetVal = $(this).parent().parent()[0].value.data.node.attributes.authorid;
-	 hidemenudiv(e,'menu');
-	 itemAppend(targetVal,"researcher");
-	 return false;
+		var targetVal = [];
+		if($(this).parent().parent()[0].value.type=="clickNode")
+		targetVal.push($(this).parent().parent()[0].value.data.node.attributes.authorid);
+		
+		if($(this).parent().parent()[0].value.type=="clickEdge")
+		{
+			if($(this).parent().parent()[0].value.data.edge.attributes.sourceauthorisadded)
+			targetVal.push($(this).parent().parent()[0].value.data.edge.attributes.sourceauthorid);
+			
+			if($(this).parent().parent()[0].value.data.edge.attributes.targetauthorisadded)
+			targetVal.push($(this).parent().parent()[0].value.data.edge.attributes.targetauthorid);
+		}
+		
+		 hidemenudiv(e,'menu');
+		 console.log("targetVAL: " + targetVal)
+		 itemAppend(targetVal,"researcher");
+		 return false;
 	});
 	
 	$('#replace').click(function(e){
-	var targetVal = $(this).parent().parent()[0].value.data.node.attributes.authorid;
-	 hidemenudiv(e,'menu');
-	 itemReplace(targetVal,"researcher");
-	 return false;
+		var targetVal = [];
+		if($(this).parent().parent()[0].value.type=="clickNode")
+			targetVal.push($(this).parent().parent()[0].value.data.node.attributes.authorid);
+		
+		if($(this).parent().parent()[0].value.type=="clickEdge")
+		{
+			if($(this).parent().parent()[0].value.data.edge.attributes.sourceauthorisadded)
+			targetVal.push($(this).parent().parent()[0].value.data.edge.attributes.sourceauthorid);
+			
+			if($(this).parent().parent()[0].value.data.edge.attributes.targetauthorisadded)
+			targetVal.push($(this).parent().parent()[0].value.data.edge.attributes.targetauthorid);
+		}
+		
+		hidemenudiv(e,'menu');
+		console.log("targetVAL in replace: " + targetVal)
+		itemReplace(targetVal,"researcher");
+		return false;
 	});
 	
 	$('#coauthors').click(function(e){
@@ -532,6 +576,7 @@ $( function(){
 					
 					
 					s.bind('clickEdge', function(e){
+						showmenudiv(e,'menu');
 						//e.data.edge.label = "something " + e.data.edge.source;
 						console.log(e.type, e.data.edge, e.data.captor, e);
 						textDiv.html(e.data.edge.source + " and " + e.data.edge.target + " have co-authored " + truncate(e.data.edge.weight / 0.1,0) + " time(s) within this network");

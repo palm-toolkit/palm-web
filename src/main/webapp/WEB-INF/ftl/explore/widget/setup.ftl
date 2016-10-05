@@ -48,6 +48,9 @@
 				<#-- show pop up progress log -->
 						},
 			onRefreshDone: function(  widgetElem , data ){
+			console.log("NEW PORTION")
+			console.log(data.id)
+			console.log(data.name)
 				var id = data.id;
 				console.log("value of replace: " + data.replace)
 				var wordsContainer = $( widgetElem ).find( ".scroll_search_words" );
@@ -58,6 +61,7 @@
 				visOptionsContainer = $( widgetElem ).find( ".vis_options" );
 				visOptionsContainer.html( "" );
 				
+		for(var i=0;i<data.name.length;i++){
 				<#-- TO-DO Add css part to palm.css -->
 				var nameDiv = $( '<span/>' )
 							.css("color", "black")
@@ -73,18 +77,18 @@
 							.css("padding-left","5px")
 							.css("padding-right","5px")
 							.css({ "cursor":"pointer"})
-							.html("  "+data.name+ " X ");
+							.html("  "+data.name[i]+ " X ");
 				
-				if(data.replace){
+				if(data.replace && i==0){
 					type = data.type;
 							names = [];
 							ids = [];
 							wordsContainer.html( "" );
 							resetFlag = "1";
-							names.push(data.name);
-							ids.push(data.id);
+							names.push(data.name[i]);
+							ids.push(data.id[i]);
 							
-							if(data.name!=""){
+							if(data.name[i]!=""){
 							wordsContainer
 								.append(nameDiv)
 						
@@ -107,26 +111,12 @@
 								}
 							}
 							
-							if(type == "researcher"){
-								refreshVisFilter(id, type,  "researchers");
-							}
-							if(type == "publication"){
-								refreshVisFilter(id, type, "conferences");
-							}
-							if(type == "conference"){
-								refreshVisFilter(id, type, "publications");
-							}
-							if(type == "topic"){
-								refreshVisFilter(id, type,  "publications");
-							}
-							if(type == "circle"){
-								refreshVisFilter(id, type,  "");
-							}				
-				
+					if(i == data.name.length-1)		
+						callRefresh(id,type)
 				}
 				else{
 				<#-- update list of items chosen from search widget -->
-				if(names.indexOf(data.name)== -1 ){	
+				if(names.indexOf(data.name[i])== -1 ){	
 					if(type!=""){
 						if(type!=data.type){
 							type = data.type;
@@ -141,9 +131,10 @@
 						resetFlag = "0";
 					}
 					
-					names.push(data.name);
-					ids.push(data.id);
-					if(data.name!=""){
+					names.push(data.name[i]);
+					ids.push(data.id[i]);
+
+					if(data.name[i]!=""){
 						wordsContainer
 						.append(nameDiv)
 						
@@ -165,25 +156,11 @@
 								}
 							}
 					}
-							
-							if(type == "researcher"){
-								refreshVisFilter(id, type,  "researchers");
-							}
-							if(type == "publication"){
-								refreshVisFilter(id, type, "conferences");
-							}
-							if(type == "conference"){
-								refreshVisFilter(id, type, "publications");
-							}
-							if(type == "topic"){
-								refreshVisFilter(id, type,  "publications");
-							}
-							if(type == "circle"){
-								refreshVisFilter(id, type,  "");
-							}
+					if(i == data.name.length-1)		
+						callRefresh(id,type)
 				}	
 			}
-			
+	}		
 				<#-- click to delete item from setup widget -->
 				nameDiv.on( "click", function(){
 					this.remove();
@@ -201,6 +178,24 @@
 				
 			}
 		};
+	
+		function callRefresh(id,type){
+		if(type == "researcher"){
+								refreshVisFilter(id, type,  "researchers");
+							}
+							if(type == "publication"){
+								refreshVisFilter(id, type, "conferences");
+							}
+							if(type == "conference"){
+								refreshVisFilter(id, type, "publications");
+							}
+							if(type == "topic"){
+								refreshVisFilter(id, type,  "publications");
+							}
+							if(type == "circle"){
+								refreshVisFilter(id, type,  "");
+							}
+		}
 	
 		function selectBox(typeOfBox){
 			//	updateSelf();
