@@ -63,7 +63,7 @@
 				
 		for(var i=0;i<data.name.length;i++){
 				<#-- TO-DO Add css part to palm.css -->
-				var nameDiv = $( '<span/>' )
+				nameDiv = $( '<span/>' )
 							.css("color", "black")
 							.css("left-margin","2px")
 							.css("background-color","#d9c7c6")
@@ -164,9 +164,11 @@
 				<#-- click to delete item from setup widget -->
 				nameDiv.on( "click", function(){
 					this.remove();
-					var i = names.indexOf(data.name);
+					console.log("data.name : " + data.name[0])
+					var i = names.indexOf(data.name[0]);
 					names.splice(i, 1);
 					ids.splice(i,1);
+					console.log("after deletion: " + names)
 					updateVisDelete( "true", type);
 					if(names.length == 0){
 						wordsContainer.html("");
@@ -241,11 +243,15 @@
 		
 			dataTransfer = "true";
 			console.log("type: " + type)
+			checkedPubValues=[];
+			checkedConfValues=[];
+			checkedTopValues=[];
+			checkedCirValues=[];
 			var updateString = "?id="+id+"&type="+type+"&dataList="+names+"&idList="+ids+"&visType="+currentVisType+"&dataTransfer="+dataTransfer;
 					
 			<#-- update visualize widget -->
 			var visualizeWidget = $.PALM.boxWidget.getByUniqueName( 'explore_visualize' ); 
-			visualizeWidget.options.queryString = updateString;
+			visualizeWidget.options.queryString = updateString+"&checkedPubValues="+checkedPubValues+"&checkedConfValues="+checkedConfValues+"&checkedTopValues="+checkedTopValues+"&checkedCirValues="+checkedCirValues;
 			$.PALM.boxWidget.refresh( visualizeWidget.element , visualizeWidget.options );
 			
 			<#-- update filter widget -->

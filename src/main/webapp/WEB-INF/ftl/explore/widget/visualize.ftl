@@ -88,10 +88,22 @@ g.arc path {
 
 		<#-- javascript -->
 		function showhoverdiv(e,divid, text){
+		console.log("mouse over true 2!")
+		console.log(e.type)
 			document.getElementById(divid).innerHTML = text;
-		    var left  = e.data.captor.clientX + 10 + "px";
-		    var top  = e.data.captor.clientY  + 10 + "px";
-		
+		    var left;
+			var top;
+			
+			if(e.type == "similarBar"){
+			    left  = (e.clientX - 10) + "px";
+			    top  = (e.clientY  + 20) + "px";
+		    }
+		    
+		    if(e.type == "clickNode" || e.type == "overEdge"){
+			    left  = (e.data.captor.clientX) + "px";
+			    top  = (e.data.captor.clientY) + "px";
+		    }
+		    
 		    var div = document.getElementById(divid);
 		
 		    div.style.left = left;
@@ -99,29 +111,36 @@ g.arc path {
 			div.style.display = "inline"
 		    return false;
 		}
-		function hidehoverdiv(e,divid, text){
-		    var left  = e.data.captor.clientX + 10 + "px";
-		    var top  = e.data.captor.clientY  + 10 + "px";
-		
+		function hidehoverdiv(divid){
 		    var div = document.getElementById(divid);
-		
-		    div.style.left = left;
-		    div.style.top = top;
 			div.style.display = "none"
 		    return false;
 		}
 		function showmenudiv(e,divid){
-		    var left  = (e.data.captor.clientX - 350) + "px";
-		    var top  = (e.data.captor.clientY  - 140) + "px";
+		
+			console.log("names in here:  " + names)
+			console.log("vis TYPE: " + visType.substring(0,visType.length-1));
+			console.log("object TYPE: " + objectType);
+			console.log(e)
+			
+			var left;
+			var top;
+			
+			if(e.type == "similarBar"){
+			    left  = (e.clientX - 330) + "px";
+			    top  = (e.clientY  - 140) + "px";
+		    }
+		    
+		    if(e.type == "clickNode" || e.type == "clickEdge"){
+			    left  = (e.data.captor.clientX - 350) + "px";
+			    top  = (e.data.captor.clientY  - 140) + "px";
+		    }
+		    
 		    var div = document.getElementById(divid);
 		    div.style.left = left;
 		    div.style.top = top;
 			div.style.display = "block";
 			
-			console.log("names in here:  " + names)
-			console.log("vis TYPE: " + visType.substring(0,visType.length-1));
-			console.log("object TYPE: " + objectType);
-			console.log(e)
 			
 			if(e.type == "clickNode"){
 				$("#coauthors").show();
@@ -145,7 +164,9 @@ g.arc path {
 				}	
 			}
 			
-			if(e.type == "clickEdge"){
+			if(e.type == "clickEdge" || e.type == "similarBar"){
+				
+				$(".menu").show();
 				<#-- do not show menu if the object is there in the setup already -->
 					$("#coauthors").hide();
 				
@@ -163,7 +184,8 @@ g.arc path {
 			div.value = e;
 		    return false;
 		}
-		function hidemenudiv(e,divid){
+		function hidemenudiv(divid){
+			console.log("HIDE CALLED")
 			var div = document.getElementById(divid);
 			div.style.display = "none"
 		    return false;
@@ -174,6 +196,7 @@ $( function(){
 
 	$('#append').click(function(e){
 		var targetVal = [];
+		
 		if($(this).parent().parent()[0].value.type=="clickNode")
 		targetVal.push($(this).parent().parent()[0].value.data.node.attributes.authorid);
 		
@@ -186,7 +209,10 @@ $( function(){
 			targetVal.push($(this).parent().parent()[0].value.data.edge.attributes.targetauthorid);
 		}
 		
-		 hidemenudiv(e,'menu');
+		if($(this).parent().parent()[0].value.type=="similarBar")
+		targetVal.push($(this).parent().parent()[0].value.authorId);
+		
+		 hidemenudiv('menu');
 		 console.log("targetVAL: " + targetVal)
 		 itemAppend(targetVal,"researcher");
 		 return false;
@@ -206,7 +232,10 @@ $( function(){
 			targetVal.push($(this).parent().parent()[0].value.data.edge.attributes.targetauthorid);
 		}
 		
-		hidemenudiv(e,'menu');
+		if($(this).parent().parent()[0].value.type=="similarBar")
+		targetVal.push($(this).parent().parent()[0].value.authorId);
+		
+		hidemenudiv('menu');
 		console.log("targetVAL in replace: " + targetVal)
 		itemReplace(targetVal,"researcher");
 		return false;
@@ -214,7 +243,7 @@ $( function(){
 	
 	$('#coauthors').click(function(e){
 	var targetVal = $(this).parent().parent()[0].value.data.node.attributes.authorid;
-	 hidemenudiv(e,'menu');
+	 hidemenudiv('menu');
 	 itemCoAuthors(targetVal,"researcher");
 	 return false;
 	});
@@ -270,7 +299,7 @@ $( function(){
 						},
 			onRefreshDone: function(  widgetElem , data ){
 				loadedList = [];
-
+				graphFile = "";
 				names = data.dataList;
 				ids = data.idsList;
 				yearFilterPresent = data.yearFilterPresent;
@@ -404,6 +433,8 @@ $( function(){
 						);
 						
 				 	tabHeader.on("click",function(e){
+				 		hidehoverdiv('divtoshow');
+				 		hidemenudiv('menu')
 						loadVis(data.type, visType, e.target.title, widgetElem, names, ids, tabContent, data.authoridForCoAuthors);
 					});
 
@@ -480,11 +511,11 @@ $( function(){
 				var canvasDiv = $('<div/>').attr({'id': 'canvas'});
 				tabContent.html("");
 				tabContent.append(canvasDiv);
-				var textDiv = $('<div/>')
+				<#-- var textDiv = $('<div/>')
 								.attr({'id': 'canvasText'})
 								.css("color","red");
 				canvasDiv.append(textDiv);
-				textDiv.html("hello")
+				textDiv.html("hello")-->
 			
 				<#-- initialize sigma.js renderer for gephi-->
 				s = new sigma({
@@ -560,7 +591,7 @@ $( function(){
 						console.log(e.data.node.attributes.isadded);
 						if(e.data.node.attributes.isadded==false){
 							var text = e.data.node.label;
-							textDiv.html(text.toUpperCase() + " is currently not present in the PALM System. \nPlease add the researcher from the 'Researchers' section in the top menu explicitly.")
+							//textDiv.html(text.toUpperCase() + " is currently not present in the PALM System. \nPlease add the researcher from the 'Researchers' section in the top menu explicitly.")
 							showhoverdiv(e,'divtoshow', text.toUpperCase() + " is currently not present in PALM");
 						}
 						else
@@ -571,20 +602,20 @@ $( function(){
 						showhoverdiv(e,'divtoshow', "co-authored " + truncate(e.data.edge.weight / 0.1,0) + " time(s)");
 					})
 					s.bind('outEdge',function(e){
-						hidehoverdiv(e,'divtoshow', "");
+						hidehoverdiv('divtoshow');
 					})
 					
 					
 					s.bind('clickEdge', function(e){
 						showmenudiv(e,'menu');
 						//e.data.edge.label = "something " + e.data.edge.source;
-						console.log(e.type, e.data.edge, e.data.captor, e);
-						textDiv.html(e.data.edge.source + " and " + e.data.edge.target + " have co-authored " + truncate(e.data.edge.weight / 0.1,0) + " time(s) within this network");
+						//console.log(e.type, e.data.edge, e.data.captor, e);
+						//textDiv.html(e.data.edge.source + " and " + e.data.edge.target + " have co-authored " + truncate(e.data.edge.weight / 0.1,0) + " time(s) within this network");
 					})
 					
 					s.bind('clickStage',function(e){
-						hidemenudiv(e,'menu');
-						hidehoverdiv(e,'divtoshow', "");
+						hidemenudiv('menu');
+						hidehoverdiv('divtoshow');
 					})
 				}); 
 				//s.refresh();
@@ -628,17 +659,36 @@ $( function(){
 				        s.refresh();
 					})
 					s.bind('clickNode', function(e){
+						
 						console.log(e.type, e.data.node.label, e.data.captor, e);
 						console.log(e.data.node.attributes.isadded);
 						if(e.data.node.attributes.isadded==false){
-						var text = e.data.node.label;
-						textDiv.html(text.toUpperCase() + " is currently not present in the PALM System. \nPlease add the researcher from the 'Researchers' section in the top menu explicitly.")
+							var text = e.data.node.label;
+							//textDiv.html(text.toUpperCase() + " is currently not present in the PALM System. \nPlease add the researcher from the 'Researchers' section in the top menu explicitly.")
+							showhoverdiv(e,'divtoshow', text.toUpperCase() + " is currently not present in PALM");
 						}
+						else
+						showmenudiv(e,'menu');
 					})
+					
+					s.bind('overEdge',function(e){
+						showhoverdiv(e,'divtoshow', "co-authored " + truncate(e.data.edge.weight / 0.1,0) + " time(s)");
+					})
+					s.bind('outEdge',function(e){
+						hidehoverdiv('divtoshow');
+					})
+					
+					
 					s.bind('clickEdge', function(e){
+						showmenudiv(e,'menu');
 						//e.data.edge.label = "something " + e.data.edge.source;
 						console.log(e.type, e.data.edge, e.data.captor, e);
-						textDiv.html(e.data.edge.source + " and " + e.data.edge.target + " have co-authored " + truncate(e.data.edge.weight / 0.1,0) + " time(s) within this network");
+						//textDiv.html(e.data.edge.source + " and " + e.data.edge.target + " have co-authored " + truncate(e.data.edge.weight / 0.1,0) + " time(s) within this network");
+					})
+					
+					s.bind('clickStage',function(e){
+						hidemenudiv('menu');
+						hidehoverdiv('divtoshow');
 					})
 					
 				}); 
@@ -1401,7 +1451,7 @@ $( function(){
 				$.PALM.popUpMessage.remove( uniqueVisWidget );
 				
 				console.log("similar tab")
-				console.log(data);
+				console.log(data.map.interests);
 				
 				var similarTab = $( widgetElem ).find( "#tab_Similar" );
 				similarTab.html("");
@@ -1424,7 +1474,7 @@ $( function(){
 				
 				similarDiv.append(innerDiv)	
 				
-				//http://bl.ocks.org/kiranml1/6872226
+				<#-- http://bl.ocks.org/kiranml1/6872226 -->
 				var grid = d3.range(15).map(function(i){
 					return {'x1':0,'y1':0,'x2':0,'y2':480};
 				});
@@ -1448,8 +1498,14 @@ $( function(){
 		
 				var canvas = d3.select('#sim_tab')
 								.append('svg')
-								.attr({'width':700,'height':700});
-								
+								.attr({'width':700,'height':700})
+				
+				canvas.on("click", function(e) { console.log("svg"); hidemenudiv('menu'); })		
+		<#--  temp here !! 		canvas.on('click', function(e){
+									hidemenudiv(e,'menu');
+									d3.event.stopPropagation();
+								}) -->
+				
 				<#--var	yAxis = d3.svg.axis();
 					yAxis
 						.orient('left')
@@ -1473,7 +1529,43 @@ $( function(){
 								.attr('height',15)
 								.attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
 								.style('fill',function(d,i){ return colorScale(i); })
-								.attr('width',function(d){ return 0; });
+								.attr('width',function(d){ return 0; })
+								.on("click", function(e, i){
+									
+									obj = {
+											  type:"similarBar",
+									          clientX:d3.event.clientX,
+									          clientY:d3.event.clientY,
+									          authorId:data.map.authorIds[i]
+									};
+									
+									showmenudiv(obj,'menu');
+									d3.event.stopPropagation();
+								})
+								.on("mouseover", function(d,i){
+								console.log("mouse over true!")
+									obj = {
+												  type:"similarBar",
+										          clientX:d3.event.clientX,
+										          clientY:d3.event.clientY,
+										          authorId:data.map.authorIds[i]
+									};
+									
+									var intarr = [] 
+									intarr = Object.keys(data.map.interests[i])
+									var count = 5;
+									if(intarr.length<5)
+										count = intarr.length
+										
+									var arr = [];	
+									for(var i=0;i<count;i++){
+										arr.push(intarr[i])
+									}
+									showhoverdiv(obj,'divtoshow', arr);
+								})
+								.on("mouseout", function(e,i){
+									hidehoverdiv('divtoshow');
+								})
 	
 	
 			var transit = d3.select("svg").selectAll("rect")
