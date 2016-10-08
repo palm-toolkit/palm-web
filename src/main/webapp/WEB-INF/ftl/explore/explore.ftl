@@ -1,10 +1,14 @@
- <@layout.global classStyle="layout-top-nav skin-blue-light">
+ <@layout.global>
  	 	
  	<@content.header>
 
-		<#include "headerHome.ftl" />
+		<#include "headerPage.ftl" />
 		
  	</@content.header>
+ 	
+ 	<@content.leftSidebar>
+		<#include "widgetLayoutSidebar.ftl" />
+ 	</@content.leftSidebar>
  	
  	<@content.contentWrapper>
           <section class="content">
