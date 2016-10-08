@@ -77,7 +77,7 @@
 			
 				var targetContainer = $( widgetElem ).find( ".content-list" );
 				targetContainer.html( "" );
-				
+				$( "#search_field" ).val("");
 			
 				<#-- pagging next -->
 				$( "li.toNext" ).click( function(){

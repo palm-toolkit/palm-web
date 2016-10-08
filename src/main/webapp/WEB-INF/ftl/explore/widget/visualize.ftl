@@ -9,7 +9,7 @@
   </div>
 <div class="menu" id="menu">
  <ul>
- <a id="append" href="#"><li>Append</li></a>
+ <a id="append" href="#"><li>Add</li></a>
  <a id="replace" href="#"><li>Replace</li></a>
  <a id="coauthors" href="#"><li>Add Co-Authors</li></a>
  </ul>
@@ -61,12 +61,14 @@ g.arc path {
   padding: 2px;
   border: 0px;
   border-radius: 0.5em;
+  z-index: 100;
 }
 .menu{
 			width: 100px;
 			position:absolute;
 			display: none;
 			box-shadow: 0 0 10px #713C3C;
+			z-index: 100;
 		}
 .menu ul{
 			list-style: none;
@@ -88,8 +90,6 @@ g.arc path {
 
 		<#-- javascript -->
 		function showhoverdiv(e,divid, text){
-		console.log("mouse over true 2!")
-		console.log(e.type)
 			document.getElementById(divid).innerHTML = text;
 		    var left;
 			var top;
@@ -102,6 +102,11 @@ g.arc path {
 		    if(e.type == "clickNode" || e.type == "overEdge"){
 			    left  = (e.data.captor.clientX) + "px";
 			    top  = (e.data.captor.clientY) + "px";
+		    }
+		    
+		     if(e.type == "clickLocation"){
+			    left  = (e.clientX + 350) + "px";
+			    top  = (e.clientY + 250) + "px";
 		    }
 		    
 		    var div = document.getElementById(divid);
@@ -126,9 +131,14 @@ g.arc path {
 			var left;
 			var top;
 			
-			if(e.type == "similarBar"){
+			if(e.type == "similarBar" || e.type=="clickPublication"){
 			    left  = (e.clientX - 330) + "px";
 			    top  = (e.clientY  - 140) + "px";
+		    }
+		    
+		    if(e.type == "clickLocation"){
+			    left  = (e.clientX) + "px";
+			    top  = (e.clientY) + "px";
 		    }
 		    
 		    if(e.type == "clickNode" || e.type == "clickEdge"){
@@ -140,7 +150,6 @@ g.arc path {
 		    div.style.left = left;
 		    div.style.top = top;
 			div.style.display = "block";
-			
 			
 			if(e.type == "clickNode"){
 				$("#coauthors").show();
@@ -164,21 +173,19 @@ g.arc path {
 				}	
 			}
 			
-			if(e.type == "clickEdge" || e.type == "similarBar"){
-				
+			if(e.type == "clickEdge" || e.type == "similarBar" || e.type == "clickLocation" || e.type == "clickPublication"){
 				$(".menu").show();
 				<#-- do not show menu if the object is there in the setup already -->
 					$("#coauthors").hide();
-				
-					<#-- append is invalid if the types are different -->
+			}
+			
+			<#-- append is invalid if the types are different -->
 					if(visType.substring(0,visType.length-1)!=objectType)
 					{
 						$("#append").hide();
 					}
 					else
 						$("#append").show();
-					
-			}
 				
 			<#-- set the value of clicked node in the menu -->
 			div.value = e;
@@ -197,8 +204,10 @@ $( function(){
 	$('#append').click(function(e){
 		var targetVal = [];
 		
-		if($(this).parent().parent()[0].value.type=="clickNode")
-		targetVal.push($(this).parent().parent()[0].value.data.node.attributes.authorid);
+		if($(this).parent().parent()[0].value.type=="clickNode"){
+			targetVal.push($(this).parent().parent()[0].value.data.node.attributes.authorid);
+			itemAdd(targetVal,"researcher");
+		}	
 		
 		if($(this).parent().parent()[0].value.type=="clickEdge")
 		{
@@ -207,21 +216,38 @@ $( function(){
 			
 			if($(this).parent().parent()[0].value.data.edge.attributes.targetauthorisadded)
 			targetVal.push($(this).parent().parent()[0].value.data.edge.attributes.targetauthorid);
+			
+			itemAdd(targetVal,"researcher");
 		}
 		
-		if($(this).parent().parent()[0].value.type=="similarBar")
-		targetVal.push($(this).parent().parent()[0].value.authorId);
+		if($(this).parent().parent()[0].value.type=="clickPublication"){
+			targetVal.push($(this).parent().parent()[0].value.pubId);
+			itemAdd(targetVal,"publication");
+		}		
 		
+		if($(this).parent().parent()[0].value.type=="similarBar")
+		{
+			targetVal.push($(this).parent().parent()[0].value.authorId);
+			itemAdd(targetVal,"researcher");
+		}
+
+		if($(this).parent().parent()[0].value.type=="clickLocation")
+		{
+			targetVal.push($(this).parent().parent()[0].value.eventGroupId);
+			itemAdd(targetVal,"conference");
+		}	
 		 hidemenudiv('menu');
 		 console.log("targetVAL: " + targetVal)
-		 itemAppend(targetVal,"researcher");
+		 
 		 return false;
 	});
 	
 	$('#replace').click(function(e){
 		var targetVal = [];
-		if($(this).parent().parent()[0].value.type=="clickNode")
+		if($(this).parent().parent()[0].value.type=="clickNode"){
 			targetVal.push($(this).parent().parent()[0].value.data.node.attributes.authorid);
+			itemReplace(targetVal,"researcher");
+		}	
 		
 		if($(this).parent().parent()[0].value.type=="clickEdge")
 		{
@@ -230,14 +256,29 @@ $( function(){
 			
 			if($(this).parent().parent()[0].value.data.edge.attributes.targetauthorisadded)
 			targetVal.push($(this).parent().parent()[0].value.data.edge.attributes.targetauthorid);
+			
+			itemReplace(targetVal,"researcher");
 		}
 		
+		if($(this).parent().parent()[0].value.type=="clickPublication"){
+			targetVal.push($(this).parent().parent()[0].value.pubId);
+			itemReplace(targetVal,"publication");
+		}		
+		
 		if($(this).parent().parent()[0].value.type=="similarBar")
-		targetVal.push($(this).parent().parent()[0].value.authorId);
+		{
+			targetVal.push($(this).parent().parent()[0].value.authorId);
+			itemReplace(targetVal,"researcher");
+		}
+		
+		if($(this).parent().parent()[0].value.type=="clickLocation")
+		{
+			targetVal.push($(this).parent().parent()[0].value.eventGroupId);
+			itemReplace(targetVal,"conference");
+		}
 		
 		hidemenudiv('menu');
 		console.log("targetVAL in replace: " + targetVal)
-		itemReplace(targetVal,"researcher");
 		return false;
 	});
 	
@@ -248,7 +289,7 @@ $( function(){
 	 return false;
 	});
 	
-	function itemAppend(id, type){
+	function itemAdd(id, type){
 		var queryString = "?id="+id+"&type="+type;
 		
 		<#-- update setup widget -->
@@ -307,7 +348,8 @@ $( function(){
 				var targetContainer = $( widgetElem ).find( ".visualize_widget" );
 				
 				targetContainer.html("");			
-
+				hidehoverdiv('divtoshow');
+				hidemenudiv('menu')
 
 				<#-- update type of visualization depending on selection-->
 				if(objectType == ""){
@@ -723,10 +765,10 @@ $( function(){
 			<#-- remove  pop up progress log -->
 			$.PALM.popUpMessage.remove( uniqueVisWidget );
 			
-			var locDiv = $('<div/>').attr("id","mapid").css("height","60vh");
+			var locDiv = $('<div/>').attr("id","mapid").css("height","60vh").css("z-index","1");
 			tabContent.append(locDiv);
 				
-			var mymap = L.map('mapid');
+			mymap = L.map('mapid');
 			
 			L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 			    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -759,9 +801,12 @@ $( function(){
 			
 								conf = data.map.events[i].name
 								year = data.map.events[i].year
+								eventGroupId = data.map.events[i].eventGroupId
 				
 								mapdata.features[0].properties.conference = conf
 								mapdata.features[0].properties.year = year
+								mapdata.features[0].properties.eventGroupId = eventGroupId
+								mapdata.features[0].properties.dataType = "researcher"
 								mydata.push(myLayer.addData(mapdata.features[0]));
 							});
 						})(i);
@@ -792,6 +837,7 @@ $( function(){
 				{
 					var eventGroupList=[];	
 					var iconColorList=['green','blue','red','yellow','orange','violet','black','grey'];			
+					console.log("events data")
 					console.log(data.map.events);
 					for(i=0; i< data.map.events.length; i++)
 					{
@@ -802,12 +848,15 @@ $( function(){
 								conf = data.map.events[i].eventGroupName //name
 								year = data.map.events[i].year
 								eventGroup = data.map.events[i].eventGroupName
+								eventGroupId = data.map.events[i].eventGroupId
 								if(eventGroupList.indexOf(eventGroup)== -1)
 								eventGroupList.push(eventGroup);
 								
 								mapdata.features[0].properties.conference = conf
 								mapdata.features[0].properties.year = year
 								mapdata.features[0].properties.eventGroup = eventGroup
+								mapdata.features[0].properties.eventGroupId = eventGroupId
+								mapdata.features[0].properties.dataType = "conference"
 								mydata.push(myLayer.addData(mapdata.features[0]));
 							});
 						})(i);
@@ -838,6 +887,11 @@ $( function(){
 						       onEachFeature: onEachFeature
 						     }).addTo(mymap); 
 				}
+				
+				mymap.on('click',function(e){
+					hidemenudiv('menu')
+					hidehoverdiv('divtoshow')
+				})
 			});		
 				
 			
@@ -856,6 +910,26 @@ $( function(){
 	        });
 	      	layer.on('click', function(e){
 	      		console.log(feature.place_name);
+	      		console.log(e)
+	      		if(feature.properties.dataType == "researcher"){
+		      		obj = {
+							type:"clickLocation",
+							clientX:e.layerPoint.x,
+							clientY:e.layerPoint.y,
+							eventGroupId:feature.properties.eventGroupId
+						};
+					showmenudiv(obj,'menu');
+				}
+				if(feature.properties.dataType == "conference"){
+						obj = {
+							type:"clickLocation",
+							clientX:e.layerPoint.x,
+							clientY:e.layerPoint.y,
+							eventGroupId:feature.properties.eventGroupId
+						};
+					showhoverdiv(obj,'divtoshow', "This conference type is already added");
+				}
+				
 	      	});
     	}
 		
@@ -991,14 +1065,27 @@ $( function(){
 									.append(
 										$('<p/>')
 										.html(item.title)
+										.click(function(e){
+											console.log("test test")
+											console.log(e)
+												obj = {
+														  type:"clickPublication",
+												          clientX:e.pageX,
+												          clientY:e.pageY,
+												          pubId:item.id
+												};
+												console.log("inner" + item.id);
+												showmenudiv(obj,'menu');
+										})
+										.css("cursor"," pointer")
+										
 									)
 									.append(
 										$('<span/>')
 										.addClass("cd-date")
 										.html(item.year)
 									)
-						)	
-							
+						)
 							
 				});
 				
