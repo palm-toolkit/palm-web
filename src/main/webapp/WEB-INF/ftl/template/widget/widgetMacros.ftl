@@ -17,10 +17,6 @@
 		<#local wClassContainer = "col-md-8">
 	<#elseif wWidth == "HALF">
 		<#local wClassContainer = "col-md-6">
-	<#elseif wWidth == "QUARTER">
-		<#local wClassContainer = "col-md-3">
-	<#elseif wWidth == "THREE4TH">
-		<#local wClassContainer = "col-md-9">
 	<#else>
 		<#local wClassContainer = "col-md-4">
 	</#if>
