@@ -156,7 +156,6 @@ g.arc path {
 				<#-- do not show menu if the object is there in the setup already -->
 				if(names.indexOf(e.data.node.label) != -1){
 					$(".menu").hide();
-					console.log(e.data.node.label + " has been clicked no menu!!")
 				}
 				else
 				{
@@ -165,7 +164,6 @@ g.arc path {
 					<#-- append is invalid if the types are different -->
 					if(visType.substring(0,visType.length-1)!=objectType)
 					{
-						console.log("why coming in to this baby?")
 						$("#append").hide();
 					}
 					else
@@ -192,7 +190,6 @@ g.arc path {
 		    return false;
 		}
 		function hidemenudiv(divid){
-			console.log("HIDE CALLED")
 			var div = document.getElementById(divid);
 			div.style.display = "none"
 		    return false;
@@ -237,7 +234,6 @@ $( function(){
 			itemAdd(targetVal,"conference");
 		}	
 		 hidemenudiv('menu');
-		 console.log("targetVAL: " + targetVal)
 		 
 		 return false;
 	});
@@ -581,9 +577,6 @@ $( function(){
 		            }
 		        });
 		        
-		    console.log("reload: " + reload)
-		    
-		        
 			if(reload!="true"){
 			$.getJSON( url , function( data ) {
 				
@@ -628,9 +621,6 @@ $( function(){
 					})
 					
 					s.bind('clickNode', function(e){
-						
-						console.log(e.type, e.data.node.label, e.data.captor, e);
-						console.log(e.data.node.attributes.isadded);
 						if(e.data.node.attributes.isadded==false){
 							var text = e.data.node.label;
 							//textDiv.html(text.toUpperCase() + " is currently not present in the PALM System. \nPlease add the researcher from the 'Researchers' section in the top menu explicitly.")
@@ -651,7 +641,6 @@ $( function(){
 					s.bind('clickEdge', function(e){
 						showmenudiv(e,'menu');
 						//e.data.edge.label = "something " + e.data.edge.source;
-						//console.log(e.type, e.data.edge, e.data.captor, e);
 						//textDiv.html(e.data.edge.source + " and " + e.data.edge.target + " have co-authored " + truncate(e.data.edge.weight / 0.1,0) + " time(s) within this network");
 					})
 					
@@ -702,8 +691,6 @@ $( function(){
 					})
 					s.bind('clickNode', function(e){
 						
-						console.log(e.type, e.data.node.label, e.data.captor, e);
-						console.log(e.data.node.attributes.isadded);
 						if(e.data.node.attributes.isadded==false){
 							var text = e.data.node.label;
 							//textDiv.html(text.toUpperCase() + " is currently not present in the PALM System. \nPlease add the researcher from the 'Researchers' section in the top menu explicitly.")
@@ -724,7 +711,6 @@ $( function(){
 					s.bind('clickEdge', function(e){
 						showmenudiv(e,'menu');
 						//e.data.edge.label = "something " + e.data.edge.source;
-						console.log(e.type, e.data.edge, e.data.captor, e);
 						//textDiv.html(e.data.edge.source + " and " + e.data.edge.target + " have co-authored " + truncate(e.data.edge.weight / 0.1,0) + " time(s) within this network");
 					})
 					
@@ -760,8 +746,6 @@ $( function(){
 		
 		$.getJSON( url , function( data ) {
 		
-			console.log("locations data!!")
-			console.log(data)
 			<#-- remove  pop up progress log -->
 			$.PALM.popUpMessage.remove( uniqueVisWidget );
 			
@@ -837,8 +821,6 @@ $( function(){
 				{
 					var eventGroupList=[];	
 					var iconColorList=['green','blue','red','yellow','orange','violet','black','grey'];			
-					console.log("events data")
-					console.log(data.map.events);
 					for(i=0; i< data.map.events.length; i++)
 					{
 					 (function(i) {
@@ -877,8 +859,6 @@ $( function(){
 						       		minlat = latlng.lon
 						       }
 						       
-						       console.log(feature.properties.eventGroup);
-						       console.log(eventGroupList);
 						        mymap.setView([(maxlat+minlat)/2,(maxlon+minlon)/2], 2);
 						        return L.marker(latlng,{icon: new L.Icon({
 								  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-'+iconColorList[eventGroupList.indexOf(feature.properties.eventGroup)]+'.png'
@@ -909,8 +889,6 @@ $( function(){
 	            this.closePopup();
 	        });
 	      	layer.on('click', function(e){
-	      		console.log(feature.place_name);
-	      		console.log(e)
 	      		if(feature.properties.dataType == "researcher"){
 		      		obj = {
 							type:"clickLocation",
@@ -940,9 +918,6 @@ $( function(){
 		
 		$.getJSON( url , function( data ) {
 		
-				console.log("Timeline Data")
-				console.log(data)	
-	
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniqueVisWidget );
 				
@@ -1066,15 +1041,12 @@ $( function(){
 										$('<p/>')
 										.html(item.title)
 										.click(function(e){
-											console.log("test test")
-											console.log(e)
 												obj = {
 														  type:"clickPublication",
 												          clientX:e.pageX,
 												          clientY:e.pageY,
 												          pubId:item.id
 												};
-												console.log("inner" + item.id);
 												showmenudiv(obj,'menu');
 										})
 										.css("cursor"," pointer")
@@ -1100,9 +1072,6 @@ $( function(){
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniqueVisWidget );
 				
-				console.log("bubbles tab")
-				console.log(dataBubble);
-				
 				var bubblesTab = $( widgetElem ).find( "#tab_Bubbles" );
 				bubblesTab.html("");
 				
@@ -1116,7 +1085,6 @@ $( function(){
 			
 		$.getJSON( url , function( data ) {
 		
-			console.log(data);
 			<#-- remove  pop up progress log -->
 			$.PALM.popUpMessage.remove( uniqueVisWidget );
 			
@@ -1190,7 +1158,6 @@ $( function(){
 			
 			svg.selectAll("circle")
 				.on("click",function(e){
-			  	console.log(e.aggField[0]);
 			  })
 		}
 		
@@ -1222,8 +1189,6 @@ $( function(){
 			
 			$.getJSON( url , function( data ) {
 
-					console.log("group data")
-					console.log(data);
 					<#-- remove  pop up progress log -->
 					$.PALM.popUpMessage.remove( uniqueVisWidget );
 					
@@ -1236,7 +1201,6 @@ $( function(){
 						$.PALM.callout.generate( tabGroupContainer , "warning", "Empty List!", "Insufficient Data!" );
 						return false;
 					}
-					console.log("sizes: " + tabContent1.height() + " " + tabGroupContainer.height() )
 					var groupSection = $( '<div/>' ).addClass("clusters")
 
 					tabContent.append(groupSection);
@@ -1259,7 +1223,6 @@ $( function(){
 					}		
 					
 					if(visType == "publications"){
-					console.log(data)
 						data = data.map.publications;
 						visualizeResearcherCluster(data, tabGroupContainer, visType);	
 					}
@@ -1271,9 +1234,6 @@ $( function(){
 		function tabVisList(uniqueVisWidget, url, widgetElem, tabContent, visType, type){
 		
 			$.getJSON( url , function( data ) {
-						
-						console.log("List Data")
-						console.log(data.map.events)
 						
 							var tabListContainer = $( widgetElem ).find( "#tab_List" );
 								
@@ -1473,10 +1433,40 @@ $( function(){
 			console.log(data);
 			
 			var tabComparisonContainer = $( widgetElem ).find( "#tab_Comparison" );
-			tabComparisonContainer.html("");	
-	
+			tabComparisonContainer.html("");
+			
+			var extraContainer = $( '<div/>' ).css("height","67vh")
+			tabComparisonContainer.append(extraContainer)
+
+			var vennContainer = $( '<div/>' ).attr("id","vennContainer").css("height","67vh").css("width","70%").css("float","left");
+			var listContainer = $( '<div/>' ).attr("id","listContainer").css("height","67vh").css("width","30%").css("float","right");
+			
+			extraContainer.append(vennContainer);
+			extraContainer.append(listContainer);
+			
+			
+			var innerListContainer = $( '<div/>' ).attr("id","innerListContainer").css('overflow-y','scroll')
+								.css('max-height','67vh')
+			listContainer.append(innerListContainer);
+			
+							
+							$("#innerListContainer").slimscroll({
+								height: "67vh",
+						        size: "5px",
+					        	allowPageScroll: true,
+					   			touchScrollStep: 50,
+					   			//alwaysVisible: true
+					       });
+			
+			
 			var vennD = $( '<div/>' ).attr("id","venn").css("height","67vh");
-			tabComparisonContainer.append(vennD);
+			vennContainer.append(vennD);
+			
+			var vennListC = $( '<div/>' );
+			innerListContainer.append(vennListC);
+			
+			var clickFlag = "false";
+			var selectedVenn = "";
 			
 			var chart = venn.VennDiagram()
 			
@@ -1486,6 +1476,14 @@ $( function(){
 			
 			var div = d3.select("#venn")
 			div.datum(dataComp).call(chart);
+			
+			div.on("click", function(d,i){
+					vennListC.html("");
+					var s  = d3.selectAll("path")
+					s.style("stroke-width", 0)
+			            .style("fill-opacity", d.sets.length == 1 ? .25 : .0)
+			            .style("stroke-opacity", 0);
+				})
 			
 			var tooltip = d3.select("body").append("div")
 			    .attr("class", "venntooltip");
@@ -1503,7 +1501,6 @@ $( function(){
 			        // Display a tooltip with the current size
 			        tooltip.transition().duration(400).style("opacity", .9);
 			        tooltip.text(d.size);
-			
 			        // highlight the current path
 			        var selection = d3.select(this).transition("tooltip").duration(400);
 			        selection.select("path")
@@ -1513,32 +1510,83 @@ $( function(){
 			            .style("stroke-opacity", 1);
 			    })
 			
-			    .on("mousemove", function() {
+			    .on("mousemove", function(d,i) {
 			        tooltip.style("left", (d3.event.pageX) + "px")
 			               .style("top", (d3.event.pageY - 28) + "px");
 			    })
 			
 			    .on("mouseout", function(d, i) {
 			        tooltip.transition().duration(400).style("opacity", 0);
+			        
+			        if(selectedVenn!=d.altLabel){
 			        var selection = d3.select(this).transition("tooltip").duration(400);
 			        selection.select("path")
 			            .style("stroke-width", 0)
 			            .style("fill-opacity", d.sets.length == 1 ? .25 : .0)
 			            .style("stroke-opacity", 0);
-			    });
+			        }    
+			    })
+				
+				.on("click", function(d,i){
+				
+					console.log(d.altLabel + " clicked")
+					console.log(d)
+					selectedVenn = d.altLabel;
+					vennListC.html("");
+					vennList(vennListC, d.list, d.idsList)
+					
+					var s  = d3.selectAll("path").filter(function(x) { 
+					return d.altLabel!=x.altLabel; });
+					console.log(s)
+					s.style("stroke-width", 0)
+			            .style("stroke-opacity", 0);
+			        d3.event.stopPropagation();    
+				})
 					
 			});
 		}
 		
+		function vennList(vennListC, nameList, idsList){
+									<#-- build the researcher list -->
+									$.each( nameList, function( index, item){
+										var vennDiv = 
+										$( '<div/>' )
+											.addClass( 'author' )
+											.attr({ 'id' : item[1].id });
+										var vennNav =
+										$( '<div/>' )
+											.addClass( 'nav' );
+										var vennDetail =
+										$( '<div/>' )
+											.addClass( 'detail' )
+											.append(
+												$( '<div/>' )
+													.addClass( 'name capitalize' )
+													.html( item[0].name )
+											);
+										vennDiv
+											.append(
+												vennNav
+											).append(
+												vennDetail
+											)
+											.on('click', function(d){ });
+											
+										//if( !item.isAdded ){
+										//	venn.addClass( "text-gray" );
+										//}
+										vennListC
+											.append( 
+												vennDiv
+											);
+									});
+		
+		}
 		<#-- SIMILARITY TAB -->
 		function tabVisSimilar(uniqueVisWidget, url, widgetElem, tabContent){
-			console.log(" similar tab clicked!" );
 			$.getJSON( url , function( data ) {
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniqueVisWidget );
-				
-				console.log("similar tab")
-				console.log(data.map.interests);
 				
 				var similarTab = $( widgetElem ).find( "#tab_Similar" );
 				similarTab.html("");
@@ -1587,7 +1635,7 @@ $( function(){
 								.append('svg')
 								.attr({'width':700,'height':700})
 				
-				canvas.on("click", function(e) { console.log("svg"); hidemenudiv('menu'); })		
+				canvas.on("click", function(e) { hidemenudiv('menu'); })		
 		<#--  temp here !! 		canvas.on('click', function(e){
 									hidemenudiv(e,'menu');
 									d3.event.stopPropagation();
@@ -1630,7 +1678,6 @@ $( function(){
 									d3.event.stopPropagation();
 								})
 								.on("mouseover", function(d,i){
-								console.log("mouse over true!")
 									obj = {
 												  type:"similarBar",
 										          clientX:d3.event.clientX,
@@ -1758,7 +1805,6 @@ $( function(){
 			      .style("font-size", function(d) { 
 			      	if(this.getComputedTextLength()!=0)
 			      	{
-				      console.log(Math.min(2 * d.r, (2 * d.r - 1) / this.getComputedTextLength() * 10));
 				      return Math.min(2 * d.r, (2 * d.r - 1) / this.getComputedTextLength() * 10) + "px";
 				    }
 				    else

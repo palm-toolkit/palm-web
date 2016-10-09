@@ -48,11 +48,7 @@
 				<#-- show pop up progress log -->
 						},
 			onRefreshDone: function(  widgetElem , data ){
-			console.log("NEW PORTION")
-			console.log(data.id)
-			console.log(data.name)
 				var id = data.id;
-				console.log("value of replace: " + data.replace)
 				var wordsContainer = $( widgetElem ).find( ".scroll_search_words" );
 				wordsContainer.css("padding-left","5px")
 					.css("padding-bottom","5px")
@@ -164,11 +160,9 @@
 				<#-- click to delete item from setup widget -->
 				nameDiv.on( "click", function(){
 					this.remove();
-					console.log("data.name : " + data.name[0])
 					var i = names.indexOf(data.name[0]);
 					names.splice(i, 1);
 					ids.splice(i,1);
-					console.log("after deletion: " + names)
 					updateVisDelete( "true", type);
 					if(names.length == 0){
 						wordsContainer.html("");
@@ -242,7 +236,6 @@
 		function refreshVisFilter(id, type, visType){
 		
 			dataTransfer = "true";
-			console.log("type: " + type)
 			checkedPubValues=[];
 			checkedConfValues=[];
 			checkedTopValues=[];
@@ -420,7 +413,7 @@
 								)
 				}
 
-				if( type == "publication" || type == "conference" || type == "topic" || type == "circle"){
+				<#--if( type == "publication" || type == "conference" || type == "topic" || type == "circle"){
 					visOptionsContainer.append(
 									$('<div/>')
 									.addClass('info-box box-home-explore bg-yellow')
@@ -445,7 +438,7 @@
 										refreshVisFilter(id, type,  "circles");
 									})
 								)
-				}
+				}-->
 				
 				
 		

@@ -1193,7 +1193,7 @@
     /*global d3 console:true*/
 
     function VennDiagram() {
-        var width = 600,
+        var width = 450,
             height = 350,
             padding = 15,
             duration = 1000,
