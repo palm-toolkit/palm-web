@@ -5,7 +5,7 @@
   	<div class="box-tools">
   	<div>
 	    <div class="drop-down">
-	    	<select id="selectDropDown" style="width:100%;font-size:12px" class="form-control" >
+	    	<select id="selectDropDown" style="width:100%;font-size:14px;text-align:center;font-weight: bold;" class="form-control" >
 			  <option value="researchers">RESEARCHERS</option>
 			  <option value="conferences">CONFERENCES</option>
 			  <option value="publications">PUBLICATIONS</option>

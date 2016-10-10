@@ -53,13 +53,17 @@
 				wordsContainer.css("padding-left","5px")
 					.css("padding-bottom","5px")
 					.css("padding-top","5px")
-				
+				console.log("name to be added: " + data.name)
 				visOptionsContainer = $( widgetElem ).find( ".vis_options" );
 				visOptionsContainer.html( "" );
 				
+		
 		for(var i=0;i<data.name.length;i++){
-				<#-- TO-DO Add css part to palm.css -->
-				nameDiv = $( '<span/>' )
+				
+							<#-- TO-DO Add css part to palm.css -->
+				
+							nameDiv = $( '<span/>' )
+							.attr("id",data.id[i])
 							.css("color", "black")
 							.css("left-margin","2px")
 							.css("background-color","#d9c7c6")
@@ -73,7 +77,19 @@
 							.css("padding-left","5px")
 							.css("padding-right","5px")
 							.css({ "cursor":"pointer"})
-							.html("  "+data.name[i]+ " X ");
+							.html("  "+data.name[i]+ " X ")
+							<#-- click to delete item from setup widget -->
+							.on( "click", function(e){
+								this.remove();
+								var i = ids.indexOf(e.delegateTarget.id);
+								names.splice(i, 1);
+								ids.splice(i,1);
+								updateVisDelete( "true", type);
+								if(names.length == 0){
+									wordsContainer.html("");
+									visOptionsContainer.html( "" );
+								}
+							});
 				
 				if(data.replace && i==0){
 					type = data.type;
@@ -133,7 +149,7 @@
 					if(data.name[i]!=""){
 						wordsContainer
 						.append(nameDiv)
-						
+						console.log("append")
 							if(resetFlag=="1" || currentVisType=="" || type!=data.type){
 								if(type == "researcher"){
 									setBoxes(id, type, "researchers")
@@ -157,22 +173,11 @@
 				}	
 			}
 	}		
-				<#-- click to delete item from setup widget -->
-				nameDiv.on( "click", function(){
-					this.remove();
-					var i = names.indexOf(data.name[0]);
-					names.splice(i, 1);
-					ids.splice(i,1);
-					updateVisDelete( "true", type);
-					if(names.length == 0){
-						wordsContainer.html("");
-						visOptionsContainer.html( "" );
-					}
-				});
-				
 				setBoxes(id, type, currentVisType);
 				
 			}
+			
+			
 		};
 	
 		function callRefresh(id,type){
@@ -234,7 +239,7 @@
 		}
 		
 		function refreshVisFilter(id, type, visType){
-		
+		console.log("refresh vis called")
 			dataTransfer = "true";
 			checkedPubValues=[];
 			checkedConfValues=[];

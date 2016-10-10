@@ -90,6 +90,7 @@ g.arc path {
 
 		<#-- javascript -->
 		function showhoverdiv(e,divid, text){
+			hidemenudiv('menu')
 			document.getElementById(divid).innerHTML = text;
 		    var left;
 			var top;
@@ -109,6 +110,16 @@ g.arc path {
 			    top  = (e.clientY + 250) + "px";
 		    }
 		    
+		    if(e.type == "comparisonListItem"){
+			    left  = (e.clientX) + "px";
+			    top  = (e.clientY) + "px";
+		    }
+		    
+		    if(e.type == "listItem"){
+			    left  = (e.clientX) + "px";
+			    top  = (e.clientY) + "px";
+		    }
+		    
 		    var div = document.getElementById(divid);
 		
 		    div.style.left = left;
@@ -122,7 +133,7 @@ g.arc path {
 		    return false;
 		}
 		function showmenudiv(e,divid){
-		
+			hidehoverdiv('divtoshow')
 			console.log("names in here:  " + names)
 			console.log("vis TYPE: " + visType.substring(0,visType.length-1));
 			console.log("object TYPE: " + objectType);
@@ -133,7 +144,7 @@ g.arc path {
 			
 			if(e.type == "similarBar" || e.type=="clickPublication"){
 			    left  = (e.clientX - 330) + "px";
-			    top  = (e.clientY  - 140) + "px";
+			    top  = (e.clientY - 140) + "px";
 		    }
 		    
 		    if(e.type == "clickLocation"){
@@ -141,9 +152,19 @@ g.arc path {
 			    top  = (e.clientY) + "px";
 		    }
 		    
+		    if(e.type == "comparisonListItem"){
+			    left  = (e.clientX - 330) + "px";
+			    top  = (e.clientY - 140) + "px";
+		    }
+
 		    if(e.type == "clickNode" || e.type == "clickEdge"){
 			    left  = (e.data.captor.clientX - 350) + "px";
-			    top  = (e.data.captor.clientY  - 140) + "px";
+			    top  = (e.data.captor.clientY  - 150) + "px";
+		    }
+		    
+		    if(e.type == "listItem"){
+			    left  = (e.clientX - 330) + "px";
+			    top  = (e.clientY - 140) + "px";
 		    }
 		    
 		    var div = document.getElementById(divid);
@@ -171,7 +192,7 @@ g.arc path {
 				}	
 			}
 			
-			if(e.type == "clickEdge" || e.type == "similarBar" || e.type == "clickLocation" || e.type == "clickPublication"){
+			if(e.type == "clickEdge" || e.type == "similarBar" || e.type == "clickLocation" || e.type == "clickPublication" || e.type == "comparisonListItem" || e.type == "listItem"){
 				$(".menu").show();
 				<#-- do not show menu if the object is there in the setup already -->
 					$("#coauthors").hide();
@@ -214,7 +235,8 @@ $( function(){
 			if($(this).parent().parent()[0].value.data.edge.attributes.targetauthorisadded)
 			targetVal.push($(this).parent().parent()[0].value.data.edge.attributes.targetauthorid);
 			
-			itemAdd(targetVal,"researcher");
+			if(targetVal.length > 0)
+				itemAdd(targetVal,"researcher");
 		}
 		
 		if($(this).parent().parent()[0].value.type=="clickPublication"){
@@ -233,6 +255,20 @@ $( function(){
 			targetVal.push($(this).parent().parent()[0].value.eventGroupId);
 			itemAdd(targetVal,"conference");
 		}	
+		
+		if($(this).parent().parent()[0].value.type=="comparisonListItem")
+		{
+			targetVal.push($(this).parent().parent()[0].value.itemId);
+			itemAdd(targetVal,$(this).parent().parent()[0].value.objectType);
+		}
+		
+		if($(this).parent().parent()[0].value.type=="listItem")
+		{
+			targetVal.push($(this).parent().parent()[0].value.itemId);
+			itemAdd(targetVal,$(this).parent().parent()[0].value.objectType);
+		}
+		
+		
 		 hidemenudiv('menu');
 		 
 		 return false;
@@ -253,7 +289,8 @@ $( function(){
 			if($(this).parent().parent()[0].value.data.edge.attributes.targetauthorisadded)
 			targetVal.push($(this).parent().parent()[0].value.data.edge.attributes.targetauthorid);
 			
-			itemReplace(targetVal,"researcher");
+			if(targetVal.length > 0)
+				itemReplace(targetVal,"researcher");
 		}
 		
 		if($(this).parent().parent()[0].value.type=="clickPublication"){
@@ -271,6 +308,18 @@ $( function(){
 		{
 			targetVal.push($(this).parent().parent()[0].value.eventGroupId);
 			itemReplace(targetVal,"conference");
+		}
+		
+		if($(this).parent().parent()[0].value.type=="comparisonListItem")
+		{
+			targetVal.push($(this).parent().parent()[0].value.itemId);
+			itemReplace(targetVal,$(this).parent().parent()[0].value.objectType);
+		}
+		
+		if($(this).parent().parent()[0].value.type=="listItem")
+		{
+			targetVal.push($(this).parent().parent()[0].value.itemId);
+			itemReplace(targetVal,$(this).parent().parent()[0].value.objectType);
 		}
 		
 		hidemenudiv('menu');
@@ -1289,7 +1338,20 @@ $( function(){
 											).append(
 												researcherDetail
 											)
-											.on('click', function(d){ });
+											.on('click', function(d){ 
+												obj = {
+															  type:"listItem",
+													          clientX:d.clientX,
+													          clientY:d.clientY,
+													          itemId:item.id,
+													          objectType:"researcher"
+													};
+														if(item.isAdded)
+															showmenudiv(obj, 'menu')
+														else
+															showhoverdiv(obj, 'divtoshow', item.name.toUpperCase() + " is currently not present in PALM")
+											
+											});
 											
 										if( !item.isAdded ){
 											researcherDetail.addClass( "text-gray" );
@@ -1343,6 +1405,39 @@ $( function(){
 											).append(
 												conferenceDetail
 											).append('&nbsp;')
+											.on('click', function(d){ 
+												
+													
+													if(type=="conference"){
+														obj = {
+																type:"listItem",
+														        clientX:d.clientX,
+														        clientY:d.clientY,
+														        itemId:item.id,
+														        objectType:"conference"
+														};
+														showhoverdiv(obj,'divtoshow', "This conference type is already added");
+													}
+													else
+													{
+														obj = {
+																  type:"listItem",
+														          clientX:d.clientX,
+														          clientY:d.clientY,
+														          itemId:item.id,
+														          objectType:"conference"
+														};
+														if(item.isAdded)
+															showmenudiv(obj, 'menu')
+														else
+															showhoverdiv(obj, 'divtoshow', item.name.toUpperCase() + " is currently not present in PALM")
+													}
+											});
+											
+										if( !item.isAdded ){
+											conferenceDiv.addClass( "text-gray" );
+										}
+											
 										listSection
 											.append( 
 												conferenceDiv
@@ -1372,6 +1467,17 @@ $( function(){
 											.append(
 												topicNav
 											).append('&nbsp;')
+											.on('click', function(d){ 
+												obj = {
+															  type:"listItem",
+													          clientX:d.clientX,
+													          clientY:d.clientY,
+													          itemId:item.id,
+													          objectType:"topic"
+													};
+												showmenudiv(obj, 'menu')
+											});
+											
 										listSection
 											.append( 
 												topicDiv
@@ -1410,6 +1516,17 @@ $( function(){
 											).append(
 												conferenceDetail
 											).append('&nbsp;')
+											.on('click', function(d){ 
+												obj = {
+															  type:"listItem",
+													          clientX:d.clientX,
+													          clientY:d.clientY,
+													          itemId:item.id,
+													          objectType:"publication"
+													};
+												showmenudiv(obj, 'menu')
+											
+											});
 											
 										listSection
 											.append( 
@@ -1478,6 +1595,8 @@ $( function(){
 			div.datum(dataComp).call(chart);
 			
 			div.on("click", function(d,i){
+					hidehoverdiv('divtoshow')
+					hidemenudiv('menu')
 					vennListC.html("");
 					var s  = d3.selectAll("path")
 					s.style("stroke-width", 0)
@@ -1529,15 +1648,12 @@ $( function(){
 				
 				.on("click", function(d,i){
 				
-					console.log(d.altLabel + " clicked")
-					console.log(d)
 					selectedVenn = d.altLabel;
 					vennListC.html("");
 					vennList(vennListC, d.list, d.idsList)
 					
 					var s  = d3.selectAll("path").filter(function(x) { 
 					return d.altLabel!=x.altLabel; });
-					console.log(s)
 					s.style("stroke-width", 0)
 			            .style("stroke-opacity", 0);
 			        d3.event.stopPropagation();    
@@ -1562,7 +1678,7 @@ $( function(){
 											.append(
 												$( '<div/>' )
 													.addClass( 'name capitalize' )
-													.html( item[0].name )
+													.html( (index+1)+") "+item[0].name )
 											);
 										vennDiv
 											.append(
@@ -1570,11 +1686,29 @@ $( function(){
 											).append(
 												vennDetail
 											)
-											.on('click', function(d){ });
+											.on('click', function(d){ 
+												console.log(d);
+												
+												obj = {
+														  type:"comparisonListItem",
+												          clientX:d.clientX,
+												          clientY:d.clientY,
+												          itemId:item[1].id,
+												          objectType:visType.substring(0,visType.length-1)
+												};
+												if(visType == "researchers" || visType == "conferences"){
+													if(item[2].isAdded)
+														showmenudiv(obj, 'menu')
+													else
+														showhoverdiv(obj, 'divtoshow', item[0].name.toUpperCase() + " is currently not present in PALM")
+												}		
+												else
+														showmenudiv(obj, 'menu')
+											});
 											
-										//if( !item.isAdded ){
-										//	venn.addClass( "text-gray" );
-										//}
+										if( !item[2].isAdded ){
+											vennDiv.addClass( "text-gray" );
+										}
 										vennListC
 											.append( 
 												vennDiv
