@@ -1705,9 +1705,10 @@ $( function(){
 												else
 														showmenudiv(obj, 'menu')
 											});
-											
-										if( !item[2].isAdded ){
-											vennDiv.addClass( "text-gray" );
+										if(visType == "researchers" || visType == "conferences"){	
+											if( !item[2].isAdded ){
+												vennDiv.addClass( "text-gray" );
+											}
 										}
 										vennListC
 											.append( 
