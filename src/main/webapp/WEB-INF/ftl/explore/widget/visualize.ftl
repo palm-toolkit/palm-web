@@ -2044,7 +2044,9 @@ $( function(){
 		    
 		var bubble = d3.layout.pack()
 		      .value(function(d) { return d3.sum(d[1]); })
-		      .sort(null)
+		      .sort(function(a, b) {
+				    return -(a.value - b.value);
+				})
 		      .size([diameter, diameter])
 		      .padding(1.5),
 		    arc = d3.svg.arc().innerRadius(0),

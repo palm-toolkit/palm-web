@@ -81,7 +81,7 @@
 				if(objectType=="researcher")
 				{
 					if(visType=="researchers"){
-						filterList = ["Time","Publications", "Conferences", "Circles"];
+						filterList = ["Time","Publications", "Conferences", "Topics","Circles"];
 					}
 					if(visType=="conferences"){
 						filterList = ["Time","Topics", "Conferences"];
@@ -321,71 +321,6 @@
 									});
 							}	
 						
-						<#-- CIRCLES FILTER -->
-						if(data.circleFilter!=null){
-						
-							var cirSectionHeader = $( '<span/>' ).html("CIRCLES:")
-											.append('&nbsp;')
-											.append(
-												$('<span/>')
-												.append(
-													$('<input/>')
-													.attr('type','checkbox')
-													.attr('value', 'All')
-													.on("click", function(){toggleCir(this)})
-												 )
-											);
-							var cirSection = $( '<div/>' );
-								
-							filterContent.append(cirSectionHeader);
-							filterContent.append(cirSection);
-					
-							//cirSection.html("");
-							cirSection.addClass('cir_list')
-								.css('overflow-y','scroll')
-								.css('height', 'auto')
-								.css('background-color', '#f9f5f5')
-								.css('max-height', '23vh')
-							
-							$(".cir_list").slimscroll({
-								height: "23vh",
-						        size: "10px",
-					        	allowPageScroll: true,
-					   			touchScrollStep: 50,
-					   			color: '#008000'
-					   			//alwaysVisible: true
-					       });
-					
-							<#-- build the Publication Filter list -->
-							$.each( data.circleFilter.circles, function( index, item){
-							var circleDiv = 
-									$( '<div/>' )
-										.addClass('authorExplore')
-										.attr({ 'id' : item.id })
-										.css('padding-left','4px')
-										.css('padding-right','4px')
-										.append(
-											$('<input/>')
-												.attr('type','checkbox')
-												.attr('name','circleCB')
-												.attr('value', item.name)
-												.attr({ 'id' : item.id })
-											 )
-										.append(
-											$( '<span/>' )
-												.addClass( 'name' )
-												.html( " " +  item.name )
-										)
-											
-										cirSection
-											.append( 
-												circleDiv
-											);
-	
-									});
-							}	
-							
-							
 						<#-- TOPIC FILTER -->
 						if(data.topicFilter!=null){
 						
@@ -452,7 +387,71 @@
 							}
 		
 						});
-														
+					<#-- CIRCLES FILTER -->
+						if(data.circleFilter!=null){
+						
+							var cirSectionHeader = $( '<span/>' ).html("CIRCLES:")
+											.append('&nbsp;')
+											.append(
+												$('<span/>')
+												.append(
+													$('<input/>')
+													.attr('type','checkbox')
+													.attr('value', 'All')
+													.on("click", function(){toggleCir(this)})
+												 )
+											);
+							var cirSection = $( '<div/>' );
+								
+							filterContent.append(cirSectionHeader);
+							filterContent.append(cirSection);
+					
+							//cirSection.html("");
+							cirSection.addClass('cir_list')
+								.css('overflow-y','scroll')
+								.css('height', 'auto')
+								.css('background-color', '#f9f5f5')
+								.css('max-height', '23vh')
+							
+							$(".cir_list").slimscroll({
+								height: "23vh",
+						        size: "10px",
+					        	allowPageScroll: true,
+					   			touchScrollStep: 50,
+					   			color: '#008000'
+					   			//alwaysVisible: true
+					       });
+					
+							<#-- build the Publication Filter list -->
+							$.each( data.circleFilter.circles, function( index, item){
+							var circleDiv = 
+									$( '<div/>' )
+										.addClass('authorExplore')
+										.attr({ 'id' : item.id })
+										.css('padding-left','4px')
+										.css('padding-right','4px')
+										.append(
+											$('<input/>')
+												.attr('type','checkbox')
+												.attr('name','circleCB')
+												.attr('value', item.name)
+												.attr({ 'id' : item.id })
+											 )
+										.append(
+											$( '<span/>' )
+												.addClass( 'name' )
+												.html( " " +  item.name )
+										)
+											
+										cirSection
+											.append( 
+												circleDiv
+											);
+	
+									});
+							}	
+							
+																				
 					}			
 				}					
 				
