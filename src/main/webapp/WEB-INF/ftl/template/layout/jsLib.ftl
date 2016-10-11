@@ -56,7 +56,9 @@
 <script src="<@spring.url '/resources/plugins/timeline/modernizr.js' />" type="text/javascript"></script>
 
 <#-- Dimple js -->
-<script src="http://dimplejs.org/dist/dimple.v1.1.5.min.js"></script>
+<#--<script src="http://dimplejs.org/dist/dimple.v1.1.5.min.js"></script>-->
+<script src="<@spring.url '/resources/dimplejs/dimple.v2.0.0.js' />" type="text/javascript"></script>
+
 
 <#-- used to provide rich tree visualization -->
 <script src="<@spring.url '/resources/plugins/fancytree/jquery.fancytree.js' />" type="text/javascript"></script>

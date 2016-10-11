@@ -36,9 +36,13 @@
       font-family: sans-serif;
     }
 svg .tooltip { opacity: 1; }   
-#chartTab, #svgContainer {
+#chartTab{
 	  height: 68vh;
+	  font-size: 2px;
 }   
+#svgContainer{
+font-size: 10px;
+}
 g.arc path {
 }
 .venntooltip {
@@ -833,7 +837,7 @@ $( function(){
 						$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/" + data.map.events[i].location.city + ".json?autocomplete=false&access_token=pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw",
 							function(mapdata){
 			
-								conf = data.map.events[i].name
+								conf = data.map.events[i].groupName // need to check this!!
 								year = data.map.events[i].year
 								eventGroupId = data.map.events[i].eventGroupId
 								groupname = data.map.events[i].groupName
@@ -876,20 +880,20 @@ $( function(){
 					for(i=0; i< data.map.events.length; i++)
 					{
 					 (function(i) {
-						$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/" + data.map.events[i].location.city + ".json?autocomplete=false&access_token=pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw",
+						$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/" + data.map.events[i].location + ".json?autocomplete=false&access_token=pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw",
 							function(mapdata){
 			
-								conf = data.map.events[i].name
+								conf = data.map.events[i].eventGroupName //name
 								year = data.map.events[i].year
+								eventGroup = data.map.events[i].eventGroupName
 								eventGroupId = data.map.events[i].eventGroupId
-								groupname = data.map.events[i].groupName
-								if(eventGroupList.indexOf(groupname)== -1)
-									eventGroupList.push(groupname);
-									
+								if(eventGroupList.indexOf(eventGroup)== -1)
+								eventGroupList.push(eventGroup);
+								
 								mapdata.features[0].properties.conference = conf
 								mapdata.features[0].properties.year = year
+								mapdata.features[0].properties.eventGroup = eventGroup
 								mapdata.features[0].properties.eventGroupId = eventGroupId
-								mapdata.features[0].properties.groupname = groupname
 								mapdata.features[0].properties.dataType = "conference"
 								mydata.push(myLayer.addData(mapdata.features[0]));
 							});
@@ -913,7 +917,7 @@ $( function(){
 						       
 						        mymap.setView([(maxlat+minlat)/2,(maxlon+minlon)/2], 2);
 						        return L.marker(latlng,{icon: new L.Icon({
-								  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-'+iconColorList[eventGroupList.indexOf(feature.properties.groupname)]+'.png'
+								  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-'+iconColorList[eventGroupList.indexOf(feature.properties.eventGroup)]+'.png'
 								})}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
 						       },
 						       onEachFeature: onEachFeature
@@ -930,7 +934,7 @@ $( function(){
 		}
 		
 		function onEachFeature(feature, layer) {
-	      var popupContent = feature.properties.groupname + ",<br> " + feature.properties.conference + ",<br> " + feature.place_name + ",<br> " + feature.properties.year;
+	      var popupContent = feature.properties.conference + ",<br> " + feature.place_name + ",<br> " + feature.properties.year;
 	
 	      layer.bindPopup(popupContent);
 	      
@@ -1131,24 +1135,48 @@ $( function(){
 			
 		$.getJSON( url , function( data ) {
 		
+		console.log("evolution data")
+		console.log(data)
 			<#-- remove  pop up progress log -->
 			$.PALM.popUpMessage.remove( uniqueVisWidget );
 			
 			var tabEvolutionContainer = $( widgetElem ).find( "#tab_Evolution" );
 			tabEvolutionContainer.html("");
 					
-			var evolutionSection = $( '<div/>' ).attr("id","svgContainer")
-			tabEvolutionContainer.append(evolutionSection);		
+			var evolutionSection = $( '<div/>' )
+			tabEvolutionContainer.append(evolutionSection);	
 			
-			drawDimpleChart(data.map.list);
+			var newSect = $( '<div/>' ).attr("id","svgContainer")
+			evolutionSection.append(newSect);	
+			
+							evolutionSection.addClass('evolutionSection')
+								.css('overflow-y','scroll')
+								.css('max-height','67vh')
+							
+							$(".evolutionSection").slimscroll({
+								height: "67vh",
+						        size: "5px",
+					        	allowPageScroll: true,
+					   			touchScrollStep: 50,
+					   			//alwaysVisible: true
+					       });
+			
+				drawDimpleChart(data.map.list);
 			});
 			
 		}
 
 		function drawDimpleChart(data){
-		
-			var svg = dimple.newSvg("#chartTab", "100%", "100%");
 			
+			var numberOfTopics = dimple.getUniqueValues(data, "Topic");
+			console.log(numberOfTopics.length + " length")
+			if(numberOfTopics.length * 40 > 400)
+				height = numberOfTopics.length * 40
+			else
+				height = 400
+					
+			console.log(height)		
+			var svg = dimple.newSvg("#chartTab", "100%", height);
 			var chart = new dimple.chart(svg, data);
 			var y = chart.addCategoryAxis("y", ["Topic", "Author"]);
 			y.addOrderRule("Topic", true);
@@ -1159,7 +1187,7 @@ $( function(){
 			var myLegend = chart.addLegend(0, 10, 500, 400, "right");
 			chart.draw();
 			y.shapes.selectAll("text")
-			  .call(wrap, 50);
+			  .call(wrap, 30);
 			
 			$('#chartTab').contents().appendTo("#svgContainer");
 			
