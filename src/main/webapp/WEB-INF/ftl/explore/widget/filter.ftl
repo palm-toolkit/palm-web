@@ -594,7 +594,6 @@
 		  	}
 			
 			<#-- update visualize widget -->
-
 			var yearFilterPresent = "true";
 			var updateString = "?type="+objectType+"&dataList="+names+"&idList="+ids+"&visType="+visType+"&dataTransfer="+dataTransfer+"&checkedPubValues="+checkedPubValues+"&checkedConfValues="+checkedConfValues+"&checkedTopValues="+checkedTopValues+"&checkedCirValues="+checkedCirValues+"&startYear="+startYear+"&endYear="+endYear+"&yearFilterPresent="+yearFilterPresent;
 			var visualizeWidget = $.PALM.boxWidget.getByUniqueName( 'explore_visualize' ); 

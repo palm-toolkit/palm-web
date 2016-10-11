@@ -795,6 +795,7 @@ $( function(){
 		
 		$.getJSON( url , function( data ) {
 		
+			console.log(data)
 			<#-- remove  pop up progress log -->
 			$.PALM.popUpMessage.remove( uniqueVisWidget );
 			
@@ -835,10 +836,12 @@ $( function(){
 								conf = data.map.events[i].name
 								year = data.map.events[i].year
 								eventGroupId = data.map.events[i].eventGroupId
+								groupname = data.map.events[i].groupName
 				
 								mapdata.features[0].properties.conference = conf
 								mapdata.features[0].properties.year = year
 								mapdata.features[0].properties.eventGroupId = eventGroupId
+								mapdata.features[0].properties.groupname = groupname
 								mapdata.features[0].properties.dataType = "researcher"
 								mydata.push(myLayer.addData(mapdata.features[0]));
 							});
@@ -873,20 +876,20 @@ $( function(){
 					for(i=0; i< data.map.events.length; i++)
 					{
 					 (function(i) {
-						$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/" + data.map.events[i].location + ".json?autocomplete=false&access_token=pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw",
+						$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/" + data.map.events[i].location.city + ".json?autocomplete=false&access_token=pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw",
 							function(mapdata){
 			
-								conf = data.map.events[i].eventGroupName //name
+								conf = data.map.events[i].name
 								year = data.map.events[i].year
-								eventGroup = data.map.events[i].eventGroupName
 								eventGroupId = data.map.events[i].eventGroupId
-								if(eventGroupList.indexOf(eventGroup)== -1)
-								eventGroupList.push(eventGroup);
-								
+								groupname = data.map.events[i].groupName
+								if(eventGroupList.indexOf(groupname)== -1)
+									eventGroupList.push(groupname);
+									
 								mapdata.features[0].properties.conference = conf
 								mapdata.features[0].properties.year = year
-								mapdata.features[0].properties.eventGroup = eventGroup
 								mapdata.features[0].properties.eventGroupId = eventGroupId
+								mapdata.features[0].properties.groupname = groupname
 								mapdata.features[0].properties.dataType = "conference"
 								mydata.push(myLayer.addData(mapdata.features[0]));
 							});
@@ -910,7 +913,7 @@ $( function(){
 						       
 						        mymap.setView([(maxlat+minlat)/2,(maxlon+minlon)/2], 2);
 						        return L.marker(latlng,{icon: new L.Icon({
-								  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-'+iconColorList[eventGroupList.indexOf(feature.properties.eventGroup)]+'.png'
+								  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-'+iconColorList[eventGroupList.indexOf(feature.properties.groupname)]+'.png'
 								})}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
 						       },
 						       onEachFeature: onEachFeature
@@ -927,7 +930,7 @@ $( function(){
 		}
 		
 		function onEachFeature(feature, layer) {
-	      var popupContent = feature.properties.conference + ",<br> " + feature.place_name + ",<br> " + feature.properties.year;
+	      var popupContent = feature.properties.groupname + ",<br> " + feature.properties.conference + ",<br> " + feature.place_name + ",<br> " + feature.properties.year;
 	
 	      layer.bindPopup(popupContent);
 	      
@@ -938,24 +941,18 @@ $( function(){
 	            this.closePopup();
 	        });
 	      	layer.on('click', function(e){
-	      		if(feature.properties.dataType == "researcher"){
-		      		obj = {
+	      	
+	      		obj = {
 							type:"clickLocation",
 							clientX:e.layerPoint.x,
 							clientY:e.layerPoint.y,
 							eventGroupId:feature.properties.eventGroupId
 						};
+	      		
+	      		if(feature.properties.dataType == "researcher")
 					showmenudiv(obj,'menu');
-				}
-				if(feature.properties.dataType == "conference"){
-						obj = {
-							type:"clickLocation",
-							clientX:e.layerPoint.x,
-							clientY:e.layerPoint.y,
-							eventGroupId:feature.properties.eventGroupId
-						};
+				if(feature.properties.dataType == "conference")
 					showhoverdiv(obj,'divtoshow', "This conference type is already added");
-				}
 				
 	      	});
     	}
