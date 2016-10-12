@@ -16,7 +16,7 @@ if (typeof jQuery === "undefined") {
 	throw new Error("PALM requires jQuery");
 }
 
-var customColors = ["#078973", "#dead98",
+var customColors = ["#66cccc", "#dead98",
                     "#138808","#eeb1b9",
                     "#eaf7c7","#123e4e",
                     "#615c39","#5f68a3",

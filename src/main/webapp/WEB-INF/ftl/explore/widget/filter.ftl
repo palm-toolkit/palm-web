@@ -228,7 +228,11 @@
 					       });
 					
 							<#-- build the Publication Filter list -->
-							$.each( data.publicationFilter.publicationsList, function( index, item){
+							var sortedPublicationList = data.publicationFilter.publicationsList.sort(function(a, b) 
+											{
+											  return sortList(a.title, b.title);
+											})
+							$.each( sortedPublicationList, function( index, item){
 							var publicationDiv = 
 									$( '<div/>' )
 										.addClass('authorExplore')
@@ -293,7 +297,11 @@
 					       });
 					
 							<#-- build the Conference Filter list -->
-							$.each( data.conferenceFilter.eventsList, function( index, item){
+							var sortedConferenceList = data.conferenceFilter.eventsList.sort(function(a, b) 
+											{
+											  return sortList(a.title, b.title);
+											})
+							$.each(sortedConferenceList , function( index, item){
 							var conferenceDiv = 
 									$( '<div/>' )
 										.addClass('authorExplore')
@@ -357,7 +365,11 @@
 					       });
 					
 							<#-- build the Topic Filter list -->
-							$.each( data.topicFilter.topicDetailsList, function( index, item){
+							var sortedTopicList = data.topicFilter.topicDetailsList.sort(function(a, b) 
+											{
+											  return sortList(a.title, b.title);
+											})
+							$.each( sortedTopicList, function( index, item){
 							
 							if(item.title!=null)
 							{
@@ -423,7 +435,11 @@
 					       });
 					
 							<#-- build the Publication Filter list -->
-							$.each( data.circleFilter.circles, function( index, item){
+							var sortedCircleList = data.circleFilter.circles.sort(function(a, b) 
+											{
+											  return sortList(a.name, b.name);
+											})
+							$.each(sortedCircleList , function( index, item){
 							var circleDiv = 
 									$( '<div/>' )
 										.addClass('authorExplore')
@@ -548,6 +564,12 @@
 		  }
 		}
 		
+		function sortList(a,b){
+			a = a.toLowerCase();
+			b = b.toLowerCase();
+			return (a < b) ? -1 : (a > b) ? 1 : 0;
+		}
+		
 		<#--// register the widget-->
 		$.PALM.options.registeredWidget.push({
 			"type":"${wType}",
@@ -584,7 +606,7 @@
 		  	checkboxesTop = document.getElementsByName('topicCB');
 		  	for(var i=0; i<checkboxesTop.length;i++) {
 		    	if(checkboxesTop[i].checked)
-		    		checkedTopValues.push(checkboxesTop[i].value)
+		    		checkedTopValues.push(checkboxesTop[i].id)
 		  	}
 		  	
 		  	checkboxesCir = document.getElementsByName('circleCB');
