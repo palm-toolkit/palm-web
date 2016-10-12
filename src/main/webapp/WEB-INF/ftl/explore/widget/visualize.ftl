@@ -1002,6 +1002,9 @@ $( function(){
 					
 						 inner = $('<div/>')
 									.addClass("cd-timeline-block")
+									.click(function(e){
+										hidemenudiv('menu');
+									})
 						
 						if(prevYear!=item.year)
 						{			 
@@ -1098,6 +1101,7 @@ $( function(){
 												          pubId:item.id
 												};
 												showmenudiv(obj,'menu');
+												e.stopPropagation()
 										})
 										.css("cursor"," pointer")
 										
@@ -1289,16 +1293,16 @@ $( function(){
 							return false;
 						}
 						else
-							visualizeResearcherCluster(data, tabGroupContainer, visType);
+							visualizeCluster(data, tabGroupContainer, visType);
 					}					
 					if(visType == "conferences"){
 						data = data.map.conferences;
-						visualizeResearcherCluster(data, tabGroupContainer, visType);	
+						visualizeCluster(data, tabGroupContainer, visType);	
 					}		
 					
 					if(visType == "publications"){
 						data = data.map.publications;
-						visualizeResearcherCluster(data, tabGroupContainer, visType);	
+						visualizeCluster(data, tabGroupContainer, visType);	
 					}
 			});
 			
@@ -1878,15 +1882,17 @@ $( function(){
 			});
 		}
 		
-		function visualizeResearcherCluster(data, tabContainer , visType){
+		function visualizeCluster(data, tabContainer , visType){
+			console.log("clucster data")
+			console.log(data)
 			var margin = {top: -300, right: -100, bottom: 200, left: -5};
 			
 			var color = d3.scale.ordinal()
     						.range(customColors); 
     
-			var width = 400//tabContainer.width();
-			var height = 500//tabContainer.width();
-		
+			var width = tabContainer.width();
+			var height = tabContainer.width()/1.5;	
+				
 			var zoom = d3.behavior.zoom()
 						.scaleExtent([0, 10])
 						.on("zoom", zoomed);
@@ -1921,11 +1927,21 @@ $( function(){
 						    .on("tick", tick)
 						    .start();
 
-			vis_researcher = d3.select(".clusters").append("svg")
-		    .attr("width", width)
-		    .attr("height", height)
-		      .append("g")
-		    .call(zoom).append("g");
+			 vis_researcher = d3.select(".clusters").append("svg")
+							    .attr("width", width)
+							    .attr("height", height)
+							      .append("g")
+							    .call(zoom).append("g"); 
+
+		<#--	vis_researcher = d3.select(".clusters")
+					  .append("div")
+				      .classed("svg-container", true)
+				      .call(zoom) //container class to make it responsive
+					  .append("svg:svg")
+				   	  .attr("preserveAspectRatio", "xMinYMin meet")
+				      .attr("viewBox", "0 0 " + width + " " + height)
+				      .classed("svg-content-responsive", true)
+				      .classed( "researcher_cluster", true);-->
 		    
 		   var rect2 = vis_researcher.append("rect")
 							    .attr("width", width)
@@ -1933,13 +1949,20 @@ $( function(){
 							    .style("fill", "none")
 							    .style("pointer-events", "all"); 
 			
-			var container = vis_researcher.append("g");
+			<#--var container = vis_researcher.append("g");
 	
 			container.append("g")
 		
-			node = container.selectAll(".node")
+			node = container.selectAll(".node")-->
+			node = vis_researcher.selectAll(".node")
 					      .data(nodes)
-					      .enter().append("g")
+					      .enter()
+					      <#--.append("circle")
+						  .style("fill", function(d) { return color(d.cluster); })
+						  .on("click",function(d){console.log("clicked:"+d.cluster);})-->
+			
+					      
+					     .append("g")
 			      .attr("class", "node")
 			      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 			
@@ -1951,9 +1974,9 @@ $( function(){
 			      .attr("r", function(d) { return d.r; })
 			      .style("fill", function(d) { return color(d.cluster); })
 			    
-			if(visType!="publications")
-			{
-			  node.append("text")
+			//if(visType!="publications")
+			//{
+			  node.append("svg:text")
 			      .attr("dy", ".3em")
 			      .style("text-anchor", "middle")
 			      .text(function(d) { 
@@ -1970,7 +1993,7 @@ $( function(){
 				    else
 				    	return Math.min(2 * d.r, (2 * d.r - 1) / 120 * 10) + "px"; 
 			      })
-			}
+			//}
 			
 			node.transition()
 			    .duration(750)
@@ -1979,7 +2002,52 @@ $( function(){
 			      var i = d3.interpolate(0, d.radius);
 			      return function(t) { return d.radius = i(t); };
 			    });
+			 
+			 groups = d3.nest().key(function(d) { return d.cluster }).entries(nodes);
+
+			console.log(groups.length);
+			groupPath = function(d) {
+			   var fakePoints = [];
+			    if (d.values.length == 2)
+			    {
+			        //[dx, dy] is the direction vector of the line
+			        var dx = d.values[1].x - d.values[0].x;
+			        var dy = d.values[1].y - d.values[0].y;
+			
+			        //scale it to something very small
+			        dx *= 0.00001; dy *= 0.00001;
+			
+			        //orthogonal directions to a 2D vector [dx, dy] are [dy, -dx] and [-dy, dx]
+			        //take the midpoint [mx, my] of the line and translate it in both directions
+			        var mx = (d.values[0].x + d.values[1].x) * 0.5;
+			        var my = (d.values[0].y + d.values[1].y) * 0.5;
+			        fakePoints = [ [mx + dy, my - dx],
+			                      [mx - dy, my + dx]];
+			        //the two additional points will be sufficient for the convex hull algorithm
+			    }
+			       
+			   return "M" + d3.geom.hull(d.values.map(function(d) { return [d.x, d.y]; })
+			       .concat(fakePoints))  //do not forget to append the fakePoints to the group data
+			       .join("L") + "Z";
+			};
 			    
+			groupFill = function(d,i) { return color(d.values[0].cluster); };
+			    
+			 vis_researcher.selectAll("path")
+			    .data(groups)
+			      .attr("d", groupPath)
+			    .enter().insert("path", "g")
+			      .style("fill", groupFill)
+			      .style("stroke", groupFill)
+			      .style("stroke-width", 100)
+			      .style("stroke-linejoin", "round")
+			      .style("opacity", .2)
+			      .attr("d", groupPath)
+			      .on("click", function(d){
+			        console.log(d.values[0].cluster);
+			      })
+		.append("title")
+			      .text(function(d) { return d.values[0].cluster; });    
 		}
 		
 		function getClusters(data){
@@ -1999,6 +2067,8 @@ $( function(){
 		      .each(collide(.5))
 		      .attr("cx", function(d) { return d.x; })
 		      .attr("cy", function(d) { return d.y; });
+		      
+		     
 		      
 			}
 			
@@ -2025,9 +2095,9 @@ $( function(){
 			function collide(alpha) {
 			  var quadtree = d3.geom.quadtree(nodes);
 			 
-			 	var padding = 1.5; <#-- separation between same-color nodes -->
-	    		var clusterPadding = 60; <#-- separation between different-color nodes -->
-	    		var maxRadius = 10;
+			 	var padding = 5.5; <#-- separation between same-color nodes -->
+	    		var clusterPadding = 30; <#-- separation between different-color nodes -->
+	    		var maxRadius = 100;
 			 
 			  return function(d) {
 			    var r = d.radius + maxRadius + Math.max(padding, clusterPadding),
