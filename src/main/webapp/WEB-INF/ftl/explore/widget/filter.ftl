@@ -194,8 +194,8 @@
 					
 						<#-- PUBLICATIONS FILTER -->
 						if(data.publicationFilter!=null){
-						
-							var pubSectionHeader = $( '<span/>' ).html("PUBLICATIONS:")
+						console.log(data.publicationFilter.publicationsList.length + "len")
+							var pubSectionHeader = $( '<span/>' ).html("PUBLICATIONS (" + data.publicationFilter.publicationsList.length + ") :")
 											.append('&nbsp;')
 											.append(
 												$('<span/>')
@@ -249,7 +249,7 @@
 										.append(
 											$( '<span/>' )
 												.addClass( 'name' )
-												.html( " " +  item.title )
+												.html( " " +  item.title.toUpperCase() )
 										)
 											
 										pubSection
@@ -264,7 +264,7 @@
 						<#-- CONFERENCE FILTER -->
 						if(data.conferenceFilter!=null){
 						
-							var confSectionHeader = $( '<span/>' ).html("CONFERENCES:")
+							var confSectionHeader = $( '<span/>' ).html("CONFERENCES (" + data.conferenceFilter.eventsList.length + ") :")
 											.append('&nbsp;')
 											.append(
 												$('<span/>')
@@ -318,7 +318,7 @@
 										.append(
 											$( '<span/>' )
 												.addClass( 'name' )
-												.html( " " +  item.title )
+												.html( " " +  item.title.toUpperCase() )
 										)
 											
 										confSection
@@ -332,7 +332,7 @@
 						<#-- TOPIC FILTER -->
 						if(data.topicFilter!=null){
 						
-						 	var topSectionHeader = $( '<span/>' ).html("TOPICS/INTERESTS:")
+						 	var topSectionHeader = $( '<span/>' ).html("TOPICS/INTERESTS (" + data.topicFilter.topicDetailsList.length + ") :")
 											.append('&nbsp;')
 											.append(
 												$('<span/>')
@@ -389,7 +389,7 @@
 											.append(
 												$( '<span/>' )
 													.addClass( 'name' )
-													.html( " " +  item.title )
+													.html( " " +  item.title.toUpperCase() )
 											)
 												
 											topSection
@@ -402,7 +402,7 @@
 					<#-- CIRCLES FILTER -->
 						if(data.circleFilter!=null){
 						
-							var cirSectionHeader = $( '<span/>' ).html("CIRCLES:")
+							var cirSectionHeader = $( '<span/>' ).html("CIRCLES (" + data.circleFilter.circles.length + ") :")
 											.append('&nbsp;')
 											.append(
 												$('<span/>')
@@ -456,7 +456,7 @@
 										.append(
 											$( '<span/>' )
 												.addClass( 'name' )
-												.html( " " +  item.name )
+												.html( " " +  item.name.toUpperCase() )
 										)
 											
 										cirSection

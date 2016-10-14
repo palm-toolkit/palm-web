@@ -99,7 +99,7 @@ g.arc path {
 		    var left;
 			var top;
 			
-			if(e.type == "similarBar"){
+			if(e.type == "similarBar" || e.type == "cluster" || e.type == "clusterItem"){
 			    left  = (e.clientX - 10) + "px";
 			    top  = (e.clientY  + 20) + "px";
 		    }
@@ -146,7 +146,7 @@ g.arc path {
 			var left;
 			var top;
 			
-			if(e.type == "similarBar" || e.type=="clickPublication"){
+			if(e.type == "similarBar" || e.type=="clickPublication" || e.type == "cluster" || e.type == "clusterItem"){
 			    left  = (e.clientX - 330) + "px";
 			    top  = (e.clientY - 140) + "px";
 		    }
@@ -170,7 +170,7 @@ g.arc path {
 			    left  = (e.clientX - 330) + "px";
 			    top  = (e.clientY - 140) + "px";
 		    }
-		    
+		    console.log("divid: " + divid)
 		    var div = document.getElementById(divid);
 		    div.style.left = left;
 		    div.style.top = top;
@@ -196,7 +196,7 @@ g.arc path {
 				}	
 			}
 			
-			if(e.type == "clickEdge" || e.type == "similarBar" || e.type == "clickLocation" || e.type == "clickPublication" || e.type == "comparisonListItem" || e.type == "listItem"){
+			if(e.type == "clickEdge" || e.type == "similarBar" || e.type == "clickLocation" || e.type == "clickPublication" || e.type == "comparisonListItem" || e.type == "listItem" || e.type == "cluster" || e.type == "clusterItem"){
 				$(".menu").show();
 				<#-- do not show menu if the object is there in the setup already -->
 					$("#coauthors").hide();
@@ -272,6 +272,20 @@ $( function(){
 			itemAdd(targetVal,$(this).parent().parent()[0].value.objectType);
 		}
 		
+		if($(this).parent().parent()[0].value.type=="cluster"){
+
+			for(var i=0;i<$(this).parent().parent()[0].value.clusterItems.length; i++)
+			{
+				targetVal.push($(this).parent().parent()[0].value.clusterItems[i]);
+			}
+			itemAdd(targetVal,$(this).parent().parent()[0].value.visType.substring(0,visType.length-1));
+		}
+		
+		if($(this).parent().parent()[0].value.type=="clusterItem"){
+
+			targetVal.push($(this).parent().parent()[0].value.clusterItem);
+			itemAdd(targetVal,$(this).parent().parent()[0].value.visType.substring(0,visType.length-1));
+		}
 		
 		 hidemenudiv('menu');
 		 
@@ -324,6 +338,21 @@ $( function(){
 		{
 			targetVal.push($(this).parent().parent()[0].value.itemId);
 			itemReplace(targetVal,$(this).parent().parent()[0].value.objectType);
+		}
+		
+		if($(this).parent().parent()[0].value.type=="cluster"){
+
+			for(var i=0;i<$(this).parent().parent()[0].value.clusterItems.length; i++)
+			{
+				targetVal.push($(this).parent().parent()[0].value.clusterItems[i]);
+			}
+			itemReplace(targetVal,$(this).parent().parent()[0].value.visType.substring(0,visType.length-1));
+		}
+		
+		if($(this).parent().parent()[0].value.type=="clusterItem"){
+
+			targetVal.push($(this).parent().parent()[0].value.clusterItem);
+			itemReplace(targetVal,$(this).parent().parent()[0].value.visType.substring(0,visType.length-1));
 		}
 		
 		hidemenudiv('menu');
@@ -1269,7 +1298,8 @@ $( function(){
 
 					<#-- remove  pop up progress log -->
 					$.PALM.popUpMessage.remove( uniqueVisWidget );
-					
+					var mainWidget = $( widgetElem ).find( "#boxbody-${wUniqueName}" );
+					console.log("main widget height " + mainWidget.height() + " " + mainWidget.width())
 					var tabContent1 = $( widgetElem ).find( "#tab-content" );					
 					
 					var tabGroupContainer = $( widgetElem ).find( "#tab_Group" );
@@ -1293,16 +1323,16 @@ $( function(){
 							return false;
 						}
 						else
-							visualizeCluster(data, tabGroupContainer, visType);
+							visualizeCluster(data, mainWidget, visType);
 					}					
 					if(visType == "conferences"){
 						data = data.map.conferences;
-						visualizeCluster(data, tabGroupContainer, visType);	
+						visualizeCluster(data, mainWidget, visType);	
 					}		
 					
 					if(visType == "publications"){
 						data = data.map.publications;
-						visualizeCluster(data, tabGroupContainer, visType);	
+						visualizeCluster(data, mainWidget, visType);	
 					}
 			});
 			
@@ -1800,23 +1830,6 @@ $( function(){
 								.attr({'width':700,'height':700})
 				
 				canvas.on("click", function(e) { hidemenudiv('menu'); })		
-		<#--  temp here !! 		canvas.on('click', function(e){
-									hidemenudiv(e,'menu');
-									d3.event.stopPropagation();
-								}) -->
-				
-				<#--var	yAxis = d3.svg.axis();
-					yAxis
-						.orient('left')
-						.scale(yscale)
-						.tickSize(2)
-						.tickFormat(function(d,i){ return data.map.authorNames[i]; })
-						.tickValues(d3.range(21));
-		
-				var y_xis = canvas.append('g')
-								  .attr("transform", "translate(150,25)")
-								  .attr('id','yaxis')
-								  .call(yAxis);-->				
 			
 				var chart = canvas.append('g')
 								//.attr("transform", "translate(150,0)")
@@ -1878,7 +1891,30 @@ $( function(){
 							.enter()
 							.append('text')
 							.attr({'x':function(d) {return 0; },'y':function(d,i){ return yscale(i)+15; }})
-							.text(function(d){ return d; }).style({'fill':'black','font-size':'11px'});
+							.text(function(d){ return d; }).style({'fill':'black','font-size':'11px'})
+							.on("mouseover", function(d,i){
+									obj = {
+												  type:"similarBar",
+										          clientX:d3.event.clientX,
+										          clientY:d3.event.clientY,
+										          authorId:data.map.authorIds[i]
+									};
+									
+									var intarr = [] 
+									intarr = Object.keys(data.map.interests[i])
+									var count = 5;
+									if(intarr.length<5)
+										count = intarr.length
+										
+									var arr = [];	
+									for(var i=0;i<count;i++){
+										arr.push(intarr[i])
+									}
+									showhoverdiv(obj,'divtoshow', arr);
+								})
+								.on("mouseout", function(e,i){
+									hidehoverdiv('divtoshow');
+								})
 			});
 		}
 		
@@ -1889,10 +1925,11 @@ $( function(){
 			
 			var color = d3.scale.ordinal()
     						.range(customColors); 
-    
+    		console.log("tabContainer width and height " + tabContainer.width() + " . " )
 			var width = tabContainer.width();
-			var height = tabContainer.width()/1.5;	
+			var height = tabContainer.width();  //	screen.height * 0.68; 
 				
+			console.log("step 1")	
 			var zoom = d3.behavior.zoom()
 						.scaleExtent([0, 10])
 						.on("zoom", zoomed);
@@ -1901,7 +1938,7 @@ $( function(){
 			
 			nodes = data.map(function(d) {
 				  if(visType == "researchers" || visType=="publications"){
-			      	new_data = {cluster: d.cluster, radius: 20, name: d.name, clusterTerms : d.clusterTerms};
+			      	new_data = {cluster: d.cluster, radius: 20, id: d.id, name: d.name, clusterTerms : d.clusterTerms};
 				  }
 				  if(visType == "conferences"){
 			      	new_data = {cluster: d.cluster, radius: 20, name: d.name, abr: d.abr, clusterTerms : d.clusterTerms};
@@ -1909,7 +1946,7 @@ $( function(){
 				  if (!clusters[d.cluster]) {clusters[d.cluster] = new_data;}
 				  return new_data;
 				});
-			
+			console.log("step 2")
 			d3.layout.pack()
 			    .sort(null)
 			    .size([width, height])
@@ -1931,17 +1968,11 @@ $( function(){
 							    .attr("width", width)
 							    .attr("height", height)
 							      .append("g")
-							    .call(zoom).append("g"); 
-
-		<#--	vis_researcher = d3.select(".clusters")
-					  .append("div")
-				      .classed("svg-container", true)
-				      .call(zoom) //container class to make it responsive
-					  .append("svg:svg")
-				   	  .attr("preserveAspectRatio", "xMinYMin meet")
-				      .attr("viewBox", "0 0 " + width + " " + height)
-				      .classed("svg-content-responsive", true)
-				      .classed( "researcher_cluster", true);-->
+							    .call(zoom).append("g")
+							    .on("click",function(){
+									hidemenudiv('menu');			
+							    }); 
+			console.log("step 3")
 		    
 		   var rect2 = vis_researcher.append("rect")
 							    .attr("width", width)
@@ -1949,31 +1980,45 @@ $( function(){
 							    .style("fill", "none")
 							    .style("pointer-events", "all"); 
 			
-			<#--var container = vis_researcher.append("g");
-	
-			container.append("g")
-		
-			node = container.selectAll(".node")-->
 			node = vis_researcher.selectAll(".node")
 					      .data(nodes)
 					      .enter()
-					      <#--.append("circle")
-						  .style("fill", function(d) { return color(d.cluster); })
-						  .on("click",function(d){console.log("clicked:"+d.cluster);})-->
-			
-					      
 					     .append("g")
 			      .attr("class", "node")
-			      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+			      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+					.on("click", function(d){
+			         console.log(d);
+			         obj = {
+							type:"clusterItem",
+							clientX:d3.event.clientX,
+							clientY:d3.event.clientY,
+							clusterItem: d.id,
+							visType : visType 
+						};
+			         showmenudiv(obj,'menu');
+			         d3.event.stopPropagation();
+			      })
+			      .on("mouseover",function(d) { 
+			      obj = {
+							type:"clusterItem",
+							clientX:d3.event.clientX,
+							clientY:d3.event.clientY,
+							clusterItem: d.id,
+							visType : visType 
+						};
+			      		showhoverdiv(obj, 'divtoshow', d.name + "<br />" + d.clusterTerms); 
+			      }) 
+			      .on("mouseout", function(e,i){
+									hidehoverdiv('divtoshow');
+								})
 			
-			
-			  node.append("title")
-			      .text(function(d) { return d.name; });
+			 <#-- node.append("title")
+			      .text(function(d) { return d.name + "\n" + d.clusterTerms; }); -->
 			
 			  node.append("circle")
 			      .attr("r", function(d) { return d.r; })
 			      .style("fill", function(d) { return color(d.cluster); })
-			    
+			console.log("step 4")    
 			//if(visType!="publications")
 			//{
 			  node.append("svg:text")
@@ -2005,7 +2050,6 @@ $( function(){
 			 
 			 groups = d3.nest().key(function(d) { return d.cluster }).entries(nodes);
 
-			console.log(groups.length);
 			groupPath = function(d) {
 			   var fakePoints = [];
 			    if (d.values.length == 2)
@@ -2041,13 +2085,46 @@ $( function(){
 			      .style("stroke", groupFill)
 			      .style("stroke-width", 100)
 			      .style("stroke-linejoin", "round")
-			      .style("opacity", .2)
+			      .style("opacity", .3)
 			      .attr("d", groupPath)
 			      .on("click", function(d){
 			        console.log(d.values[0].cluster);
+			         console.log(d);
+			         var list = [];
+			         for(var i=0; i< d.values.length; i++){
+			         	list.push(d.values[i].id)
+			         }
+			         obj = {
+							type:"cluster",
+							clientX:d3.event.clientX,
+							clientY:d3.event.clientY,
+							clusterItems: list,
+							visType : visType 
+						};
+			         showmenudiv(obj,'menu');
+			         d3.event.stopPropagation();
 			      })
-		.append("title")
-			      .text(function(d) { return d.values[0].cluster; });    
+			     .on("mouseover",function(d) {
+			     var list = [];
+			         for(var i=0; i< d.values.length; i++){
+			         	list.push(d.values[i].id)
+			         }
+			     	obj = {
+							type:"cluster",
+							clientX:d3.event.clientX,
+							clientY:d3.event.clientY,
+							clusterItems: list,
+							visType : visType 
+						}; 
+						console.log(d)
+			      showhoverdiv(obj, 'divtoshow', d.values[0].clusterTerms); 
+			     }) 
+			     .on("mouseout", function(e,i){
+									hidehoverdiv('divtoshow');
+								})
+				<#--.append("title")
+			      .text(function(d) { 
+			      return d.values[0].clusterTerms; });    -->
 		}
 		
 		function getClusters(data){
@@ -2067,9 +2144,6 @@ $( function(){
 		      .each(collide(.5))
 		      .attr("cx", function(d) { return d.x; })
 		      .attr("cy", function(d) { return d.y; });
-		      
-		     
-		      
 			}
 			
 			// Move d to be adjacent to the cluster node.
@@ -2096,7 +2170,7 @@ $( function(){
 			  var quadtree = d3.geom.quadtree(nodes);
 			 
 			 	var padding = 5.5; <#-- separation between same-color nodes -->
-	    		var clusterPadding = 30; <#-- separation between different-color nodes -->
+	    		var clusterPadding = 10; <#-- separation between different-color nodes -->
 	    		var maxRadius = 100;
 			 
 			  return function(d) {
