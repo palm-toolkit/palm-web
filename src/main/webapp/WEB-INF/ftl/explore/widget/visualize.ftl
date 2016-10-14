@@ -1332,6 +1332,7 @@ $( function(){
 					
 					if(visType == "publications"){
 						data = data.map.publications;
+						console.log(data)
 						visualizeCluster(data, mainWidget, visType);	
 					}
 			});
@@ -1868,11 +1869,11 @@ $( function(){
 									if(intarr.length<5)
 										count = intarr.length
 										
-									var arr = [];	
-									for(var i=0;i<count;i++){
-										arr.push(intarr[i])
-									}
-									showhoverdiv(obj,'divtoshow', arr);
+								var str = "Main topics/interests:";
+								for(var i=0; i<count; i++)
+									str = str +  "<br /> - " + intarr[i] 
+										
+									showhoverdiv(obj,'divtoshow', str);
 								})
 								.on("mouseout", function(e,i){
 									hidehoverdiv('divtoshow');
@@ -1906,11 +1907,11 @@ $( function(){
 									if(intarr.length<5)
 										count = intarr.length
 										
-									var arr = [];	
-									for(var i=0;i<count;i++){
-										arr.push(intarr[i])
-									}
-									showhoverdiv(obj,'divtoshow', arr);
+								var str = "Main topics/interests:";
+								for(var i=0; i<count; i++)
+									str = str +  "<br /> - " + intarr[i] 
+								
+									showhoverdiv(obj,'divtoshow', str);
 								})
 								.on("mouseout", function(e,i){
 									hidehoverdiv('divtoshow');
@@ -1941,7 +1942,7 @@ $( function(){
 			      	new_data = {cluster: d.cluster, radius: 20, id: d.id, name: d.name, clusterTerms : d.clusterTerms};
 				  }
 				  if(visType == "conferences"){
-			      	new_data = {cluster: d.cluster, radius: 20, name: d.name, abr: d.abr, clusterTerms : d.clusterTerms};
+			      	new_data = {cluster: d.cluster, radius: 20, id: d.id, name: d.name, abr: d.abr, clusterTerms : d.clusterTerms};
 				  }
 				  if (!clusters[d.cluster]) {clusters[d.cluster] = new_data;}
 				  return new_data;
@@ -1999,14 +2000,19 @@ $( function(){
 			         d3.event.stopPropagation();
 			      })
 			      .on("mouseover",function(d) { 
-			      obj = {
+			      		obj = {
 							type:"clusterItem",
 							clientX:d3.event.clientX,
 							clientY:d3.event.clientY,
 							clusterItem: d.id,
 							visType : visType 
 						};
-			      		showhoverdiv(obj, 'divtoshow', d.name + "<br />" + d.clusterTerms); 
+						
+						var str = "";
+						for(var i=0; i<d.clusterTerms.length; i++)
+							str = str +  "<br /> - " + d.clusterTerms[i] 
+						
+			      		showhoverdiv(obj, 'divtoshow', d.name + "<br />" + str); 
 			      }) 
 			      .on("mouseout", function(e,i){
 									hidehoverdiv('divtoshow');
@@ -2117,7 +2123,12 @@ $( function(){
 							visType : visType 
 						}; 
 						console.log(d)
-			      showhoverdiv(obj, 'divtoshow', d.values[0].clusterTerms); 
+						
+				   var str = "Cluster topics/interests:";
+						for(var i=0; i<d.values[0].clusterTerms.length; i++)
+							str = str +  "<br /> - " + d.values[0].clusterTerms[i] 
+									
+			      showhoverdiv(obj, 'divtoshow', str); 
 			     }) 
 			     .on("mouseout", function(e,i){
 									hidehoverdiv('divtoshow');
