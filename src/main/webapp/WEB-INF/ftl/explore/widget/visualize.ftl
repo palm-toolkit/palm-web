@@ -35,369 +35,67 @@
       z-index: 1;
       font-family: sans-serif;
     }
-svg .tooltip { opacity: 1; }   
+svg .tooltip { 
+	opacity: 1; 
+}   
 #chartTab{
-	  height: 68vh;
-	  font-size: 2px;
+	height: 68vh;
+	font-size: 2px;
 }   
 #svgContainer{
-font-size: 10px;
+	font-size: 10px;
 }
 g.arc path {
 }
 .venntooltip {
-  position: absolute;
-  text-align: center;
-  width: 70px;
-  height: 24px;
-  background: #333;
-  color: #ddd;
-  padding: 2px;
-  border: 0px;
-  border-radius: 8px;
-  opacity: 0;
+	position: absolute;
+  	text-align: center;
+  	width: 70px;
+  	height: 24px;
+  	background: #333;
+  	color: #ddd;
+  	padding: 2px;
+  	border: 0px;
+  	border-radius: 8px;
+  	opacity: 0;
 }
-#divtoshow    
-{
-  background-color:Black;
-  color:White;
-  font-weight:normal;
-  padding: 2px;
-  border: 0px;
-  border-radius: 0.5em;
-  z-index: 100;
+#divtoshow	{
+	background-color:Black;
+  	color:White;
+  	font-weight:normal;
+  	padding: 2px;
+  	border: 0px;
+  	border-radius: 0.5em;
+  	z-index: 100;
 }
-.menu{
-			width: 100px;
-			position:absolute;
-			display: none;
-			box-shadow: 0 0 10px #713C3C;
-			z-index: 100;
-		}
-.menu ul{
-			list-style: none;
-			padding: 0;
-			margin:0;
-		}
-.menu ul li{
-			padding: 6%;
-			background: #000;
-			color: #fff;
-		}
-.menu ul li:hover{
-			background-color: #F7BA4B;
-	    	color: #444343;
-		}
+.menu 	{
+	width: 100px;
+	position:absolute;
+	display: none;
+	box-shadow: 0 0 10px #713C3C;
+	z-index: 100;
+}
+.menu ul	{
+	list-style: none;
+	padding: 0;
+	margin:0;
+}
+.menu ul li	{
+	padding: 6%;
+	background: #000;
+	color: #fff;
+}
+.menu ul li:hover	{
+	background-color: #F7BA4B;
+   	color: #444343;
+}
 </style>
 
 <script>
 
-		<#-- javascript -->
-		function showhoverdiv(e,divid, text){
-			hidemenudiv('menu')
-			document.getElementById(divid).innerHTML = text;
-		    var left;
-			var top;
-			
-			if(e.type == "similarBar" || e.type == "cluster" || e.type == "clusterItem"){
-			    left  = (e.clientX - 10) + "px";
-			    top  = (e.clientY  + 20) + "px";
-		    }
-		    
-		    if(e.type == "clickNode" || e.type == "overEdge"){
-			    left  = (e.data.captor.clientX) + "px";
-			    top  = (e.data.captor.clientY) + "px";
-		    }
-		    
-		     if(e.type == "clickLocation"){
-			    left  = (e.clientX + 350) + "px";
-			    top  = (e.clientY + 250) + "px";
-		    }
-		    
-		    if(e.type == "comparisonListItem"){
-			    left  = (e.clientX) + "px";
-			    top  = (e.clientY) + "px";
-		    }
-		    
-		    if(e.type == "listItem"){
-			    left  = (e.clientX) + "px";
-			    top  = (e.clientY) + "px";
-		    }
-		    
-		    var div = document.getElementById(divid);
 		
-		    div.style.left = left;
-		    div.style.top = top;
-			div.style.display = "inline"
-		    return false;
-		}
-		function hidehoverdiv(divid){
-		    var div = document.getElementById(divid);
-			div.style.display = "none"
-		    return false;
-		}
-		function showmenudiv(e,divid){
-			hidehoverdiv('divtoshow')
-			console.log("names in here:  " + names)
-			console.log("vis TYPE: " + visType.substring(0,visType.length-1));
-			console.log("object TYPE: " + objectType);
-			console.log(e)
-			
-			var left;
-			var top;
-			
-			if(e.type == "similarBar" || e.type=="clickPublication" || e.type == "cluster" || e.type == "clusterItem"){
-			    left  = (e.clientX - 330) + "px";
-			    top  = (e.clientY - 140) + "px";
-		    }
-		    
-		    if(e.type == "clickLocation"){
-			    left  = (e.clientX) + "px";
-			    top  = (e.clientY) + "px";
-		    }
-		    
-		    if(e.type == "comparisonListItem"){
-			    left  = (e.clientX - 330) + "px";
-			    top  = (e.clientY - 140) + "px";
-		    }
-
-		    if(e.type == "clickNode" || e.type == "clickEdge"){
-			    left  = (e.data.captor.clientX - 350) + "px";
-			    top  = (e.data.captor.clientY  - 150) + "px";
-		    }
-		    
-		    if(e.type == "listItem"){
-			    left  = (e.clientX - 330) + "px";
-			    top  = (e.clientY - 140) + "px";
-		    }
-		    console.log("divid: " + divid)
-		    var div = document.getElementById(divid);
-		    div.style.left = left;
-		    div.style.top = top;
-			div.style.display = "block";
-			
-			if(e.type == "clickNode"){
-				$("#coauthors").show();
-				<#-- do not show menu if the object is there in the setup already -->
-				if(names.indexOf(e.data.node.label) != -1){
-					$(".menu").hide();
-				}
-				else
-				{
-					$(".menu").show();
-					
-					<#-- append is invalid if the types are different -->
-					if(visType.substring(0,visType.length-1)!=objectType)
-					{
-						$("#append").hide();
-					}
-					else
-						$("#append").show();
-				}	
-			}
-			
-			if(e.type == "clickEdge" || e.type == "similarBar" || e.type == "clickLocation" || e.type == "clickPublication" || e.type == "comparisonListItem" || e.type == "listItem" || e.type == "cluster" || e.type == "clusterItem"){
-				$(".menu").show();
-				<#-- do not show menu if the object is there in the setup already -->
-					$("#coauthors").hide();
-			}
-			
-			<#-- append is invalid if the types are different -->
-					if(visType.substring(0,visType.length-1)!=objectType)
-					{
-						$("#append").hide();
-					}
-					else
-						$("#append").show();
-				
-			<#-- set the value of clicked node in the menu -->
-			div.value = e;
-		    return false;
-		}
-		function hidemenudiv(divid){
-			var div = document.getElementById(divid);
-			div.style.display = "none"
-		    return false;
-		}
-
 <#-- jquery -->
 $( function(){
-
-	$('#append').click(function(e){
-		var targetVal = [];
-		
-		if($(this).parent().parent()[0].value.type=="clickNode"){
-			targetVal.push($(this).parent().parent()[0].value.data.node.attributes.authorid);
-			itemAdd(targetVal,"researcher");
-		}	
-		
-		if($(this).parent().parent()[0].value.type=="clickEdge")
-		{
-			if($(this).parent().parent()[0].value.data.edge.attributes.sourceauthorisadded)
-			targetVal.push($(this).parent().parent()[0].value.data.edge.attributes.sourceauthorid);
-			
-			if($(this).parent().parent()[0].value.data.edge.attributes.targetauthorisadded)
-			targetVal.push($(this).parent().parent()[0].value.data.edge.attributes.targetauthorid);
-			
-			if(targetVal.length > 0)
-				itemAdd(targetVal,"researcher");
-		}
-		
-		if($(this).parent().parent()[0].value.type=="clickPublication"){
-			targetVal.push($(this).parent().parent()[0].value.pubId);
-			itemAdd(targetVal,"publication");
-		}		
-		
-		if($(this).parent().parent()[0].value.type=="similarBar")
-		{
-			targetVal.push($(this).parent().parent()[0].value.authorId);
-			itemAdd(targetVal,"researcher");
-		}
-
-		if($(this).parent().parent()[0].value.type=="clickLocation")
-		{
-			targetVal.push($(this).parent().parent()[0].value.eventGroupId);
-			itemAdd(targetVal,"conference");
-		}	
-		
-		if($(this).parent().parent()[0].value.type=="comparisonListItem")
-		{
-			targetVal.push($(this).parent().parent()[0].value.itemId);
-			itemAdd(targetVal,$(this).parent().parent()[0].value.objectType);
-		}
-		
-		if($(this).parent().parent()[0].value.type=="listItem")
-		{
-			targetVal.push($(this).parent().parent()[0].value.itemId);
-			itemAdd(targetVal,$(this).parent().parent()[0].value.objectType);
-		}
-		
-		if($(this).parent().parent()[0].value.type=="cluster"){
-
-			for(var i=0;i<$(this).parent().parent()[0].value.clusterItems.length; i++)
-			{
-				targetVal.push($(this).parent().parent()[0].value.clusterItems[i]);
-			}
-			itemAdd(targetVal,$(this).parent().parent()[0].value.visType.substring(0,visType.length-1));
-		}
-		
-		if($(this).parent().parent()[0].value.type=="clusterItem"){
-
-			targetVal.push($(this).parent().parent()[0].value.clusterItem);
-			itemAdd(targetVal,$(this).parent().parent()[0].value.visType.substring(0,visType.length-1));
-		}
-		
-		 hidemenudiv('menu');
-		 
-		 return false;
-	});
-	
-	$('#replace').click(function(e){
-		var targetVal = [];
-		if($(this).parent().parent()[0].value.type=="clickNode"){
-			targetVal.push($(this).parent().parent()[0].value.data.node.attributes.authorid);
-			itemReplace(targetVal,"researcher");
-		}	
-		
-		if($(this).parent().parent()[0].value.type=="clickEdge")
-		{
-			if($(this).parent().parent()[0].value.data.edge.attributes.sourceauthorisadded)
-			targetVal.push($(this).parent().parent()[0].value.data.edge.attributes.sourceauthorid);
-			
-			if($(this).parent().parent()[0].value.data.edge.attributes.targetauthorisadded)
-			targetVal.push($(this).parent().parent()[0].value.data.edge.attributes.targetauthorid);
-			
-			if(targetVal.length > 0)
-				itemReplace(targetVal,"researcher");
-		}
-		
-		if($(this).parent().parent()[0].value.type=="clickPublication"){
-			targetVal.push($(this).parent().parent()[0].value.pubId);
-			itemReplace(targetVal,"publication");
-		}		
-		
-		if($(this).parent().parent()[0].value.type=="similarBar")
-		{
-			targetVal.push($(this).parent().parent()[0].value.authorId);
-			itemReplace(targetVal,"researcher");
-		}
-		
-		if($(this).parent().parent()[0].value.type=="clickLocation")
-		{
-			targetVal.push($(this).parent().parent()[0].value.eventGroupId);
-			itemReplace(targetVal,"conference");
-		}
-		
-		if($(this).parent().parent()[0].value.type=="comparisonListItem")
-		{
-			targetVal.push($(this).parent().parent()[0].value.itemId);
-			itemReplace(targetVal,$(this).parent().parent()[0].value.objectType);
-		}
-		
-		if($(this).parent().parent()[0].value.type=="listItem")
-		{
-			targetVal.push($(this).parent().parent()[0].value.itemId);
-			itemReplace(targetVal,$(this).parent().parent()[0].value.objectType);
-		}
-		
-		if($(this).parent().parent()[0].value.type=="cluster"){
-
-			for(var i=0;i<$(this).parent().parent()[0].value.clusterItems.length; i++)
-			{
-				targetVal.push($(this).parent().parent()[0].value.clusterItems[i]);
-			}
-			itemReplace(targetVal,$(this).parent().parent()[0].value.visType.substring(0,visType.length-1));
-		}
-		
-		if($(this).parent().parent()[0].value.type=="clusterItem"){
-
-			targetVal.push($(this).parent().parent()[0].value.clusterItem);
-			itemReplace(targetVal,$(this).parent().parent()[0].value.visType.substring(0,visType.length-1));
-		}
-		
-		hidemenudiv('menu');
-		console.log("targetVAL in replace: " + targetVal)
-		return false;
-	});
-	
-	$('#coauthors').click(function(e){
-	var targetVal = $(this).parent().parent()[0].value.data.node.attributes.authorid;
-	 hidemenudiv('menu');
-	 itemCoAuthors(targetVal,"researcher");
-	 return false;
-	});
-	
-	function itemAdd(id, type){
-		var queryString = "?id="+id+"&type="+type;
-		
-		<#-- update setup widget -->
-		var stageWidget = $.PALM.boxWidget.getByUniqueName( 'explore_setup' ); 
-		stageWidget.options.queryString = queryString;
-		$.PALM.boxWidget.refresh( stageWidget.element , stageWidget.options );
-	}
-	
-	function itemReplace(id, type){
-		var replace = true;
-		var queryString = "?id="+id+"&type="+type+"&replace="+replace;
-		
-		<#-- update setup widget -->
-		var stageWidget = $.PALM.boxWidget.getByUniqueName( 'explore_setup' ); 
-		stageWidget.options.queryString = queryString;
-		$.PALM.boxWidget.refresh( stageWidget.element , stageWidget.options );
-	}
-	
-	function itemCoAuthors(id, type){
-		dataTransfer = "true";
-		authoridForCoAuthors = id;
-		var updateString = "?type="+type+"&dataList="+names+"&idList="+ids+"&visType="+visType+"&dataTransfer="+dataTransfer+"&authoridForCoAuthors="+authoridForCoAuthors;
-					
-			<#-- update visualize widget -->
-			var visualizeWidget = $.PALM.boxWidget.getByUniqueName( 'explore_visualize' ); 
-			visualizeWidget.options.queryString = updateString;
-			$.PALM.boxWidget.refresh( visualizeWidget.element , visualizeWidget.options );
-			
-	}	
-
 		var visType = "";
 		var defaultVisType = "";
 		var objectType = "";
@@ -442,27 +140,7 @@ $( function(){
 					visType = data.visType;
 				}
 				
-				<#-->if(data.type==objectType && visType!=data.visType && data.visType==""){
-					visType = visType;
-				}	-->
-			<#--	if(visType == ""){
-					if(objectType == "researcher"){
-						visType = "researchers"
-					}
-					if(objectType == "publication"){
-						visType = "conferences"
-					}
-					if(objectType == "conference"){
-						visType = "publications"
-					}
-					if(objectType == "topic"){
-						visType = "publications"
-					}
-					if(objectType == "circle"){
-						visType = ""
-					}
-				}	-->	
-				
+			<#-- if more than one item in consideration -->	
 			if(ids.length>1)
 			{
 				if(visType=="researchers"){
@@ -482,12 +160,13 @@ $( function(){
 				if(visType=="publications"){
 					if(objectType!="conference")
 						visList = ["Timeline", "Group", "List", "Comparison"];
+					if(objectType=="publication")
+					{
+						visList = ["Timeline", "Group", "Similar", "List", "Comparison"];
+					}	
 				}
 				if(visType=="topics"){
 					visList = ["Bubbles", "Evolution", "List", "Comparison"];
-				}
-				if(visType=="circles"){
-					visList = ["TBD"];
 				}
 			}
 			else
@@ -508,12 +187,13 @@ $( function(){
 				}		
 				if(visType=="publications"){
 					visList = ["Timeline", "Group", "List"];
+					if(objectType=="publication")
+					{
+						visList = ["Timeline", "Group", "Similar", "List"];
+					}	
 				}
 				if(visType=="topics"){
 					visList = ["Bubbles", "Evolution", "List"];
-				}
-				if(visType=="circles"){
-					visList = ["TBD"];
 				}
 			}	
 				<#-- create tabs according to visualization type-->
@@ -529,9 +209,9 @@ $( function(){
 				<#-- append tab header and content -->
 				visualizationTabs.append( visualizationTabsHeaders ).append( visualizationTabsContents );
 
-			if(ids.length!=0)
-				<#-- set inner tab into main tab -->
-				{targetContainer.html( visualizationTabs );}
+				if(ids.length!=0)
+					<#-- set inner tab into main tab -->
+					{targetContainer.html( visualizationTabs );}
 
 				<#-- fill with types from visList -->
 				$.each( visList , function( index, item ){
@@ -582,6 +262,7 @@ $( function(){
 				<#-- generate unique id for progress log -->
 				var uniqueVisWidget = $.PALM.utility.generateUniqueId();
 				
+				<#-- to show the gephi network again -->
 				if(loadedList.indexOf(visItem)!= -1 && visItem=="Network"){
 					var reload="true";
 					tabVisNetwork(uniqueVisWidget, url, widgetElem, tabContent, reload);
@@ -631,11 +312,6 @@ $( function(){
 				var canvasDiv = $('<div/>').attr({'id': 'canvas'});
 				tabContent.html("");
 				tabContent.append(canvasDiv);
-				<#-- var textDiv = $('<div/>')
-								.attr({'id': 'canvasText'})
-								.css("color","red");
-				canvasDiv.append(textDiv);
-				textDiv.html("hello")-->
 			
 				<#-- initialize sigma.js renderer for gephi-->
 				s = new sigma({
@@ -705,7 +381,6 @@ $( function(){
 					s.bind('clickNode', function(e){
 						if(e.data.node.attributes.isadded==false){
 							var text = e.data.node.label;
-							//textDiv.html(text.toUpperCase() + " is currently not present in the PALM System. \nPlease add the researcher from the 'Researchers' section in the top menu explicitly.")
 							showhoverdiv(e,'divtoshow', text.toUpperCase() + " is currently not present in PALM");
 						}
 						else
@@ -722,8 +397,6 @@ $( function(){
 					
 					s.bind('clickEdge', function(e){
 						showmenudiv(e,'menu');
-						//e.data.edge.label = "something " + e.data.edge.source;
-						//textDiv.html(e.data.edge.source + " and " + e.data.edge.target + " have co-authored " + truncate(e.data.edge.weight / 0.1,0) + " time(s) within this network");
 					})
 					
 					s.bind('clickStage',function(e){
@@ -775,7 +448,6 @@ $( function(){
 						
 						if(e.data.node.attributes.isadded==false){
 							var text = e.data.node.label;
-							//textDiv.html(text.toUpperCase() + " is currently not present in the PALM System. \nPlease add the researcher from the 'Researchers' section in the top menu explicitly.")
 							showhoverdiv(e,'divtoshow', text.toUpperCase() + " is currently not present in PALM");
 						}
 						else
@@ -792,8 +464,6 @@ $( function(){
 					
 					s.bind('clickEdge', function(e){
 						showmenudiv(e,'menu');
-						//e.data.edge.label = "something " + e.data.edge.source;
-						//textDiv.html(e.data.edge.source + " and " + e.data.edge.target + " have co-authored " + truncate(e.data.edge.weight / 0.1,0) + " time(s) within this network");
 					})
 					
 					s.bind('clickStage',function(e){
@@ -804,14 +474,13 @@ $( function(){
 				}); 
 				s.refresh();
 				url="";
-		}
-		
+			}
 		}
 		
 		function truncate (num, places) {
  			 return Math.trunc(num * Math.pow(10, places)) / Math.pow(10, places);
 		}
-		<#-- neighbour highlight -->
+		<#-- neighbour highlight in gephi network -->
 		sigma.classes.graph.addMethod('neighbors', function(nodeId) {
     		var k,
 	        neighbors = {},
@@ -828,7 +497,6 @@ $( function(){
 		
 		$.getJSON( url , function( data ) {
 		
-			console.log(data)
 			<#-- remove  pop up progress log -->
 			$.PALM.popUpMessage.remove( uniqueVisWidget );
 			
@@ -851,14 +519,14 @@ $( function(){
 			
 			var myLayer;
 			var mydata = [];	
-			//var city = ["Aachen","Chandigarh","New York","Melbourne"];
-			//var country = ["de","in","us","au"]
 			var city = [];
 			var country = [];
 			var confdata = data;
 			var i;
 			
-			if(data.type=="researcher")
+			console.log("locations data")
+			console.log(data)
+			if(data.type=="researcher" || data.type=="publication")
 			{
 					for(i=0; i< data.map.events.length; i++)
 					{
@@ -958,8 +626,6 @@ $( function(){
 					hidehoverdiv('divtoshow')
 				})
 			});		
-				
-			
 		}
 		
 		function onEachFeature(feature, layer) {
@@ -986,7 +652,6 @@ $( function(){
 					showmenudiv(obj,'menu');
 				if(feature.properties.dataType == "conference")
 					showhoverdiv(obj,'divtoshow', "This conference type is already added");
-				
 	      	});
     	}
 		
@@ -994,7 +659,6 @@ $( function(){
 		function tabVisTimeline(uniqueVisWidget, url, widgetElem, tabContent){
 		
 		var prevYear = 1000;
-		
 		$.getJSON( url , function( data ) {
 		
 				<#-- remove  pop up progress log -->
@@ -1003,7 +667,6 @@ $( function(){
 				var timeDiv = $('<div/>')
 							.addClass("timeline")
 							.css('overflow-y','scroll')
-							//.css('max-height','68vh')
 				
 				tabContent.addClass("timeline-body").append(timeDiv);
 				
@@ -1012,7 +675,6 @@ $( function(){
 					        size: "5px",
 				        	allowPageScroll: true,
 				   			touchScrollStep: 50,
-				   			//alwaysVisible: true
 				});
 				
 				var innerTimeDiv = $('<div/>')
@@ -1115,7 +777,6 @@ $( function(){
 									)
 						}
 						
-						
 						inner.append(
 								$('<div/>')
 									.addClass("cd-timeline-content")
@@ -1141,11 +802,8 @@ $( function(){
 										.html(item.year)
 									)
 						)
-							
 				});
-				
 			});
-			
 		}
 		
 		<#-- BUBBLES TAB -->
@@ -1159,7 +817,6 @@ $( function(){
 				bubblesTab.html("");
 				
 				visBubbles(dataBubble.map.list);
-	
 			});
 		}
 				
@@ -1191,106 +848,12 @@ $( function(){
 						        size: "5px",
 					        	allowPageScroll: true,
 					   			touchScrollStep: 50,
-					   			//alwaysVisible: true
 					       });
 			
 				drawDimpleChart(data.map.list);
 			});
-			
 		}
 
-		function drawDimpleChart(data){
-			
-			var numberOfTopics = dimple.getUniqueValues(data, "Topic");
-			console.log(numberOfTopics.length + " length")
-			if(numberOfTopics.length * 40 > 400)
-				height = numberOfTopics.length * 40
-			else
-				height = 400
-					
-			console.log(height)		
-			var svg = dimple.newSvg("#chartTab", "100%", height);
-			var chart = new dimple.chart(svg, data);
-			var y = chart.addCategoryAxis("y", ["Topic", "Author"]);
-			y.addOrderRule("Topic", true);
-			chart.addCategoryAxis("x", "Year");
-			//chart.addMeasureAxis("z", "Weight");
-			var s = chart.addSeries("Author", dimple.plot.bubble);
-			
-			var myLegend = chart.addLegend(0, 10, 500, 400, "right");
-			chart.draw();
-			y.shapes.selectAll("text")
-			  .call(wrap, 30);
-			
-			$('#chartTab').contents().appendTo("#svgContainer");
-			
-			chart.legends = [];
-			// Get a unique list of Owner values to use when filtering
-			var filterValues = dimple.getUniqueValues(data, "Author");
-			// Get all the rectangles from our now orphaned legend
-			myLegend.shapes.selectAll("rect")
-			  // Add a click event to each rectangle
-			  .on("click", function(e) {
-			    // This indicates whether the item is already visible or not
-			    var hide = false;
-			    var newFilters = [];
-			    // If the filters contain the clicked shape hide it
-			    filterValues.forEach(function(f) {
-			      if (f === e.aggField.slice(-1)[0]) {
-			        hide = true;
-			      } else {
-			        newFilters.push(f);
-			      }
-			    });
-			    // Hide the shape or show it
-			    if (hide) {
-			      d3.select(this).style("opacity", 0.2);
-			    } else {
-			      newFilters.push(e.aggField.slice(-1)[0]);
-			      d3.select(this).style("opacity", 0.8);
-			    }
-			    // Update the filters
-			    filterValues = newFilters;
-			    // Filter the data
-			    chart.data = dimple.filterData(data, "Author", filterValues);
-			    // Passing a duration parameter makes the chart animate. Without
-			    // it there is no transition
-			    chart.draw();
-			    y.shapes.selectAll("text")
-			      .call(wrap, 50);
-			      
-			      
-			  });
-			
-			
-			svg.selectAll("circle")
-				.on("click",function(e){
-			  })
-		}
-		
-		function wrap(text, width) {
-		  text.each(function() {
-		    var text = d3.select(this),
-		      words = text.text().split(/\s+/).reverse(),
-		      word,
-		      line = [],
-		      lineNumber = 0,
-		      lineHeight = 0.8, // ems
-		      y = text.attr("y"),
-		      dy = parseFloat(text.attr("dy")),
-		      tspan = text.text(null).append("tspan").attr("x", -3).attr("y", y).attr("dy", -dy + "em");
-		    while (word = words.pop()) {
-		      line.push(word);
-		      tspan.text(line.join(" "));
-		      if (tspan.node().getComputedTextLength() > width) {
-		        line.pop();
-		        tspan.text(line.join(" "));
-		        line = [word];
-		        tspan = text.append("tspan").attr("x", -3).attr("y", y).attr("dy", ++lineNumber * lineHeight - dy + "em").text(word);
-		      }
-		    }
-		  });
-		}		
 		<#-- GROUP TAB -->
 		function tabVisGroup(uniqueVisWidget, url, widgetElem, tabContent, visType){
 			
@@ -1299,9 +862,7 @@ $( function(){
 					<#-- remove  pop up progress log -->
 					$.PALM.popUpMessage.remove( uniqueVisWidget );
 					var mainWidget = $( widgetElem ).find( "#boxbody-${wUniqueName}" );
-					console.log("main widget height " + mainWidget.height() + " " + mainWidget.width())
 					var tabContent1 = $( widgetElem ).find( "#tab-content" );					
-					
 					var tabGroupContainer = $( widgetElem ).find( "#tab_Group" );
 					tabGroupContainer.html("");
 					
@@ -1312,7 +873,6 @@ $( function(){
 					var groupSection = $( '<div/>' ).addClass("clusters")
 
 					tabContent.append(groupSection);
-					
 					
 					if(visType == "researchers")
 					{
@@ -1336,22 +896,20 @@ $( function(){
 						visualizeCluster(data, mainWidget, visType);	
 					}
 			});
-			
 		}
 		
 		<#-- LIST TAB -->
 		function tabVisList(uniqueVisWidget, url, widgetElem, tabContent, visType, type){
 		
+		
+		
 			$.getJSON( url , function( data ) {
-						
+						console.log("list data")
+						console.log(data)
 							var tabListContainer = $( widgetElem ).find( "#tab_List" );
-								
 							tabListContainer.html("");	
-		  					
 		  					var listSection = $( '<div/>' );
 							tabContent.append(listSection);
-					
-							//pubSection.html("");
 							listSection.addClass('_list')
 								.css('overflow-y','scroll')
 								.css('max-height','67vh')
@@ -1436,7 +994,7 @@ $( function(){
 												.addClass( 'author' )
 												<#--.attr({ 'id' : item.location.id });-->
 										}
-										if(type=="conference")
+										if(type=="conference" || type=="publication")
 										{
 											conferenceDiv = 
 											$( '<div/>' )
@@ -1638,15 +1196,11 @@ $( function(){
 			
 			var vennD = $( '<div/>' ).attr("id","venn").css("height","67vh");
 			vennContainer.append(vennD);
-			
 			var vennListC = $( '<div/>' );
 			innerListContainer.append(vennListC);
-			
 			var clickFlag = "false";
 			var selectedVenn = "";
-			
 			var chart = venn.VennDiagram()
-			
 			dataComp = data.map.comparisonList
 			
 			<#-- data list are also here // use later-->
@@ -1775,7 +1329,6 @@ $( function(){
 												vennDiv
 											);
 									});
-		
 		}
 		<#-- SIMILARITY TAB -->
 		function tabVisSimilar(uniqueVisWidget, url, widgetElem, tabContent){
@@ -1920,17 +1473,13 @@ $( function(){
 		}
 		
 		function visualizeCluster(data, tabContainer , visType){
-			console.log("clucster data")
-			console.log(data)
 			var margin = {top: -300, right: -100, bottom: 200, left: -5};
 			
 			var color = d3.scale.ordinal()
     						.range(customColors); 
-    		console.log("tabContainer width and height " + tabContainer.width() + " . " )
 			var width = tabContainer.width();
 			var height = tabContainer.width();  //	screen.height * 0.68; 
 				
-			console.log("step 1")	
 			var zoom = d3.behavior.zoom()
 						.scaleExtent([0, 10])
 						.on("zoom", zoomed);
@@ -1947,7 +1496,6 @@ $( function(){
 				  if (!clusters[d.cluster]) {clusters[d.cluster] = new_data;}
 				  return new_data;
 				});
-			console.log("step 2")
 			d3.layout.pack()
 			    .sort(null)
 			    .size([width, height])
@@ -1965,7 +1513,7 @@ $( function(){
 						    .on("tick", tick)
 						    .start();
 
-			 vis_researcher = d3.select(".clusters").append("svg")
+			vis_researcher = d3.select(".clusters").append("svg")
 							    .attr("width", width)
 							    .attr("height", height)
 							      .append("g")
@@ -1973,9 +1521,8 @@ $( function(){
 							    .on("click",function(){
 									hidemenudiv('menu');			
 							    }); 
-			console.log("step 3")
 		    
-		   var rect2 = vis_researcher.append("rect")
+			var rect2 = vis_researcher.append("rect")
 							    .attr("width", width)
 							    .attr("height", height)
 							    .style("fill", "none")
@@ -2024,7 +1571,6 @@ $( function(){
 			  node.append("circle")
 			      .attr("r", function(d) { return d.r; })
 			      .style("fill", function(d) { return color(d.cluster); })
-			console.log("step 4")    
 			//if(visType!="publications")
 			//{
 			  node.append("svg:text")
@@ -2094,8 +1640,6 @@ $( function(){
 			      .style("opacity", .3)
 			      .attr("d", groupPath)
 			      .on("click", function(d){
-			        console.log(d.values[0].cluster);
-			         console.log(d);
 			         var list = [];
 			         for(var i=0; i< d.values.length; i++){
 			         	list.push(d.values[i].id)
@@ -2122,7 +1666,6 @@ $( function(){
 							clusterItems: list,
 							visType : visType 
 						}; 
-						console.log(d)
 						
 				   var str = "Cluster topics/interests:";
 						for(var i=0; i<d.values[0].clusterTerms.length; i++)
@@ -2285,6 +1828,93 @@ $( function(){
 		  svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 		}
 		
+		function drawDimpleChart(data){
+			
+			var numberOfTopics = dimple.getUniqueValues(data, "Topic");
+			if(numberOfTopics.length * 40 > 400)
+				height = numberOfTopics.length * 40
+			else
+				height = 400
+					
+			var svg = dimple.newSvg("#chartTab", "100%", height);
+			var chart = new dimple.chart(svg, data);
+			var y = chart.addCategoryAxis("y", ["Topic", "Author"]);
+			y.addOrderRule("Topic", true);
+			chart.addCategoryAxis("x", "Year");
+			//chart.addMeasureAxis("z", "Weight");
+			var s = chart.addSeries("Author", dimple.plot.bubble);
+			
+			var myLegend = chart.addLegend(0, 10, 500, 400, "right");
+			chart.draw();
+			y.shapes.selectAll("text")
+			  .call(wrap, 30);
+			
+			$('#chartTab').contents().appendTo("#svgContainer");
+			
+			chart.legends = [];
+			// Get a unique list of Owner values to use when filtering
+			var filterValues = dimple.getUniqueValues(data, "Author");
+			// Get all the rectangles from our now orphaned legend
+			myLegend.shapes.selectAll("rect")
+			  // Add a click event to each rectangle
+			  .on("click", function(e) {
+			    // This indicates whether the item is already visible or not
+			    var hide = false;
+			    var newFilters = [];
+			    // If the filters contain the clicked shape hide it
+			    filterValues.forEach(function(f) {
+			      if (f === e.aggField.slice(-1)[0]) {
+			        hide = true;
+			      } else {
+			        newFilters.push(f);
+			      }
+			    });
+			    // Hide the shape or show it
+			    if (hide) {
+			      d3.select(this).style("opacity", 0.2);
+			    } else {
+			      newFilters.push(e.aggField.slice(-1)[0]);
+			      d3.select(this).style("opacity", 0.8);
+			    }
+			    // Update the filters
+			    filterValues = newFilters;
+			    // Filter the data
+			    chart.data = dimple.filterData(data, "Author", filterValues);
+			    // Passing a duration parameter makes the chart animate. Without
+			    // it there is no transition
+			    chart.draw();
+			    y.shapes.selectAll("text")
+			      .call(wrap, 50);
+			  });
+			
+			svg.selectAll("circle")
+				.on("click",function(e){
+			  })
+		}
+		
+		function wrap(text, width) {
+		  text.each(function() {
+		    var text = d3.select(this),
+		      words = text.text().split(/\s+/).reverse(),
+		      word,
+		      line = [],
+		      lineNumber = 0,
+		      lineHeight = 0.8, // ems
+		      y = text.attr("y"),
+		      dy = parseFloat(text.attr("dy")),
+		      tspan = text.text(null).append("tspan").attr("x", -3).attr("y", y).attr("dy", -dy + "em");
+		    while (word = words.pop()) {
+		      line.push(word);
+		      tspan.text(line.join(" "));
+		      if (tspan.node().getComputedTextLength() > width) {
+		        line.pop();
+		        tspan.text(line.join(" "));
+		        line = [word];
+		        tspan = text.append("tspan").attr("x", -3).attr("y", y).attr("dy", ++lineNumber * lineHeight - dy + "em").text(word);
+		      }
+		    }
+		  });
+		}		
 		
 		<#--// register the widget-->
 		$.PALM.options.registeredWidget.push({
@@ -2300,4 +1930,310 @@ $( function(){
 		$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) , options );
 		
 	});
+	
+	<#-- javascript -->
+		function showhoverdiv(e,divid, text){
+			hidemenudiv('menu')
+			document.getElementById(divid).innerHTML = text;
+		    var left;
+			var top;
+			
+			if(e.type == "similarBar" || e.type == "cluster" || e.type == "clusterItem"){
+			    left  = (e.clientX - 10) + "px";
+			    top  = (e.clientY  + 20) + "px";
+		    }
+		    
+		    if(e.type == "clickNode" || e.type == "overEdge"){
+			    left  = (e.data.captor.clientX) + "px";
+			    top  = (e.data.captor.clientY) + "px";
+		    }
+		    
+		     if(e.type == "clickLocation"){
+			    left  = (e.clientX + 350) + "px";
+			    top  = (e.clientY + 250) + "px";
+		    }
+		    
+		    if(e.type == "comparisonListItem"){
+			    left  = (e.clientX) + "px";
+			    top  = (e.clientY) + "px";
+		    }
+		    
+		    if(e.type == "listItem"){
+			    left  = (e.clientX) + "px";
+			    top  = (e.clientY) + "px";
+		    }
+		    
+		    var div = document.getElementById(divid);
+		
+		    div.style.left = left;
+		    div.style.top = top;
+			div.style.display = "inline"
+		    return false;
+		}
+		function hidehoverdiv(divid){
+		    var div = document.getElementById(divid);
+			div.style.display = "none"
+		    return false;
+		}
+		function showmenudiv(e,divid){
+			hidehoverdiv('divtoshow')
+			console.log("names in here:  " + names)
+			console.log("vis TYPE: " + visType.substring(0,visType.length-1));
+			console.log("object TYPE: " + objectType);
+			console.log(e)
+			
+			var left;
+			var top;
+			
+			if(e.type == "similarBar" || e.type=="clickPublication" || e.type == "cluster" || e.type == "clusterItem"){
+			    left  = (e.clientX - 330) + "px";
+			    top  = (e.clientY - 140) + "px";
+		    }
+		    
+		    if(e.type == "clickLocation"){
+			    left  = (e.clientX) + "px";
+			    top  = (e.clientY) + "px";
+		    }
+		    
+		    if(e.type == "comparisonListItem"){
+			    left  = (e.clientX - 330) + "px";
+			    top  = (e.clientY - 140) + "px";
+		    }
+
+		    if(e.type == "clickNode" || e.type == "clickEdge"){
+			    left  = (e.data.captor.clientX - 350) + "px";
+			    top  = (e.data.captor.clientY  - 150) + "px";
+		    }
+		    
+		    if(e.type == "listItem"){
+			    left  = (e.clientX - 330) + "px";
+			    top  = (e.clientY - 140) + "px";
+		    }
+		    console.log("divid: " + divid)
+		    var div = document.getElementById(divid);
+		    div.style.left = left;
+		    div.style.top = top;
+			div.style.display = "block";
+			
+			if(e.type == "clickNode"){
+				$("#coauthors").show();
+				<#-- do not show menu if the object is there in the setup already -->
+				if(names.indexOf(e.data.node.label) != -1){
+					$(".menu").hide();
+				}
+				else
+				{
+					$(".menu").show();
+					
+					<#-- append is invalid if the types are different -->
+					if(visType.substring(0,visType.length-1)!=objectType)
+					{
+						$("#append").hide();
+					}
+					else
+						$("#append").show();
+				}	
+			}
+			
+			if(e.type == "clickEdge" || e.type == "similarBar" || e.type == "clickLocation" || e.type == "clickPublication" || e.type == "comparisonListItem" || e.type == "listItem" || e.type == "cluster" || e.type == "clusterItem"){
+					$(".menu").show();
+	
+				<#-- do not show menu if the object is there in the setup already -->
+					$("#coauthors").hide();
+			}
+			
+			<#-- append is invalid if the types are different -->
+					if(visType.substring(0,visType.length-1)!=objectType)
+					{
+						$("#append").hide();
+					}
+					else
+						$("#append").show();
+				
+			<#-- set the value of clicked node in the menu -->
+			div.value = e;
+		    return false;
+		}
+		function hidemenudiv(divid){
+			var div = document.getElementById(divid);
+			div.style.display = "none"
+		    return false;
+		}
+		
+		<#-- JQUERY -->
+
+	$('#append').click(function(e){
+		var targetVal = [];
+		
+		if($(this).parent().parent()[0].value.type=="clickNode"){
+			targetVal.push($(this).parent().parent()[0].value.data.node.attributes.authorid);
+			itemAdd(targetVal,"researcher");
+		}	
+		
+		if($(this).parent().parent()[0].value.type=="clickEdge")
+		{
+			if($(this).parent().parent()[0].value.data.edge.attributes.sourceauthorisadded)
+			targetVal.push($(this).parent().parent()[0].value.data.edge.attributes.sourceauthorid);
+			
+			if($(this).parent().parent()[0].value.data.edge.attributes.targetauthorisadded)
+			targetVal.push($(this).parent().parent()[0].value.data.edge.attributes.targetauthorid);
+			
+			if(targetVal.length > 0)
+				itemAdd(targetVal,"researcher");
+		}
+		
+		if($(this).parent().parent()[0].value.type=="clickPublication"){
+			targetVal.push($(this).parent().parent()[0].value.pubId);
+			itemAdd(targetVal,"publication");
+		}		
+		
+		if($(this).parent().parent()[0].value.type=="similarBar")
+		{
+			targetVal.push($(this).parent().parent()[0].value.authorId);
+			itemAdd(targetVal,"researcher");
+		}
+
+		if($(this).parent().parent()[0].value.type=="clickLocation")
+		{
+			targetVal.push($(this).parent().parent()[0].value.eventGroupId);
+			itemAdd(targetVal,"conference");
+		}	
+		
+		if($(this).parent().parent()[0].value.type=="comparisonListItem")
+		{
+			targetVal.push($(this).parent().parent()[0].value.itemId);
+			itemAdd(targetVal,$(this).parent().parent()[0].value.objectType);
+		}
+		
+		if($(this).parent().parent()[0].value.type=="listItem")
+		{
+			targetVal.push($(this).parent().parent()[0].value.itemId);
+			itemAdd(targetVal,$(this).parent().parent()[0].value.objectType);
+		}
+		
+		if($(this).parent().parent()[0].value.type=="cluster"){
+
+			for(var i=0;i<$(this).parent().parent()[0].value.clusterItems.length; i++)
+			{
+				targetVal.push($(this).parent().parent()[0].value.clusterItems[i]);
+			}
+			itemAdd(targetVal,$(this).parent().parent()[0].value.visType.substring(0,visType.length-1));
+		}
+		
+		if($(this).parent().parent()[0].value.type=="clusterItem"){
+
+			targetVal.push($(this).parent().parent()[0].value.clusterItem);
+			itemAdd(targetVal,$(this).parent().parent()[0].value.visType.substring(0,visType.length-1));
+		}
+		
+		 hidemenudiv('menu');
+		 
+		 return false;
+	});
+	
+	$('#replace').click(function(e){
+		var targetVal = [];
+		if($(this).parent().parent()[0].value.type=="clickNode"){
+			targetVal.push($(this).parent().parent()[0].value.data.node.attributes.authorid);
+			itemReplace(targetVal,"researcher");
+		}	
+		
+		if($(this).parent().parent()[0].value.type=="clickEdge")
+		{
+			if($(this).parent().parent()[0].value.data.edge.attributes.sourceauthorisadded)
+			targetVal.push($(this).parent().parent()[0].value.data.edge.attributes.sourceauthorid);
+			
+			if($(this).parent().parent()[0].value.data.edge.attributes.targetauthorisadded)
+			targetVal.push($(this).parent().parent()[0].value.data.edge.attributes.targetauthorid);
+			
+			if(targetVal.length > 0)
+				itemReplace(targetVal,"researcher");
+		}
+		
+		if($(this).parent().parent()[0].value.type=="clickPublication"){
+			targetVal.push($(this).parent().parent()[0].value.pubId);
+			itemReplace(targetVal,"publication");
+		}		
+		
+		if($(this).parent().parent()[0].value.type=="similarBar")
+		{
+			targetVal.push($(this).parent().parent()[0].value.authorId);
+			itemReplace(targetVal,"researcher");
+		}
+		
+		if($(this).parent().parent()[0].value.type=="clickLocation")
+		{
+			targetVal.push($(this).parent().parent()[0].value.eventGroupId);
+			itemReplace(targetVal,"conference");
+		}
+		
+		if($(this).parent().parent()[0].value.type=="comparisonListItem")
+		{
+			targetVal.push($(this).parent().parent()[0].value.itemId);
+			itemReplace(targetVal,$(this).parent().parent()[0].value.objectType);
+		}
+		
+		if($(this).parent().parent()[0].value.type=="listItem")
+		{
+			targetVal.push($(this).parent().parent()[0].value.itemId);
+			itemReplace(targetVal,$(this).parent().parent()[0].value.objectType);
+		}
+		
+		if($(this).parent().parent()[0].value.type=="cluster"){
+
+			for(var i=0;i<$(this).parent().parent()[0].value.clusterItems.length; i++)
+			{
+				targetVal.push($(this).parent().parent()[0].value.clusterItems[i]);
+			}
+			itemReplace(targetVal,$(this).parent().parent()[0].value.visType.substring(0,visType.length-1));
+		}
+		
+		if($(this).parent().parent()[0].value.type=="clusterItem"){
+
+			targetVal.push($(this).parent().parent()[0].value.clusterItem);
+			itemReplace(targetVal,$(this).parent().parent()[0].value.visType.substring(0,visType.length-1));
+		}
+		
+		hidemenudiv('menu');
+		console.log("targetVAL in replace: " + targetVal)
+		return false;
+	});
+	
+	$('#coauthors').click(function(e){
+	var targetVal = $(this).parent().parent()[0].value.data.node.attributes.authorid;
+	 hidemenudiv('menu');
+	 itemCoAuthors(targetVal,"researcher");
+	 return false;
+	});
+	
+	function itemAdd(id, type){
+		var queryString = "?id="+id+"&type="+type;
+		
+		<#-- update setup widget -->
+		var stageWidget = $.PALM.boxWidget.getByUniqueName( 'explore_setup' ); 
+		stageWidget.options.queryString = queryString;
+		$.PALM.boxWidget.refresh( stageWidget.element , stageWidget.options );
+	}
+	
+	function itemReplace(id, type){
+		var replace = true;
+		var queryString = "?id="+id+"&type="+type+"&replace="+replace;
+		
+		<#-- update setup widget -->
+		var stageWidget = $.PALM.boxWidget.getByUniqueName( 'explore_setup' ); 
+		stageWidget.options.queryString = queryString;
+		$.PALM.boxWidget.refresh( stageWidget.element , stageWidget.options );
+	}
+	
+	function itemCoAuthors(id, type){
+		dataTransfer = "true";
+		authoridForCoAuthors = id;
+		var updateString = "?type="+type+"&dataList="+names+"&idList="+ids+"&visType="+visType+"&dataTransfer="+dataTransfer+"&authoridForCoAuthors="+authoridForCoAuthors;
+					
+			<#-- update visualize widget -->
+			var visualizeWidget = $.PALM.boxWidget.getByUniqueName( 'explore_visualize' ); 
+			visualizeWidget.options.queryString = updateString;
+			$.PALM.boxWidget.refresh( visualizeWidget.element , visualizeWidget.options );
+	}	
+	
 </script>

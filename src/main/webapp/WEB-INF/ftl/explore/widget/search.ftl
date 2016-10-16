@@ -350,14 +350,18 @@
 									<#-- append detail -->
 									//eventDetail.append( eventIcon ).append('&nbsp;').append( eventName );
 
+									eventDetail
+										.on("mouseover", function(){
+										$( this ).parent().context.style.color="gray";
+									});
+									eventDetail
+										.on("mouseout", function(){
+										$( this ).parent().context.style.color="black";
+									});
+
 									<#-- add click event -->
 									eventDetail.on( "click", function( e){
-												if($( this ).parent().context.style.color=="gray")
-												{
-													$( this ).parent().context.style.color="black";
-												}
-												else
-													$( this ).parent().context.style.color="gray";
+										$( this ).parent().context.style.color="black";
 										<#-- remove active class -->
 										//if( $.PALM.selected.record(  "eventGroup", $( this ).parent().data( 'id' ) , $( this ).parent() )){
 											//history.pushState(null, "Venue " + itemEvent.name, "<@spring.url '/venue' />?id=" + itemEvent.id + "&name=" + itemEvent.name );
@@ -367,7 +371,9 @@
 										
 									});
 									
-									targetContainer.append( eventItem );
+									targetContainer
+									.append( eventItem )
+									.css({ "cursor":"pointer"});
 									
 																	
 								});
@@ -390,63 +396,89 @@
 							
 								<#-- build the publication table -->
 								$.each( data.publications, function( index, itemPublication ){
-
 									var publicationItem = 
 										$('<div/>')
 										.addClass( "publicationExplore" )
 										.attr({ "data-id": itemPublication.id });
 										
-									<#-- publication menu -->
-									var pubNav = $( '<div/>' )
+									<#-- event menu -->
+									var publicationNav = $( '<div/>' )
 										.attr({'class':'nav'});
+									
+									<#-- append to event group -->
+									publicationItem.append( publicationNav );
+									
+									<#-- event detail -->
+									var publicationDetail = $('<div/>')
+										.addClass( "detail" );
+									
+									<#-- append to event group -->
+									publicationItem.append( publicationDetail );
 						
-									<#-- publication icon -->
-									var pubIcon = $('<i/>');
+									console.log(itemPublication)
+									<#-- event icon -->
+									var publicationType="fa fa-file-text-o";
+									var eventIcon = $('<div/>').css("width","4%").css("float","left").append($('<i/>'));
 									if( typeof itemPublication.type !== "undefined" ){
 										if( itemPublication.type == "Conference" )
-											pubIcon.addClass( "fa fa-file-text-o bg-blue" ).attr({ "title":"Conference" });
-										else if( itemPublication.type == "Workshop" )
-											pubIcon.addClass( "fa fa-file-text-o bg-blue-dark" ).attr({ "title":"Workshop" });
+											publicationType = "fa fa-file-text-o";
 										else if( itemPublication.type == "Journal" )
-											pubIcon.addClass( "fa fa-files-o bg-red" ).attr({ "title":"Journal" });
+											publicationType = "fa fa-files-o";
 										else if( itemPublication.type == "Book" )
-											pubIcon.addClass( "fa fa-book bg-green" ).attr({ "title":"Book" });
-										else if( itemPublication.type == "Informal" )
-											pubIcon.addClass( "fa fa-file-text-o bg-gray" ).attr({ "title":"Other/Informal" });
+											publicationType = "fa fa-book";
+										else
+											publicationType = "fa fa-file-text-o";	
 									}else{
-										pubIcon.addClass( "fa fa-question bg-purple" ).attr({ "title":"Unknown publication type" });
+										publicationType = "fa fa-question";
 									}
 									
-									pubNav.append( pubIcon );
-									
 
-									publicationItem.append( pubNav );
-
-									<#-- publication detail -->
-									var pubDetail = $('<div/>').addClass( "detail" );
 									<#-- title -->
-									var pubTitle = $('<div/>').addClass( "title" ).html( itemPublication.title );
 
-
-									<#-- append detail -->
-									pubDetail.append( pubTitle );
-										
-									<#-- append to item -->
-									publicationItem.append( pubDetail );
-
-									<#-- add clcik event -->
-									pubDetail.on( "click", function(){
+									if( typeof itemPublication.type != 'undefined')
+										publicationDetail.append(
+											$( '<div/>' )
+											.addClass( 'affiliation' )
+											.append('&nbsp;')
+											.append( 
+												$( '<i/>' )
+												.addClass( publicationType )
+													.append('&nbsp;')
+											).append( 
+												$( '<span/>' )
+												.addClass( 'info font-xs' )
+												.html( itemPublication.title )											
+											)
+										);
+									
+								publicationDetail
+										.on("mouseover", function(){
+										$( this ).parent().context.style.color="gray";
+									});
+									publicationDetail
+										.on("mouseout", function(){
+										$( this ).parent().context.style.color="black";
+									});
+									
+									<#-- add click event -->
+									publicationDetail.on( "click", function( e){
+										$( this ).parent().context.style.color="black";
 										<#-- remove active class -->
-										//if( $.PALM.selected.record( "publication", itemPublication.id, pubDetail.parent() )){
-											<#-- push history -->
-											//history.pushState( null, "Publication " + itemPublication.title, "<@spring.url '/publication' />?id=" + itemPublication.id + "&title=" + itemPublication.title);
-											//getPublicationDetails( itemPublication.id);
+										//if( $.PALM.selected.record(  "eventGroup", $( this ).parent().data( 'id' ) , $( this ).parent() )){
+											//history.pushState(null, "Venue " + itemEvent.name, "<@spring.url '/venue' />?id=" + itemEvent.id + "&name=" + itemEvent.name );
+											//getVenueGroupDetails( $( this ).parent().data( 'id' ) , eventGroup, itemEvent.name);
 										//}
 										itemSelection(itemPublication.id, "publication");
 										
 									});
-
-									targetContainer.append( publicationItem );
+									
+									targetContainer
+									.append( publicationItem )
+									.css({ "cursor":"pointer"});
+									
+						
+						
+						
 								
 								
 								});

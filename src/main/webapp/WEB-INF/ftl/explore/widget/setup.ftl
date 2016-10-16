@@ -53,15 +53,12 @@
 				wordsContainer.css("padding-left","5px")
 					.css("padding-bottom","5px")
 					.css("padding-top","5px")
-				console.log("name to be added: " + data.name)
 				visOptionsContainer = $( widgetElem ).find( ".vis_options" );
 				visOptionsContainer.html( "" );
-				
 		
-		for(var i=0;i<data.name.length;i++){
+				for(var i=0;i<data.name.length;i++){
 				
 							<#-- TO-DO Add css part to palm.css -->
-				
 							nameDiv = $( '<span/>' )
 							.attr("id",data.id[i])
 							.css("color", "black")
@@ -146,42 +143,39 @@
 					names.push(data.name[i]);
 					ids.push(data.id[i]);
 
-					if(data.name[i]!=""){
-						wordsContainer
-						.append(nameDiv)
-						console.log("append")
-							if(resetFlag=="1" || currentVisType=="" || type!=data.type){
-								if(type == "researcher"){
-									setBoxes(id, type, "researchers")
-								}
-								if(type == "publication"){
-									setBoxes(id, type, "conferences")
-								}
-								if(type == "conference"){
-									setBoxes(id, type, "publications")
-								}
-								if(type == "topic"){
-									setBoxes(id, type, "publications")
-								}
-								if(type == "circle"){
-									setBoxes(id, type, "")
+							if(data.name[i]!=""){
+								wordsContainer
+								.append(nameDiv)
+
+								if(resetFlag=="1" || currentVisType=="" || type!=data.type){
+									if(type == "researcher"){
+										setBoxes(id, type, "researchers")
+									}
+									if(type == "publication"){
+										setBoxes(id, type, "conferences")
+									}
+									if(type == "conference"){
+										setBoxes(id, type, "publications")
+									}
+									if(type == "topic"){
+										setBoxes(id, type, "publications")
+									}
+									if(type == "circle"){
+										setBoxes(id, type, "")
+									}
 								}
 							}
+							if(i == data.name.length-1)		
+								callRefresh(id,type)
+						}	
 					}
-					if(i == data.name.length-1)		
-						callRefresh(id,type)
-				}	
-			}
-	}		
-				setBoxes(id, type, currentVisType);
-				
-			}
-			
-			
-		};
+				}		
+			setBoxes(id, type, currentVisType);
+		}
+	};
 	
 		function callRefresh(id,type){
-		if(type == "researcher"){
+							if(type == "researcher"){
 								refreshVisFilter(id, type,  "researchers");
 							}
 							if(type == "publication"){
@@ -196,25 +190,6 @@
 							if(type == "circle"){
 								refreshVisFilter(id, type,  "");
 							}
-		}
-	
-		function selectBox(typeOfBox){
-			//	updateSelf();
-			//currentVisType = typeOfBox;
-		}
-		
-		function updateSelf(){
-			<#-- update self -->
-			resetFlag = "0";
-			count = 22;
-			//name="";
-			//id="";
-			var fromSearchWidget = "";
-			var setupWidget = $.PALM.boxWidget.getByUniqueName( 'explore_setup' ); 
-			//setupWidget.options.queryString = "?fromSearchWidget="+fromSearchWidget;
-			$.PALM.boxWidget.refresh( setupWidget.element , setupWidget.options );
-
-//			visOptionsContainer.load(".vis_options");
 		}
 		
 		function updateVisDelete( deleteFlag, type){
@@ -239,7 +214,6 @@
 		}
 		
 		function refreshVisFilter(id, type, visType){
-		console.log("refresh vis called")
 			dataTransfer = "true";
 			checkedPubValues=[];
 			checkedConfValues=[];
@@ -300,10 +274,6 @@
 				circleBorderProp = borderProp;
 			}
 			
-			
-					
-					
-								
 		<#-- dynamic widgets depending on type of search object -->
 				if(type == "researcher" || type == "publication" || type == "conference" || type == "topic" || type == "circle"){
 					
@@ -330,7 +300,6 @@
 									.css("border" , researcherBorderProp)
 									.css({ "cursor":"pointer"})
 									.on( "click", function( e){
-										//selectBox("researchers");
 										setBoxes(id, type, "researchers")
 										refreshVisFilter(id, type,  "researchers");
 									})
@@ -357,7 +326,6 @@
 									.css("border" , conferenceBorderProp)
 									.css({ "cursor":"pointer"})
 									.on( "click", function( e){
-										//selectBox("conferences");
 										setBoxes(id, type, "conferences")
 										refreshVisFilter(id, type,  "conferences");
 									})
@@ -384,7 +352,6 @@
 									.css("border" , publicationBorderProp)
 									.css({ "cursor":"pointer"})
 									.on( "click", function( e){
-										//selectBox("publications");
 										setBoxes(id, type, "publications")
 										refreshVisFilter(id, type,  "publications");
 									})
@@ -411,42 +378,11 @@
 									.css("border" , topicBorderProp)
 									.css({ "cursor":"pointer"})
 									.on( "click", function( e){
-										//selectBox("topics");
 										setBoxes(id, type, "topics")
 										refreshVisFilter(id, type,  "topics");
 									})
 								)
 				}
-
-				<#--if( type == "publication" || type == "conference" || type == "topic" || type == "circle"){
-					visOptionsContainer.append(
-									$('<div/>')
-									.addClass('info-box box-home-explore bg-yellow')
-									.append(
-										$('<i/>')
-										.addClass('fa fa-users fa-lg'))
-										.css("text-align","center")
-									.append(
-										$('<div/>')
-										.addClass('info-box-content info-box-home-text')
-										.append(
-											$('<span/>')
-											.addClass('info-box-number fontsize24')
-										)
-									)		
-									.append($('<h5/>').css("text-align","center").html("Circles"))
-									.css("border" , circleBorderProp)
-									.css({ "cursor":"pointer"})
-									.on( "click", function( e){
-										//selectBox("circles");
-										setBoxes(id, type, "circles")
-										refreshVisFilter(id, type,  "circles");
-									})
-								)
-				}-->
-				
-				
-		
 		}
 		
 	

@@ -3,15 +3,11 @@
 </@security.authorize>
 <div id="boxbody-${wUniqueName}" class="box-body no-padding" style="height:77vh;overflow:hidden">
   	<div class="filter_widget" class="nav-tabs-custom">
-  		
   		<div id="apply_button" style="display:none">
   			<input type="button" value="Apply" id="button" style="margin:auto;display:block;width:10vh;left-margin:40vh,background-color:#d9c7c6;font-size:12px;border:1px solid black;border-radius:0.5em;margin-top:3px;padding-left:5px;padding-right:5px;cursor:pointer;" onclick="checkBoxChange()">
   		</div>
-  		
   		<div class="widget_body" style="height:120vh;">
-    		
   		</div>
-  		
 	</div>
 </div>
 
@@ -24,7 +20,6 @@
 		checkedConfValues = [];
 		checkedTopValues = [];
 		checkedCirValues = [];
-
 		startYear = 0;
 		endYear = 0;
 		visType = "";
@@ -38,17 +33,13 @@
 			page:0,
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
-					
-				<#-- generate unique id for progress log -->
-				uniqueFilterWidget = $.PALM.utility.generateUniqueId();
-				
+					<#-- generate unique id for progress log -->
+					uniqueFilterWidget = $.PALM.utility.generateUniqueId();
 						},
 			onRefreshDone: function(  widgetElem , data ){
 			
 			<#-- show pop up progress log -->
 			$.PALM.popUpMessage.create( "Loading Filters..", { uniqueId:uniqueFilterWidget, popUpHeight:40, directlyRemove:false , polling:false});
-					
-        	
 			
 			$(".widget_body").slimscroll({
 				height: "75vh",
@@ -62,7 +53,6 @@
 				ids = data.idsList;
 			
 				var targetContainer = $( widgetElem ).find( ".widget_body" );
-					
 				
 				<#-- update type of visualization depending on selection-->
 				if(objectType == ""){
@@ -92,9 +82,6 @@
 					if(visType=="topics"){
 						filterList = ["Time","Publications", "Researchers", "Conferences"];
 					}
-					if(visType=="circles"){
-						filterList = ["TBD"];
-					}
 				}
 				
 				if(objectType=="conference")
@@ -111,8 +98,21 @@
 					if(visType=="topics"){
 						filterList = ["Time","Publications", "Researchers", "Conferences"];
 					}
-					if(visType=="circles"){
-						filterList = ["TBD"];
+				}
+				
+				if(objectType=="publication")
+				{
+					if(visType=="researchers"){
+						filterList = ["Time","Publications", "Conferences", "Topics","Circles"];
+					}
+					if(visType=="conferences"){
+						filterList = ["Time","Topics", "Conferences"];
+					}		
+					if(visType=="publications"){
+						filterList = ["Time","Topics", "Researchers", "Conferences"];
+					}
+					if(visType=="topics"){
+						filterList = ["Time","Publications", "Researchers", "Conferences"];
 					}
 				}
 				
@@ -123,7 +123,6 @@
 				
 				if(data.type!="undefined" && data.visType!="undefined")
 				{
-					
 					targetContainer.html("");
 	    			
 	    			if(ids.length!=0)
@@ -182,19 +181,15 @@
 						});
 		    		
 		    			var filters = $('<div/>').addClass("other_filters");
-		    		
 		    			targetContainer.append(filters);
 					}
 								
 					var filterContent = $( widgetElem ).find( ".other_filters" );
-					
 					filterContent.html("");			
 		
-					console.log(data);
 					
 						<#-- PUBLICATIONS FILTER -->
 						if(data.publicationFilter!=null){
-						console.log(data.publicationFilter.publicationsList.length + "len")
 							var pubSectionHeader = $( '<span/>' ).html("PUBLICATIONS (" + data.publicationFilter.publicationsList.length + ") :")
 											.append('&nbsp;')
 											.append(
@@ -207,11 +202,8 @@
 												 )
 											);
 							var pubSection = $( '<div/>' );
-								
 							filterContent.append(pubSectionHeader);
 							filterContent.append(pubSection);
-					
-							//pubSection.html("");
 							pubSection.addClass('pub_list')
 								.css('overflow-y','scroll')
 								.css('height', 'auto')
@@ -224,14 +216,13 @@
 					        	allowPageScroll: true,
 					   			touchScrollStep: 50,
 					   			color: '#008000'
-					   			//alwaysVisible: true
 					       });
 					
 							<#-- build the Publication Filter list -->
 							var sortedPublicationList = data.publicationFilter.publicationsList.sort(function(a, b) 
-											{
-											  return sortList(a.title, b.title);
-											})
+							{
+								return sortList(a.title, b.title);
+							})
 							$.each( sortedPublicationList, function( index, item){
 							var publicationDiv = 
 									$( '<div/>' )
@@ -251,15 +242,12 @@
 												.addClass( 'name' )
 												.html( " " +  item.title.toUpperCase() )
 										)
-											
 										pubSection
 											.append( 
 												publicationDiv
 											);
-	
 									});
 							}	
-							
 							
 						<#-- CONFERENCE FILTER -->
 						if(data.conferenceFilter!=null){
@@ -276,11 +264,9 @@
 												 )
 											);
 							var confSection = $( '<div/>' );
-								
 							filterContent.append(confSectionHeader);
 							filterContent.append(confSection);
 					
-							//pubSection.html("");
 							confSection.addClass('conf_list')
 								.css('overflow-y','scroll')
 								.css('height', 'auto')
@@ -293,14 +279,13 @@
 					        	allowPageScroll: true,
 					   			touchScrollStep: 50,
 					   			color: '#008000'
-					   			//alwaysVisible: true
 					       });
 					
 							<#-- build the Conference Filter list -->
 							var sortedConferenceList = data.conferenceFilter.eventsList.sort(function(a, b) 
-											{
-											  return sortList(a.title, b.title);
-											})
+							{
+								return sortList(a.title, b.title);
+							})
 							$.each(sortedConferenceList , function( index, item){
 							var conferenceDiv = 
 									$( '<div/>' )
@@ -320,12 +305,10 @@
 												.addClass( 'name' )
 												.html( " " +  item.title.toUpperCase() )
 										)
-											
 										confSection
 											.append( 
 												conferenceDiv
 											);
-	
 									});
 							}	
 						
@@ -348,7 +331,6 @@
 							filterContent.append(topSectionHeader);
 							filterContent.append(topSection);
 					
-							//pubSection.html("");
 							topSection.addClass('top_list')
 								.css('overflow-y','scroll')
 								.css('height', 'auto')
@@ -361,16 +343,14 @@
 					        	allowPageScroll: true,
 					   			touchScrollStep: 50,
 					   			color: '#008000'
-					   			//alwaysVisible: true
 					       });
 					
 							<#-- build the Topic Filter list -->
 							var sortedTopicList = data.topicFilter.topicDetailsList.sort(function(a, b) 
-											{
-											  return sortList(a.title, b.title);
-											})
+							{
+								return sortList(a.title, b.title);
+							})
 							$.each( sortedTopicList, function( index, item){
-							
 							if(item.title!=null)
 							{
 								var topicDiv = 
@@ -397,7 +377,6 @@
 													topicDiv
 												);
 							}
-		
 						});
 					<#-- CIRCLES FILTER -->
 						if(data.circleFilter!=null){
@@ -418,7 +397,6 @@
 							filterContent.append(cirSectionHeader);
 							filterContent.append(cirSection);
 					
-							//cirSection.html("");
 							cirSection.addClass('cir_list')
 								.css('overflow-y','scroll')
 								.css('height', 'auto')
@@ -431,14 +409,13 @@
 					        	allowPageScroll: true,
 					   			touchScrollStep: 50,
 					   			color: '#008000'
-					   			//alwaysVisible: true
 					       });
 					
 							<#-- build the Publication Filter list -->
 							var sortedCircleList = data.circleFilter.circles.sort(function(a, b) 
-											{
-											  return sortList(a.name, b.name);
-											})
+							{
+								return sortList(a.name, b.name);
+							})
 							$.each(sortedCircleList , function( index, item){
 							var circleDiv = 
 									$( '<div/>' )
@@ -458,81 +435,15 @@
 												.addClass( 'name' )
 												.html( " " +  item.name.toUpperCase() )
 										)
-											
 										cirSection
 											.append( 
 												circleDiv
 											);
-	
 									});
 							}	
-							
-																				
 					}			
 				}					
-				
-				});
-				
-				
-				<#--
-				if(objectType=="researchers")
-				{
-					if(visType=="researchers"){
-						filterList = ["Publications", "Conferences", "Circles"];
-					}
-					if(visType=="conferences"){
-						filterList = [""];
-					}		
-					if(visType=="publications"){
-						filterList = ["Timeline", "Group", "List", "Comparison"];
-					}
-					if(visType=="topics"){
-						filterList = ["Bubbles", "Evolution", "Group", "List", "Comparison"];
-					}
-					if(visType=="circles"){
-						filterList = ["TBD"];
-					}
-				}
-				
-				if(objectType=="researchers")
-				{
-					if(visType=="researchers"){
-						filterList = ["Publications", "Conferences", "Circles"];
-					}
-					if(visType=="conferences"){
-						filterList = [""];
-					}		
-					if(visType=="publications"){
-						filterList = ["Timeline", "Group", "List", "Comparison"];
-					}
-					if(visType=="topics"){
-						filterList = ["Bubbles", "Evolution", "Group", "List", "Comparison"];
-					}
-					if(visType=="circles"){
-						filterList = ["TBD"];
-					}
-				}
-				
-				if(objectType=="researchers")
-				{
-					if(visType=="researchers"){
-						filterList = ["Publications", "Conferences", "Circles"];
-					}
-					if(visType=="conferences"){
-						filterList = [""];
-					}		
-					if(visType=="publications"){
-						filterList = ["Timeline", "Group", "List", "Comparison"];
-					}
-					if(visType=="topics"){
-						filterList = ["Bubbles", "Evolution", "Group", "List", "Comparison"];
-					}
-					if(visType=="circles"){
-						filterList = ["TBD"];
-					}
-				}-->
-				
-					
+			});
 			}
 		};	
 		
