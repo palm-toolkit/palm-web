@@ -115,11 +115,14 @@
 				<#-- search icon presed -->
 				$( "#search_button" ).click( function(){
 					//searchText = $( "#search_field" ).val();
-					
 					itemSearch( $( "#search_field" ).val() , "first", data, targetContainer, widgetElem);
-					
-					
 				});
+				
+				$( "#search_field" )
+	    			.on( "keypress", function(e) {
+			  			if ( e.keyCode == 13)
+			    			itemSearch( $( "#search_field" ).val() , "first", data, targetContainer, widgetElem);
+					})
 				
 				
 				<#-- drop down change event-->

@@ -9,8 +9,8 @@
   </div>
 <div class="menu" id="menu">
  <ul>
- <a id="append" href="#"><li>Add</li></a>
- <a id="replace" href="#"><li>Replace</li></a>
+ <a id="append" href="#"><li>Add to Search</li></a>
+ <a id="replace" href="#"><li>Search for</li></a>
  <a id="coauthors" href="#"><li>Add Co-Authors</li></a>
  </ul>
 </div>
@@ -156,13 +156,17 @@ $( function(){
 					{
 						visList = ["Locations", "Similar", "List"]; //comparison doesn't make sense here
 					}
+					if(objectType=="publication")
+					{
+						visList = ["Locations", "List"]; //comparison doesn't make sense here
+					}
 				}		
 				if(visType=="publications"){
 					if(objectType!="conference")
 						visList = ["Timeline", "Group", "List", "Comparison"];
 					if(objectType=="publication")
 					{
-						visList = ["Timeline", "Group", "Similar", "List", "Comparison"];
+						visList = ["Timeline", "Group", "Similar", "List"];
 					}	
 				}
 				if(visType=="topics"){
@@ -1333,6 +1337,10 @@ $( function(){
 		<#-- SIMILARITY TAB -->
 		function tabVisSimilar(uniqueVisWidget, url, widgetElem, tabContent){
 			$.getJSON( url , function( data ) {
+				
+				console.log("similar data")
+				console.log(data)
+			
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniqueVisWidget );
 				
@@ -1422,7 +1430,7 @@ $( function(){
 									if(intarr.length<5)
 										count = intarr.length
 										
-								var str = "Main topics/interests:";
+								var str = "Top common interests:";
 								for(var i=0; i<count; i++)
 									str = str +  "<br /> - " + intarr[i] 
 										
@@ -1460,7 +1468,7 @@ $( function(){
 									if(intarr.length<5)
 										count = intarr.length
 										
-								var str = "Main topics/interests:";
+								var str = "Top common interests:";
 								for(var i=0; i<count; i++)
 									str = str +  "<br /> - " + intarr[i] 
 								
@@ -2090,7 +2098,8 @@ $( function(){
 		if($(this).parent().parent()[0].value.type=="similarBar")
 		{
 			targetVal.push($(this).parent().parent()[0].value.authorId);
-			itemAdd(targetVal,"researcher");
+			console.log("visType.substring(0,visType.length-1)" + visType.substring(0,visType.length-1))
+			itemAdd(targetVal,visType.substring(0,visType.length-1));
 		}
 
 		if($(this).parent().parent()[0].value.type=="clickLocation")
@@ -2158,7 +2167,7 @@ $( function(){
 		if($(this).parent().parent()[0].value.type=="similarBar")
 		{
 			targetVal.push($(this).parent().parent()[0].value.authorId);
-			itemReplace(targetVal,"researcher");
+			itemReplace(targetVal,visType.substring(0,visType.length-1));
 		}
 		
 		if($(this).parent().parent()[0].value.type=="clickLocation")
