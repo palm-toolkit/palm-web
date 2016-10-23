@@ -863,6 +863,9 @@ $( function(){
 			
 			$.getJSON( url , function( data ) {
 
+			console.log("cluster data")
+			console.log(data)
+
 					<#-- remove  pop up progress log -->
 					$.PALM.popUpMessage.remove( uniqueVisWidget );
 					var mainWidget = $( widgetElem ).find( "#boxbody-${wUniqueName}" );
@@ -1282,7 +1285,11 @@ $( function(){
 		
 		function vennList(vennListC, nameList, idsList){
 									<#-- build the researcher list -->
-									$.each( nameList, function( index, item){
+									var sortedNamesList = nameList.sort(function(a, b) 
+									{
+										return sortList(a[0].name, b[0].name);
+									})
+									$.each( sortedNamesList, function( index, item){
 										var vennDiv = 
 										$( '<div/>' )
 											.addClass( 'author' )
@@ -1385,7 +1392,7 @@ $( function(){
 		
 				var colorScale = d3.scale.linear()
 								.domain([0,data.map.authorNames.length])
-								.range(["green","#c4e6fc"]);
+								.range(["#cdf0fd", "#d4d4d1"]);
 		
 				var canvas = d3.select('#sim_tab')
 								.append('svg')
@@ -1400,7 +1407,7 @@ $( function(){
 								.data(data.map.similarity)
 								.enter()
 								.append('rect')
-								.attr('height',15)
+								.attr('height',20)
 								.attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
 								.style('fill',function(d,i){ return colorScale(i); })
 								.attr('width',function(d){ return 0; })
@@ -1445,15 +1452,17 @@ $( function(){
 							    .data(data.map.similarity)
 							    .transition()
 							    .duration(1000) 
-							    .attr("width", function(d) {return xscale(d); });
+							    .attr("width", function(d) {return xscale(d/2.5); });
 	
 			var transitext = d3.select('#bars')
 							.selectAll('text')
 							.data(data.map.authorNames)
 							.enter()
 							.append('text')
-							.attr({'x':function(d) {return 0; },'y':function(d,i){ return yscale(i)+15; }})
-							.text(function(d){ return d; }).style({'fill':'black','font-size':'11px'})
+							.attr({'x':function(d) {return 0; },'y':function(d,i){ return yscale(i)+32; }})
+							.text(function(d,i){
+								return data.map.authorNames[i] + " (Common interests: " + data.map.similarity[i] + ") "; 
+							}).style({'fill':'black','font-size':'13px', 'font-weight':'bold'})
 							.on("mouseover", function(d,i){
 									obj = {
 												  type:"similarBar",
@@ -1496,10 +1505,10 @@ $( function(){
 			
 			nodes = data.map(function(d) {
 				  if(visType == "researchers" || visType=="publications"){
-			      	new_data = {cluster: d.cluster, radius: 20, id: d.id, name: d.name, clusterTerms : d.clusterTerms};
+			      	new_data = {cluster: d.cluster, radius: 20, id: d.id, name: d.name, clusterTerms : d.clusterTerms, nodeTerms : d.nodeTerms};
 				  }
 				  if(visType == "conferences"){
-			      	new_data = {cluster: d.cluster, radius: 20, id: d.id, name: d.name, abr: d.abr, clusterTerms : d.clusterTerms};
+			      	new_data = {cluster: d.cluster, radius: 20, id: d.id, name: d.name, abr: d.abr, clusterTerms : d.clusterTerms, nodeTerms : d.nodeTerms};
 				  }
 				  if (!clusters[d.cluster]) {clusters[d.cluster] = new_data;}
 				  return new_data;
@@ -1563,11 +1572,11 @@ $( function(){
 							visType : visType 
 						};
 						
-						var str = "";
-						for(var i=0; i<d.clusterTerms.length; i++)
-							str = str +  "<br /> - " + d.clusterTerms[i] 
+						var str = d.name;
+						for(var i=0; i<d.nodeTerms.length; i++)
+							str = str +  "<br /> - " + d.nodeTerms[i] 
 						
-			      		showhoverdiv(obj, 'divtoshow', d.name + "<br />" + str); 
+			      		showhoverdiv(obj, 'divtoshow', str); 
 			      }) 
 			      .on("mouseout", function(e,i){
 									hidehoverdiv('divtoshow');
@@ -1827,7 +1836,14 @@ $( function(){
 	      .attr("dy", ".3em")
 	      .style("text-anchor", "middle")
 	      .text(function(d) { return [d[0]]; })
-	      .style("font-size", function(d) { return Math.min(2 * d.r, (2 * d.r - 1) / this.getComputedTextLength() * 10) + "px"; })
+	      .style("font-size", function(d) { 
+			      	if(this.getComputedTextLength()!=0)
+			      	{
+				      return Math.min(2 * d.r, (2 * d.r - 1) / this.getComputedTextLength() * 10) + "px";
+				    }
+				    else
+				    	return Math.min(2 * d.r, (2 * d.r - 1) / 120 * 10) + "px"; 
+			      })
 			
 		
 		}
@@ -1853,48 +1869,53 @@ $( function(){
 			var s = chart.addSeries("Author", dimple.plot.bubble);
 			
 			var myLegend = chart.addLegend(0, 10, 500, 400, "right");
+			if(dimple.getUniqueValues(data,"Author").length<2)
+				chart.legends = [];
+				
 			chart.draw();
 			y.shapes.selectAll("text")
 			  .call(wrap, 30);
 			
 			$('#chartTab').contents().appendTo("#svgContainer");
 			
-			chart.legends = [];
-			// Get a unique list of Owner values to use when filtering
-			var filterValues = dimple.getUniqueValues(data, "Author");
-			// Get all the rectangles from our now orphaned legend
-			myLegend.shapes.selectAll("rect")
-			  // Add a click event to each rectangle
-			  .on("click", function(e) {
-			    // This indicates whether the item is already visible or not
-			    var hide = false;
-			    var newFilters = [];
-			    // If the filters contain the clicked shape hide it
-			    filterValues.forEach(function(f) {
-			      if (f === e.aggField.slice(-1)[0]) {
-			        hide = true;
-			      } else {
-			        newFilters.push(f);
-			      }
-			    });
-			    // Hide the shape or show it
-			    if (hide) {
-			      d3.select(this).style("opacity", 0.2);
-			    } else {
-			      newFilters.push(e.aggField.slice(-1)[0]);
-			      d3.select(this).style("opacity", 0.8);
-			    }
-			    // Update the filters
-			    filterValues = newFilters;
-			    // Filter the data
-			    chart.data = dimple.filterData(data, "Author", filterValues);
-			    // Passing a duration parameter makes the chart animate. Without
-			    // it there is no transition
-			    chart.draw();
-			    y.shapes.selectAll("text")
-			      .call(wrap, 50);
-			  });
-			
+			if(dimple.getUniqueValues(data,"Author").length>1){
+				chart.legends = [];
+				// Get a unique list of Owner values to use when filtering
+				var filterValues = dimple.getUniqueValues(data, "Author");
+				// Get all the rectangles from our now orphaned legend
+				myLegend.shapes.selectAll("rect")
+				  // Add a click event to each rectangle
+				  .on("click", function(e) {
+				    // This indicates whether the item is already visible or not
+				    var hide = false;
+				    var newFilters = [];
+				    // If the filters contain the clicked shape hide it
+				    filterValues.forEach(function(f) {
+				      if (f === e.aggField.slice(-1)[0]) {
+				        hide = true;
+				      } else {
+				        newFilters.push(f);
+				      }
+				    });
+				    // Hide the shape or show it
+				    if (hide) {
+				      d3.select(this).style("opacity", 0.2);
+				    } else {
+				      newFilters.push(e.aggField.slice(-1)[0]);
+				      d3.select(this).style("opacity", 0.8);
+				    }
+				    // Update the filters
+				    filterValues = newFilters;
+				    // Filter the data
+				    chart.data = dimple.filterData(data, "Author", filterValues);
+				    // Passing a duration parameter makes the chart animate. Without
+				    // it there is no transition
+				    chart.draw();
+				    y.shapes.selectAll("text")
+				      .call(wrap, 50);
+				  });
+			}
+				
 			svg.selectAll("circle")
 				.on("click",function(e){
 			  })
@@ -2244,5 +2265,11 @@ $( function(){
 			visualizeWidget.options.queryString = updateString;
 			$.PALM.boxWidget.refresh( visualizeWidget.element , visualizeWidget.options );
 	}	
+	
+	function sortList(a,b){
+			a = a.toLowerCase();
+			b = b.toLowerCase();
+			return (a < b) ? -1 : (a > b) ? 1 : 0;
+		}
 	
 </script>
