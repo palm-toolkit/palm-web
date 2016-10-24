@@ -171,6 +171,10 @@ $( function(){
 				}
 				if(visType=="topics"){
 					visList = ["Bubbles", "Evolution", "List", "Comparison"];
+					if(objectType=="publication")
+					{
+						visList = ["Bubbles", "List", "Comparison"];
+					}
 				}
 			}
 			else
@@ -193,11 +197,15 @@ $( function(){
 					visList = ["Timeline", "Group", "List"];
 					if(objectType=="publication")
 					{
-						visList = ["Timeline", "Group", "Similar", "List"];
+						visList = ["Similar", "List"];
 					}	
 				}
 				if(visType=="topics"){
 					visList = ["Bubbles", "Evolution", "List"];
+					if(objectType=="publication")
+					{
+						visList = ["Bubbles", "List"];
+					}
 				}
 			}	
 				<#-- create tabs according to visualization type-->
@@ -814,13 +822,16 @@ $( function(){
 		function tabVisBubbles(uniqueVisWidget, url, widgetElem, tabContent){
 			
 			$.getJSON( url , function( dataBubble ) {
+			
+			console.log("bubbles data")
+			console.log(dataBubble)
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniqueVisWidget );
 				
 				var bubblesTab = $( widgetElem ).find( "#tab_Bubbles" );
 				bubblesTab.html("");
 				
-				visBubbles(dataBubble.map.list);
+				visBubbles(dataBubble.map.list, dataBubble.dataList.split(','));
 			});
 		}
 				
@@ -841,6 +852,9 @@ $( function(){
 			tabEvolutionContainer.append(evolutionSection);	
 			
 			var newSect = $( '<div/>' ).attr("id","svgContainer")
+								.on("click",function(){
+									hidemenudiv('menu')
+								})
 			evolutionSection.append(newSect);	
 			
 							evolutionSection.addClass('evolutionSection')
@@ -854,7 +868,7 @@ $( function(){
 					   			touchScrollStep: 50,
 					       });
 			
-				drawDimpleChart(data.map.list);
+				drawDimpleChart(data.map.list, data.map.topicIdMap);
 			});
 		}
 
@@ -908,8 +922,6 @@ $( function(){
 		<#-- LIST TAB -->
 		function tabVisList(uniqueVisWidget, url, widgetElem, tabContent, visType, type){
 		
-		
-		
 			$.getJSON( url , function( data ) {
 						console.log("list data")
 						console.log(data)
@@ -949,13 +961,19 @@ $( function(){
 										var researcherNav =
 										$( '<div/>' )
 											.addClass( 'nav' );
+											
+										if(objectType=="publication")
+											text = item.name
+										else
+											text = item.name + " ( " + item.coautorTimes + " time(s) )"		
+											
 										var researcherDetail =
 										$( '<div/>' )
 											.addClass( 'detail' )
 											.append(
 												$( '<div/>' )
-													.addClass( 'name capitalize' )
-													.html( item.name )
+													//.addClass( 'name capitalize' )
+													.html( text )
 											);
 										researcherDiv
 											.append(
@@ -1079,7 +1097,7 @@ $( function(){
 										var topicDiv = 
 										$( '<div/>' )
 											.addClass( 'author' )
-											.attr({ 'id' : item[0] });
+											.attr({ 'id' : item[2] });
 										var topicNav =
 										$( '<div/>' )
 											.addClass( 'nav' )
@@ -1097,7 +1115,7 @@ $( function(){
 															  type:"listItem",
 													          clientX:d.clientX,
 													          clientY:d.clientY,
-													          itemId:item.id,
+													          itemId:item[2],
 													          objectType:"topic"
 													};
 												showmenudiv(obj, 'menu')
@@ -1287,13 +1305,13 @@ $( function(){
 									<#-- build the researcher list -->
 									var sortedNamesList = nameList.sort(function(a, b) 
 									{
-										return sortList(a[0].name, b[0].name);
+										return sortList(a.name, b.name);
 									})
 									$.each( sortedNamesList, function( index, item){
 										var vennDiv = 
 										$( '<div/>' )
 											.addClass( 'author' )
-											.attr({ 'id' : item[1].id });
+											.attr({ 'id' : item.id });
 										var vennNav =
 										$( '<div/>' )
 											.addClass( 'nav' );
@@ -1303,7 +1321,7 @@ $( function(){
 											.append(
 												$( '<div/>' )
 													.addClass( 'name capitalize' )
-													.html( (index+1)+") "+item[0].name )
+													.html( (index+1)+") "+item.name )
 											);
 										vennDiv
 											.append(
@@ -1318,20 +1336,20 @@ $( function(){
 														  type:"comparisonListItem",
 												          clientX:d.clientX,
 												          clientY:d.clientY,
-												          itemId:item[1].id,
+												          itemId:item.id,
 												          objectType:visType.substring(0,visType.length-1)
 												};
 												if(visType == "researchers" || visType == "conferences"){
-													if(item[2].isAdded)
+													if(item.isAdded)
 														showmenudiv(obj, 'menu')
 													else
-														showhoverdiv(obj, 'divtoshow', item[0].name.toUpperCase() + " is currently not present in PALM")
+														showhoverdiv(obj, 'divtoshow', item.name.toUpperCase() + " is currently not present in PALM")
 												}		
 												else
 														showmenudiv(obj, 'menu')
 											});
 										if(visType == "researchers" || visType == "conferences"){	
-											if( !item[2].isAdded ){
+											if( !item.isAdded ){
 												vennDiv.addClass( "text-gray" );
 											}
 										}
@@ -1773,13 +1791,13 @@ $( function(){
 		  vis_researcher.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 		}
 		
-		function visBubbles(data){
+		function visBubbles(data, namesList){
 		
 		var color = d3.scale.ordinal().range(customColors),
 		    diameter = 500;
 		    
 		var zoom = d3.behavior.zoom()
-						.scaleExtent([0, 10])
+						.scaleExtent([0, 15])
 						.on("zoom", zoomedBubbles);    
 		    
 		var bubble = d3.layout.pack()
@@ -1797,7 +1815,11 @@ $( function(){
 		    .attr("height", diameter)
 		    .attr("class", "bubble")
 		      .append("g")
-		    .call(zoom).append("g");
+		    .call(zoom).append("g")
+		    .on("click",function(){
+		    	hidehoverdiv('divtoshow');
+				hidemenudiv('menu')
+		    })
 		    
 	   var rect2 = svg.append("rect")
 						    .attr("width", diameter)
@@ -1815,7 +1837,26 @@ $( function(){
 		    .attr("class", "node")
 		    .attr("transform", function(d) { return "translate(" + (d.x + 50) + "," + (d.y - 40) + ")"; })
 			.on("click", function(d){
-			        	console.log(d);} );		  
+					obj = {
+							type:"bubble",
+							clientX:d3.event.clientX,
+							clientY:d3.event.clientY,
+							topicId:d[2]
+						};
+									
+					showmenudiv(obj,'menu'); 
+					d3.event.stopPropagation();       	
+			} )
+			.on("mouseover",function(d,i){
+					obj = {
+							type:"bubble",
+							clientX:d3.event.clientX,
+							clientY:d3.event.clientY,
+							name:namesList[i]
+						};
+					if(namesList.length<2)					
+					showhoverdiv(obj,'divtoshow', d[0]);		    	
+		    })      			  
 		
 		arcGs = nodes.selectAll("g.arc")
 		    .data(function(d) {
@@ -1829,7 +1870,23 @@ $( function(){
 		      arc.outerRadius(d.r);
 		      return arc(d);
 		    })
-		    .style("fill", function(d, i) { return color(i); });
+		    .style("fill", function(d, i) { return color(i); })
+		    .on("mouseover",function(d,i){
+		    
+					obj = {
+							type:"bubble",
+							clientX:d3.event.clientX,
+							clientY:d3.event.clientY,
+							name:namesList[i]
+						};
+					if(namesList.length>1)				
+						showhoverdiv(obj,'divtoshow',namesList[i]);		    	
+		    })
+		   <#-- .on("click",function(d,i){
+		    	console.log("arc")
+		    	console.log(d);
+		    	console.log(namesList[i])
+		    })-->
 		
 		
 		nodes.append("text")
@@ -1852,7 +1909,7 @@ $( function(){
 		  svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 		}
 		
-		function drawDimpleChart(data){
+		function drawDimpleChart(data, topicIdMap){
 			
 			var numberOfTopics = dimple.getUniqueValues(data, "Topic");
 			if(numberOfTopics.length * 40 > 400)
@@ -1918,6 +1975,18 @@ $( function(){
 				
 			svg.selectAll("circle")
 				.on("click",function(e){
+					obj = {
+							type:"evolution",
+							clientX:d3.event.clientX,
+							clientY:d3.event.clientY,
+							topicId:topicIdMap[e.y]
+						};
+									
+					showmenudiv(obj,'menu');
+				
+				console.log(topicIdMap[e.y])
+				d3.event.stopPropagation(); 
+				//console.log(d3.event.pageX + " : " + d3.event.pageY );
 			  })
 		}
 		
@@ -1967,7 +2036,7 @@ $( function(){
 		    var left;
 			var top;
 			
-			if(e.type == "similarBar" || e.type == "cluster" || e.type == "clusterItem"){
+			if(e.type == "similarBar" || e.type == "cluster" || e.type == "clusterItem" || e.type == "bubble"){
 			    left  = (e.clientX - 10) + "px";
 			    top  = (e.clientY  + 20) + "px";
 		    }
@@ -2014,7 +2083,7 @@ $( function(){
 			var left;
 			var top;
 			
-			if(e.type == "similarBar" || e.type=="clickPublication" || e.type == "cluster" || e.type == "clusterItem"){
+			if(e.type == "similarBar" || e.type=="clickPublication" || e.type == "cluster" || e.type == "clusterItem" || e.type == "bubble" || e.type == "evolution"){
 			    left  = (e.clientX - 330) + "px";
 			    top  = (e.clientY - 140) + "px";
 		    }
@@ -2064,7 +2133,7 @@ $( function(){
 				}	
 			}
 			
-			if(e.type == "clickEdge" || e.type == "similarBar" || e.type == "clickLocation" || e.type == "clickPublication" || e.type == "comparisonListItem" || e.type == "listItem" || e.type == "cluster" || e.type == "clusterItem"){
+			if(e.type == "clickEdge" || e.type == "similarBar" || e.type == "clickLocation" || e.type == "clickPublication" || e.type == "comparisonListItem" || e.type == "listItem" || e.type == "cluster" || e.type == "clusterItem" || e.type == "bubble" || e.type == "evolution"){
 					$(".menu").show();
 	
 				<#-- do not show menu if the object is there in the setup already -->
@@ -2156,6 +2225,18 @@ $( function(){
 			itemAdd(targetVal,$(this).parent().parent()[0].value.visType.substring(0,visType.length-1));
 		}
 		
+		if($(this).parent().parent()[0].value.type=="bubble"){
+
+			targetVal.push($(this).parent().parent()[0].value.topicId);
+			itemAdd(targetVal,"topic");
+		}
+		
+		if($(this).parent().parent()[0].value.type=="evolution"){
+
+			targetVal.push($(this).parent().parent()[0].value.topicId);
+			itemAdd(targetVal,"topic");
+		}
+		
 		 hidemenudiv('menu');
 		 
 		 return false;
@@ -2222,6 +2303,18 @@ $( function(){
 
 			targetVal.push($(this).parent().parent()[0].value.clusterItem);
 			itemReplace(targetVal,$(this).parent().parent()[0].value.visType.substring(0,visType.length-1));
+		}
+		
+		if($(this).parent().parent()[0].value.type=="bubble"){
+
+			targetVal.push($(this).parent().parent()[0].value.topicId);
+			itemReplace(targetVal,"topic");
+		}
+		
+		if($(this).parent().parent()[0].value.type=="evolution"){
+
+			targetVal.push($(this).parent().parent()[0].value.topicId);
+			itemReplace(targetVal,"topic");
 		}
 		
 		hidemenudiv('menu');

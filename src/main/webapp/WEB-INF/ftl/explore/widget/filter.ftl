@@ -103,16 +103,16 @@
 				if(objectType=="publication")
 				{
 					if(visType=="researchers"){
-						filterList = ["Time","Publications", "Conferences", "Topics","Circles"];
+						filterList = ["Time", "Conferences", "Topics","Circles"];
 					}
 					if(visType=="conferences"){
-						filterList = ["Time","Topics", "Conferences"];
+						filterList = ["Time", "Topics", "Conferences"];
 					}		
 					if(visType=="publications"){
 						filterList = ["Time","Topics", "Researchers", "Conferences"];
 					}
 					if(visType=="topics"){
-						filterList = ["Time","Publications", "Researchers", "Conferences"];
+						filterList = ["Time", "Researchers", "Conferences"];
 					}
 				}
 				
@@ -123,6 +123,10 @@
 				
 				if(data.type!="undefined" && data.visType!="undefined")
 				{
+				
+				console.log("FILTERS: ....... ")
+				console.log(data)
+				
 					targetContainer.html("");
 	    			
 	    			if(ids.length!=0)
@@ -189,7 +193,7 @@
 		
 					
 						<#-- PUBLICATIONS FILTER -->
-						if(data.publicationFilter!=null){
+						if(data.publicationFilter.publicationsList.length!=0){
 							var pubSectionHeader = $( '<span/>' ).html("PUBLICATIONS (" + data.publicationFilter.publicationsList.length + ") :")
 											.append('&nbsp;')
 											.append(
@@ -250,7 +254,7 @@
 							}	
 							
 						<#-- CONFERENCE FILTER -->
-						if(data.conferenceFilter!=null){
+						if(data.conferenceFilter.eventsList.length!=0){
 						
 							var confSectionHeader = $( '<span/>' ).html("CONFERENCES (" + data.conferenceFilter.eventsList.length + ") :")
 											.append('&nbsp;')
@@ -313,7 +317,7 @@
 							}	
 						
 						<#-- TOPIC FILTER -->
-						if(data.topicFilter!=null){
+						if(data.topicFilter.topicDetailsList.length!=0){
 						
 						 	var topSectionHeader = $( '<span/>' ).html("TOPICS/INTERESTS (" + data.topicFilter.topicDetailsList.length + ") :")
 											.append('&nbsp;')
@@ -379,7 +383,7 @@
 							}
 						});
 					<#-- CIRCLES FILTER -->
-						if(data.circleFilter!=null){
+						if(data.circleFilter.circles.length!=0){
 						
 							var cirSectionHeader = $( '<span/>' ).html("CIRCLES (" + data.circleFilter.circles.length + ") :")
 											.append('&nbsp;')
