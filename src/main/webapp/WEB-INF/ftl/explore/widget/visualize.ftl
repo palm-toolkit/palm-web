@@ -1912,10 +1912,10 @@ $( function(){
 		function drawDimpleChart(data, topicIdMap){
 			
 			var numberOfTopics = dimple.getUniqueValues(data, "Topic");
-			if(numberOfTopics.length * 40 > 400)
+			if(numberOfTopics.length * 40 > 500)
 				height = numberOfTopics.length * 40
 			else
-				height = 400
+				height = 500
 					
 			var svg = dimple.newSvg("#chartTab", "100%", height);
 			var chart = new dimple.chart(svg, data);

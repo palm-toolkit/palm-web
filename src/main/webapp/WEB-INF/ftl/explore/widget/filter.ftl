@@ -96,7 +96,7 @@
 						filterList = ["Time","Topics"];
 					}
 					if(visType=="topics"){
-						filterList = ["Time","Publications", "Researchers", "Conferences"];
+						filterList = ["Time","Publications", "Researchers"];
 					}
 				}
 				
