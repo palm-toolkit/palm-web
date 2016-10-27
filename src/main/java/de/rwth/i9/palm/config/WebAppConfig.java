@@ -39,11 +39,11 @@ import de.rwth.i9.palm.feature.researcher.ResearcherFeature;
 import de.rwth.i9.palm.feature.researcher.ResearcherFeatureImpl;
 import de.rwth.i9.palm.feature.user.UserFeature;
 import de.rwth.i9.palm.feature.user.UserFeatureImpl;
-import de.rwth.i9.palm.graph.feature.GraphFeature;
-import de.rwth.i9.palm.graph.feature.GraphFeatureImpl;
 import de.rwth.i9.palm.service.ApplicationService;
 import de.rwth.i9.palm.service.SecurityService;
 import de.rwth.i9.palm.service.TemplateService;
+import de.rwth.i9.palm.visualanalytics.visualization.GraphFeature;
+import de.rwth.i9.palm.visualanalytics.visualization.GraphFeatureImpl;
 
 //import de.rwth.i9.palm.analytics.api.PalmAnalyticsImpl;
 

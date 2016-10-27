@@ -193,7 +193,7 @@
 		
 					
 						<#-- PUBLICATIONS FILTER -->
-						if(data.publicationFilter.publicationsList.length!=0){
+						if(data.publicationFilter != undefined && data.publicationFilter.publicationsList.length!=0){
 							var pubSectionHeader = $( '<span/>' ).html("PUBLICATIONS (" + data.publicationFilter.publicationsList.length + ") :")
 											.append('&nbsp;')
 											.append(
@@ -254,7 +254,7 @@
 							}	
 							
 						<#-- CONFERENCE FILTER -->
-						if(data.conferenceFilter.eventsList.length!=0){
+						if(data.conferenceFilter != undefined && data.conferenceFilter.eventsList.length!=0){
 						
 							var confSectionHeader = $( '<span/>' ).html("CONFERENCES (" + data.conferenceFilter.eventsList.length + ") :")
 											.append('&nbsp;')
@@ -317,6 +317,8 @@
 							}	
 						
 						<#-- TOPIC FILTER -->
+						console.log(data.topicFilter != undefined && data.topicFilter.topicDetailsList.length + " here")
+
 						if(data.topicFilter.topicDetailsList.length!=0){
 						
 						 	var topSectionHeader = $( '<span/>' ).html("TOPICS/INTERESTS (" + data.topicFilter.topicDetailsList.length + ") :")
@@ -383,7 +385,7 @@
 							}
 						});
 					<#-- CIRCLES FILTER -->
-						if(data.circleFilter.circles.length!=0){
+						if(data.circleFilter != undefined && data.circleFilter.circles.length!=0){
 						
 							var cirSectionHeader = $( '<span/>' ).html("CIRCLES (" + data.circleFilter.circles.length + ") :")
 											.append('&nbsp;')
