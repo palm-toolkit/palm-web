@@ -140,6 +140,8 @@ $( function(){
 					visType = data.visType;
 				}
 				
+				
+				console.log(" visType: " + visType + " object:  "  +objectType  )
 			<#-- if more than one item in consideration -->	
 			if(ids.length>1)
 			{
@@ -162,11 +164,12 @@ $( function(){
 					}
 				}		
 				if(visType=="publications"){
-					if(objectType!="conference")
-						visList = ["Timeline", "Group", "List", "Comparison"];
+					visList = ["Timeline", "Group", "List", "Comparison"];
+					if(objectType=="conference")
+						visList = ["Timeline", "Group", "List"]; //comparison doesn't make sense here
 					if(objectType=="publication")
 					{
-						visList = ["Timeline", "Group", "Similar", "List"];
+						visList = ["Timeline", "Similar", "List"]; //comparison doesn't make sense here
 					}	
 				}
 				if(visType=="topics"){
@@ -275,9 +278,14 @@ $( function(){
 				var uniqueVisWidget = $.PALM.utility.generateUniqueId();
 				
 				<#-- to show the gephi network again -->
-				if(loadedList.indexOf(visItem)!= -1 && visItem=="Network"){
+				if(loadedList.indexOf(visItem)!= -1){
+				
 					var reload="true";
-					tabVisNetwork(uniqueVisWidget, url, widgetElem, tabContent, reload);
+					if( visItem=="Network")	
+						tabVisNetwork(uniqueVisWidget, url, widgetElem, tabContent, reload);
+						
+					if( visItem=="Locations")	
+						tabVisLocations(uniqueVisWidget, url, widgetElem, tabContent, reload);	
 				}
 				if(loadedList.indexOf(visItem)== -1){
 				
@@ -289,7 +297,7 @@ $( function(){
 						tabVisNetwork(uniqueVisWidget, url, widgetElem, tabContent, false);
 					}
 					if(visItem == "Locations"){
-						tabVisLocations(uniqueVisWidget, url, widgetElem, tabContent);
+						tabVisLocations(uniqueVisWidget, url, widgetElem, tabContent, false);
 					}
 					if(visItem == "Timeline"){
 						tabVisTimeline(uniqueVisWidget, url, widgetElem, tabContent);
@@ -505,139 +513,144 @@ $( function(){
   		});
 		
 		<#-- LOCATIONS TAB -->
-		function tabVisLocations(uniqueVisWidget, url, widgetElem, tabContent){
+		function tabVisLocations(uniqueVisWidget, url, widgetElem, tabContent, reload){
 		
-		$.getJSON( url , function( data ) {
-		
-			<#-- remove  pop up progress log -->
-			$.PALM.popUpMessage.remove( uniqueVisWidget );
+		if(reload){
+			 L.Util.requestAnimFrame(mymap.invalidateSize,mymap,!1,mymap._container);
+		}
+		else{
+			$.getJSON( url , function( data ) {
 			
-			var locDiv = $('<div/>').attr("id","mapid").css("height","60vh").css("z-index","1");
-			tabContent.append(locDiv);
+				<#-- remove  pop up progress log -->
+				$.PALM.popUpMessage.remove( uniqueVisWidget );
 				
-			mymap = L.map('mapid');
-			
-			L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-			    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-			    maxZoom: 18,
-			    id: 'mguliani.0ph7d97m',
-			    accessToken: 'pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw'
-			}).addTo(mymap);
-			
-			var maxlat=0;
-			var maxlon=0;
-			var minlat=0;
-			var minlon=0;
-			
-			var myLayer;
-			var mydata = [];	
-			var city = [];
-			var country = [];
-			var confdata = data;
-			var i;
-			
-			console.log("locations data")
-			console.log(data)
-			if(data.type=="researcher" || data.type=="publication")
-			{
-					for(i=0; i< data.map.events.length; i++)
-					{
-					 (function(i) {
-						$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/" + data.map.events[i].location.city + ".json?autocomplete=false&access_token=pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw",
-							function(mapdata){
-			
-								conf = data.map.events[i].groupName // need to check this!!
-								year = data.map.events[i].year
-								eventGroupId = data.map.events[i].eventGroupId
-								groupname = data.map.events[i].groupName
+				var locDiv = $('<div/>').attr("id","mapid").css("height","60vh").css("z-index","1");
+				tabContent.append(locDiv);
+					
+				mymap = L.map('mapid');
 				
-								mapdata.features[0].properties.conference = conf
-								mapdata.features[0].properties.year = year
-								mapdata.features[0].properties.eventGroupId = eventGroupId
-								mapdata.features[0].properties.groupname = groupname
-								mapdata.features[0].properties.dataType = "researcher"
-								mydata.push(myLayer.addData(mapdata.features[0]));
-							});
-						})(i);
-					}			
-					myLayer = L.geoJson(mydata, {
-						       pointToLayer: function (feature, latlng) {
-						      	
-						       if(latlng.lat > maxlat){
-						       		maxlat = latlng.lat
-						       }
-						       if(latlng.lat < minlat){
-						       		minlat = latlng.lat
-						       }
-						       if(latlng.lon > maxlon){
-						       		maxlon = latlng.lon
-						       }
-						       if(latlng.lon < minlon){
-						       		minlat = latlng.lon
-						       }
-						       
-						        mymap.setView([(maxlat+minlat)/2,(maxlon+minlon)/2], 2);
-						         return L.marker(latlng).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
-						       },
-						       onEachFeature: onEachFeature
-						     }).addTo(mymap); 
-				}
-				if(data.type=="conference")
+				L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+				    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+				    maxZoom: 18,
+				    id: 'mguliani.0ph7d97m',
+				    accessToken: 'pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw'
+				}).addTo(mymap);
+				
+				var maxlat=0;
+				var maxlon=0;
+				var minlat=0;
+				var minlon=0;
+				
+				var myLayer;
+				var mydata = [];	
+				var city = [];
+				var country = [];
+				var confdata = data;
+				var i;
+				
+				console.log("locations data")
+				console.log(data)
+				if(data.type=="researcher" || data.type=="publication")
 				{
-					var eventGroupList=[];	
-					var iconColorList=['green','blue','red','yellow','orange','violet','black','grey'];			
-					for(i=0; i< data.map.events.length; i++)
-					{
-					 (function(i) {
-						$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/" + data.map.events[i].location + ".json?autocomplete=false&access_token=pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw",
-							function(mapdata){
-			
-								conf = data.map.events[i].eventGroupName //name
-								year = data.map.events[i].year
-								eventGroup = data.map.events[i].eventGroupName
-								eventGroupId = data.map.events[i].eventGroupId
-								if(eventGroupList.indexOf(eventGroup)== -1)
-								eventGroupList.push(eventGroup);
-								
-								mapdata.features[0].properties.conference = conf
-								mapdata.features[0].properties.year = year
-								mapdata.features[0].properties.eventGroup = eventGroup
-								mapdata.features[0].properties.eventGroupId = eventGroupId
-								mapdata.features[0].properties.dataType = "conference"
-								mydata.push(myLayer.addData(mapdata.features[0]));
-							});
-						})(i);
-					}			
-					myLayer = L.geoJson(mydata, {
-						       pointToLayer: function (feature, latlng) {
-						      	
-						       if(latlng.lat > maxlat){
-						       		maxlat = latlng.lat
-						       }
-						       if(latlng.lat < minlat){
-						       		minlat = latlng.lat
-						       }
-						       if(latlng.lon > maxlon){
-						       		maxlon = latlng.lon
-						       }
-						       if(latlng.lon < minlon){
-						       		minlat = latlng.lon
-						       }
-						       
-						        mymap.setView([(maxlat+minlat)/2,(maxlon+minlon)/2], 2);
-						        return L.marker(latlng,{icon: new L.Icon({
-								  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-'+iconColorList[eventGroupList.indexOf(feature.properties.eventGroup)]+'.png'
-								})}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
-						       },
-						       onEachFeature: onEachFeature
-						     }).addTo(mymap); 
-				}
+						for(i=0; i< data.map.events.length; i++)
+						{
+						 (function(i) {
+							$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/" + data.map.events[i].location.city + ".json?autocomplete=false&access_token=pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw",
+								function(mapdata){
 				
-				mymap.on('click',function(e){
-					hidemenudiv('menu')
-					hidehoverdiv('divtoshow')
-				})
-			});		
+									conf = data.map.events[i].groupName // need to check this!!
+									year = data.map.events[i].year
+									eventGroupId = data.map.events[i].eventGroupId
+									groupname = data.map.events[i].groupName
+					
+									mapdata.features[0].properties.conference = conf
+									mapdata.features[0].properties.year = year
+									mapdata.features[0].properties.eventGroupId = eventGroupId
+									mapdata.features[0].properties.groupname = groupname
+									mapdata.features[0].properties.dataType = "researcher"
+									mydata.push(myLayer.addData(mapdata.features[0]));
+								});
+							})(i);
+						}			
+						myLayer = L.geoJson(mydata, {
+							       pointToLayer: function (feature, latlng) {
+							      	
+							       if(latlng.lat > maxlat){
+							       		maxlat = latlng.lat
+							       }
+							       if(latlng.lat < minlat){
+							       		minlat = latlng.lat
+							       }
+							       if(latlng.lon > maxlon){
+							       		maxlon = latlng.lon
+							       }
+							       if(latlng.lon < minlon){
+							       		minlat = latlng.lon
+							       }
+							       
+							        mymap.setView([(maxlat+minlat)/2,(maxlon+minlon)/2], 2);
+							         return L.marker(latlng).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+							       },
+							       onEachFeature: onEachFeature
+							     }).addTo(mymap); 
+					}
+					if(data.type=="conference")
+					{
+						var eventGroupList=[];	
+						var iconColorList=['green','blue','red','yellow','orange','violet','black','grey'];			
+						for(i=0; i< data.map.events.length; i++)
+						{
+						 (function(i) {
+							$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/" + data.map.events[i].location + ".json?autocomplete=false&access_token=pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw",
+								function(mapdata){
+				
+									conf = data.map.events[i].eventGroupName //name
+									year = data.map.events[i].year
+									eventGroup = data.map.events[i].eventGroupName
+									eventGroupId = data.map.events[i].eventGroupId
+									if(eventGroupList.indexOf(eventGroup)== -1)
+									eventGroupList.push(eventGroup);
+									
+									mapdata.features[0].properties.conference = conf
+									mapdata.features[0].properties.year = year
+									mapdata.features[0].properties.eventGroup = eventGroup
+									mapdata.features[0].properties.eventGroupId = eventGroupId
+									mapdata.features[0].properties.dataType = "conference"
+									mydata.push(myLayer.addData(mapdata.features[0]));
+								});
+							})(i);
+						}			
+						myLayer = L.geoJson(mydata, {
+							       pointToLayer: function (feature, latlng) {
+							      	
+							       if(latlng.lat > maxlat){
+							       		maxlat = latlng.lat
+							       }
+							       if(latlng.lat < minlat){
+							       		minlat = latlng.lat
+							       }
+							       if(latlng.lon > maxlon){
+							       		maxlon = latlng.lon
+							       }
+							       if(latlng.lon < minlon){
+							       		minlat = latlng.lon
+							       }
+							       
+							        mymap.setView([(maxlat+minlat)/2,(maxlon+minlon)/2], 2);
+							        return L.marker(latlng,{icon: new L.Icon({
+									  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-'+iconColorList[eventGroupList.indexOf(feature.properties.eventGroup)]+'.png'
+									})}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+							       },
+							       onEachFeature: onEachFeature
+							     }).addTo(mymap); 
+					}
+					
+					mymap.on('click',function(e){
+						hidemenudiv('menu')
+						hidehoverdiv('divtoshow')
+					})
+				});
+			}		
 		}
 		
 		function onEachFeature(feature, layer) {
