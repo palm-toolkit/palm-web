@@ -74,6 +74,7 @@
 							.css("padding-left","5px")
 							.css("padding-right","5px")
 							.css({ "cursor":"pointer"})
+							.addClass( 'name capitalize' )
 							.html("  "+data.name[i]+ " X ")
 							<#-- click to delete item from setup widget -->
 							.on( "click", function(e){

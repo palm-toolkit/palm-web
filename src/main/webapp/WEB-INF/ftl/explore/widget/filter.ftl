@@ -103,7 +103,7 @@
 				if(objectType=="publication")
 				{
 					if(visType=="researchers"){
-						filterList = ["Time", "Conferences", "Topics","Circles"];
+						filterList = ["Time", "Topics", "Conferences"];
 					}
 					if(visType=="conferences"){
 						filterList = ["Time", "Topics", "Conferences"];
@@ -317,10 +317,7 @@
 							}	
 						
 						<#-- TOPIC FILTER -->
-						console.log(data.topicFilter != undefined && data.topicFilter.topicDetailsList.length + " here")
-
-						if(data.topicFilter.topicDetailsList.length!=0){
-						
+						if(data.topicFilter != undefined && data.topicFilter.topicDetailsList.length!=0){
 						 	var topSectionHeader = $( '<span/>' ).html("TOPICS/INTERESTS (" + data.topicFilter.topicDetailsList.length + ") :")
 											.append('&nbsp;')
 											.append(

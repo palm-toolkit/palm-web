@@ -483,8 +483,9 @@ div.d3-tooltip {
 }
 
 .content-list>.authorExplore,
-.content-list>.eventgroup-itemExplore,
-.content-list>.publicationExplore
+.content-list>.eventgroupExplore,
+.content-list>.publicationExplore,
+.content-list>.topicExplore
 {
 	margin-left: 5px;
 	width:100%;

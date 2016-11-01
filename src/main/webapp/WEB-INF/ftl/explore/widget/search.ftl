@@ -149,11 +149,11 @@
 	   				if(itemType == "publications"){
 	   					url = "searchPublications";
 	   				}
-	   				if(itemType == "circles"){
-	   					url = "searchCircles";
-	   				}
 	   				if(itemType == "topics"){
 	   					url = "searchTopics";
+	   				}
+	   				if(itemType == "circles"){
+	   					url = "searchCircles";
 	   				}
 		}
 		
@@ -285,7 +285,7 @@
 								$.each( data.eventGroups, function( index, itemEvent ){
 									var eventItem = 
 										$('<div/>')
-										.addClass( "eventgroup-itemExplore" )
+										.addClass( "eventgroupExplore" )
 										.attr({ "data-id": itemEvent.id });
 										
 									<#-- hide unevaluated event -->
@@ -478,11 +478,6 @@
 									targetContainer
 									.append( publicationItem )
 									.css({ "cursor":"pointer"});
-									
-						
-						
-						
-								
 								
 								});
 								
@@ -490,7 +485,62 @@
 							}
 	   						
 	   						
-						}	//if 
+						}	//if
+						
+						if(itemType == "topics"){
+   						
+						<#--	if( data.count == 0 ){
+								if( typeof data.query === "undefined" || data.query == "" )
+									$.PALM.callout.generate( targetContainer , "normal", "Currently no conferences/journals found on PALM database" );
+								else
+									$.PALM.callout.generate( targetContainer , "warning", "Empty search results!", "No conferences/journals found with query \"" + data.query + "\"" );
+								//return false;
+							}
+							
+							if( data.count > 0 ){-->
+							
+								// build the topics list
+								var sortedList = data.topicsList.sort();
+								$.each( sortedList, function( index, item ){
+									var topicItem = 
+										$('<div/>')
+										.addClass( "topicExplore" )
+										.attr({ "data-id": item.id });
+										
+									<#-- topic detail -->
+									var topicDetail = $('<div/>')
+										.addClass( 'name capitalize' )
+										.html(item.name);
+									
+									<#-- append to event group -->
+									topicItem.append( topicDetail );
+						
+									topicDetail
+										.on("mouseover", function(){
+										$( this ).parent().context.style.color="gray";
+									});
+									topicDetail
+										.on("mouseout", function(){
+										$( this ).parent().context.style.color="black";
+									});
+
+									<#-- add click event -->
+									topicDetail.on( "click", function( e){
+										$( this ).parent().context.style.color="black";
+										console.log(item.id)
+										itemSelection(item.id, "topic");
+									});
+									
+									targetContainer
+									.append( topicItem )
+									.css({ "cursor":"pointer"});
+																	
+								});
+								
+								setFooter(data, widgetElem);
+							//}	
+						}
+						 
 									
 					}); //getJson
 		}
@@ -528,7 +578,7 @@
 				if( jumpTo === "first") // if new searching performed
 					url = url + "?query=" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
 				else
-					url = url + "?query=" + obj.options.query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
+					url = url + "?query=" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
 	
 		});
 				targetContainer.html( "" );
