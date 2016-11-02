@@ -178,6 +178,10 @@ $( function(){
 					{
 						visList = ["Bubbles", "List", "Comparison"];
 					}
+					if(objectType=="topic")
+					{
+						visList = ["Similar", "Evolution", "List"];
+					}
 				}
 			}
 			else
@@ -208,6 +212,10 @@ $( function(){
 					if(objectType=="publication")
 					{
 						visList = ["Bubbles", "List"];
+					}
+					if(objectType=="topic")
+					{
+						visList = ["Similar", "Evolution", "List"];
 					}
 				}
 			}	
@@ -382,14 +390,14 @@ $( function(){
 				          if (toKeep[n.id])
 				            n.color = n.originalColor;
 				          else
-				            n.color = '#eee';
+				            n.color = '#c9c0c2';
 				        });
 				
 				        s.graph.edges().forEach(function(e) {
 				          if (toKeep[e.source] && toKeep[e.target])
 				            e.color = e.originalColor;
 				          else
-				            e.color = '#eee';
+				            e.color = '#c9c0c2';
 				        });
 				
 				        // Since the data has been modified, we need to
@@ -449,14 +457,14 @@ $( function(){
 				          if (toKeep[n.id])
 				            n.color = n.originalColor;
 				          else
-				            n.color = '#eee';
+				            n.color = '#c9c0c2';
 				        });
 				
 				        s.graph.edges().forEach(function(e) {
 				          if (toKeep[e.source] && toKeep[e.target])
 				            e.color = e.originalColor;
 				          else
-				            e.color = '#eee';
+				            e.color = '#c9c0c2';
 				        });
 				
 				        // Since the data has been modified, we need to
@@ -550,7 +558,7 @@ $( function(){
 				
 				console.log("locations data")
 				console.log(data)
-				if(data.type=="researcher" || data.type=="publication")
+				if(data.type=="researcher" || data.type=="publication" || data.type=="topic")
 				{
 						for(i=0; i< data.map.events.length; i++)
 						{
@@ -975,7 +983,7 @@ $( function(){
 										$( '<div/>' )
 											.addClass( 'nav' );
 											
-										if(objectType=="publication")
+										if(objectType=="publication" || objectType=="topic")
 											text = item.name
 										else
 											text = item.name + " ( " + item.coautorTimes + " time(s) )"		
@@ -1032,8 +1040,9 @@ $( function(){
 												.addClass( 'author' )
 												<#--.attr({ 'id' : item.location.id });-->
 										}
-										if(type=="conference" || type=="publication")
+										if(type=="conference" || type=="publication" || type=="topic")
 										{
+										console.log("coming in 1")
 											conferenceDiv = 
 											$( '<div/>' )
 												.addClass( 'author' )
@@ -1062,8 +1071,6 @@ $( function(){
 												conferenceDetail
 											).append('&nbsp;')
 											.on('click', function(d){ 
-												
-													
 													if(type=="conference"){
 														obj = {
 																type:"listItem",
@@ -1455,24 +1462,26 @@ $( function(){
 									d3.event.stopPropagation();
 								})
 								.on("mouseover", function(d,i){
-									obj = {
-												  type:"similarBar",
-										          clientX:d3.event.clientX,
-										          clientY:d3.event.clientY,
-										          authorId:data.map.authorIds[i]
-									};
-									
-									var intarr = [] 
-									intarr = Object.keys(data.map.interests[i])
-									var count = 5;
-									if(intarr.length<5)
-										count = intarr.length
+									if(objectType!="topic"){
+										obj = {
+													  type:"similarBar",
+											          clientX:d3.event.clientX,
+											          clientY:d3.event.clientY,
+											          authorId:data.map.authorIds[i]
+										};
 										
-								var str = "Top common interests:";
-								for(var i=0; i<count; i++)
-									str = str +  "<br /> - " + intarr[i] 
-										
-									showhoverdiv(obj,'divtoshow', str);
+										var intarr = [] 
+										intarr = Object.keys(data.map.interests[i])
+										var count = 5;
+										if(intarr.length<5)
+											count = intarr.length
+											
+										var str = "Top common interests:";
+										for(var i=0; i<count; i++)
+											str = str +  "<br /> - " + intarr[i] 
+												
+											showhoverdiv(obj,'divtoshow', str);
+									}		
 								})
 								.on("mouseout", function(e,i){
 									hidehoverdiv('divtoshow');
@@ -1492,27 +1501,32 @@ $( function(){
 							.append('text')
 							.attr({'x':function(d) {return 0; },'y':function(d,i){ return yscale(i)+32; }})
 							.text(function(d,i){
-								return data.map.authorNames[i] + " (Common interests: " + data.map.similarity[i] + ") "; 
+								if(objectType=="topic")
+									return data.map.authorNames[i]
+								else
+									return data.map.authorNames[i] + " (Common interests: " + data.map.similarity[i] + ") "; 
 							}).style({'fill':'black','font-size':'13px', 'font-weight':'bold'})
 							.on("mouseover", function(d,i){
-									obj = {
-												  type:"similarBar",
-										          clientX:d3.event.clientX,
-										          clientY:d3.event.clientY,
-										          authorId:data.map.authorIds[i]
-									};
-									
-									var intarr = [] 
-									intarr = Object.keys(data.map.interests[i])
-									var count = 5;
-									if(intarr.length<5)
-										count = intarr.length
+									if(objectType!="topic"){
+										obj = {
+													  type:"similarBar",
+											          clientX:d3.event.clientX,
+											          clientY:d3.event.clientY,
+											          authorId:data.map.authorIds[i]
+										};
 										
-								var str = "Top common interests:";
-								for(var i=0; i<count; i++)
-									str = str +  "<br /> - " + intarr[i] 
-								
-									showhoverdiv(obj,'divtoshow', str);
+										var intarr = [] 
+										intarr = Object.keys(data.map.interests[i])
+										var count = 5;
+										if(intarr.length<5)
+											count = intarr.length
+											
+										var str = "Top common interests:";
+										for(var i=0; i<count; i++)
+											str = str +  "<br /> - " + intarr[i] 
+												
+											showhoverdiv(obj,'divtoshow', str);
+									}
 								})
 								.on("mouseout", function(e,i){
 									hidehoverdiv('divtoshow');
