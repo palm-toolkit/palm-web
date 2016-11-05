@@ -116,7 +116,7 @@
 										setBoxes(id, type, "publications")
 									}
 									if(type == "circle"){
-										setBoxes(id, type, "")
+										setBoxes(id, type, "researchers")
 									}
 								}
 							}
@@ -162,7 +162,7 @@
 										setBoxes(id, type, "publications")
 									}
 									if(type == "circle"){
-										setBoxes(id, type, "")
+										setBoxes(id, type, "researchers")
 									}
 								}
 							}
@@ -189,7 +189,7 @@
 								refreshVisFilter(id, type,  "publications");
 							}
 							if(type == "circle"){
-								refreshVisFilter(id, type,  "");
+								refreshVisFilter(id, type,  "researchers");
 							}
 		}
 		

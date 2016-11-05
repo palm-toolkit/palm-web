@@ -558,7 +558,7 @@ $( function(){
 				
 				console.log("locations data")
 				console.log(data)
-				if(data.type=="researcher" || data.type=="publication" || data.type=="topic")
+				if(data.type=="researcher" || data.type=="publication" || data.type=="topic" || data.type=="circle")
 				{
 						for(i=0; i< data.map.events.length; i++)
 						{
@@ -983,7 +983,7 @@ $( function(){
 										$( '<div/>' )
 											.addClass( 'nav' );
 											
-										if(objectType=="publication" || objectType=="topic")
+										if(objectType=="publication" || objectType=="topic" || objectType=="circle")
 											text = item.name
 										else
 											text = item.name + " ( " + item.coautorTimes + " time(s) )"		
@@ -1040,7 +1040,7 @@ $( function(){
 												.addClass( 'author' )
 												<#--.attr({ 'id' : item.location.id });-->
 										}
-										if(type=="conference" || type=="publication" || type=="topic")
+										if(type=="conference" || type=="publication" || type=="topic" || type=="circle" )
 										{
 										console.log("coming in 1")
 											conferenceDiv = 
@@ -1946,11 +1946,32 @@ $( function(){
 					
 			var svg = dimple.newSvg("#chartTab", "100%", height);
 			var chart = new dimple.chart(svg, data);
-			var y = chart.addCategoryAxis("y", ["Topic", "Author"]);
-			y.addOrderRule("Topic", true);
+			
+			var y;
+			var y_attr = [];
+			
+			if(objectType == "topic"){
+				y_attr = "Publication Count"
+				y_order =  "Publication Count"
+				s_attr = "Interest"
+				chart_type = dimple.plot.line
+				desc = false;
+				y = chart.addMeasureAxis("y", y_attr);
+			}
+			else{
+				y_attr = ["Topic", "Author"];
+				y_order = "Topic";
+				s_attr = "Author";
+				chart_type = dimple.plot.bubble
+				desc = true;
+				y = chart.addCategoryAxis("y", y_attr);
+			}
+			
+			
+			y.addOrderRule(y_order, desc );
 			chart.addCategoryAxis("x", "Year");
 			//chart.addMeasureAxis("z", "Weight");
-			var s = chart.addSeries("Author", dimple.plot.bubble);
+			var s = chart.addSeries(s_attr, chart_type);
 			
 			var myLegend = chart.addLegend(0, 10, 500, 400, "right");
 			if(dimple.getUniqueValues(data,"Author").length<2)

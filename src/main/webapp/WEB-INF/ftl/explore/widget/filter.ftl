@@ -128,7 +128,22 @@
 						filterList = ["Time", "Conferences"];
 					}
 					if(visType=="topics"){
-						filterList = ["Time", "Conferences"];
+						filterList = ["Time"];
+					}
+				}
+				if(objectType=="circle")
+				{
+					if(visType=="researchers"){
+						filterList = ["Time","Publications", "Conferences", "Topics"];
+					}
+					if(visType=="conferences"){
+						filterList = ["Time","Topics", "Conferences"];
+					}		
+					if(visType=="publications"){
+						filterList = ["Time","Topics", "Conferences"];
+					}
+					if(visType=="topics"){
+						filterList = ["Time","Publications", "Conferences"];
 					}
 				}
 				

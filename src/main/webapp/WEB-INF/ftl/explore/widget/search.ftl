@@ -6,7 +6,7 @@
   	<div>
 	    <div class="drop-down">
 	    	<select id="selectDropDown" style="width:100%;font-size:14px;text-align:center;font-weight: bold;" class="form-control" >
-			  <option value="researchers">RESEARCHERS</option>
+			  <option value="researchers" selected>RESEARCHERS</option>
 			  <option value="conferences">CONFERENCES</option>
 			  <option value="publications">PUBLICATIONS</option>
 			  <option value="topics">TOPICS</option>
@@ -162,8 +162,6 @@
 			<#-- show pop up progress log -->
    			$.PALM.popUpMessage.create( "Loading "+itemType+" ..", { uniqueId:uniqueSearchWidget, popUpHeight:40, directlyRemove:false , polling:false});
    					
-		
-		
 			<#-- Content List -->
 				$.getJSON( "<@spring.url '/explore/' />"+url , function( data ) {
 				
@@ -510,7 +508,20 @@
 									<#-- topic detail -->
 									var topicDetail = $('<div/>')
 										.addClass( 'name capitalize' )
-										.html(item.name);
+										.append(
+											$( '<div/>' )
+											.append('&nbsp;')
+											.append( 
+												$( '<i/>' )
+												.addClass( "fa fa-comments-o" )
+													.append('&nbsp;')
+											).append( 
+												$( '<span/>' )
+												.addClass( 'info font-xs' )
+												.html( item.name )											
+											)
+										);
+										
 									
 									<#-- append to event group -->
 									topicItem.append( topicDetail );
@@ -540,8 +551,88 @@
 								setFooter(data, widgetElem);
 							//}	
 						}
-						 
+						
+						if(itemType == "circles"){
+   						console.log(data)
+	   						if( data.count == 0 ){
+								if( typeof data.query === "undefined" || data.query == "" )
+									$.PALM.callout.generate( targetContainer , "normal", "Currently no circles found on PALM database" );
+								else
+									$.PALM.callout.generate( targetContainer , "warning", "Empty search results!", "No circles found with query \"" + data.query + "\"" );
+								return false;
+							}
+							
+							if( data.count > 0 ){
+							
+								<#-- build the publication table -->
+								$.each( data.circles, function( index, itemCircle ){
+									var circleItem = 
+										$('<div/>')
+										.addClass( "circleExplore" )
+										.attr({ "data-id": itemCircle.id });
+										
+									<#-- event menu -->
+									var circleNav = $( '<div/>' )
+										.attr({'class':'nav'});
 									
+									<#-- append to event group -->
+									circleItem.append( circleNav );
+									
+									<#-- event detail -->
+									var circleDetail = $('<div/>')
+										.addClass( "detail" );
+									
+									<#-- append to event group -->
+									circleItem.append( circleDetail );
+						
+									console.log(itemCircle)
+
+									<#-- title -->
+										circleDetail.append(
+											$( '<div/>' )
+											.addClass( 'affiliation' )
+											.append('&nbsp;')
+											.append( 
+												$( '<i/>' )
+												.addClass( "fa fa-circle-o" )
+													.append('&nbsp;')
+											).append( 
+												$( '<span/>' )
+												.addClass( 'info font-xs' )
+												.html( itemCircle.name )											
+											)
+										);
+									
+								circleDetail
+										.on("mouseover", function(){
+										$( this ).parent().context.style.color="gray";
+									});
+									circleDetail
+										.on("mouseout", function(){
+										$( this ).parent().context.style.color="black";
+									});
+									
+									<#-- add click event -->
+									circleDetail.on( "click", function( e){
+										$( this ).parent().context.style.color="black";
+										<#-- remove active class -->
+										//if( $.PALM.selected.record(  "eventGroup", $( this ).parent().data( 'id' ) , $( this ).parent() )){
+											//history.pushState(null, "Venue " + itemEvent.name, "<@spring.url '/venue' />?id=" + itemEvent.id + "&name=" + itemEvent.name );
+											//getVenueGroupDetails( $( this ).parent().data( 'id' ) , eventGroup, itemEvent.name);
+										//}
+										itemSelection(itemCircle.id, "circle");
+										
+									});
+									
+									targetContainer
+									.append( circleItem )
+									.css({ "cursor":"pointer"});
+								
+								});
+								
+								setFooter(data, widgetElem);
+							}
+						}
 					}); //getJson
 		}
 		
