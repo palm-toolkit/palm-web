@@ -169,7 +169,7 @@ $( function(){
 						visList = ["Timeline", "Group", "List"]; //comparison doesn't make sense here
 					if(objectType=="publication")
 					{
-						visList = ["Timeline", "Similar", "List"]; //comparison doesn't make sense here
+						visList = ["Timeline", "Similar"]; //comparison doesn't make sense here
 					}	
 				}
 				if(visType=="topics"){
@@ -195,6 +195,10 @@ $( function(){
 				}
 				if(visType=="conferences"){
 					visList = ["Locations", "Group", "List"];
+					if(objectType=="publication")
+					{
+						visList = ["Locations", "List"];
+					}
 					if(objectType=="conference")
 					{
 						visList = ["Locations", "Similar", "List"];
@@ -694,6 +698,8 @@ $( function(){
 		var prevYear = 1000;
 		$.getJSON( url , function( data ) {
 		
+		console.log("timeline data")
+		console.log(data)
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniqueVisWidget );
 				
