@@ -376,6 +376,8 @@ $( function(){
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniqueVisWidget );
 				
+				var edgeSizes = [];
+				
 				<#-- gephi network -->
 				graphFile=data.map.graphFile;
 				sigma.parsers.gexf( "<@spring.url '/resources/gexf/'/>" + data.map.graphFile ,s,function() {
@@ -386,8 +388,11 @@ $( function(){
 				      });
 				      s.graph.edges().forEach(function(e) {
 				        e.originalColor = e.color;
+				        edgeSizes.push(e.size)
 				      });
 				      
+				      console.log(s.graph.edges())
+				      console.log(edgeSizes)
 					s.bind('overNode', function(e){
 						var nodeId = e.data.node.id,
             			toKeep = s.graph.neighbors(nodeId);
@@ -423,7 +428,8 @@ $( function(){
 					})
 					
 					s.bind('overEdge',function(e){
-						showhoverdiv(e,'divtoshow', "co-authored " + truncate(e.data.edge.weight / 0.1,0) + " time(s)");
+						if(!(edgeSizes.every( (val, i, arr) => val == arr[0] )))
+						showhoverdiv(e,'divtoshow', "co-authored " + Math.round(e.data.edge.weight / 0.1) + " time(s)");
 					})
 					s.bind('outEdge',function(e){
 						hidehoverdiv('divtoshow');
@@ -453,6 +459,7 @@ $( function(){
 				      });
 				      s.graph.edges().forEach(function(e) {
 				        e.originalColor = e.color;
+				        edgeSizes.push(e.size)
 				      });
 				      
 					s.bind('overNode', function(e){
@@ -490,6 +497,7 @@ $( function(){
 					})
 					
 					s.bind('overEdge',function(e){
+						if(!(edgeSizes.every( (val, i, arr) => val == arr[0] )))
 						showhoverdiv(e,'divtoshow', "co-authored " + truncate(e.data.edge.weight / 0.1,0) + " time(s)");
 					})
 					s.bind('outEdge',function(e){
