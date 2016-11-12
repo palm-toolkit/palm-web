@@ -498,7 +498,7 @@ $( function(){
 					
 					s.bind('overEdge',function(e){
 						if(!(edgeSizes.every( (val, i, arr) => val == arr[0] )))
-						showhoverdiv(e,'divtoshow', "co-authored " + truncate(e.data.edge.weight / 0.1,0) + " time(s)");
+						showhoverdiv(e,'divtoshow', "co-authored " + Math.round(e.data.edge.weight / 0.1) + " time(s)");
 					})
 					s.bind('outEdge',function(e){
 						hidehoverdiv('divtoshow');
@@ -573,20 +573,19 @@ $( function(){
 				
 				console.log("locations data")
 				console.log(data)
-				//if(data.type=="researcher" || data.type=="publication" || data.type=="topic" || data.type=="circle")
-				//{
+				if(data.type=="researcher" || data.type=="publication" || data.type=="topic" || data.type=="circle")
+				{
 						for(i=0; i< data.map.events.length; i++)
 						{
 						 (function(i) {
 							$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/" + data.map.events[i].location + ".json?autocomplete=false&access_token=pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw",
 								function(mapdata){
 				
-									conf = data.map.events[i].groupName // need to check this!!
 									year = data.map.events[i].year
 									eventGroupId = data.map.events[i].eventGroupId
 									groupname = data.map.events[i].groupName
 					
-									mapdata.features[0].properties.conference = conf
+									mapdata.features[0].properties.conference = groupname
 									mapdata.features[0].properties.year = year
 									mapdata.features[0].properties.eventGroupId = eventGroupId
 									mapdata.features[0].properties.groupname = groupname
@@ -616,8 +615,8 @@ $( function(){
 							       },
 							       onEachFeature: onEachFeature
 							     }).addTo(mymap); 
-					//}
-					<#--if(data.type=="conference")
+					}
+					if(data.type=="conference")
 					{
 						var eventGroupList=[];	
 						var iconColorList=['green','blue','red','yellow','orange','violet','black','grey'];			
@@ -627,14 +626,13 @@ $( function(){
 							$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/" + data.map.events[i].location + ".json?autocomplete=false&access_token=pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw",
 								function(mapdata){
 				
-									conf = data.map.events[i].eventGroupName //name
 									year = data.map.events[i].year
-									eventGroup = data.map.events[i].eventGroupName
+									eventGroup = data.map.events[i].groupName
 									eventGroupId = data.map.events[i].eventGroupId
 									if(eventGroupList.indexOf(eventGroup)== -1)
 									eventGroupList.push(eventGroup);
 									
-									mapdata.features[0].properties.conference = conf
+									mapdata.features[0].properties.conference = groupname
 									mapdata.features[0].properties.year = year
 									mapdata.features[0].properties.eventGroup = eventGroup
 									mapdata.features[0].properties.eventGroupId = eventGroupId
@@ -666,7 +664,7 @@ $( function(){
 							       },
 							       onEachFeature: onEachFeature
 							     }).addTo(mymap); 
-					}-->
+					}
 					
 					mymap.on('click',function(e){
 						hidemenudiv('menu')
@@ -699,7 +697,7 @@ $( function(){
 	      		if(feature.properties.dataType == "researcher")
 					showmenudiv(obj,'menu');
 				if(feature.properties.dataType == "conference")
-					showhoverdiv(obj,'divtoshow', "This conference type is already added");
+					showhoverdiv(obj,'divtoshow', "This conference is already added");
 	      	});
     	}
 		
