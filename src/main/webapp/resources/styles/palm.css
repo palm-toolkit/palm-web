@@ -470,6 +470,11 @@ div.d3-tooltip {
 /* End of pie chart style */
 
 /*  list style */
+
+.bold-text{
+  font-weight: bold;
+}
+
 .content-list{
 	overflow: scroll;
 }

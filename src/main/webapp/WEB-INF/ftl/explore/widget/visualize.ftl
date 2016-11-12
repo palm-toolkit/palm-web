@@ -115,6 +115,8 @@ $( function(){
 				
 						},
 			onRefreshDone: function(  widgetElem , data ){
+			console.log(data)
+			
 				loadedList = [];
 				graphFile = "";
 				names = data.dataList;
@@ -122,6 +124,7 @@ $( function(){
 				yearFilterPresent = data.yearFilterPresent;
 				deleteFlag = data.deleteFlag;
 				var targetContainer = $( widgetElem ).find( ".visualize_widget" );
+				
 				
 				targetContainer.html("");			
 				hidehoverdiv('divtoshow');
@@ -858,7 +861,7 @@ $( function(){
 				var bubblesTab = $( widgetElem ).find( "#tab_Bubbles" );
 				bubblesTab.html("");
 				
-				visBubbles(dataBubble.map.list, dataBubble.dataList.split(','));
+				visBubbles(dataBubble.map.list, dataBubble.dataList);
 			});
 		}
 				
@@ -952,9 +955,33 @@ $( function(){
 			$.getJSON( url , function( data ) {
 						console.log("list data")
 						console.log(data)
-							var tabListContainer = $( widgetElem ).find( "#tab_List" );
-							tabListContainer.html("");	
+						var namesList = data.dataList;
+						
+							//var tabListContainer = $( widgetElem ).find( "#tab_List" );
+							//tabListContainer.html("");	
 		  					var listSection = $( '<div/>' );
+							
+						<#--	var listOfOptions = ["Co-Authors", "Similar Authors"];
+							var select = $( '<select/>' )
+												.attr({"id":"listTypeOptions","class":"form-control"})
+												.css({"width":"50%","float":"right"})
+															
+														
+							$.each(listOfOptions, function(index, value){
+								select.append(
+										$( '<option/>' )
+										.attr( "value",value )
+										.html( value )
+									)
+							})
+							
+							var listTypeOptions = $( '<div/>' )
+													.css({"height":"5vh"})
+													.addClass( "form-group" )
+													.append(select)
+							
+							tabContent.append(listTypeOptions);-->
+							
 							tabContent.append(listSection);
 							listSection.addClass('_list')
 								.css('overflow-y','scroll')
@@ -991,15 +1018,39 @@ $( function(){
 											
 										if(objectType=="publication" || objectType=="topic" || objectType=="circle")
 											text = item.name
-										else
-											text = item.name + " ( " + item.coautorTimes + " time(s) )"		
-											
+										if(objectType=="researcher")
+										{
+										console.log("year filter: " + yearFilterPresent) 
+											text = " <b> " + item.name + " </b> "  ;
+											if(data.idsList.length > 1 && yearFilterPresent=="false")
+											{
+												for(var i=0;i<data.idsList.length;i++)
+												{
+													text = text + " <br />   Co-authored in <b>" + data.map.collaborationMaps[data.idsList[i]][item.id]+  "</b> publication(s) with" + " " + namesList[i];
+												 }
+											 }
+											 else
+											 	text = text + " <br />   Co-authored in <b> " + data.map.collaborationMaps[data.idsList[0]][item.id]+ "</b> publication(s)" ;
+										}
+										if(objectType=="conference")
+										{
+											text = " <b> " + item.name + " </b> "  ;
+											if(data.idsList.length > 1 && yearFilterPresent=="false")
+											{
+												for(var i=0;i<data.idsList.length;i++)
+												{
+													text = text + " <br /> <b>" + data.map.collaborationMaps[data.idsList[i]][item.id]+  "</b> publication(s) in" + " " + namesList[i];
+												 }
+											 }
+											 else
+											 	text = text + " <br /> <b> " + data.map.collaborationMaps[data.idsList[0]][item.id]+ "</b> publication(s)" ;
+										}
 										var researcherDetail =
 										$( '<div/>' )
 											.addClass( 'detail' )
 											.append(
 												$( '<div/>' )
-													//.addClass( 'name capitalize' )
+													.addClass( 'name capitalize' )
 													.html( text )
 											);
 										researcherDiv
@@ -1007,7 +1058,15 @@ $( function(){
 												researcherNav
 											).append(
 												researcherDetail
-											)
+											).append('&nbsp;')
+											.css("cursor"," pointer")
+											.on('mouseover',function(){
+													color = $( this ).parent().context.style.color;
+													$( this ).parent().context.style.color="blue";
+											})
+											.on('mouseout',function(){
+													$( this ).parent().context.style.color=color;
+											})
 											.on('click', function(d){ 
 												obj = {
 															  type:"listItem",
@@ -1036,9 +1095,10 @@ $( function(){
 							
 							if(visType == "conferences")
 							{
-									var sortedList = data.map.events.sort();
+									//var sortedList = data.map.events.sort();
+									var previousEG = "";
 									<#-- build the conference list -->
-									$.each( sortedList, function( index, item){
+									$.each( data.map.events, function( index, item){
 										if(type=="researcher")
 										{
 											conferenceDiv = 
@@ -1048,44 +1108,57 @@ $( function(){
 										}
 										if(type=="conference" || type=="publication" || type=="topic" || type=="circle" )
 										{
-										console.log("coming in 1")
 											conferenceDiv = 
 											$( '<div/>' )
 												.addClass( 'author' )
 												.attr({ 'id' : item.id });
 										}
+										
+										var eventLocation = "";
+										if(item.location!=null)
+											eventLocation = item.location.city +", " +item.location.country.name + " : " + item.year;
+										else
+											eventLocation = "Unknown Location : " + item.year;
+											
 										var conferenceNav =
 										$( '<div/>' )
 											.addClass( 'nav' )
+											.append( 
+												$( '<i/>' )
+												.addClass( 'fa fa-angle-right icon font-xs' )
+												.append('&nbsp;')
+											)
 											.append(
-												$( '<div/>' )
+												$( '<span/>' )
 													.addClass( 'name capitalize' )
-													.html( item.name )
+													.html( eventLocation )
 											);
 										var conferenceDetail =
 										$( '<div/>' )
 											.addClass( 'detail' )
 											.append(
 												$( '<span/>' )
-													.addClass( 'name capitalize' )
-													.html( " " + item.year )
-											);
-										conferenceDiv
-											.append(
-												conferenceNav
-											).append(
-												conferenceDetail
-											).append('&nbsp;')
+													.addClass( 'name capitalize bold-text' )
+													.html( " " + item.groupName )
+											)
+											.css("cursor"," pointer")
+											.on('mouseover',function(){
+													color = $( this ).parent().context.style.color;
+													$( this ).parent().context.style.color="blue";
+											})
+											.on('mouseout',function(){
+													$( this ).parent().context.style.color=color;
+											})
 											.on('click', function(d){ 
 													if(type=="conference"){
 														obj = {
 																type:"listItem",
 														        clientX:d.clientX,
 														        clientY:d.clientY,
-														        itemId:item.id,
+														        itemId:item.eventGroupId,
 														        objectType:"conference"
 														};
-														showhoverdiv(obj,'divtoshow', "This conference type is already added");
+														showhoverdiv(obj,'divtoshow', "This conference is already added");
 													}
 													else
 													{
@@ -1093,19 +1166,35 @@ $( function(){
 																  type:"listItem",
 														          clientX:d.clientX,
 														          clientY:d.clientY,
-														          itemId:item.id,
+														          itemId:item.eventGroupId,
 														          objectType:"conference"
 														};
-														if(item.isAdded)
+														if(item.eventGroupIsAdded)
 															showmenudiv(obj, 'menu')
 														else
-															showhoverdiv(obj, 'divtoshow', item.name.toUpperCase() + " is currently not present in PALM")
+															showhoverdiv(obj, 'divtoshow', item.groupName.toUpperCase() + " is currently not present in PALM")
 													}
 											});
 											
-										if( !item.isAdded ){
-											conferenceDiv.addClass( "text-gray" );
-										}
+											
+										if(previousEG != item.groupName)	
+										{
+											previousEG = item.groupName;
+											conferenceDiv
+												.append('&nbsp;')
+												.append(
+													conferenceDetail
+												)
+										}	
+											
+										conferenceDiv.append(
+												conferenceNav
+											)
+											
+										if( !item.isAdded )
+											conferenceNav.addClass( "text-gray" );
+										if(!item.eventGroupIsAdded)
+											conferenceDetail.addClass( "text-gray" );
 											
 										listSection
 											.append( 
@@ -1129,13 +1218,21 @@ $( function(){
 											.addClass( 'nav' )
 											.append(
 												$( '<div/>' )
-													.addClass( 'name capitalize' )
+													.addClass( 'name capitalize bold-text' )
 													.html( item[0] )
 											);
 										topicDiv
 											.append(
 												topicNav
 											).append('&nbsp;')
+											.css("cursor"," pointer")
+											.on('mouseover',function(){
+													color = $( this ).parent().context.style.color;
+													$( this ).parent().context.style.color="blue";
+											})
+											.on('mouseout',function(){
+													$( this ).parent().context.style.color=color;
+											})
 											.on('click', function(d){ 
 												obj = {
 															  type:"listItem",
@@ -1163,28 +1260,28 @@ $( function(){
 										$( '<div/>' )
 											.addClass( 'author' )
 											.attr({ 'id' : item.id });
-										var conferenceNav =
-										$( '<div/>' )
-											.addClass( 'nav' )
-											.append(
+												
+										var conferenceDetail =
 												$( '<div/>' )
 													.addClass( 'name capitalize' )
 													.html( item.title )
-											);
-										var conferenceDetail =
-										$( '<div/>' )
-											.addClass( 'detail' )
-											.append(
-												$( '<span/>' )
+												.append(
+													$( '<span/>' )
 													.addClass( 'name capitalize' )
-													.html( " " + item.year )
-											);
+													.html( " : " + item.year )
+												)
 										conferenceDiv
 											.append(
-												conferenceNav
-											).append(
 												conferenceDetail
 											).append('&nbsp;')
+											.css("cursor"," pointer")
+											.on('mouseover',function(){
+													color = $( this ).parent().context.style.color;
+													$( this ).parent().context.style.color="blue";
+											})
+											.on('mouseout',function(){
+													$( this ).parent().context.style.color=color;
+											})
 											.on('click', function(d){ 
 												obj = {
 															  type:"listItem",
@@ -1355,6 +1452,14 @@ $( function(){
 											).append(
 												vennDetail
 											)
+											.css("cursor"," pointer")
+											.on('mouseover',function(){
+													color = $( this ).parent().context.style.color;
+													$( this ).parent().context.style.color="blue";
+											})
+											.on('mouseout',function(){
+													$( this ).parent().context.style.color=color;
+											})
 											.on('click', function(d){ 
 												console.log(d);
 												
