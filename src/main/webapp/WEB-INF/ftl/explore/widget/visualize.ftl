@@ -573,12 +573,12 @@ $( function(){
 				
 				console.log("locations data")
 				console.log(data)
-				if(data.type=="researcher" || data.type=="publication" || data.type=="topic" || data.type=="circle")
-				{
+				//if(data.type=="researcher" || data.type=="publication" || data.type=="topic" || data.type=="circle")
+				//{
 						for(i=0; i< data.map.events.length; i++)
 						{
 						 (function(i) {
-							$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/" + data.map.events[i].location.city + ".json?autocomplete=false&access_token=pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw",
+							$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/" + data.map.events[i].location + ".json?autocomplete=false&access_token=pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw",
 								function(mapdata){
 				
 									conf = data.map.events[i].groupName // need to check this!!
@@ -616,8 +616,8 @@ $( function(){
 							       },
 							       onEachFeature: onEachFeature
 							     }).addTo(mymap); 
-					}
-					if(data.type=="conference")
+					//}
+					<#--if(data.type=="conference")
 					{
 						var eventGroupList=[];	
 						var iconColorList=['green','blue','red','yellow','orange','violet','black','grey'];			
@@ -666,7 +666,7 @@ $( function(){
 							       },
 							       onEachFeature: onEachFeature
 							     }).addTo(mymap); 
-					}
+					}-->
 					
 					mymap.on('click',function(e){
 						hidemenudiv('menu')
@@ -1123,8 +1123,8 @@ $( function(){
 										}
 										
 										var eventLocation = "";
-										if(item.location!=null)
-											eventLocation = item.location.city +", " +item.location.country.name + " : " + item.year;
+										if(item.location!="")
+											eventLocation = item.location + " : " + item.year;
 										else
 											eventLocation = "Unknown Location : " + item.year;
 											
