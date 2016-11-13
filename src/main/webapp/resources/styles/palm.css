@@ -487,11 +487,7 @@ div.d3-tooltip {
 	float:left;
 }
 
-.content-list>.authorExplore,
-.content-list>.eventgroupExplore,
-.content-list>.publicationExplore,
-.content-list>.topicExplore,
-.content-list>.circleExplore
+.content-list>.explore
 {
 	margin-left: 5px;
 	width:100%;
@@ -1159,4 +1155,26 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 	left-margin:2px;
 	background-color:"#CF6876";
 	font-size:15px;
+}
+
+.text-field{
+	font-size:10pt;
+	height:22px;
+	margin:5px;
+}
+
+.search-item{
+	color:black;
+	left-margin:2px;
+	background-color:#d9c7c6;
+	font-size:14px;
+	border:1px solid black;
+	border-radius:0.5em;
+	display:inline-block;
+	margin-top:3px;
+	margin-left:3px;
+	margin-right:3px;
+	padding-left:5px;
+	padding-right:5px;
+	cursor:pointer;
 }

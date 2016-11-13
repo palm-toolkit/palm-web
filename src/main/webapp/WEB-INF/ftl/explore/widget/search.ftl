@@ -186,7 +186,7 @@
 								
 									var researcherDiv = 
 									$( '<div/>' )
-										.addClass( 'authorExplore' )
+										.addClass( 'explore' )
 										.attr({ 'id' : item.id });
 										
 									var researcherNav =
@@ -283,7 +283,7 @@
 								$.each( data.eventGroups, function( index, itemEvent ){
 									var eventItem = 
 										$('<div/>')
-										.addClass( "eventgroupExplore" )
+										.addClass( "explore" )
 										.attr({ "data-id": itemEvent.id });
 										
 									<#-- hide unevaluated event -->
@@ -399,7 +399,7 @@
 								$.each( data.publications, function( index, itemPublication ){
 									var publicationItem = 
 										$('<div/>')
-										.addClass( "publicationExplore" )
+										.addClass( "explore" )
 										.attr({ "data-id": itemPublication.id });
 										
 									<#-- event menu -->
@@ -502,7 +502,7 @@
 								$.each( sortedList, function( index, item ){
 									var topicItem = 
 										$('<div/>')
-										.addClass( "topicExplore" )
+										.addClass( "explore" )
 										.attr({ "data-id": item.id });
 										
 									<#-- topic detail -->
@@ -568,7 +568,7 @@
 								$.each( data.circles, function( index, itemCircle ){
 									var circleItem = 
 										$('<div/>')
-										.addClass( "circleExplore" )
+										.addClass( "explore" )
 										.attr({ "data-id": itemCircle.id });
 										
 									<#-- event menu -->

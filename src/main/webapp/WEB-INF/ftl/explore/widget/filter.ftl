@@ -27,22 +27,60 @@
 		visType = "";
 		
 		$('body').on('click', '#pub_filter_search', function () {
-		     console.log("pub_filter_search clicked")
-		     
 		     $('#pub_filter_search')
  				.on( "keypress", function(e) {
 		    				var term = $( this ).val();
-		    				console.log(term)
+				  			if ( e.keyCode == 13)
+				  			{							
+				  				fillFilter(pubList, term, pubCount, publicationsFilter, pubSectionHeader, 'publicationCB', 'hsla(120, 100%, 50%, 0.2)')
+				  				//fillPublicationFilter(pubList, term);
+				  			}
+					})
+		});
+		$('body').on('click', '#conf_filter_search', function () {
+		     $('#conf_filter_search')
+ 				.on( "keypress", function(e) {
+		    				var term = $( this ).val();
 				  			if ( e.keyCode == 13)
 				  			{
-				  				fillPublicationFilter( pubList, term);
+				  				//fillConferenceFilter(confList, term);
+				  				fillFilter(confList, term, confCount, conferencesFilter, confSectionHeader, 'conferenceCB', 'hsla(70,100%,50%,0.2)')
+				  			}
+					})
+		});
+		$('body').on('click', '#top_filter_search', function () {
+		     $('#top_filter_search')
+ 				.on( "keypress", function(e) {
+		    				var term = $( this ).val();
+				  			if ( e.keyCode == 13)
+				  			{
+				  				//fillTopicFilter(topList, term);
+				  				fillFilter(topList, term, topCount, topicsFilter, topSectionHeader, 'topicCB', 'hsla(240, 83%, 47%, 0.2)')
+				  			}
+					})
+		});
+		$('body').on('click', '#cir_filter_search', function () {
+		     $('#cir_filter_search')
+ 				.on( "keypress", function(e) {
+		    				var term = $( this ).val();
+				  			if ( e.keyCode == 13)
+				  			{
+				  				//fillCircleFilter(cirList, term);
+				  				fillFilter(cirList, term, cirCount, circlesFilter, cirSectionHeader, 'circleCB', '#f9f5f5')
 				  			}
 					})
 		});
 		$('body').on('click', '#pub_filter_all', function () {
-		     console.log("pub_filter_all clicked")
-		     
 		     $("#pub_filter_all").on("click", function(){togglePub(this)})
+		});
+		$('body').on('click', '#conf_filter_all', function () {
+		     $("#conf_filter_all").on("click", function(){toggleConf(this)})
+		});
+		$('body').on('click', '#top_filter_all', function () {
+		     $("#top_filter_all").on("click", function(){toggleTop(this)})
+		});
+		$('body').on('click', '#cir_filter_all', function () {
+		     $("#cir_filter_all").on("click", function(){toggleCir(this)})
 		});
 		
 		<#-- generate unique id for progress log -->
@@ -175,12 +213,7 @@
 				
 				if(data.type!="undefined" && data.visType!="undefined")
 				{
-				
-				console.log("FILTERS: ....... ")
-				console.log(data)
-				
 					targetContainer.html("");
-	    			
 	    			if(ids.length!=0)
 	    			{
 		    			var applyButton = $( widgetElem ).find( "#apply_button" );
@@ -246,6 +279,15 @@
 					publicationsFilter = $('<div/>').addClass("publicationsFilter")
 					filterContent.append(publicationsFilter);
 					
+					conferencesFilter = $('<div/>').addClass("conferencesFilter")
+					filterContent.append(conferencesFilter);
+					
+					topicsFilter = $('<div/>').addClass("topicsFilter")
+					filterContent.append(topicsFilter);
+					
+					circlesFilter = $('<div/>').addClass("circlesFilter")
+					filterContent.append(circlesFilter);
+					
 						<#-- PUBLICATIONS FILTER -->
 						if(data.publicationFilter != undefined && data.publicationFilter.publicationsList.length!=0){
 							pubList = data.publicationFilter.publicationsList;
@@ -261,25 +303,21 @@
 													.attr("id" , "pub_filter_all")
 													.on("click", function(){togglePub(this)})
 												 )
-												).append(
-												$('<span/>')
-												.css("float","right")
-													.css("width","30%")
-													).append('&nbsp;')
-											.append(
+												).append('&nbsp;')
+												.append(
 												$('<input/>')
 												.attr("id" , "pub_filter_search")
-												.css("font-size","10pt")
-												.css("height","25px")
-												.css("margin","5px")
+												.addClass('text-field')
 											 )
-					fillPublicationFilter(pubList, "");
-				}	
+							//fillPublicationFilter(pubList,"");
+							fillFilter(pubList, "", pubCount, publicationsFilter, pubSectionHeader, 'publicationCB', 'hsla(120, 100%, 50%, 0.2)')
+						}	
 							
 						<#-- CONFERENCE FILTER -->
 						if(data.conferenceFilter != undefined && data.conferenceFilter.eventsList.length!=0){
-						
-							var confSectionHeader = $( '<span/>' ).html("CONFERENCES (" + data.conferenceFilter.eventsList.length + ") :")
+							confList = data.conferenceFilter.eventsList;
+							confCount = $( '<span/>' )
+							confSectionHeader = $( '<span/>' ).html("CONFERENCES")
 											.append('&nbsp;')
 											.append(
 												$('<span/>')
@@ -287,61 +325,25 @@
 													$('<input/>')
 													.attr('type','checkbox')
 													.attr('value', 'All')
+													.attr("id" , "conf_filter_all")
 													.on("click", function(){toggleConf(this)})
 												 )
-											);
-							var confSection = $( '<div/>' );
-							filterContent.append(confSectionHeader);
-							filterContent.append(confSection);
-					
-							confSection.addClass('conf_list')
-								.css('overflow-y','scroll')
-								.css('height', 'auto')
-								.css('background-color', 'hsla(70,100%,50%,0.2)')
-								.css('max-height', '23vh')
+												).append('&nbsp;')
+												.append(
+												$('<input/>')
+												.attr("id" , "conf_filter_search")
+												.addClass('text-field')
+											 	)
 							
-							$(".conf_list").slimscroll({
-								height: "23vh",
-						        size: "10px",
-					        	allowPageScroll: true,
-					   			touchScrollStep: 50,
-					   			color: '#008000'
-					       });
-					
-							<#-- build the Conference Filter list -->
-							var sortedConferenceList = data.conferenceFilter.eventsList.sort(function(a, b) 
-							{
-								return sortList(a.title, b.title);
-							})
-							$.each(sortedConferenceList , function( index, item){
-							var conferenceDiv = 
-									$( '<div/>' )
-										.addClass('authorExplore')
-										.attr({ 'id' : item.id })
-										.css('padding-left','4px')
-										.css('padding-right','4px')
-										.append(
-											$('<input/>')
-												.attr('type','checkbox')
-												.attr('name','conferenceCB')
-												.attr('value', item.title)
-												.attr({ 'id' : item.id })
-											 )
-										.append(
-											$( '<span/>' )
-												.addClass( 'name' )
-												.html( " " +  item.title )
-										)
-										confSection
-											.append( 
-												conferenceDiv
-											);
-									});
-							}	
+							//fillConferenceFilter(confList,"");
+							fillFilter(confList, "", confCount, conferencesFilter, confSectionHeader, 'conferenceCB', 'hsla(70,100%,50%,0.2)')
+						}	
 						
 						<#-- TOPIC FILTER -->
 						if(data.topicFilter != undefined && data.topicFilter.topicDetailsList.length!=0){
-						 	var topSectionHeader = $( '<span/>' ).html("TOPICS/INTERESTS (" + data.topicFilter.topicDetailsList.length + ") :")
+						 	topList = data.topicFilter.topicDetailsList;
+							topCount = $( '<span/>' )
+						 	topSectionHeader = $( '<span/>' ).html("TOPICS/INTERESTS")
 											.append('&nbsp;')
 											.append(
 												$('<span/>')
@@ -349,65 +351,24 @@
 													$('<input/>')
 													.attr('type','checkbox')
 													.attr('value', 'All')
+													.attr("id" , "top_filter_all")
 													.on("click", function(){toggleTop(this)})
 												 )
-											);
-							var topSection = $( '<div/>' );
-								
-							filterContent.append(topSectionHeader);
-							filterContent.append(topSection);
-					
-							topSection.addClass('top_list')
-								.css('overflow-y','scroll')
-								.css('height', 'auto')
-								.css('background-color', 'hsla(240, 83%, 47%, 0.2)')
-								.css('max-height', '23vh')
-							
-							$(".top_list").slimscroll({
-								height: "23vh",
-						        size: "10px",
-					        	allowPageScroll: true,
-					   			touchScrollStep: 50,
-					   			color: '#008000'
-					       });
-					
-							<#-- build the Topic Filter list -->
-							var sortedTopicList = data.topicFilter.topicDetailsList.sort(function(a, b) 
-							{
-								return sortList(a.title, b.title);
-							})
-							$.each( sortedTopicList, function( index, item){
-							if(item.title!=null)
-							{
-								var topicDiv = 
-										$( '<div/>' )
-											.addClass('authorExplore')
-											.attr({ 'id' : item.id })
-											.css('padding-left','4px')
-											.css('padding-right','4px')
-											.append(
+											).append('&nbsp;')
+												.append(
 												$('<input/>')
-													.attr('type','checkbox')
-													.attr('name','topicCB')
-													.attr('value', item.title)
-													.attr({ 'id' : item.id })
-												 )
-											.append(
-												$( '<span/>' )
-													.addClass( 'name' )
-													.html( " " +  item.title )
-											)
-												
-											topSection
-												.append( 
-													topicDiv
-												);
-							}
-						});
-					<#-- CIRCLES FILTER -->
-						if(data.circleFilter != undefined && data.circleFilter.circles.length!=0){
+												.attr("id" , "top_filter_search")
+												.addClass('text-field')
+											 	)
+							//fillTopicFilter(topList,"");	
+							fillFilter(topList, "", topCount, topicsFilter, topSectionHeader, 'topicCB', 'hsla(240, 83%, 47%, 0.2)')			 	
+						}	
 						
-							var cirSectionHeader = $( '<span/>' ).html("CIRCLES (" + data.circleFilter.circles.length + ") :")
+						<#-- CIRCLES FILTER -->
+						if(data.circleFilter != undefined && data.circleFilter.circles.length!=0){
+							cirList = data.circleFilter.circles;
+							cirCount = $( '<span/>' )
+							cirSectionHeader = $( '<span/>' ).html("CIRCLES ")
 											.append('&nbsp;')
 											.append(
 												$('<span/>')
@@ -415,61 +376,20 @@
 													$('<input/>')
 													.attr('type','checkbox')
 													.attr('value', 'All')
+													.attr("id" , "cir_filter_all")
 													.on("click", function(){toggleCir(this)})
 												 )
-											);
-							var cirSection = $( '<div/>' );
-								
-							filterContent.append(cirSectionHeader);
-							filterContent.append(cirSection);
-					
-							cirSection.addClass('cir_list')
-								.css('overflow-y','scroll')
-								.css('height', 'auto')
-								.css('background-color', '#f9f5f5')
-								.css('max-height', '23vh')
-							
-							$(".cir_list").slimscroll({
-								height: "23vh",
-						        size: "10px",
-					        	allowPageScroll: true,
-					   			touchScrollStep: 50,
-					   			color: '#008000'
-					       });
-					
-							<#-- build the Publication Filter list -->
-							var sortedCircleList = data.circleFilter.circles.sort(function(a, b) 
-							{
-								return sortList(a.name, b.name);
-							})
-							$.each(sortedCircleList , function( index, item){
-							var circleDiv = 
-									$( '<div/>' )
-										.addClass('authorExplore')
-										.attr({ 'id' : item.id })
-										.css('padding-left','4px')
-										.css('padding-right','4px')
-										.append(
-											$('<input/>')
-												.attr('type','checkbox')
-												.attr('name','circleCB')
-												.attr('value', item.name)
-												.attr({ 'id' : item.id })
-											 )
-										.append(
-											$( '<span/>' )
-												.addClass( 'name' )
-												.html( " " +  item.name )
-										)
-										cirSection
-											.append( 
-												circleDiv
-											);
-									});
-							}	
-					}			
-				}					
-			});
+											).append('&nbsp;')
+												.append(
+												$('<input/>')
+												.attr("id" , "cir_filter_search")
+												.addClass('text-field')
+											 	)
+							//fillCircleFilter(cirList,"");
+							fillFilter(cirList, "", cirCount, circlesFilter, cirSectionHeader, 'circleCB', '#f9f5f5')
+						}
+					}						
+				});
 			}
 		};	
 		
@@ -507,71 +427,76 @@
 			return (a < b) ? -1 : (a > b) ? 1 : 0;
 		}
 		
-		function fillPublicationFilter( data, term){
-				var array = [];
+		function fillFilter(data,term, sectionCount, typeFilter, filterHeader, sectionName, color){
+			var array = [];
 				if(term!=""){
-				$.each(data,function(index, item){
-					  					if(item!=undefined){
-						  					if(item.title.toLowerCase().indexOf(term.toLowerCase()) != -1)
-						  						array.push(item)
-					  					}	
-					  				})
+					$.each(data,function(index, item){
+	  					if(item!=undefined){
+		  					if(item.name.toLowerCase().indexOf(term.toLowerCase()) != -1)
+		  						array.push(item)
+	  					}	
+	  				})
 				}
 				else
 					array = data;
-					
-				var pubSection = $( '<div/>' );
-				
-				pubCount.html("");
-				pubCount.html("(" + array.length + "/" + data.length + ")") 
-				publicationsFilter.html("");
-				publicationsFilter.append(pubSectionHeader);
-				pubSectionHeader.append(pubCount);
-				publicationsFilter.append(pubSection);
-				pubSection.addClass('pub_list')
-					.css('overflow-y','scroll')
-					.css('height', 'auto')
-					.css('background-color', 'hsla(120, 100%, 50%, 0.2)')
-					.css('max-height', '23vh')
-				
-				$(".pub_list").slimscroll({
-					height: "23vh",
-			        size: "10px",
-		        	allowPageScroll: true,
-		   			touchScrollStep: 50,
-		   			color: '#008000'
-		       });
 		
-				<#-- build the Publication Filter list -->
-				var sortedPublicationList = array.sort(function(a, b) 
-				{
-					return sortList(a.title, b.title);
-				})
-				$.each( sortedPublicationList, function( index, item){
-				var publicationDiv = 
+			var itemSection = $( '<div/>' );
+								
+			sectionCount.html("");
+			sectionCount.html("(" + array.length + "/" + data.length + ")") 
+			typeFilter.html("");
+			typeFilter.append(filterHeader);
+			filterHeader.append(sectionCount);
+			typeFilter.append(itemSection);
+	
+			itemSection.addClass('top_list')
+				.css('overflow-y','scroll')
+				.css('height', 'auto')
+				.css('background-color', color)
+				.css('max-height', '23vh')
+			
+			$(".top_list").slimscroll({
+				height: "23vh",
+		        size: "10px",
+	        	allowPageScroll: true,
+	   			touchScrollStep: 50,
+	   			color: '#008000'
+	       });
+	
+			<#-- build the Topic Filter list -->
+			var sortedList = array.sort(function(a, b) 
+			{
+				return sortList(a.name, b.name);
+			})
+			$.each( sortedList, function( index, item){
+			if(item.name!=null)
+			{
+				var itemDiv = 
 						$( '<div/>' )
-							.addClass('authorExplore')
 							.attr({ 'id' : item.id })
 							.css('padding-left','4px')
 							.css('padding-right','4px')
 							.append(
 								$('<input/>')
 									.attr('type','checkbox')
-									.attr('name','publicationCB')
-									.attr('value', item.title)
+									.attr('name',sectionName)
+									.attr('value', item.name)
 									.attr({ 'id' : item.id })
 								 )
 							.append(
 								$( '<span/>' )
 									.addClass( 'name' )
-									.html( " " +  item.title )
+									.html( " " +  item.name )
 							)
-							pubSection
+								
+							itemSection
 								.append( 
-									publicationDiv
+									itemDiv
 								);
-						});
+				}
+			});
 		}
+		
 		<#--// register the widget-->
 		$.PALM.options.registeredWidget.push({
 			"type":"${wType}",

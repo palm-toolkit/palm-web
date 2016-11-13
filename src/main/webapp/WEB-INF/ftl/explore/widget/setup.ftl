@@ -61,20 +61,7 @@
 							<#-- TO-DO Add css part to palm.css -->
 							nameDiv = $( '<span/>' )
 							.attr("id",data.id[i])
-							.css("color", "black")
-							.css("left-margin","2px")
-							.css("background-color","#d9c7c6")
-							.css("font-size","14px")
-							.css("border" ,"1px solid black")
-							.css("border-radius","0.5em")
-							.css("display","inline-block")
-							.css("margin-top","3px")
-							.css("margin-left","3px")
-							.css("margin-right","3px")
-							.css("padding-left","5px")
-							.css("padding-right","5px")
-							.css({ "cursor":"pointer"})
-							.addClass( 'name capitalize' )
+							.addClass( 'name capitalize search-item' )
 							.html("  "+data.name[i]+ " X ")
 							<#-- click to delete item from setup widget -->
 							.on( "click", function(e){
