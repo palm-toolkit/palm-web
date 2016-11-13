@@ -6,7 +6,7 @@
   	<div>
 	    <div class="drop-down">
 	    	<select id="selectDropDown" style="width:100%;font-size:14px;text-align:center;font-weight: bold;" class="form-control" >
-			  <option value="researchers" selected>RESEARCHERS</option>
+			  <option value="researchers">RESEARCHERS</option>
 			  <option value="conferences">CONFERENCES</option>
 			  <option value="publications">PUBLICATIONS</option>
 			  <option value="topics">TOPICS</option>
@@ -44,6 +44,7 @@
 <script>
 	$( function(){
 		
+			data = new Object();
 			<#-- add slim scroll -->
 	      $(".content-list").slimscroll({
 				height: "100%",
@@ -51,10 +52,56 @@
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50
 		  });
+		  
+		  var targetContainer = $(".content-list" );
+		  <#-- pagging next -->
+				$( "li.toNext" ).click( function(){
+					if( !$( this ).hasClass( "disabled" ) )
+						itemSearch( $( "#search_field" ).val().trim() , "next", data, targetContainer);
+				});
+				
+				<#-- pagging prev -->
+				$( "li.toPrev" ).click( function(){
+					if( !$( this ).hasClass( "disabled" ) )
+						itemSearch( $( "#search_field" ).val().trim() , "prev", data, targetContainer);
+				});
+				
+				<#-- pagging to first -->
+				$( "li.toFirst" ).click( function(){
+					if( !$( this ).hasClass( "disabled" ) )
+						itemSearch( $( "#search_field" ).val().trim() , "first", data, targetContainer);
+				});
+				
+				<#-- pagging to end -->
+				$( "li.toEnd" ).click( function(){
+					if( !$( this ).hasClass( "disabled" ) )
+						itemSearch( $( "#search_field" ).val().trim() , "end", data, targetContainer);
+				});
+				
+				<#-- jump to specific page -->
+				$( "select.page-number" ).change( function(){
+					itemSearch( $( "#search_field" ).val() , $( this ).val(), data, targetContainer);
+				});
+				
+			
+				<#-- search icon presed -->
+				$( "#search_button" ).click( function(){
+					//searchText = $( "#search_field" ).val();
+					itemSearch( $( "#search_field" ).val() , "first", data, targetContainer);
+				});
+				
+				$( "#search_field" )
+	    			.on( "keypress", function(e) {
+			  			if ( e.keyCode == 13)
+			  			{
+			    			itemSearch( $( "#search_field" ).val() , "first", data, targetContainer);
+			    		}	
+					})
+				
 		
 		<#-- event for searching researcher -->
 		var searchText = $( "#search_field" ).val();
-		
+		var popUp = 0;
 		var itemType = "researchers";
 		var url = "searchResearchers";
 		<#-- generate unique id for progress log -->
@@ -67,76 +114,16 @@
 			page:0,
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
-					
 				<#-- show pop up progress log -->
 				$.PALM.popUpMessage.create( "Loading "+itemType+" ..", { uniqueId:uniqueSearchWidget, popUpHeight:40, directlyRemove:false , polling:false});
-   			
-				dropDown = $( widgetElem ).find( "#selectDropDown" );
-  				itemType = dropDown.val();
-				getURL(itemType);
-				
-				console.log("on refresh start!")
-   					
 			},
 
 			onRefreshDone: function(  widgetElem , data ){
-			
-			
-			
-				var targetContainer = $( widgetElem ).find( ".content-list" );
+				
 				targetContainer.html( "" );
 				//$( "#search_field" ).val("");
 			
-				<#-- pagging next -->
-				$( "li.toNext" ).click( function(){
-					if( !$( this ).hasClass( "disabled" ) )
-						itemSearch( $( "#search_field" ).val().trim() , "next", data, targetContainer, widgetElem);
-				});
-				
-				<#-- pagging prev -->
-				$( "li.toPrev" ).click( function(){
-					if( !$( this ).hasClass( "disabled" ) )
-						itemSearch( $( "#search_field" ).val().trim() , "prev", data, targetContainer, widgetElem);
-				});
-				
-				<#-- pagging to first -->
-				$( "li.toFirst" ).click( function(){
-					if( !$( this ).hasClass( "disabled" ) )
-						itemSearch( $( "#search_field" ).val().trim() , "first", data, targetContainer, widgetElem);
-				});
-				
-				<#-- pagging to end -->
-				$( "li.toEnd" ).click( function(){
-					if( !$( this ).hasClass( "disabled" ) )
-						itemSearch( $( "#search_field" ).val().trim() , "end", data, targetContainer, widgetElem);
-				});
-				
-				<#-- jump to specific page -->
-				$( "select.page-number" ).change( function(){
-					itemSearch( $( "#search_field" ).val() , $( this ).val(), data, targetContainer, widgetElem);
-				});
-				
-			
 				getData(data, targetContainer, widgetElem);
-				
-				<#-- search icon presed -->
-				$( "#search_button" ).click( function(){
-					//searchText = $( "#search_field" ).val();
-					console.log("1");
-					itemSearch( $( "#search_field" ).val() , "first", data, targetContainer, widgetElem);
-					console.log("2");
-				});
-				
-				$( "#search_field" )
-	    			.on( "keypress", function(e) {
-			  			if ( e.keyCode == 13)
-			  			{
-			  				console.log("3");
-			    			itemSearch( $( "#search_field" ).val() , "first", data, targetContainer, widgetElem);
-			    			console.log("4");
-			    		}	
-					})
-				
 				
 				<#-- drop down change event-->
 				dropDown = $( widgetElem ).find( "#selectDropDown" );
@@ -177,7 +164,7 @@
 			<#-- Content List -->
 					<#-- remove  pop up progress log -->
 					$.PALM.popUpMessage.remove( uniqueSearchWidget );
-				
+					//popUp = 0;
 				
    				   	if(itemType == "researchers"){
    						
@@ -496,15 +483,15 @@
 						
 						if(itemType == "topics"){
    						
-						<#--	if( data.count == 0 ){
+							if( data.count == 0 ){
 								if( typeof data.query === "undefined" || data.query == "" )
-									$.PALM.callout.generate( targetContainer , "normal", "Currently no conferences/journals found on PALM database" );
+									$.PALM.callout.generate( targetContainer , "normal", "Currently no topics found on PALM database" );
 								else
-									$.PALM.callout.generate( targetContainer , "warning", "Empty search results!", "No conferences/journals found with query \"" + data.query + "\"" );
+									$.PALM.callout.generate( targetContainer , "warning", "Empty search results!", "No topics found with query \"" + data.query + "\"" );
 								//return false;
 							}
 							
-							if( data.count > 0 ){-->
+							if( data.count > 0 ){
 							
 								// build the topics list
 								var sortedList = data.topicsList.sort();
@@ -557,7 +544,7 @@
 								});
 								
 								setFooter(data, widgetElem);
-							//}	
+							}	
 						}
 						
 						if(itemType == "circles"){
@@ -640,9 +627,8 @@
 						}
 		}
 		
-		function itemSearch( query , jumpTo, data, targetContainer, widgetElem){
-			
-			console.log("ITEM SEARCH")
+		function itemSearch( query , jumpTo, data, targetContainer)
+		{
 			<#-- update setup widget -->
 			var obj = $.PALM.boxWidget.getByUniqueName( 'explore_search' ); 
 			
@@ -679,51 +665,43 @@
 					obj.options.source = "<@spring.url '/explore/' />"+ url + "?query=" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
 	
 				targetContainer.html( "" );
-				
 				$.PALM.boxWidget.refresh( obj.element , obj.options );
-			
-				
 	}
 	
 	function itemSelection(id, type){
-	
 		var queryString = "?id="+id+"&type="+type;
 		
 		<#-- update setup widget -->
 		var stageWidget = $.PALM.boxWidget.getByUniqueName( 'explore_setup' ); 
 		stageWidget.options.queryString = queryString;
 		$.PALM.boxWidget.refresh( stageWidget.element , stageWidget.options );
-		
-		
-		
 	}
 	
 	
 	function setFooter(data, widgetElem){
+		var maxPage = Math.ceil(data.totalCount/data.maxresult);
+		var $pageDropdown = $( widgetElem ).find( "select.page-number" );
+		$pageDropdown.html( "" );
+		<#-- set dropdown page -->
+		for( var i=1;i<=maxPage;i++){
+			$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
+		}
+		<#-- //enable bootstrap tooltip -->
+		<#-- $( widgetElem ).find( "[data-toggle='tooltip']" ).tooltip(); -->
+		
+		<#--// set page number-->
+		
+		$pageDropdown.val( data.page + 1 );
+		$( widgetElem ).find( "span.total-page" ).html( maxPage );
+		var endRecord = (data.page + 1) * data.maxresult;
+		if( data.page == maxPage - 1 ) 
+		endRecord = data.totalCount;
+//	$( widgetElem ).find( "span.paging-info" ).html( "Displaying records " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.totalCount );
 	
-								var maxPage = Math.ceil(data.totalCount/data.maxresult);
-								var $pageDropdown = $( widgetElem ).find( "select.page-number" );
-								$pageDropdown.html( "" );
-								<#-- set dropdown page -->
-								for( var i=1;i<=maxPage;i++){
-									$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
-								}
-								<#-- //enable bootstrap tooltip -->
-								<#-- $( widgetElem ).find( "[data-toggle='tooltip']" ).tooltip(); -->
-								
-								<#--// set page number-->
-								
-								$pageDropdown.val( data.page + 1 );
-								$( widgetElem ).find( "span.total-page" ).html( maxPage );
-								var endRecord = (data.page + 1) * data.maxresult;
-								if( data.page == maxPage - 1 ) 
-								endRecord = data.totalCount;
-						//	$( widgetElem ).find( "span.paging-info" ).html( "Displaying records " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.totalCount );
-							
-								if( maxPage == 1 ){
-									$( widgetElem ).find( "li.toNext" ).addClass( "disabled" );
-									$( widgetElem ).find( "li.toEnd" ).addClass( "disabled" );
-								}
+		if( maxPage == 1 ){
+			$( widgetElem ).find( "li.toNext" ).addClass( "disabled" );
+			$( widgetElem ).find( "li.toEnd" ).addClass( "disabled" );
+		}
 	}
 	
 		<#--// register the widget-->
