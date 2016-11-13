@@ -100,6 +100,8 @@ $( function(){
 		var defaultVisType = "";
 		var objectType = "";
 		var visList = [];
+		var currentTab = 0;
+		
 		<#-- do not load data again if already loaded -->
 		var loadedList = [];
 		var dataLoadedFlag = "0";
@@ -223,6 +225,9 @@ $( function(){
 					}
 				}
 			}	
+			
+			
+			
 				<#-- create tabs according to visualization type-->
 				var visualizationTabs = $( '<div/>' )
 													.attr({"id":"tab_visualization"})
@@ -262,20 +267,25 @@ $( function(){
 				 	tabHeader.on("click",function(e){
 				 		hidehoverdiv('divtoshow');
 				 		hidemenudiv('menu')
+				 		if(item == "Comparison")
+				 		{	document.getElementById("other_filters").style.visibility = "hidden";}
+						else
+						{	document.getElementById("other_filters").style.visibility = "visible";}
+				 		
+				 		currentTab = index;
+				 		console.log(currentTab)
 						loadVis(data.type, visType, e.target.title, widgetElem, names, ids, tabContent, data.authoridForCoAuthors);
 					});
 
-					if( index == 0 ){
+					if( index == currentTab ){
 						tabHeader.addClass( "active" );
 						tabContent.addClass( "active" );
 					}
-					
 
 					<#-- append tab header and content -->
 					visualizationTabsHeaders.append( tabHeader );
 					visualizationTabsContents.append( tabContent );
-
-					if(item == visList[0]){
+					if(item == visList[currentTab]){
 						loadVis(data.type, visType, item, widgetElem, names, ids, tabContent, data.authoridForCoAuthors);
 					}
 				});
@@ -338,7 +348,7 @@ $( function(){
 		
 		<#-- NETWORK TAB -->
 		function tabVisNetwork(uniqueVisWidget, url, widgetElem, tabContent, reload){
-			
+			console.log(names.length + " names")	
 			var tabContainer = $( widgetElem ).find( "#tab_Network" );
 				
 				var canvasDiv = $('<div/>').attr({'id': 'canvas'});
@@ -366,15 +376,14 @@ $( function(){
 		            	//defaultHoverLabelBGColor: "pink"
 		            }
 		        });
-		        
+		    var edgeSizes = [];
 			if(reload!="true"){
 			$.getJSON( url , function( data ) {
 				
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniqueVisWidget );
 				
-				var edgeSizes = [];
-				
+			
 				<#-- gephi network -->
 				graphFile=data.map.graphFile;
 				sigma.parsers.gexf( "<@spring.url '/resources/gexf/'/>" + data.map.graphFile ,s,function() {
@@ -384,7 +393,10 @@ $( function(){
 					if(s.graph.nodes().length==0 && s.graph.edges().length==0){
 						console.log("condition met")
 						tabContainer.html("")
-						$.PALM.callout.generate( tabContainer , "warning", "No data found!!", "No authors satisfy the specified criteria!" );
+						if(names.length > 2)
+							$.PALM.callout.generate( tabContainer , "warning", "No data found!!", "You can try to look for associations between two authors instead!" );
+						else
+							$.PALM.callout.generate( tabContainer , "warning", "No data found!!", "No authors satisfy the specified criteria!" );
 						return false;
 					}
 					

@@ -269,11 +269,12 @@
 						    endYear = value[1];
 						});
 		    		
-		    			var filters = $('<div/>').addClass("other_filters");
+		    			var filters = $('<div/>')
+		    						.attr("id","other_filters");
 		    			targetContainer.append(filters);
 					}
 								
-					var filterContent = $( widgetElem ).find( ".other_filters" );
+					var filterContent = $( widgetElem ).find( "#other_filters" );
 					filterContent.html("");			
 		
 					publicationsFilter = $('<div/>').addClass("publicationsFilter")
