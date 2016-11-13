@@ -32,7 +32,7 @@
 			<ul id="researcherPaging" class="pagination marginBottom0">
 				<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
 				<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
-				<#--<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>-->
+				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>
 				<li class="paginate_button toNext"><a href="#"><i class="fa fa-caret-right"></i></a></li>
 				<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
 			</ul>
@@ -59,6 +59,7 @@
 		var url = "searchResearchers";
 		<#-- generate unique id for progress log -->
 		var uniqueSearchWidget = $.PALM.utility.generateUniqueId();
+		
 		var options ={
 			source : "<@spring.url '/explore/' />"+url,
 			query: "",
@@ -66,18 +67,25 @@
 			page:0,
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
-	
-					dropDown = $( widgetElem ).find( "#selectDropDown" );
-      				itemType = dropDown.val();
-   					getURL(itemType);
+					
+				<#-- show pop up progress log -->
+				$.PALM.popUpMessage.create( "Loading "+itemType+" ..", { uniqueId:uniqueSearchWidget, popUpHeight:40, directlyRemove:false , polling:false});
+   			
+				dropDown = $( widgetElem ).find( "#selectDropDown" );
+  				itemType = dropDown.val();
+				getURL(itemType);
+				
+				console.log("on refresh start!")
    					
 			},
 
 			onRefreshDone: function(  widgetElem , data ){
 			
+			
+			
 				var targetContainer = $( widgetElem ).find( ".content-list" );
 				targetContainer.html( "" );
-				$( "#search_field" ).val("");
+				//$( "#search_field" ).val("");
 			
 				<#-- pagging next -->
 				$( "li.toNext" ).click( function(){
@@ -109,19 +117,24 @@
 				});
 				
 			
-			
 				getData(data, targetContainer, widgetElem);
 				
 				<#-- search icon presed -->
 				$( "#search_button" ).click( function(){
 					//searchText = $( "#search_field" ).val();
+					console.log("1");
 					itemSearch( $( "#search_field" ).val() , "first", data, targetContainer, widgetElem);
+					console.log("2");
 				});
 				
 				$( "#search_field" )
 	    			.on( "keypress", function(e) {
 			  			if ( e.keyCode == 13)
+			  			{
+			  				console.log("3");
 			    			itemSearch( $( "#search_field" ).val() , "first", data, targetContainer, widgetElem);
+			    			console.log("4");
+			    		}	
 					})
 				
 				
@@ -134,7 +147,10 @@
    					getURL(itemType);
 	   				$( "#search_field" ).val("");
    					targetContainer.html( "" );
-   					getData(data, targetContainer, widgetElem);
+   					//getData(data, targetContainer, widgetElem);
+   					var obj = $.PALM.boxWidget.getByUniqueName( 'explore_search' ); 
+					obj.options.source = "<@spring.url '/explore/' />"+ url
+   					$.PALM.boxWidget.refresh( obj.element , obj.options );
 				}	
 			}
 		};	
@@ -158,13 +174,7 @@
 		}
 		
 		function getData(data, targetContainer, widgetElem){
-		
-			<#-- show pop up progress log -->
-   			$.PALM.popUpMessage.create( "Loading "+itemType+" ..", { uniqueId:uniqueSearchWidget, popUpHeight:40, directlyRemove:false , polling:false});
-   					
 			<#-- Content List -->
-				$.getJSON( "<@spring.url '/explore/' />"+url , function( data ) {
-				
 					<#-- remove  pop up progress log -->
 					$.PALM.popUpMessage.remove( uniqueSearchWidget );
 				
@@ -416,7 +426,6 @@
 									<#-- append to event group -->
 									publicationItem.append( publicationDetail );
 						
-									console.log(itemPublication)
 									<#-- event icon -->
 									var publicationType="fa fa-file-text-o";
 									var eventIcon = $('<div/>').css("width","4%").css("float","left").append($('<i/>'));
@@ -538,7 +547,6 @@
 									<#-- add click event -->
 									topicDetail.on( "click", function( e){
 										$( this ).parent().context.style.color="black";
-										console.log(item.id)
 										itemSelection(item.id, "topic");
 									});
 									
@@ -553,7 +561,6 @@
 						}
 						
 						if(itemType == "circles"){
-   						console.log(data)
 	   						if( data.count == 0 ){
 								if( typeof data.query === "undefined" || data.query == "" )
 									$.PALM.callout.generate( targetContainer , "normal", "Currently no circles found on PALM database" );
@@ -585,8 +592,6 @@
 									<#-- append to event group -->
 									circleItem.append( circleDetail );
 						
-									console.log(itemCircle)
-
 									<#-- title -->
 										circleDetail.append(
 											$( '<div/>' )
@@ -633,14 +638,17 @@
 								setFooter(data, widgetElem);
 							}
 						}
-					}); //getJson
 		}
 		
 		function itemSearch( query , jumpTo, data, targetContainer, widgetElem){
+			
+			console.log("ITEM SEARCH")
+			<#-- update setup widget -->
+			var obj = $.PALM.boxWidget.getByUniqueName( 'explore_search' ); 
+			
 		
-		<#--//find the element option-->
-		$.each( $.PALM.options.registeredWidget, function(index, obj){
 				var maxPage = parseInt($( obj.element ).find( "span.total-page" ).html()) - 1;
+				
 				if( jumpTo === "next")
 					obj.options.page = obj.options.page + 1;
 				else if( jumpTo === "prev")
@@ -665,24 +673,20 @@
 				}
 				
 				getURL(itemType);
-					
 				if( jumpTo === "first") // if new searching performed
-					url = url + "?query=" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
+					obj.options.source = "<@spring.url '/explore/' />"+ url + "?query=" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
 				else
-					url = url + "?query=" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
+					obj.options.source = "<@spring.url '/explore/' />"+ url + "?query=" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
 	
-		});
 				targetContainer.html( "" );
-
-				getData(data, targetContainer);
 				
-				setFooter(data, widgetElem);
+				$.PALM.boxWidget.refresh( obj.element , obj.options );
+			
 				
 	}
 	
 	function itemSelection(id, type){
 	
-		console.log("type here: "+ type)
 		var queryString = "?id="+id+"&type="+type;
 		
 		<#-- update setup widget -->

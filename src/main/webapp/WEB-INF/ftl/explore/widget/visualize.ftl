@@ -115,7 +115,6 @@ $( function(){
 				
 						},
 			onRefreshDone: function(  widgetElem , data ){
-			console.log(data)
 			
 				loadedList = [];
 				graphFile = "";
@@ -143,8 +142,6 @@ $( function(){
 					visType = data.visType;
 				}
 				
-				
-				console.log(" visType: " + visType + " object:  "  +objectType  )
 			<#-- if more than one item in consideration -->	
 			if(ids.length>1)
 			{
