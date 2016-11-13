@@ -383,16 +383,22 @@ $( function(){
 				sigma.parsers.gexf( "<@spring.url '/resources/gexf/'/>" + data.map.graphFile ,s,function() {
 					//s.refresh();
 					s.refresh();
+					
+					if(s.graph.nodes().length==0 && s.graph.edges().length==0){
+						console.log("condition met")
+						tabContainer.html("")
+						$.PALM.callout.generate( tabContainer , "warning", "No data found!!", "No authors satisfy the specified criteria!" );
+						return false;
+					}
+					
 					s.graph.nodes().forEach(function(n) {
 				        n.originalColor = n.color;
 				      });
-				      s.graph.edges().forEach(function(e) {
+				    s.graph.edges().forEach(function(e) {
 				        e.originalColor = e.color;
 				        edgeSizes.push(e.size)
 				      });
 				      
-				      console.log(s.graph.edges())
-				      console.log(edgeSizes)
 					s.bind('overNode', function(e){
 						var nodeId = e.data.node.id,
             			toKeep = s.graph.neighbors(nodeId);
@@ -454,6 +460,14 @@ $( function(){
 				<#-- gephi network -->
 				sigma.parsers.gexf( "<@spring.url '/resources/gexf/'/>" + graphFile ,s,function() {
 					s.refresh();
+					
+					if(s.graph.nodes().length==0 && s.graph.edges().length==0){
+						console.log("condition met")
+						tabContainer.html("")
+						$.PALM.callout.generate( tabContainer , "warning", "No data found!!", "No authors satisfy the specified criteria!" );
+						return false;
+					}
+					
 					s.graph.nodes().forEach(function(n) {
 				        n.originalColor = n.color;
 				      });
@@ -519,10 +533,7 @@ $( function(){
 				url="";
 			}
 		}
-		
-		function truncate (num, places) {
- 			 return Math.trunc(num * Math.pow(10, places)) / Math.pow(10, places);
-		}
+			
 		<#-- neighbour highlight in gephi network -->
 		sigma.classes.graph.addMethod('neighbors', function(nodeId) {
     		var k,
@@ -546,6 +557,11 @@ $( function(){
 			
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniqueVisWidget );
+				
+				if( data.map.events.length == 0 ){
+					$.PALM.callout.generate( tabContent , "warning", "No data found!!", "Information about geographical locations is not available for the specified criteria!" );
+					return false;
+				}
 				
 				var locDiv = $('<div/>').attr("id","mapid").css("height","60vh").css("z-index","1");
 				tabContent.append(locDiv);
@@ -712,6 +728,11 @@ $( function(){
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniqueVisWidget );
 				
+				if( data.map.pubDetailsList.length == 0 ){
+					$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No publications satisfy the specified criteria" );
+					return false;
+				}
+				
 				var timeDiv = $('<div/>')
 							.addClass("timeline")
 							.css('overflow-y','scroll')
@@ -867,6 +888,15 @@ $( function(){
 				var bubblesTab = $( widgetElem ).find( "#tab_Bubbles" );
 				bubblesTab.html("");
 				
+				if( dataBubble.map.list.length == 0 ){
+					if(objectType == "publication" )
+						$.PALM.callout.generate( bubblesTab , "warning", "No data found!!", "No topics found!" );
+					else
+						$.PALM.callout.generate( bubblesTab , "warning", "No data found!!", "No interests found!" );
+					return false;
+				}
+				
+				
 				visBubbles(dataBubble.map.list, dataBubble.dataList);
 			});
 		}
@@ -880,6 +910,14 @@ $( function(){
 		console.log(data)
 			<#-- remove  pop up progress log -->
 			$.PALM.popUpMessage.remove( uniqueVisWidget );
+			
+			if( data.map.list.length == 0 ){
+				if(objectType == "publication" )
+					$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No topics found!" );
+				else
+					$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No interests found!" );
+				return false;
+			}
 			
 			var tabEvolutionContainer = $( widgetElem ).find( "#tab_Evolution" );
 			tabEvolutionContainer.html("");
@@ -924,7 +962,7 @@ $( function(){
 					tabGroupContainer.html("");
 					
 					if( data.map == null ){
-						$.PALM.callout.generate( tabGroupContainer , "warning", "Empty List!", "Insufficient Data!" );
+						$.PALM.callout.generate( tabGroupContainer , "warning", "No data found!!", "Insufficient Data!" );
 						return false;
 					}
 					var groupSection = $( '<div/>' ).addClass("clusters")
@@ -936,7 +974,7 @@ $( function(){
 						data = data.map.coauthors;
 						if( data == 0 || data == null )
 						{
-							$.PALM.callout.generate( tabGroupContainer , "warning", "Empty List!", "Insufficient Data!" );
+							$.PALM.callout.generate( tabGroupContainer , "warning", "No data found!!", "No authors satisfy the specified criteria!" );
 							return false;
 						}
 						else
@@ -944,13 +982,24 @@ $( function(){
 					}					
 					if(visType == "conferences"){
 						data = data.map.conferences;
-						visualizeCluster(data, mainWidget, visType);	
+						if( data == 0 || data == null )
+						{
+							$.PALM.callout.generate( tabGroupContainer , "warning", "No data found!!", "No conferences satisfy the specified criteria!" );
+							return false;
+						}
+						else
+							visualizeCluster(data, mainWidget, visType);	
 					}		
 					
 					if(visType == "publications"){
 						data = data.map.publications;
-						console.log(data)
-						visualizeCluster(data, mainWidget, visType);	
+						if( data == 0 || data == null )
+						{
+							$.PALM.callout.generate( tabGroupContainer , "warning", "No data found!!", "No publications satisfy the specified criteria!" );
+							return false;
+						}
+						else
+							visualizeCluster(data, mainWidget, visType);	
 					}
 			});
 		}
@@ -961,11 +1010,17 @@ $( function(){
 			$.getJSON( url , function( data ) {
 						console.log("list data")
 						console.log(data)
+						
+						if( data.map == null ){
+							$.PALM.callout.generate( tabContent , "warning", "No data found!!", "Insufficient Data!" );
+							return false;
+						}
+						
 						var namesList = data.dataList;
 						
 							//var tabListContainer = $( widgetElem ).find( "#tab_List" );
 							//tabListContainer.html("");	
-		  					var listSection = $( '<div/>' );
+		  				var listSection = $( '<div/>' );
 							
 						<#--	var listOfOptions = ["Co-Authors", "Similar Authors"];
 							var select = $( '<select/>' )
@@ -1006,12 +1061,13 @@ $( function(){
 							
 							if(visType == "researchers")
 							{
-								if( data.map.count == 0 ){
-									$.PALM.callout.generate( tabListContainer , "warning", "Empty List!", "Insufficient Data!" );
+								if( data.map.coAuthors.length == 0 ){
+									tabContent.html("")
+									$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No researchers satisfy the criteria!" );
 									return false;
 								}
 								
-								if( data.map.count > 0 ){
+								if( data.map.coAuthors.length > 0 ){
 									<#-- build the researcher list -->
 									$.each( data.map.coAuthors, function( index, item){
 										var researcherDiv = 
@@ -1026,7 +1082,6 @@ $( function(){
 											text = item.name
 										if(objectType=="researcher")
 										{
-										console.log("year filter: " + yearFilterPresent) 
 											text = " <b> " + item.name + " </b> "  ;
 											if(data.idsList.length > 1 && yearFilterPresent=="false")
 											{
@@ -1101,8 +1156,15 @@ $( function(){
 							
 							if(visType == "conferences")
 							{
-									//var sortedList = data.map.events.sort();
+								if( data.map.events.length == 0 ){
+									tabContent.html("")
+									$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No conferences satisfy the criteria!" );
+									return false;
+								}
+								else
+								{	
 									var previousEG = "";
+									
 									<#-- build the conference list -->
 									$.each( data.map.events, function( index, item){
 										if(type=="researcher")
@@ -1206,11 +1268,22 @@ $( function(){
 											.append( 
 												conferenceDiv
 											);
-									});			
+									});
+								}				
 							}
 							
 							if(visType == "topics")
 							{
+								if( data.map.list.length == 0 ){
+									tabContent.html("")	
+									if(objectType == "publication" )
+										$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No topics found!" );
+									else
+										$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No interests found!" );
+										return false;
+								}
+								else
+								{
 									var sortedList = data.map.list.sort();
 									<#-- build the conference list -->
 									$.each( sortedList , function( index, item){
@@ -1254,11 +1327,18 @@ $( function(){
 											.append( 
 												topicDiv
 											);
-									});			
+									});
+								}				
 							}
-							
 							if(visType == "publications")
 							{
+								if( data.map.pubDetailsList.length == 0 ){
+									tabContent.html("")								
+									$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No publications satisfy the criteria!" );
+									return false;
+								}
+								else
+								{
 									<#-- build the conference list -->
 									$.each( data.map.pubDetailsList, function( index, item){
 									
@@ -1304,7 +1384,8 @@ $( function(){
 											.append( 
 												conferenceDiv
 											);
-									});			
+									});	
+								}			
 							}
 							
 						});
@@ -1509,145 +1590,157 @@ $( function(){
 				var similarTab = $( widgetElem ).find( "#tab_Similar" );
 				similarTab.html("");
 				
-				var similarDiv = $('<div/>')
-							.addClass("similarity")
-							.css('overflow-y','scroll')
-							
-				similarTab.append(similarDiv);
+				if( data.map == null ){
+						$.PALM.callout.generate( similarTab , "warning", "No data found!!", "Insufficient Data!" );
+						return false;
+				}
 				
-				$(".similarity").slimscroll({
-							height: "67vh",
-					        size: "5px",
-				        	allowPageScroll: true,
-				   			touchScrollStep: 50,
-				   			//alwaysVisible: true
-				});		
-				
-				var innerDiv = $('<div/>').attr('id','sim_tab')
-				
-				similarDiv.append(innerDiv)	
-				
-				<#-- http://bl.ocks.org/kiranml1/6872226 -->
-				var grid = d3.range(15).map(function(i){
-					return {'x1':0,'y1':0,'x2':0,'y2':480};
-				});
-		
-				var tickVals = grid.map(function(d,i){
-					if(i>0){ return i*10; }
-					else if(i===0){ return "100";}
-				});
-		
-				var xscale = d3.scale.linear()
-								.domain([0,209])
-								.range([0,822]);
-		
-				var yscale = d3.scale.linear()
-								.domain([0,data.map.authorNames.length])
-								.range([0,580]);
-		
-				var colorScale = d3.scale.linear()
-								.domain([0,data.map.authorNames.length])
-								.range(["#cdf0fd", "#d4d4d1"]);
-		
-				var canvas = d3.select('#sim_tab')
-								.append('svg')
-								.attr({'width':700,'height':700})
-				
-				canvas.on("click", function(e) { hidemenudiv('menu'); })		
+				if(data.map.names.length==0){
+					$.PALM.callout.generate( similarTab , "warning", "No data found!!", "No similar "+ visType + ", not enough information available" );
+					return false;
+				}
+				else
+				{
+					var similarDiv = $('<div/>')
+								.addClass("similarity")
+								.css('overflow-y','scroll')
+								
+					similarTab.append(similarDiv);
+					
+					$(".similarity").slimscroll({
+								height: "67vh",
+						        size: "5px",
+					        	allowPageScroll: true,
+					   			touchScrollStep: 50,
+					   			//alwaysVisible: true
+					});		
+					
+					var innerDiv = $('<div/>').attr('id','sim_tab')
+					
+					similarDiv.append(innerDiv)	
+					
+					<#-- http://bl.ocks.org/kiranml1/6872226 -->
+					var grid = d3.range(15).map(function(i){
+						return {'x1':0,'y1':0,'x2':0,'y2':480};
+					});
 			
-				var chart = canvas.append('g')
-								//.attr("transform", "translate(150,0)")
-								.attr('id','bars')
-								.selectAll('rect')
-								.data(data.map.similarity)
+					var tickVals = grid.map(function(d,i){
+						if(i>0){ return i*10; }
+						else if(i===0){ return "100";}
+					});
+			
+					var xscale = d3.scale.linear()
+									.domain([0,209])
+									.range([0,822]);
+			
+					var yscale = d3.scale.linear()
+									.domain([0,data.map.names.length])
+									.range([0,580]);
+			
+					var colorScale = d3.scale.linear()
+									.domain([0,data.map.names.length])
+									.range(["#cdf0fd", "#d4d4d1"]);
+			
+					var canvas = d3.select('#sim_tab')
+									.append('svg')
+									.attr({'width':700,'height':700})
+					
+					canvas.on("click", function(e) { hidemenudiv('menu'); })		
+				
+					var chart = canvas.append('g')
+									//.attr("transform", "translate(150,0)")
+									.attr('id','bars')
+									.selectAll('rect')
+									.data(data.map.similarity)
+									.enter()
+									.append('rect')
+									.attr('height',20)
+									.attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+									.style('fill',function(d,i){ return colorScale(i); })
+									.attr('width',function(d){ return 0; })
+									.on("click", function(e, i){
+										
+										obj = {
+												  type:"similarBar",
+										          clientX:d3.event.clientX,
+										          clientY:d3.event.clientY,
+										          authorId:data.map.ids[i]
+										};
+										
+										showmenudiv(obj,'menu');
+										d3.event.stopPropagation();
+									})
+									.on("mouseover", function(d,i){
+										if(objectType!="topic"){
+											obj = {
+														  type:"similarBar",
+												          clientX:d3.event.clientX,
+												          clientY:d3.event.clientY,
+												          authorId:data.map.ids[i]
+											};
+											
+											var intarr = [] 
+											intarr = Object.keys(data.map.interests[i])
+											var count = 5;
+											if(intarr.length<5)
+												count = intarr.length
+												
+											var str = "Top common interests:";
+											for(var i=0; i<count; i++)
+												str = str +  "<br /> - " + intarr[i] 
+													
+												showhoverdiv(obj,'divtoshow', str);
+										}		
+									})
+									.on("mouseout", function(e,i){
+										hidehoverdiv('divtoshow');
+									})
+		
+		
+				var transit = d3.select("svg").selectAll("rect")
+								    .data(data.map.similarity)
+								    .transition()
+								    .duration(1000) 
+								    .attr("width", function(d) {return xscale(d/2.5); });
+		
+				var transitext = d3.select('#bars')
+								.selectAll('text')
+								.data(data.map.names)
 								.enter()
-								.append('rect')
-								.attr('height',20)
-								.attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
-								.style('fill',function(d,i){ return colorScale(i); })
-								.attr('width',function(d){ return 0; })
-								.on("click", function(e, i){
-									
-									obj = {
-											  type:"similarBar",
-									          clientX:d3.event.clientX,
-									          clientY:d3.event.clientY,
-									          authorId:data.map.authorIds[i]
-									};
-									
-									showmenudiv(obj,'menu');
-									d3.event.stopPropagation();
-								})
+								.append('text')
+								.attr({'x':function(d) {return 0; },'y':function(d,i){ return yscale(i)+32; }})
+								.text(function(d,i){
+									if(objectType=="topic")
+										return data.map.names[i]
+									else
+										return data.map.names[i] + " (Common interests: " + data.map.similarity[i] + ") "; 
+								}).style({'fill':'black','font-size':'13px', 'font-weight':'bold'})
 								.on("mouseover", function(d,i){
-									if(objectType!="topic"){
-										obj = {
-													  type:"similarBar",
-											          clientX:d3.event.clientX,
-											          clientY:d3.event.clientY,
-											          authorId:data.map.authorIds[i]
-										};
-										
-										var intarr = [] 
-										intarr = Object.keys(data.map.interests[i])
-										var count = 5;
-										if(intarr.length<5)
-											count = intarr.length
+										if(objectType!="topic"){
+											obj = {
+														  type:"similarBar",
+												          clientX:d3.event.clientX,
+												          clientY:d3.event.clientY,
+												          authorId:data.map.ids[i]
+											};
 											
-										var str = "Top common interests:";
-										for(var i=0; i<count; i++)
-											str = str +  "<br /> - " + intarr[i] 
+											var intarr = [] 
+											intarr = Object.keys(data.map.interests[i])
+											var count = 5;
+											if(intarr.length<5)
+												count = intarr.length
 												
-											showhoverdiv(obj,'divtoshow', str);
-									}		
-								})
-								.on("mouseout", function(e,i){
-									hidehoverdiv('divtoshow');
-								})
-	
-	
-			var transit = d3.select("svg").selectAll("rect")
-							    .data(data.map.similarity)
-							    .transition()
-							    .duration(1000) 
-							    .attr("width", function(d) {return xscale(d/2.5); });
-	
-			var transitext = d3.select('#bars')
-							.selectAll('text')
-							.data(data.map.authorNames)
-							.enter()
-							.append('text')
-							.attr({'x':function(d) {return 0; },'y':function(d,i){ return yscale(i)+32; }})
-							.text(function(d,i){
-								if(objectType=="topic")
-									return data.map.authorNames[i]
-								else
-									return data.map.authorNames[i] + " (Common interests: " + data.map.similarity[i] + ") "; 
-							}).style({'fill':'black','font-size':'13px', 'font-weight':'bold'})
-							.on("mouseover", function(d,i){
-									if(objectType!="topic"){
-										obj = {
-													  type:"similarBar",
-											          clientX:d3.event.clientX,
-											          clientY:d3.event.clientY,
-											          authorId:data.map.authorIds[i]
-										};
-										
-										var intarr = [] 
-										intarr = Object.keys(data.map.interests[i])
-										var count = 5;
-										if(intarr.length<5)
-											count = intarr.length
-											
-										var str = "Top common interests:";
-										for(var i=0; i<count; i++)
-											str = str +  "<br /> - " + intarr[i] 
-												
-											showhoverdiv(obj,'divtoshow', str);
-									}
-								})
-								.on("mouseout", function(e,i){
-									hidehoverdiv('divtoshow');
-								})
+											var str = "Top common interests:";
+											for(var i=0; i<count; i++)
+												str = str +  "<br /> - " + intarr[i] 
+													
+												showhoverdiv(obj,'divtoshow', str);
+										}
+									})
+									.on("mouseout", function(e,i){
+										hidehoverdiv('divtoshow');
+									})
+				}		
 			});
 		}
 		
