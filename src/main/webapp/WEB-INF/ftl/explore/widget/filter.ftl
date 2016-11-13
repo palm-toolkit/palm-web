@@ -14,6 +14,8 @@
 <script>
 	$( function(){
 		
+		
+		var pubList = [];
 		objectType = "";
 		filterList = [];
 		checkedPubValues = [];
@@ -23,6 +25,25 @@
 		startYear = 0;
 		endYear = 0;
 		visType = "";
+		
+		$('body').on('click', '#pub_filter_search', function () {
+		     console.log("pub_filter_search clicked")
+		     
+		     $('#pub_filter_search')
+ 				.on( "keypress", function(e) {
+		    				var term = $( this ).val();
+		    				console.log(term)
+				  			if ( e.keyCode == 13)
+				  			{
+				  				fillPublicationFilter( pubList, term);
+				  			}
+					})
+		});
+		$('body').on('click', '#pub_filter_all', function () {
+		     console.log("pub_filter_all clicked")
+		     
+		     $("#pub_filter_all").on("click", function(){togglePub(this)})
+		});
 		
 		<#-- generate unique id for progress log -->
 		var uniquePidTopicWidget = $.PALM.utility.generateUniqueId();
@@ -222,10 +243,14 @@
 					var filterContent = $( widgetElem ).find( ".other_filters" );
 					filterContent.html("");			
 		
+					publicationsFilter = $('<div/>').addClass("publicationsFilter")
+					filterContent.append(publicationsFilter);
 					
 						<#-- PUBLICATIONS FILTER -->
 						if(data.publicationFilter != undefined && data.publicationFilter.publicationsList.length!=0){
-							var pubSectionHeader = $( '<span/>' ).html("PUBLICATIONS (" + data.publicationFilter.publicationsList.length + ") :")
+							pubList = data.publicationFilter.publicationsList;
+							pubCount = $( '<span/>' )
+							pubSectionHeader = $( '<span/>' ).html("PUBLICATIONS")
 											.append('&nbsp;')
 											.append(
 												$('<span/>')
@@ -233,56 +258,23 @@
 													$('<input/>')
 													.attr('type','checkbox')
 													.attr('value', 'All')
+													.attr("id" , "pub_filter_all")
 													.on("click", function(){togglePub(this)})
 												 )
-											);
-							var pubSection = $( '<div/>' );
-							filterContent.append(pubSectionHeader);
-							filterContent.append(pubSection);
-							pubSection.addClass('pub_list')
-								.css('overflow-y','scroll')
-								.css('height', 'auto')
-								.css('background-color', 'hsla(120, 100%, 50%, 0.2)')
-								.css('max-height', '23vh')
-							
-							$(".pub_list").slimscroll({
-								height: "23vh",
-						        size: "10px",
-					        	allowPageScroll: true,
-					   			touchScrollStep: 50,
-					   			color: '#008000'
-					       });
-					
-							<#-- build the Publication Filter list -->
-							var sortedPublicationList = data.publicationFilter.publicationsList.sort(function(a, b) 
-							{
-								return sortList(a.title, b.title);
-							})
-							$.each( sortedPublicationList, function( index, item){
-							var publicationDiv = 
-									$( '<div/>' )
-										.addClass('authorExplore')
-										.attr({ 'id' : item.id })
-										.css('padding-left','4px')
-										.css('padding-right','4px')
-										.append(
-											$('<input/>')
-												.attr('type','checkbox')
-												.attr('name','publicationCB')
-												.attr('value', item.title)
-												.attr({ 'id' : item.id })
+												).append(
+												$('<span/>')
+												.css("float","right")
+													.css("width","30%")
+													).append('&nbsp;')
+											.append(
+												$('<input/>')
+												.attr("id" , "pub_filter_search")
+												.css("font-size","10pt")
+												.css("height","25px")
+												.css("margin","5px")
 											 )
-										.append(
-											$( '<span/>' )
-												.addClass( 'name' )
-												.html( " " +  item.title.toUpperCase() )
-										)
-										pubSection
-											.append( 
-												publicationDiv
-											);
-									});
-							}	
+					fillPublicationFilter(pubList, "");
+				}	
 							
 						<#-- CONFERENCE FILTER -->
 						if(data.conferenceFilter != undefined && data.conferenceFilter.eventsList.length!=0){
@@ -338,7 +330,7 @@
 										.append(
 											$( '<span/>' )
 												.addClass( 'name' )
-												.html( " " +  item.title.toUpperCase() )
+												.html( " " +  item.title )
 										)
 										confSection
 											.append( 
@@ -403,7 +395,7 @@
 											.append(
 												$( '<span/>' )
 													.addClass( 'name' )
-													.html( " " +  item.title.toUpperCase() )
+													.html( " " +  item.title )
 											)
 												
 											topSection
@@ -467,7 +459,7 @@
 										.append(
 											$( '<span/>' )
 												.addClass( 'name' )
-												.html( " " +  item.name.toUpperCase() )
+												.html( " " +  item.name )
 										)
 										cirSection
 											.append( 
@@ -515,6 +507,71 @@
 			return (a < b) ? -1 : (a > b) ? 1 : 0;
 		}
 		
+		function fillPublicationFilter( data, term){
+				var array = [];
+				if(term!=""){
+				$.each(data,function(index, item){
+					  					if(item!=undefined){
+						  					if(item.title.toLowerCase().indexOf(term.toLowerCase()) != -1)
+						  						array.push(item)
+					  					}	
+					  				})
+				}
+				else
+					array = data;
+					
+				var pubSection = $( '<div/>' );
+				
+				pubCount.html("");
+				pubCount.html("(" + array.length + "/" + data.length + ")") 
+				publicationsFilter.html("");
+				publicationsFilter.append(pubSectionHeader);
+				pubSectionHeader.append(pubCount);
+				publicationsFilter.append(pubSection);
+				pubSection.addClass('pub_list')
+					.css('overflow-y','scroll')
+					.css('height', 'auto')
+					.css('background-color', 'hsla(120, 100%, 50%, 0.2)')
+					.css('max-height', '23vh')
+				
+				$(".pub_list").slimscroll({
+					height: "23vh",
+			        size: "10px",
+		        	allowPageScroll: true,
+		   			touchScrollStep: 50,
+		   			color: '#008000'
+		       });
+		
+				<#-- build the Publication Filter list -->
+				var sortedPublicationList = array.sort(function(a, b) 
+				{
+					return sortList(a.title, b.title);
+				})
+				$.each( sortedPublicationList, function( index, item){
+				var publicationDiv = 
+						$( '<div/>' )
+							.addClass('authorExplore')
+							.attr({ 'id' : item.id })
+							.css('padding-left','4px')
+							.css('padding-right','4px')
+							.append(
+								$('<input/>')
+									.attr('type','checkbox')
+									.attr('name','publicationCB')
+									.attr('value', item.title)
+									.attr({ 'id' : item.id })
+								 )
+							.append(
+								$( '<span/>' )
+									.addClass( 'name' )
+									.html( " " +  item.title )
+							)
+							pubSection
+								.append( 
+									publicationDiv
+								);
+						});
+		}
 		<#--// register the widget-->
 		$.PALM.options.registeredWidget.push({
 			"type":"${wType}",
