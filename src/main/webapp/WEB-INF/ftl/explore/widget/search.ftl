@@ -6,7 +6,7 @@
   	<div>
 	    <div class="drop-down">
 	    	<select id="selectDropDown" style="width:100%;font-size:14px;text-align:center;font-weight: bold;" class="form-control" >
-			  <option value="researchers">RESEARCHERS</option>
+			  <option value="researchers" selected>RESEARCHERS</option>
 			  <option value="conferences">CONFERENCES</option>
 			  <option value="publications">PUBLICATIONS</option>
 			  <option value="topics">TOPICS</option>

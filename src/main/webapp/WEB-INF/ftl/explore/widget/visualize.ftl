@@ -3,6 +3,24 @@
 </@security.authorize>
 <div id="boxbody-${wUniqueName}" class="box-body no-padding" style="height:77vh;overflow:hidden">
   	<div class="visualize_widget" class="nav-tabs-custom">
+  	
+  	<div style="max-width:100%;padding:5%;font-size:16px;color:#0961a3" id="introduction">
+		<h3>Welcome to the PALM Visual Analytics Dashboard Page! <br/> Here, data analysis is easy and fun...</h3>
+		<br/>
+		<i class="fa fa-arrow-left font-lg" aria-hidden="true"></i> &nbsp; Begin here! But first, please read on!<img src="<@spring.url '/resources/images/search_drop.png' />" alt="palm-logo" style="height:80px;padding:10px 10px 0 0;float:right;"><br/> 
+		You can choose a type of item to analyze, from researchers, publications, conferences, topics and circles. From the corresponding list, select one. <br/><br/>
+		As soon as one of them is selected, the widget above <i class="fa fa-arrow-up font-lg" aria-hidden="true"></i> will be updated to show you possible options for data exploration in the form of boxes. <br/>
+		<img src="<@spring.url '/resources/images/setup_widget.png' />" alt="palm-logo" style="height:80px;padding:4px 10px 0 0;float:left;">
+		One of the boxes in this widget is preselected for you. But, you can choose whichever you wish to explore.
+		<br/><br/><br/>
+		<img src="<@spring.url '/resources/images/tabs.png' />" alt="palm-logo" style="height:80px;padding:4px 10px 0 0;float:right;">
+		As per the box selection, this <i class="fa fa-arrow-down font-lg" aria-hidden="true"></i> 'visualization' widget displays the corresponding visualization or list.
+		You can choose to view any visualization from the presented options, just by clicking on the respective tab header.<br/>
+		<br/><i class="fa fa-arrow-right font-lg" aria-hidden="true"></i> The 'filters' widget can help you refine your data. For instance, if you want to see co-authors of the selected author only corresponding to a particular conference, you can simply apply that filter. 
+		This will update the present visualization to show only the required result.
+  	</div>
+  	
+  	
 	</div>
 	<div id="divtoshow" style="position: fixed;display:none;">test</div>
 	<div id="chartTab">
@@ -96,6 +114,14 @@ g.arc path {
 		
 <#-- jquery -->
 $( function(){
+
+		$("#introduction").slimscroll({
+							height: "70vh",
+					        size: "5px",
+				        	allowPageScroll: true,
+				   			touchScrollStep: 50,
+				});
+
 		var visType = "";
 		var defaultVisType = "";
 		var objectType = "";
@@ -117,7 +143,7 @@ $( function(){
 				
 						},
 			onRefreshDone: function(  widgetElem , data ){
-			
+				
 				loadedList = [];
 				graphFile = "";
 				names = data.dataList;
@@ -125,12 +151,22 @@ $( function(){
 				yearFilterPresent = data.yearFilterPresent;
 				deleteFlag = data.deleteFlag;
 				var targetContainer = $( widgetElem ).find( ".visualize_widget" );
-				
-				
-				targetContainer.html("");			
-				hidehoverdiv('divtoshow');
-				hidemenudiv('menu')
 
+				<#-- show introduction only on the first load -->				
+				var elem = document.getElementById("introduction");
+				<#--var setup = document.getElementById("widget-explore_setup")
+				if(elem!=null)
+					setup.style.display = "none"-->
+				if(data.idsList.length>0)
+					elem=null;
+				if(elem==null)
+				{
+					//setup.style.display = "block"
+					targetContainer.html("");			
+					hidehoverdiv('divtoshow');
+					hidemenudiv('menu')
+				}
+				
 				<#-- update type of visualization depending on selection-->
 				if(objectType == ""){
 					objectType = data.type;
@@ -267,16 +303,22 @@ $( function(){
 				 	tabHeader.on("click",function(e){
 				 		hidehoverdiv('divtoshow');
 				 		hidemenudiv('menu')
-				 		if(item == "Comparison")
-				 		{	document.getElementById("other_filters").style.visibility = "hidden";}
-						else
-						{	document.getElementById("other_filters").style.visibility = "visible";}
-				 		
+
+				 		var other_filters = document.getElementById("other_filters")
+						if(other_filters!=null)
+						{
+					 		if(item == "Comparison")
+					 			other_filters.style.visibility = "hidden";
+							else
+								other_filters.style.visibility = "visible";
+				 		}
 				 		currentTab = index;
 				 		console.log(currentTab)
 						loadVis(data.type, visType, e.target.title, widgetElem, names, ids, tabContent, data.authoridForCoAuthors);
 					});
 
+					if(currentTab>visList.length-1)
+						currentTab = 0;
 					if( index == currentTab ){
 						tabHeader.addClass( "active" );
 						tabContent.addClass( "active" );
@@ -311,8 +353,11 @@ $( function(){
 				}
 				if(loadedList.indexOf(visItem)== -1){
 				
-					<#-- show pop up progress log -->
-					$.PALM.popUpMessage.create( "Loading "+visItem, { uniqueId:uniqueVisWidget, popUpHeight:40, directlyRemove:false , polling:false});
+					if(ids.length>0)
+					{
+						<#-- show pop up progress log -->
+						$.PALM.popUpMessage.create( "Loading "+visItem, { uniqueId:uniqueVisWidget, popUpHeight:40, directlyRemove:false , polling:false});
+					}
 					var url = "<@spring.url '/explore/visualize' />"+"?visTab="+visItem+"&type="+type+"&visType="+visType+"&dataList="+names+"&idList="+ids+"&checkedPubValues="+checkedPubValues+"&checkedConfValues="+checkedConfValues+"&checkedTopValues="+checkedTopValues+"&checkedCirValues="+checkedCirValues+"&startYear="+startYear+"&endYear="+endYear+"&yearFilterPresent="+yearFilterPresent+"&deleteFlag="+deleteFlag+"&authoridForCoAuthors="+authoridForCoAuthors;
 		
 					if(visItem == "Network"){
@@ -348,7 +393,6 @@ $( function(){
 		
 		<#-- NETWORK TAB -->
 		function tabVisNetwork(uniqueVisWidget, url, widgetElem, tabContent, reload){
-			console.log(names.length + " names")	
 			var tabContainer = $( widgetElem ).find( "#tab_Network" );
 				
 				var canvasDiv = $('<div/>').attr({'id': 'canvas'});
@@ -392,11 +436,11 @@ $( function(){
 					
 					if(s.graph.nodes().length==0 && s.graph.edges().length==0){
 						console.log("condition met")
-						tabContainer.html("")
+						tabContent.html("")
 						if(names.length > 2)
-							$.PALM.callout.generate( tabContainer , "warning", "No data found!!", "You can try to look for associations between two authors instead!" );
+							$.PALM.callout.generate( tabContent , "warning", "No data found!!", "You can try to look for associations between two authors instead!" );
 						else
-							$.PALM.callout.generate( tabContainer , "warning", "No data found!!", "No authors satisfy the specified criteria!" );
+							$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No authors satisfy the specified criteria!" );
 						return false;
 					}
 					
@@ -472,8 +516,8 @@ $( function(){
 					
 					if(s.graph.nodes().length==0 && s.graph.edges().length==0){
 						console.log("condition met")
-						tabContainer.html("")
-						$.PALM.callout.generate( tabContainer , "warning", "No data found!!", "No authors satisfy the specified criteria!" );
+						tabContent.html("")
+						$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No authors satisfy the specified criteria!" );
 						return false;
 					}
 					
@@ -567,7 +611,7 @@ $( function(){
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniqueVisWidget );
 				
-				if( data.map.events.length == 0 ){
+				if( data.map.realLocationsFound == 0 ){
 					$.PALM.callout.generate( tabContent , "warning", "No data found!!", "Information about geographical locations is not available for the specified criteria!" );
 					return false;
 				}
@@ -613,7 +657,6 @@ $( function(){
 									mapdata.features[0].properties.conference = groupname
 									mapdata.features[0].properties.year = year
 									mapdata.features[0].properties.eventGroupId = eventGroupId
-									mapdata.features[0].properties.groupname = groupname
 									mapdata.features[0].properties.dataType = "researcher"
 									mydata.push(myLayer.addData(mapdata.features[0]));
 								});
@@ -652,14 +695,13 @@ $( function(){
 								function(mapdata){
 				
 									year = data.map.events[i].year
-									eventGroup = data.map.events[i].groupName
+									groupname = data.map.events[i].groupName
 									eventGroupId = data.map.events[i].eventGroupId
-									if(eventGroupList.indexOf(eventGroup)== -1)
-									eventGroupList.push(eventGroup);
+									if(eventGroupList.indexOf(groupname)== -1)
+									eventGroupList.push(groupname);
 									
 									mapdata.features[0].properties.conference = groupname
 									mapdata.features[0].properties.year = year
-									mapdata.features[0].properties.eventGroup = eventGroup
 									mapdata.features[0].properties.eventGroupId = eventGroupId
 									mapdata.features[0].properties.dataType = "conference"
 									mydata.push(myLayer.addData(mapdata.features[0]));
@@ -684,7 +726,7 @@ $( function(){
 							       
 							        mymap.setView([(maxlat+minlat)/2,(maxlon+minlon)/2], 2);
 							        return L.marker(latlng,{icon: new L.Icon({
-									  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-'+iconColorList[eventGroupList.indexOf(feature.properties.eventGroup)]+'.png'
+									  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-'+iconColorList[eventGroupList.indexOf(feature.properties.conference)]+'.png'
 									})}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
 							       },
 							       onEachFeature: onEachFeature

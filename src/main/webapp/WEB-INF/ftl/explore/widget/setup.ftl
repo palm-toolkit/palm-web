@@ -2,7 +2,13 @@
 	<#assign loggedUser = securityService.getUser() >
 </@security.authorize>
 <div id="boxbody-${wUniqueName}" class="box-body no-padding" style="height:100px;overflow:hidden">
-  	<div id="setup_widget" class="nav-tabs-custom">
+
+
+	<div style="max-width:100%;text-align:center;padding:3vh;display:block" id="introduction_title">
+	<div style="width:30%;float:left"><img style="height:50px" class="site-logo" src="http://haiti.informatik.rwth-aachen.de/lufgi9/wp-content/uploads/2015/04/cropped-RZ_i9_RGB12.png" alt="i9 – Learning Technologies Research Group"></div><div style="width:70%;float:right;font-size:35px"><strong>PALM</strong> - Visual Analytics Dashboard</div>
+	</div>
+
+  	<div id="setup_widget" class="nav-tabs-custom" style="display:none">
   		<div id="search_words" style="width:50%;float:left;" >
 	  		<div class="type_search_words">
 	  		</div>
@@ -48,6 +54,12 @@
 				<#-- show pop up progress log -->
 						},
 			onRefreshDone: function(  widgetElem , data ){
+				if(data.type != "name"){
+					var introduction_title = document.getElementById("introduction_title")
+					var setup_widget = document.getElementById("setup_widget")
+					introduction_title.style.display="none";
+					setup_widget.style.display="block";
+				}
 				var id = data.id;
 				var wordsContainer = $( widgetElem ).find( ".scroll_search_words" );
 				wordsContainer.css("padding-left","5px")
