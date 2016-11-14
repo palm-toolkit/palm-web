@@ -5,7 +5,7 @@
   	<div class="box-tools">
   	<div>
 	    <div class="drop-down">
-	    	<select id="selectDropDown" style="width:100%;font-size:14px;text-align:center;font-weight: bold;" class="form-control" >
+	    	<select id="select-drop-down" class="form-control" >
 			  <option value="researchers" selected>RESEARCHERS</option>
 			  <option value="conferences">CONFERENCES</option>
 			  <option value="publications">PUBLICATIONS</option>
@@ -14,7 +14,7 @@
 			</select>
 	    </div>
 	    
-	    <div class="input-group" style="width: 100%;">
+	    <div class="input-group width100p">
 	      <input type="text" id="search_field" class="form-control input-sm pull-right" placeholder="Enter search text">
 	      <div id="search_button" class="input-group-btn">
 	        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
@@ -126,8 +126,8 @@
 				getData(data, targetContainer, widgetElem);
 				
 				<#-- drop down change event-->
-				dropDown = $( widgetElem ).find( "#selectDropDown" );
-				var sel = document.getElementById('selectDropDown');
+				dropDown = $( widgetElem ).find( "#select-drop-down" );
+				var sel = document.getElementById('select-drop-down');
    				sel.onchange = function() {
       				itemType = dropDown.val();
 					
@@ -229,27 +229,15 @@
 										);
 
 									researcherDetail
-										.on("mouseover", function(){
-										$( this ).parent().context.style.color="gray";
-									});
+										.on("mouseover", gray);
 									researcherDetail
-										.on("mouseout", function(){
-										$( this ).parent().context.style.color="black";
-									});
+										.on("mouseout", black);
 
 									<#-- add click event -->
 									researcherDetail
 										.on( "click", function(){
-													$( this ).parent().context.style.color="black";
-
-												if( $.PALM.selected.record( "researcher", item.id, $( this ).parent() )){
-													<#-- push history -->
-												//	history.pushState(null, "Researcher " + item.name, "<@spring.url '/researcher' />?id=" + item.id + "&name=" + item.name );
-												//	getAuthorDetails( item.id );
-												}
-												
+												$( this ).parent().context.style.color="black";
 												itemSelection(item.id, "researcher");
-												
 										} );
 									
 									targetContainer
@@ -349,24 +337,14 @@
 									//eventDetail.append( eventIcon ).append('&nbsp;').append( eventName );
 
 									eventDetail
-										.on("mouseover", function(){
-										$( this ).parent().context.style.color="gray";
-									});
+										.on("mouseover", gray);
 									eventDetail
-										.on("mouseout", function(){
-										$( this ).parent().context.style.color="black";
-									});
+										.on("mouseout", black);
 
 									<#-- add click event -->
 									eventDetail.on( "click", function( e){
 										$( this ).parent().context.style.color="black";
-										<#-- remove active class -->
-										//if( $.PALM.selected.record(  "eventGroup", $( this ).parent().data( 'id' ) , $( this ).parent() )){
-											//history.pushState(null, "Venue " + itemEvent.name, "<@spring.url '/venue' />?id=" + itemEvent.id + "&name=" + itemEvent.name );
-											//getVenueGroupDetails( $( this ).parent().data( 'id' ) , eventGroup, itemEvent.name);
-										//}
 										itemSelection(itemEvent.id, "conference");
-										
 									});
 									
 									targetContainer
@@ -449,36 +427,21 @@
 										);
 									
 								publicationDetail
-										.on("mouseover", function(){
-										$( this ).parent().context.style.color="gray";
-									});
+										.on("mouseover", gray);
 									publicationDetail
-										.on("mouseout", function(){
-										$( this ).parent().context.style.color="black";
-									});
+										.on("mouseout", black);
 									
 									<#-- add click event -->
 									publicationDetail.on( "click", function( e){
 										$( this ).parent().context.style.color="black";
-										<#-- remove active class -->
-										//if( $.PALM.selected.record(  "eventGroup", $( this ).parent().data( 'id' ) , $( this ).parent() )){
-											//history.pushState(null, "Venue " + itemEvent.name, "<@spring.url '/venue' />?id=" + itemEvent.id + "&name=" + itemEvent.name );
-											//getVenueGroupDetails( $( this ).parent().data( 'id' ) , eventGroup, itemEvent.name);
-										//}
 										itemSelection(itemPublication.id, "publication");
-										
 									});
-									
 									targetContainer
 									.append( publicationItem )
 									.css({ "cursor":"pointer"});
-								
 								});
-								
 								setFooter(data, widgetElem);
 							}
-	   						
-	   						
 						}	//if
 						
 						if(itemType == "topics"){
@@ -523,13 +486,9 @@
 									topicItem.append( topicDetail );
 						
 									topicDetail
-										.on("mouseover", function(){
-										$( this ).parent().context.style.color="gray";
-									});
+										.on("mouseover", gray);
 									topicDetail
-										.on("mouseout", function(){
-										$( this ).parent().context.style.color="black";
-									});
+										.on("mouseout", black);
 
 									<#-- add click event -->
 									topicDetail.on( "click", function( e){
@@ -596,32 +555,20 @@
 										);
 									
 								circleDetail
-										.on("mouseover", function(){
-										$( this ).parent().context.style.color="gray";
-									});
+										.on("mouseover", gray);
 									circleDetail
-										.on("mouseout", function(){
-										$( this ).parent().context.style.color="black";
-									});
+										.on("mouseout", black);
 									
 									<#-- add click event -->
 									circleDetail.on( "click", function( e){
 										$( this ).parent().context.style.color="black";
-										<#-- remove active class -->
-										//if( $.PALM.selected.record(  "eventGroup", $( this ).parent().data( 'id' ) , $( this ).parent() )){
-											//history.pushState(null, "Venue " + itemEvent.name, "<@spring.url '/venue' />?id=" + itemEvent.id + "&name=" + itemEvent.name );
-											//getVenueGroupDetails( $( this ).parent().data( 'id' ) , eventGroup, itemEvent.name);
-										//}
 										itemSelection(itemCircle.id, "circle");
-										
 									});
 									
 									targetContainer
 									.append( circleItem )
 									.css({ "cursor":"pointer"});
-								
 								});
-								
 								setFooter(data, widgetElem);
 							}
 						}
@@ -686,22 +633,25 @@
 		for( var i=1;i<=maxPage;i++){
 			$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
 		}
-		<#-- //enable bootstrap tooltip -->
-		<#-- $( widgetElem ).find( "[data-toggle='tooltip']" ).tooltip(); -->
-		
 		<#--// set page number-->
-		
 		$pageDropdown.val( data.page + 1 );
 		$( widgetElem ).find( "span.total-page" ).html( maxPage );
 		var endRecord = (data.page + 1) * data.maxresult;
 		if( data.page == maxPage - 1 ) 
 		endRecord = data.totalCount;
-//	$( widgetElem ).find( "span.paging-info" ).html( "Displaying records " + ((data.page * data.maxresult) + 1) + " - " + endRecord + " of " + data.totalCount );
 	
 		if( maxPage == 1 ){
 			$( widgetElem ).find( "li.toNext" ).addClass( "disabled" );
 			$( widgetElem ).find( "li.toEnd" ).addClass( "disabled" );
 		}
+	}
+	
+	function gray(){
+			$( this ).parent().context.style.color="gray";
+	}
+	
+	function black(){
+			$( this ).parent().context.style.color="black";
 	}
 	
 		<#--// register the widget-->

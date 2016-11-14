@@ -1,21 +1,20 @@
 <@security.authorize access="isAuthenticated()">
 	<#assign loggedUser = securityService.getUser() >
 </@security.authorize>
-<div id="boxbody-${wUniqueName}" class="box-body no-padding" style="height:100px;overflow:hidden">
+<div id="boxbody-${wUniqueName}" class="box-body no-padding wsetup">
 
-
-	<div style="max-width:100%;text-align:center;padding:3vh;display:block" id="introduction_title">
-	<div style="width:30%;float:left"><img style="height:50px" class="site-logo" src="http://haiti.informatik.rwth-aachen.de/lufgi9/wp-content/uploads/2015/04/cropped-RZ_i9_RGB12.png" alt="i9 – Learning Technologies Research Group"></div><div style="width:70%;float:right;font-size:35px"><strong>PALM</strong> - Visual Analytics Dashboard</div>
+	<div id="introduction-title">
+	<div class="fleft width30p"><img style="height:50px" class="site-logo" src="http://haiti.informatik.rwth-aachen.de/lufgi9/wp-content/uploads/2015/04/cropped-RZ_i9_RGB12.png" alt="i9 – Learning Technologies Research Group"></div><div class="fright width70p font35"><strong>PALM</strong> - Visual Analytics Dashboard</div>
 	</div>
 
-  	<div id="setup_widget" class="nav-tabs-custom" style="display:none">
-  		<div id="search_words" style="width:50%;float:left;" >
+  	<div id="setup-widget" class="nav-tabs-custom display-none">
+  		<div id="search_words" class="fleft width50p" >
 	  		<div class="type_search_words">
 	  		</div>
-	  		<div class="scroll_search_words" style="overflow-y: scroll; height:400px; ">
+	  		<div class="scroll-search-words">
 	  		</div>
 	  	</div>
-  		<div class="vis_options" style="width:50%;float:right;height:100px;" >
+  		<div class="vis_options">
   		</div>
 	</div>
 </div>
@@ -23,8 +22,8 @@
 <script>
 	$( function(){
 		
-			<#-- add slim scroll -->
-	      $(".scroll_search_words").slimscroll({
+		<#-- add slim scroll -->
+	      $(".scroll-search-words").slimscroll({
 				height: "100px",
 		        size: "5px",
 	        	allowPageScroll: true,
@@ -55,13 +54,13 @@
 						},
 			onRefreshDone: function(  widgetElem , data ){
 				if(data.type != "name"){
-					var introduction_title = document.getElementById("introduction_title")
-					var setup_widget = document.getElementById("setup_widget")
+					var introduction_title = document.getElementById("introduction-title")
+					var setup_widget = document.getElementById("setup-widget")
 					introduction_title.style.display="none";
 					setup_widget.style.display="block";
 				}
 				var id = data.id;
-				var wordsContainer = $( widgetElem ).find( ".scroll_search_words" );
+				var wordsContainer = $( widgetElem ).find( ".scroll-search-words" );
 				wordsContainer.css("padding-left","5px")
 					.css("padding-bottom","5px")
 					.css("padding-top","5px")

@@ -1,12 +1,12 @@
 <@security.authorize access="isAuthenticated()">
 	<#assign loggedUser = securityService.getUser() >
 </@security.authorize>
-<div id="boxbody-${wUniqueName}" class="box-body no-padding" style="height:77vh;overflow:hidden">
+<div id="boxbody-${wUniqueName}" class="box-body no-padding wfilter">
   	<div class="filter_widget" class="nav-tabs-custom">
-  		<div id="apply_button" style="display:none">
-  			<input type="button" value="Apply" id="button" style="margin:auto;display:block;width:10vh;left-margin:40vh,background-color:#d9c7c6;font-size:12px;border:1px solid black;border-radius:0.5em;margin-top:3px;padding-left:5px;padding-right:5px;cursor:pointer;" onclick="checkBoxChange()">
+  		<div id="apply_button" class="display-none">
+  			<input type="button" value="Apply" id="button" class="apply-button" onclick="checkBoxChange()">
   		</div>
-  		<div class="widget_body" style="height:120vh;">
+  		<div class="widget_body height120">
   		</div>
 	</div>
 </div>

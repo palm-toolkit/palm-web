@@ -1,19 +1,19 @@
 <@security.authorize access="isAuthenticated()">
 	<#assign loggedUser = securityService.getUser() >
 </@security.authorize>
-<div id="boxbody-${wUniqueName}" class="box-body no-padding" style="height:77vh;overflow:hidden">
+<div id="boxbody-${wUniqueName}" class="box-body no-padding wfilter">
   	<div class="visualize_widget" class="nav-tabs-custom">
   	
-  	<div style="max-width:100%;padding:5%;font-size:16px;color:#0961a3" id="introduction">
-		<h3>Welcome to the PALM Visual Analytics Dashboard Page! <br/> Here, data analysis is easy and fun...</h3>
+  	<div id="introduction">
+		<h3>Welcome to the PALM Visual Analytics Dashboard! <br/> Here, data analysis is easy and fun...</h3>
 		<br/>
-		<i class="fa fa-arrow-left font-lg" aria-hidden="true"></i> &nbsp; Begin here! But first, please read on!<img src="<@spring.url '/resources/images/search_drop.png' />" alt="palm-logo" style="height:80px;padding:10px 10px 0 0;float:right;"><br/> 
+		<i class="fa fa-arrow-left font-lg" aria-hidden="true"></i> &nbsp; Begin here! But first, please read on!<img src="<@spring.url '/resources/images/search_drop.png' />" alt="palm-logo" class="img-r"><br/> 
 		You can choose a type of item to analyze, from researchers, publications, conferences, topics and circles. From the corresponding list, select one. <br/><br/>
 		As soon as one of them is selected, the widget above <i class="fa fa-arrow-up font-lg" aria-hidden="true"></i> will be updated to show you possible options for data exploration in the form of boxes. <br/>
-		<img src="<@spring.url '/resources/images/setup_widget.png' />" alt="palm-logo" style="height:80px;padding:4px 10px 0 0;float:left;">
+		<img src="<@spring.url '/resources/images/setup_widget.png' />" alt="palm-logo" class="img-l">
 		One of the boxes in this widget is preselected for you. But, you can choose whichever you wish to explore.
 		<br/><br/><br/>
-		<img src="<@spring.url '/resources/images/tabs.png' />" alt="palm-logo" style="height:80px;padding:4px 10px 0 0;float:right;">
+		<img src="<@spring.url '/resources/images/tabs.png' />" alt="palm-logo" class="img-r">
 		As per the box selection, this <i class="fa fa-arrow-down font-lg" aria-hidden="true"></i> 'visualization' widget displays the corresponding visualization or list.
 		You can choose to view any visualization from the presented options, just by clicking on the respective tab header.<br/>
 		<br/><i class="fa fa-arrow-right font-lg" aria-hidden="true"></i> The 'filters' widget can help you refine your data. For instance, if you want to see co-authors of the selected author only corresponding to a particular conference, you can simply apply that filter. 
@@ -22,7 +22,7 @@
   	
   	
 	</div>
-	<div id="divtoshow" style="position: fixed;display:none;">test</div>
+	<div id="divtoshow" class="fix-pos display-none">test</div>
 	<div id="chartTab">
   </div>
 <div class="menu" id="menu">
@@ -34,81 +34,6 @@
 </div>
 </div>
  	
-<style>
-#tab_network {
-	  height: 50vh;
-	  position: relative;
-}    
-#canvas {
-      color: #fff;
-      background: #fff;
-	  position: absolute;
-	  width:97%;
-	  height: 80%;
-}
-.label {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 1;
-      font-family: sans-serif;
-    }
-svg .tooltip { 
-	opacity: 1; 
-}   
-#chartTab{
-	height: 68vh;
-	font-size: 2px;
-}   
-#svgContainer{
-	font-size: 10px;
-}
-g.arc path {
-}
-.venntooltip {
-	position: absolute;
-  	text-align: center;
-  	width: 70px;
-  	height: 24px;
-  	background: #333;
-  	color: #ddd;
-  	padding: 2px;
-  	border: 0px;
-  	border-radius: 8px;
-  	opacity: 0;
-}
-#divtoshow	{
-	background-color:Black;
-  	color:White;
-  	font-weight:normal;
-  	padding: 2px;
-  	border: 0px;
-  	border-radius: 0.5em;
-  	z-index: 100;
-}
-.menu 	{
-	width: 100px;
-	position:absolute;
-	display: none;
-	box-shadow: 0 0 10px #713C3C;
-	z-index: 100;
-}
-.menu ul	{
-	list-style: none;
-	padding: 0;
-	margin:0;
-}
-.menu ul li	{
-	padding: 6%;
-	background: #000;
-	color: #fff;
-}
-.menu ul li:hover	{
-	background-color: #F7BA4B;
-   	color: #444343;
-}
-</style>
-
 <script>
 
 		
@@ -899,7 +824,7 @@ $( function(){
 						
 						inner.append(
 								$('<div/>')
-									.addClass("cd-timeline-content")
+									.addClass("cd-timeline-content cursor-p")
 									.append(
 										$('<p/>')
 										.html(item.title)
@@ -913,8 +838,6 @@ $( function(){
 												showmenudiv(obj,'menu');
 												e.stopPropagation()
 										})
-										.css("cursor"," pointer")
-										
 									)
 									.append(
 										$('<span/>')
@@ -982,9 +905,7 @@ $( function(){
 								})
 			evolutionSection.append(newSect);	
 			
-							evolutionSection.addClass('evolutionSection')
-								.css('overflow-y','scroll')
-								.css('max-height','67vh')
+							evolutionSection.addClass('evolutionSection overflow-height')
 							
 							$(".evolutionSection").slimscroll({
 								height: "67vh",
@@ -1095,9 +1016,7 @@ $( function(){
 							tabContent.append(listTypeOptions);-->
 							
 							tabContent.append(listSection);
-							listSection.addClass('_list')
-								.css('overflow-y','scroll')
-								.css('max-height','67vh')
+							listSection.addClass('_list overflow-height')
 							
 							$("._list").slimscroll({
 								height: "74vh",
@@ -1123,7 +1042,7 @@ $( function(){
 									$.each( data.map.coAuthors, function( index, item){
 										var researcherDiv = 
 										$( '<div/>' )
-											.addClass( 'author' )
+											.addClass( 'author cursor-p' )
 											.attr({ 'id' : item.id });
 										var researcherNav =
 										$( '<div/>' )
@@ -1171,14 +1090,8 @@ $( function(){
 											).append(
 												researcherDetail
 											).append('&nbsp;')
-											.css("cursor"," pointer")
-											.on('mouseover',function(){
-													color = $( this ).parent().context.style.color;
-													$( this ).parent().context.style.color="blue";
-											})
-											.on('mouseout',function(){
-													$( this ).parent().context.style.color=color;
-											})
+											.on('mouseover', blue)
+											.on('mouseout', originalColor)
 											.on('click', function(d){ 
 												obj = {
 															  type:"listItem",
@@ -1254,20 +1167,14 @@ $( function(){
 											);
 										var conferenceDetail =
 										$( '<div/>' )
-											.addClass( 'detail' )
+											.addClass( 'detail cursor-p' )
 											.append(
 												$( '<span/>' )
 													.addClass( 'name capitalize bold-text' )
 													.html( " " + item.groupName )
 											)
-											.css("cursor"," pointer")
-											.on('mouseover',function(){
-													color = $( this ).parent().context.style.color;
-													$( this ).parent().context.style.color="blue";
-											})
-											.on('mouseout',function(){
-													$( this ).parent().context.style.color=color;
-											})
+											.on('mouseover',blue)
+											.on('mouseout',originalColor)
 											.on('click', function(d){ 
 													if(type=="conference"){
 														obj = {
@@ -1341,7 +1248,7 @@ $( function(){
 									
 										var topicDiv = 
 										$( '<div/>' )
-											.addClass( 'author' )
+											.addClass( 'author cursor-p' )
 											.attr({ 'id' : item[2] });
 										var topicNav =
 										$( '<div/>' )
@@ -1355,14 +1262,8 @@ $( function(){
 											.append(
 												topicNav
 											).append('&nbsp;')
-											.css("cursor"," pointer")
-											.on('mouseover',function(){
-													color = $( this ).parent().context.style.color;
-													$( this ).parent().context.style.color="blue";
-											})
-											.on('mouseout',function(){
-													$( this ).parent().context.style.color=color;
-											})
+											.on('mouseover',blue)
+											.on('mouseout',originalColor)
 											.on('click', function(d){ 
 												obj = {
 															  type:"listItem",
@@ -1395,7 +1296,7 @@ $( function(){
 									
 										var conferenceDiv = 
 										$( '<div/>' )
-											.addClass( 'author' )
+											.addClass( 'author cursor-p' )
 											.attr({ 'id' : item.id });
 												
 										var conferenceDetail =
@@ -1411,14 +1312,8 @@ $( function(){
 											.append(
 												conferenceDetail
 											).append('&nbsp;')
-											.css("cursor"," pointer")
-											.on('mouseover',function(){
-													color = $( this ).parent().context.style.color;
-													$( this ).parent().context.style.color="blue";
-											})
-											.on('mouseout',function(){
-													$( this ).parent().context.style.color=color;
-											})
+											.on('mouseover',blue)
+											.on('mouseout',originalColor)
 											.on('click', function(d){ 
 												obj = {
 															  type:"listItem",
@@ -1456,18 +1351,17 @@ $( function(){
 			var tabComparisonContainer = $( widgetElem ).find( "#tab_Comparison" );
 			tabComparisonContainer.html("");
 			
-			var extraContainer = $( '<div/>' ).css("height","67vh")
+			var extraContainer = $( '<div/>' ).addClass('height67')
 			tabComparisonContainer.append(extraContainer)
 
-			var vennContainer = $( '<div/>' ).attr("id","vennContainer").css("height","67vh").css("width","70%").css("float","left");
-			var listContainer = $( '<div/>' ).attr("id","listContainer").css("height","67vh").css("width","30%").css("float","right");
+			var vennContainer = $( '<div/>' ).attr("id","vennContainer").addClass('height67 fleft width70p');
+			var listContainer = $( '<div/>' ).attr("id","listContainer").addClass('height67 fright width30p');
 			
 			extraContainer.append(vennContainer);
 			extraContainer.append(listContainer);
 			
 			
-			var innerListContainer = $( '<div/>' ).attr("id","innerListContainer").css('overflow-y','scroll')
-								.css('max-height','67vh')
+			var innerListContainer = $( '<div/>' ).attr("id","innerListContainer").addClass('overflow-height')
 			listContainer.append(innerListContainer);
 			
 							
@@ -1480,7 +1374,7 @@ $( function(){
 					       });
 			
 			
-			var vennD = $( '<div/>' ).attr("id","venn").css("height","67vh");
+			var vennD = $( '<div/>' ).attr("id","venn").addClass('height67');
 			vennContainer.append(vennD);
 			var vennListC = $( '<div/>' );
 			innerListContainer.append(vennListC);
@@ -1571,7 +1465,7 @@ $( function(){
 									$.each( sortedNamesList, function( index, item){
 										var vennDiv = 
 										$( '<div/>' )
-											.addClass( 'author' )
+											.addClass( 'author cursor-p' )
 											.attr({ 'id' : item.id });
 										var vennNav =
 										$( '<div/>' )
@@ -1590,14 +1484,8 @@ $( function(){
 											).append(
 												vennDetail
 											)
-											.css("cursor"," pointer")
-											.on('mouseover',function(){
-													color = $( this ).parent().context.style.color;
-													$( this ).parent().context.style.color="blue";
-											})
-											.on('mouseout',function(){
-													$( this ).parent().context.style.color=color;
-											})
+											.on('mouseover',blue)
+											.on('mouseout',originalColor)
 											.on('click', function(d){ 
 												console.log(d);
 												
@@ -2672,6 +2560,15 @@ $( function(){
 			a = a.toLowerCase();
 			b = b.toLowerCase();
 			return (a < b) ? -1 : (a > b) ? 1 : 0;
-		}
+	}
+		
+	function blue(){
+		color = $( this ).parent().context.style.color;
+		$( this ).parent().context.style.color="blue";
+	}	
+	
+	function originalColor(){
+		$( this ).parent().context.style.color=color;
+	}
 	
 </script>
