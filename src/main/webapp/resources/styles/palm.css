@@ -1370,3 +1370,7 @@ g.arc path {
 .cursor-p {
 	cursor:pointer;
 }
+
+#bubble-id {
+	white-space: pre-wrap;
+}

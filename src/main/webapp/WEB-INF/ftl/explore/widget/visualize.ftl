@@ -7,7 +7,7 @@
   	<div id="introduction">
 		<h3>Welcome to the PALM Visual Analytics Dashboard! <br/> Here, data analysis is easy and fun...</h3>
 		<br/>
-		<i class="fa fa-arrow-left font-lg" aria-hidden="true"></i> &nbsp; Begin here! But first, please read on!<img src="<@spring.url '/resources/images/search_drop.png' />" alt="palm-logo" class="img-r"><br/> 
+		<i class="fa fa-arrow-left font-lg" aria-hidden="true"></i> &nbsp; You can begin here! But first, please read on!<img src="<@spring.url '/resources/images/search_drop.png' />" alt="palm-logo" class="img-r"><br/> 
 		You can choose a type of item to analyze, from researchers, publications, conferences, topics and circles. From the corresponding list, select one. <br/><br/>
 		As soon as one of them is selected, the widget above <i class="fa fa-arrow-up font-lg" aria-hidden="true"></i> will be updated to show you possible options for data exploration in the form of boxes. <br/>
 		<img src="<@spring.url '/resources/images/setup_widget.png' />" alt="palm-logo" class="img-l">
@@ -565,6 +565,10 @@ $( function(){
 				var confdata = data;
 				var i;
 				
+				var zoom = 2;
+				if(data.map.events.length < 10)
+				zoom = 3;
+				
 				console.log("locations data")
 				console.log(data)
 				if(data.type=="researcher" || data.type=="publication" || data.type=="topic" || data.type=="circle")
@@ -603,7 +607,7 @@ $( function(){
 							       		minlat = latlng.lon
 							       }
 							       
-							        mymap.setView([(maxlat+minlat)/2,(maxlon+minlon)/2], 2);
+							        mymap.setView([(maxlat+minlat)/2,(maxlon+minlon)/2], zoom);
 							         return L.marker(latlng).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
 							       },
 							       onEachFeature: onEachFeature
@@ -649,7 +653,7 @@ $( function(){
 							       		minlat = latlng.lon
 							       }
 							       
-							        mymap.setView([(maxlat+minlat)/2,(maxlon+minlon)/2], 2);
+							        mymap.setView([(maxlat+minlat)/2,(maxlon+minlon)/2], zoom);
 							        return L.marker(latlng,{icon: new L.Icon({
 									  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-'+iconColorList[eventGroupList.indexOf(feature.properties.conference)]+'.png'
 									})}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
@@ -1610,6 +1614,7 @@ $( function(){
 										d3.event.stopPropagation();
 									})
 									.on("mouseover", function(d,i){
+										d3.select(this).style("cursor", "pointer")
 										if(objectType!="topic"){
 											obj = {
 														  type:"similarBar",
@@ -1654,7 +1659,20 @@ $( function(){
 									else
 										return data.map.names[i] + " (Common interests: " + data.map.similarity[i] + ") "; 
 								}).style({'fill':'black','font-size':'13px', 'font-weight':'bold'})
+								.on("click", function(e, i){
+										
+										obj = {
+												  type:"similarBar",
+										          clientX:d3.event.clientX,
+										          clientY:d3.event.clientY,
+										          authorId:data.map.ids[i]
+										};
+										
+										showmenudiv(obj,'menu');
+										d3.event.stopPropagation();
+									})
 								.on("mouseover", function(d,i){
+								d3.select(this).style("cursor", "pointer")
 										if(objectType!="topic"){
 											obj = {
 														  type:"similarBar",
@@ -1757,7 +1775,8 @@ $( function(){
 			         showmenudiv(obj,'menu');
 			         d3.event.stopPropagation();
 			      })
-			      .on("mouseover",function(d) { 
+			      .on("mouseover",function(d) {
+			      d3.select(this).style("cursor", "pointer") 
 			      		obj = {
 							type:"clusterItem",
 							clientX:d3.event.clientX,
@@ -1866,6 +1885,7 @@ $( function(){
 			         d3.event.stopPropagation();
 			      })
 			     .on("mouseover",function(d) {
+			     d3.select(this).style("cursor", "pointer")
 			     var list = [];
 			         for(var i=0; i< d.values.length; i++){
 			         	list.push(d.values[i].id)
@@ -2024,6 +2044,7 @@ $( function(){
 					d3.event.stopPropagation();       	
 			} )
 			.on("mouseover",function(d,i){
+			d3.select(this).style("cursor", "pointer")
 					obj = {
 							type:"bubble",
 							clientX:d3.event.clientX,
@@ -2048,7 +2069,7 @@ $( function(){
 		    })
 		    .style("fill", function(d, i) { return color(i); })
 		    .on("mouseover",function(d,i){
-		    
+		    d3.select(this).style("cursor", "pointer")
 					obj = {
 							type:"bubble",
 							clientX:d3.event.clientX,
@@ -2279,31 +2300,51 @@ $( function(){
 			
 			var left;
 			var top;
+			var collapse = $( "body" ).hasClass( "sidebar-collapse" );
 			
-			if(e.type == "similarBar" || e.type=="clickPublication" || e.type == "cluster" || e.type == "clusterItem" || e.type == "bubble" || e.type == "evolution"){
-			    left  = (e.clientX - 330) + "px";
-			    top  = (e.clientY - 140) + "px";
+			if(e.type == "listItem" || e.type == "comparisonListItem" || e.type == "similarBar" || e.type=="clickPublication" || e.type == "cluster" || e.type == "clusterItem" || e.type == "bubble" || e.type == "evolution"){
+			   
+			   console.log(collapse)
+		    	if(collapse)
+				{
+				    left  = (e.clientX) + "px";
+				    top  = (e.clientY - 140) + "px";
+			    }
+			    else
+			    {
+			    	left  = (e.clientX - 330) + "px";
+				    top  = (e.clientY - 140) + "px";
+			    }
 		    }
 		    
 		    if(e.type == "clickLocation"){
 			    left  = (e.clientX) + "px";
-			    top  = (e.clientY) + "px";
+			    top  = (e.clientY + 100) + "px";
 		    }
 		    
-		    if(e.type == "comparisonListItem"){
+		    <#--if(){
 			    left  = (e.clientX - 330) + "px";
 			    top  = (e.clientY - 140) + "px";
-		    }
+		    }-->
 
 		    if(e.type == "clickNode" || e.type == "clickEdge"){
-			    left  = (e.data.captor.clientX - 350) + "px";
-			    top  = (e.data.captor.clientY  - 150) + "px";
+		    	console.log(collapse)
+		    	if(collapse)
+				{
+					left  = (e.data.captor.clientX) + "px";
+				    top  = (e.data.captor.clientY  - 150) + "px";
+			    }
+			    else
+			    {
+				    left  = (e.data.captor.clientX - 350) + "px";
+				    top  = (e.data.captor.clientY  - 150) + "px";
+			    }
 		    }
 		    
-		    if(e.type == "listItem"){
+		    <#--if(){
 			    left  = (e.clientX - 330) + "px";
 			    top  = (e.clientY - 140) + "px";
-		    }
+		    }-->
 		    console.log("divid: " + divid)
 		    var div = document.getElementById(divid);
 		    div.style.left = left;
