@@ -5,7 +5,7 @@
   	<div class="box-tools">
   	<div>
 	    <div class="drop-down">
-	    	<select id="select-drop-down" class="form-control" >
+	    	<select id="select-drop-down" class="form-control selectpicker" >
 			  <option value="researchers" selected>RESEARCHERS</option>
 			  <option value="conferences">CONFERENCES</option>
 			  <option value="publications">PUBLICATIONS</option>
@@ -15,7 +15,7 @@
 	    </div>
 	    
 	    <div class="input-group width100p">
-	      <input type="text" id="search_field" class="form-control input-sm pull-right" placeholder="Enter search text">
+	      <input type="text" id="search_field" class="form-control input-sm pull-right" placeholder="Click to add text">
 	      <div id="search_button" class="input-group-btn">
 	        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
 	      </div>
@@ -114,6 +114,12 @@
 			page:0,
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
+			
+			// remove header from sidebar
+			var elements = document.getElementsByClassName("box-header");
+		    elements[0].remove();
+		    $('.box-footer').css("margin-top","8px")
+			
 				<#-- show pop up progress log -->
 				$.PALM.popUpMessage.create( "Loading "+itemType+" ..", { uniqueId:uniqueSearchWidget, popUpHeight:40, directlyRemove:false , polling:false});
 			},

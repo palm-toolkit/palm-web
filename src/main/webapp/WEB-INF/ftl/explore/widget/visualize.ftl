@@ -3,9 +3,8 @@
 </@security.authorize>
 <div id="boxbody-${wUniqueName}" class="box-body no-padding wfilter">
   	<div class="visualize_widget" class="nav-tabs-custom">
-  	
   	<div id="introduction">
-		<h3>Welcome to the PALM Visual Analytics Dashboard! <br/> Here, data analysis is easy and fun...</h3>
+		<h3>Welcome to the PALM Visual Analytics Explorer! <br/> Here, data analysis is easy and fun...</h3>
 		<br/>
 		<i class="fa fa-arrow-left font-lg" aria-hidden="true"></i> &nbsp; You can begin here! But first, please read on!<img src="<@spring.url '/resources/images/search_drop.png' />" alt="palm-logo" class="img-r"><br/> 
 		You can choose a type of item to analyze, from researchers, publications, conferences, topics and circles. From the corresponding list, select one. <br/><br/>
@@ -19,8 +18,6 @@
 		<br/><i class="fa fa-arrow-right font-lg" aria-hidden="true"></i> The 'filters' widget can help you refine your data. For instance, if you want to see co-authors of the selected author only corresponding to a particular conference, you can simply apply that filter. 
 		This will update the present visualization to show only the required result.
   	</div>
-  	
-  	
 	</div>
 	<div id="divtoshow" class="fix-pos display-none">test</div>
 	<div id="chartTab">
@@ -28,7 +25,7 @@
 <div class="menu" id="menu">
  <ul>
  <a id="append" href="#"><li>Add to Search</li></a>
- <a id="replace" href="#"><li>Search for</li></a>
+ <a id="replace" href="#"><li>Search only for</li></a>
  <a id="coauthors" href="#"><li>Add Co-Authors</li></a>
  </ul>
 </div>
@@ -247,6 +244,10 @@ $( function(){
 				 		console.log(currentTab)
 						loadVis(data.type, visType, e.target.title, widgetElem, names, ids, tabContent, data.authoridForCoAuthors);
 					});
+					
+					tabHeader.on("mouseover",function(e){
+						console.log("mouse over; " + e)
+					})
 
 					if(currentTab>visList.length-1)
 						currentTab = 0;
@@ -1418,15 +1419,13 @@ $( function(){
 				var innerListContainer = $( '<div/>' ).attr("id","innerListContainer").addClass('overflow-height')
 				listContainer.append(innerListContainer);
 				
-								
-								$("#innerListContainer").slimscroll({
-									height: "67vh",
-							        size: "5px",
-						        	allowPageScroll: true,
-						   			touchScrollStep: 50,
-						   			//alwaysVisible: true
-						       });
-				
+				$("#innerListContainer").slimscroll({
+					height: "67vh",
+			        size: "5px",
+		        	allowPageScroll: true,
+		   			touchScrollStep: 50,
+		   			//alwaysVisible: true
+				});
 				
 				var vennD = $( '<div/>' ).attr("id","venn").addClass('height67');
 				vennContainer.append(vennD);
