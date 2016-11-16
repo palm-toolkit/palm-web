@@ -14,7 +14,6 @@
 <script>
 	$( function(){
 		
-		
 		var pubList = [];
 		objectType = "";
 		filterList = [];
@@ -25,6 +24,7 @@
 		startYear = 0;
 		endYear = 0;
 		visType = "";
+		var filterPopUpIds = [];
 		
 		$('body').on('click', '#pub_filter_search', function () {
 		     $('#pub_filter_search')
@@ -92,13 +92,9 @@
 			page:0,
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
-					<#-- generate unique id for progress log -->
-					uniqueFilterWidget = $.PALM.utility.generateUniqueId();
-						},
+					
+			},
 			onRefreshDone: function(  widgetElem , data ){
-			
-			<#-- show pop up progress log -->
-			$.PALM.popUpMessage.create( "Loading Filters..", { uniqueId:uniqueFilterWidget, popUpHeight:40, directlyRemove:false , polling:false});
 			
 			$(".widget_body").slimscroll({
 				height: "75vh",
@@ -206,190 +202,208 @@
 					}
 				}
 				
+				<#-- generate unique id for progress log -->
+				uniqueFilterWidget = $.PALM.utility.generateUniqueId();
+					
+				<#-- show pop up progress log -->
+				$.PALM.popUpMessage.create( "Loading Filters..", { uniqueId:uniqueFilterWidget, popUpHeight:40, directlyRemove:false , polling:false});
+				filterPopUpIds.push(uniqueFilterWidget);
 				
 				$.getJSON( "<@spring.url '/explore/filter' />"+"?filterList="+filterList+"&dataList="+names+"&idList="+ids+"&type="+objectType+"&visType="+visType+"&startYear="+startYear+"&endYear="+endYear , function( data ) {
-					<#-- remove  pop up progress log -->
-					$.PALM.popUpMessage.remove( uniqueFilterWidget );
+					console.log("filter data: ")
+					console.log(data)
 				
-				if(data.type!="undefined" && data.visType!="undefined")
+				if(data.oldFilters=="false")
 				{
-					targetContainer.html("");
-	    			if(ids.length!=0)
-	    			{
-		    			var applyButton = $( widgetElem ).find( "#apply_button" );
-		    			applyButton.css("display","block");
-		    			
-		    			targetContainer
-		    				.append(
-		    					$('<div/>')
-		    						.css("width","20%")
-		    						.css("padding-left","6px")
-		    						.css("padding-top","20px")
-		    						.css("float","left")
-		    						.append(
-		    							$('<label/>')
-		    								.attr("for","year_range")
-		    								.html("Year(s):")		
-		    						)
-		    				)	
-							.append(
-								$('<div/>')
-									.css("padding-left","10px")
-									.css("padding-right","10px")
-									.css("width","80%")
-									.css("float","right")
-									.append(
-										$('<input/>')
-											.attr('type','text')
-											.attr('id','year_range')
-									)
-							)				
-						
-						startYear = data.TimeFilter.startYear; 
-						endYear = data.TimeFilter.endYear;	
-							
-						$("#year_range").html("");
-						$("#year_range").ionRangeSlider({
-				            hide_min_max: true,
-				            keyboard: true,
-				            min: data.TimeFilter.startYear,
-				            max: data.TimeFilter.endYear,
-				            type: 'double',
-				            step: 1,
-				            grid: true
-			        	});
-			        	
-			        	var $range = $("#year_range");
-			
-						$range.on("change", function () {
-						    var $this = $(this),
-						        value = $this.prop("value").split(";");
-						
-						    startYear = value[0]; 
-						    endYear = value[1];
-						});
-		    		
-		    			var filters = $('<div/>')
-		    						.attr("id","other_filters");
-		    			targetContainer.append(filters);
+				
+					console.log("filterPopUpIds : " +filterPopUpIds)	
+					for(var i=0;i<filterPopUpIds.length;i++)
+					{	console.log(i+ " id to remov: "  +  filterPopUpIds[i]) 
+						<#-- remove  pop up progress log -->
+						$.PALM.popUpMessage.remove( filterPopUpIds[i] );
+						//filterPopUpIds.splice(i,1);
+						//i--;
 					}
+					if(data.type!="undefined" && data.visType!="undefined")
+					{
+						targetContainer.html("");
+		    			if(ids.length!=0)
+		    			{
+			    			var applyButton = $( widgetElem ).find( "#apply_button" );
+			    			applyButton.css("display","block");
+			    			
+			    			targetContainer
+			    				.append(
+			    					$('<div/>')
+			    						.css("width","20%")
+			    						.css("padding-left","6px")
+			    						.css("padding-top","20px")
+			    						.css("float","left")
+			    						.append(
+			    							$('<label/>')
+			    								.attr("for","year_range")
+			    								.html("Year(s):")		
+			    						)
+			    				)	
+								.append(
+									$('<div/>')
+										.css("padding-left","10px")
+										.css("padding-right","10px")
+										.css("width","80%")
+										.css("float","right")
+										.append(
+											$('<input/>')
+												.attr('type','text')
+												.attr('id','year_range')
+										)
+								)				
+							
+							startYear = data.TimeFilter.startYear; 
+							endYear = data.TimeFilter.endYear;	
 								
-					var filterContent = $( widgetElem ).find( "#other_filters" );
-					filterContent.html("");			
-		
-					publicationsFilter = $('<div/>').addClass("publicationsFilter")
-					filterContent.append(publicationsFilter);
-					
-					conferencesFilter = $('<div/>').addClass("conferencesFilter")
-					filterContent.append(conferencesFilter);
-					
-					topicsFilter = $('<div/>').addClass("topicsFilter")
-					filterContent.append(topicsFilter);
-					
-					circlesFilter = $('<div/>').addClass("circlesFilter")
-					filterContent.append(circlesFilter);
-					
-						<#-- PUBLICATIONS FILTER -->
-						if(data.publicationFilter != undefined && data.publicationFilter.publicationsList.length!=0){
-							pubList = data.publicationFilter.publicationsList;
-							pubCount = $( '<span/>' )
-							pubSectionHeader = $( '<span/>' ).html("PUBLICATIONS")
-											.append('&nbsp;')
-											.append(
-												$('<span/>')
-												.append(
-													$('<input/>')
-													.attr('type','checkbox')
-													.attr('value', 'All')
-													.attr("id" , "pub_filter_all")
-													.on("click", function(){togglePub(this)})
-												 )
-												).append('&nbsp;')
-												.append(
-												$('<input/>')
-												.attr("id" , "pub_filter_search")
-												.addClass('text-field')
-											 )
-							//fillPublicationFilter(pubList,"");
-							fillFilter(pubList, "", pubCount, publicationsFilter, pubSectionHeader, 'publicationCB', 'hsla(120, 100%, 50%, 0.2)')
-						}	
+							$("#year_range").html("");
+							$("#year_range").ionRangeSlider({
+					            hide_min_max: true,
+					            keyboard: true,
+					            min: data.TimeFilter.startYear,
+					            max: data.TimeFilter.endYear,
+					            type: 'double',
+					            step: 1,
+					            grid: true
+				        	});
+				        	
+				        	var $range = $("#year_range");
+				
+							$range.on("change", function () {
+							    var $this = $(this),
+							        value = $this.prop("value").split(";");
 							
-						<#-- CONFERENCE FILTER -->
-						if(data.conferenceFilter != undefined && data.conferenceFilter.eventsList.length!=0){
-							confList = data.conferenceFilter.eventsList;
-							confCount = $( '<span/>' )
-							confSectionHeader = $( '<span/>' ).html("CONFERENCES")
-											.append('&nbsp;')
-											.append(
-												$('<span/>')
-												.append(
-													$('<input/>')
-													.attr('type','checkbox')
-													.attr('value', 'All')
-													.attr("id" , "conf_filter_all")
-													.on("click", function(){toggleConf(this)})
-												 )
-												).append('&nbsp;')
-												.append(
-												$('<input/>')
-												.attr("id" , "conf_filter_search")
-												.addClass('text-field')
-											 	)
-							
-							//fillConferenceFilter(confList,"");
-							fillFilter(confList, "", confCount, conferencesFilter, confSectionHeader, 'conferenceCB', 'hsla(70,100%,50%,0.2)')
-						}	
-						
-						<#-- TOPIC FILTER -->
-						if(data.topicFilter != undefined && data.topicFilter.topicDetailsList.length!=0){
-						 	topList = data.topicFilter.topicDetailsList;
-							topCount = $( '<span/>' )
-						 	topSectionHeader = $( '<span/>' ).html("TOPICS/INTERESTS")
-											.append('&nbsp;')
-											.append(
-												$('<span/>')
-												.append(
-													$('<input/>')
-													.attr('type','checkbox')
-													.attr('value', 'All')
-													.attr("id" , "top_filter_all")
-													.on("click", function(){toggleTop(this)})
-												 )
-											).append('&nbsp;')
-												.append(
-												$('<input/>')
-												.attr("id" , "top_filter_search")
-												.addClass('text-field')
-											 	)
-							//fillTopicFilter(topList,"");	
-							fillFilter(topList, "", topCount, topicsFilter, topSectionHeader, 'topicCB', 'hsla(240, 83%, 47%, 0.2)')			 	
-						}	
-						
-						<#-- CIRCLES FILTER -->
-						if(data.circleFilter != undefined && data.circleFilter.circles.length!=0){
-							cirList = data.circleFilter.circles;
-							cirCount = $( '<span/>' )
-							cirSectionHeader = $( '<span/>' ).html("CIRCLES ")
-											.append('&nbsp;')
-											.append(
-												$('<span/>')
-												.append(
-													$('<input/>')
-													.attr('type','checkbox')
-													.attr('value', 'All')
-													.attr("id" , "cir_filter_all")
-													.on("click", function(){toggleCir(this)})
-												 )
-											).append('&nbsp;')
-												.append(
-												$('<input/>')
-												.attr("id" , "cir_filter_search")
-												.addClass('text-field')
-											 	)
-							//fillCircleFilter(cirList,"");
-							fillFilter(cirList, "", cirCount, circlesFilter, cirSectionHeader, 'circleCB', '#f9f5f5')
+							    startYear = value[0]; 
+							    endYear = value[1];
+							});
+			    		
+			    			var filters = $('<div/>')
+			    						.attr("id","other_filters");
+			    			targetContainer.append(filters);
 						}
-					}						
+									
+						var filterContent = $( widgetElem ).find( "#other_filters" );
+						filterContent.html("");			
+			
+						publicationsFilter = $('<div/>').addClass("publicationsFilter")
+						filterContent.append(publicationsFilter);
+						
+						conferencesFilter = $('<div/>').addClass("conferencesFilter")
+						filterContent.append(conferencesFilter);
+						
+						topicsFilter = $('<div/>').addClass("topicsFilter")
+						filterContent.append(topicsFilter);
+						
+						circlesFilter = $('<div/>').addClass("circlesFilter")
+						filterContent.append(circlesFilter);
+						
+							<#-- PUBLICATIONS FILTER -->
+							if(data.publicationFilter != undefined && data.publicationFilter.publicationsList.length!=0){
+								pubList = data.publicationFilter.publicationsList;
+								pubCount = $( '<span/>' )
+								pubSectionHeader = $( '<span/>' ).html("PUBLICATIONS")
+												.append('&nbsp;')
+												.append(
+													$('<span/>')
+													.append(
+														$('<input/>')
+														.attr('type','checkbox')
+														.attr('value', 'All')
+														.attr("id" , "pub_filter_all")
+														.on("click", function(){togglePub(this)})
+													 )
+													).append('&nbsp;')
+													.append(
+													$('<input/>')
+													.attr("id" , "pub_filter_search")
+													.addClass('text-field')
+												 )
+								//fillPublicationFilter(pubList,"");
+								fillFilter(pubList, "", pubCount, publicationsFilter, pubSectionHeader, 'publicationCB', 'hsla(120, 100%, 50%, 0.2)')
+							}	
+								
+							<#-- CONFERENCE FILTER -->
+							if(data.conferenceFilter != undefined && data.conferenceFilter.eventsList.length!=0){
+								confList = data.conferenceFilter.eventsList;
+								confCount = $( '<span/>' )
+								confSectionHeader = $( '<span/>' ).html("CONFERENCES")
+												.append('&nbsp;')
+												.append(
+													$('<span/>')
+													.append(
+														$('<input/>')
+														.attr('type','checkbox')
+														.attr('value', 'All')
+														.attr("id" , "conf_filter_all")
+														.on("click", function(){toggleConf(this)})
+													 )
+													).append('&nbsp;')
+													.append(
+													$('<input/>')
+													.attr("id" , "conf_filter_search")
+													.addClass('text-field')
+												 	)
+								
+								//fillConferenceFilter(confList,"");
+								fillFilter(confList, "", confCount, conferencesFilter, confSectionHeader, 'conferenceCB', 'hsla(70,100%,50%,0.2)')
+							}	
+							
+							<#-- TOPIC FILTER -->
+							if(data.topicFilter != undefined && data.topicFilter.topicDetailsList.length!=0){
+							 	topList = data.topicFilter.topicDetailsList;
+								topCount = $( '<span/>' )
+							 	topSectionHeader = $( '<span/>' ).html("TOPICS/INTERESTS")
+												.append('&nbsp;')
+												.append(
+													$('<span/>')
+													.append(
+														$('<input/>')
+														.attr('type','checkbox')
+														.attr('value', 'All')
+														.attr("id" , "top_filter_all")
+														.on("click", function(){toggleTop(this)})
+													 )
+												).append('&nbsp;')
+													.append(
+													$('<input/>')
+													.attr("id" , "top_filter_search")
+													.addClass('text-field')
+												 	)
+								//fillTopicFilter(topList,"");	
+								fillFilter(topList, "", topCount, topicsFilter, topSectionHeader, 'topicCB', 'hsla(240, 83%, 47%, 0.2)')			 	
+							}	
+							
+							<#-- CIRCLES FILTER -->
+							if(data.circleFilter != undefined && data.circleFilter.circles.length!=0){
+								cirList = data.circleFilter.circles;
+								cirCount = $( '<span/>' )
+								cirSectionHeader = $( '<span/>' ).html("CIRCLES ")
+												.append('&nbsp;')
+												.append(
+													$('<span/>')
+													.append(
+														$('<input/>')
+														.attr('type','checkbox')
+														.attr('value', 'All')
+														.attr("id" , "cir_filter_all")
+														.on("click", function(){toggleCir(this)})
+													 )
+												).append('&nbsp;')
+													.append(
+													$('<input/>')
+													.attr("id" , "cir_filter_search")
+													.addClass('text-field')
+												 	)
+								//fillCircleFilter(cirList,"");
+								fillFilter(cirList, "", cirCount, circlesFilter, cirSectionHeader, 'circleCB', '#f9f5f5')
+							}
+						}						
+					}
 				});
 			}
 		};	

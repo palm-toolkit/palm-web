@@ -40,18 +40,24 @@
 <#-- jquery -->
 $( function(){
 
-		$("#introduction").slimscroll({
-							height: "70vh",
-					        size: "5px",
-				        	allowPageScroll: true,
-				   			touchScrollStep: 50,
-				});
+		$("#introduction")
+			.slimscroll({
+			height: "70vh",
+	        size: "5px",
+        	allowPageScroll: true,
+   			touchScrollStep: 50,
+		});
 
 		var visType = "";
 		var defaultVisType = "";
 		var objectType = "";
 		var visList = [];
 		var currentTab = 0;
+		var pops_researchers = [];
+		var pops_conferences = [];
+		var pops_publications = [];
+		var pops_topics = [];
+		var visPopUpIds = [];
 		
 		<#-- do not load data again if already loaded -->
 		var loadedList = [];
@@ -263,6 +269,23 @@ $( function(){
 		<#-- load data n visualization only when that tab shows up, not before -->
 		function loadVis(type, visType, visItem, widgetElem, names, ids, tabContent, authoridForCoAuthors){
 		
+				if(visType != "researchers")
+					visPopUpIds.push(pops_researchers);	
+				if(visType != "conferences")
+					visPopUpIds.push(pops_conferences);	
+				if(visType != "publications")
+					visPopUpIds.push(pops_publications);	
+				if(visType != "topics")
+					visPopUpIds.push(pops_topics);	
+
+
+				for(var i=0;i<visPopUpIds.length;i++)
+				{	
+					<#-- remove  pop up progress log -->
+					$.PALM.popUpMessage.remove( visPopUpIds[i] );
+					visPopUpIds.splice(i,1);
+				}
+				
 				<#-- generate unique id for progress log -->
 				var uniqueVisWidget = $.PALM.utility.generateUniqueId();
 				
@@ -282,6 +305,15 @@ $( function(){
 					{
 						<#-- show pop up progress log -->
 						$.PALM.popUpMessage.create( "Loading "+visItem, { uniqueId:uniqueVisWidget, popUpHeight:40, directlyRemove:false , polling:false});
+						if(visType == "researchers")
+							pops_researchers.push(uniqueVisWidget);	
+						if(visType == "conferences")
+							pops_conferences.push(uniqueVisWidget);		
+						if(visType == "publications")
+							pops_publications.push(uniqueVisWidget);		
+						if(visType == "topics")
+							pops_topics.push(uniqueVisWidget);	
+						
 					}
 					var url = "<@spring.url '/explore/visualize' />"+"?visTab="+visItem+"&type="+type+"&visType="+visType+"&dataList="+names+"&idList="+ids+"&checkedPubValues="+checkedPubValues+"&checkedConfValues="+checkedConfValues+"&checkedTopValues="+checkedTopValues+"&checkedCirValues="+checkedCirValues+"&startYear="+startYear+"&endYear="+endYear+"&yearFilterPresent="+yearFilterPresent+"&deleteFlag="+deleteFlag+"&authoridForCoAuthors="+authoridForCoAuthors;
 		
@@ -352,7 +384,6 @@ $( function(){
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniqueVisWidget );
 				
-			
 				<#-- gephi network -->
 				graphFile=data.map.graphFile;
 				sigma.parsers.gexf( "<@spring.url '/resources/gexf/'/>" + data.map.graphFile ,s,function() {
@@ -362,72 +393,75 @@ $( function(){
 					if(s.graph.nodes().length==0 && s.graph.edges().length==0){
 						console.log("condition met")
 						tabContent.html("")
-						if(names.length > 2)
-							$.PALM.callout.generate( tabContent , "warning", "No data found!!", "You can try to look for associations between two authors instead!" );
-						else
+						//if(names.length > 2)
+						//	$.PALM.callout.generate( tabContent , "warning", "No data found!!", "You can try to look for associations between two authors instead!" );
+						//else
 							$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No authors satisfy the specified criteria!" );
 						return false;
 					}
 					
-					s.graph.nodes().forEach(function(n) {
-				        n.originalColor = n.color;
-				      });
-				    s.graph.edges().forEach(function(e) {
-				        e.originalColor = e.color;
-				        edgeSizes.push(e.size)
-				      });
-				      
-					s.bind('overNode', function(e){
-						var nodeId = e.data.node.id,
-            			toKeep = s.graph.neighbors(nodeId);
-				        toKeep[nodeId] = e.data.node;
-				
-				        s.graph.nodes().forEach(function(n) {
-				          if (toKeep[n.id])
-				            n.color = n.originalColor;
-				          else
-				            n.color = '#c9c0c2';
-				        });
-				
-				        s.graph.edges().forEach(function(e) {
-				          if (toKeep[e.source] && toKeep[e.target])
-				            e.color = e.originalColor;
-				          else
-				            e.color = '#c9c0c2';
-				        });
-				
-				        // Since the data has been modified, we need to
-				        // call the refresh method to make the colors
-				        // update effective.
-				        s.refresh();
-					})
+					if(data.oldVis=="false")
+					{
+						s.graph.nodes().forEach(function(n) {
+					        n.originalColor = n.color;
+					      });
+					    s.graph.edges().forEach(function(e) {
+					        e.originalColor = e.color;
+					        edgeSizes.push(e.size)
+					      });
+					      
+						s.bind('overNode', function(e){
+							var nodeId = e.data.node.id,
+	            			toKeep = s.graph.neighbors(nodeId);
+					        toKeep[nodeId] = e.data.node;
 					
-					s.bind('clickNode', function(e){
-						if(e.data.node.attributes.isadded==false){
-							var text = e.data.node.label;
-							showhoverdiv(e,'divtoshow', text.toUpperCase() + " is currently not present in PALM");
-						}
-						else
-						showmenudiv(e,'menu');
-					})
+					        s.graph.nodes().forEach(function(n) {
+					          if (toKeep[n.id])
+					            n.color = n.originalColor;
+					          else
+					            n.color = '#c9c0c2';
+					        });
 					
-					s.bind('overEdge',function(e){
-						if(!(edgeSizes.every( (val, i, arr) => val == arr[0] )))
-						showhoverdiv(e,'divtoshow', "co-authored " + Math.round(e.data.edge.weight / 0.1) + " time(s)");
-					})
-					s.bind('outEdge',function(e){
-						hidehoverdiv('divtoshow');
-					})
+					        s.graph.edges().forEach(function(e) {
+					          if (toKeep[e.source] && toKeep[e.target])
+					            e.color = e.originalColor;
+					          else
+					            e.color = '#c9c0c2';
+					        });
 					
-					
-					s.bind('clickEdge', function(e){
-						showmenudiv(e,'menu');
-					})
-					
-					s.bind('clickStage',function(e){
-						hidemenudiv('menu');
-						hidehoverdiv('divtoshow');
-					})
+					        // Since the data has been modified, we need to
+					        // call the refresh method to make the colors
+					        // update effective.
+					        s.refresh();
+						})
+						
+						s.bind('clickNode', function(e){
+							if(e.data.node.attributes.isadded==false){
+								var text = e.data.node.label;
+								showhoverdiv(e,'divtoshow', text.toUpperCase() + " is currently not present in PALM");
+							}
+							else
+							showmenudiv(e,'menu');
+						})
+						
+						s.bind('overEdge',function(e){
+							if(!(edgeSizes.every( (val, i, arr) => val == arr[0] )))
+							showhoverdiv(e,'divtoshow', "co-authored " + Math.round(e.data.edge.weight / 0.1) + " time(s)");
+						})
+						s.bind('outEdge',function(e){
+							hidehoverdiv('divtoshow');
+						})
+						
+						
+						s.bind('clickEdge', function(e){
+							showmenudiv(e,'menu');
+						})
+						
+						s.bind('clickStage',function(e){
+							hidemenudiv('menu');
+							hidehoverdiv('divtoshow');
+						})
+					}
 				}); 
 				//s.refresh();
 				url="";
@@ -535,137 +569,140 @@ $( function(){
 			
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniqueVisWidget );
-				
-				if( data.map.realLocationsFound == 0 ){
-					$.PALM.callout.generate( tabContent , "warning", "No data found!!", "Information about geographical locations is not available for the specified criteria!" );
-					return false;
-				}
-				
-				var locDiv = $('<div/>').attr("id","mapid").css("height","60vh").css("z-index","1");
-				tabContent.append(locDiv);
-					
-				mymap = L.map('mapid');
-				
-				L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-				    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-				    maxZoom: 18,
-				    id: 'mguliani.0ph7d97m',
-				    accessToken: 'pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw'
-				}).addTo(mymap);
-				
-				var maxlat=0;
-				var maxlon=0;
-				var minlat=0;
-				var minlon=0;
-				
-				var myLayer;
-				var mydata = [];	
-				var city = [];
-				var country = [];
-				var confdata = data;
-				var i;
-				
-				var zoom = 2;
-				if(data.map.events.length < 10)
-				zoom = 3;
-				
-				console.log("locations data")
-				console.log(data)
-				if(data.type=="researcher" || data.type=="publication" || data.type=="topic" || data.type=="circle")
-				{
-						for(i=0; i< data.map.events.length; i++)
-						{
-						 (function(i) {
-							$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/" + data.map.events[i].location + ".json?autocomplete=false&access_token=pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw",
-								function(mapdata){
-				
-									year = data.map.events[i].year
-									eventGroupId = data.map.events[i].eventGroupId
-									groupname = data.map.events[i].groupName
-					
-									mapdata.features[0].properties.conference = groupname
-									mapdata.features[0].properties.year = year
-									mapdata.features[0].properties.eventGroupId = eventGroupId
-									mapdata.features[0].properties.dataType = "researcher"
-									mydata.push(myLayer.addData(mapdata.features[0]));
-								});
-							})(i);
-						}			
-						myLayer = L.geoJson(mydata, {
-							       pointToLayer: function (feature, latlng) {
-							      	
-							       if(latlng.lat > maxlat){
-							       		maxlat = latlng.lat
-							       }
-							       if(latlng.lat < minlat){
-							       		minlat = latlng.lat
-							       }
-							       if(latlng.lon > maxlon){
-							       		maxlon = latlng.lon
-							       }
-							       if(latlng.lon < minlon){
-							       		minlat = latlng.lon
-							       }
-							       
-							        mymap.setView([(maxlat+minlat)/2,(maxlon+minlon)/2], zoom);
-							         return L.marker(latlng).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
-							       },
-							       onEachFeature: onEachFeature
-							     }).addTo(mymap); 
+
+				if(data.oldVis=="false")
+				{				
+					if( data.map.realLocationsFound == 0 ){
+						$.PALM.callout.generate( tabContent , "warning", "No data found!!", "Information about geographical locations is not available for the specified criteria!" );
+						return false;
 					}
-					if(data.type=="conference")
+					
+					var locDiv = $('<div/>').attr("id","mapid").css("height","60vh").css("z-index","1");
+					tabContent.append(locDiv);
+						
+					mymap = L.map('mapid');
+					
+					L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+					    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+					    maxZoom: 18,
+					    id: 'mguliani.0ph7d97m',
+					    accessToken: 'pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw'
+					}).addTo(mymap);
+					
+					var maxlat=0;
+					var maxlon=0;
+					var minlat=0;
+					var minlon=0;
+					
+					var myLayer;
+					var mydata = [];	
+					var city = [];
+					var country = [];
+					var confdata = data;
+					var i;
+					
+					var zoom = 2;
+					if(data.map.events.length < 10)
+					zoom = 3;
+					
+					console.log("locations data")
+					console.log(data)
+					if(data.type=="researcher" || data.type=="publication" || data.type=="topic" || data.type=="circle")
 					{
-						var eventGroupList=[];	
-						var iconColorList=['green','blue','red','yellow','orange','violet','black','grey'];			
-						for(i=0; i< data.map.events.length; i++)
-						{
-						 (function(i) {
-							$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/" + data.map.events[i].location + ".json?autocomplete=false&access_token=pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw",
-								function(mapdata){
-				
-									year = data.map.events[i].year
-									groupname = data.map.events[i].groupName
-									eventGroupId = data.map.events[i].eventGroupId
-									if(eventGroupList.indexOf(groupname)== -1)
-									eventGroupList.push(groupname);
-									
-									mapdata.features[0].properties.conference = groupname
-									mapdata.features[0].properties.year = year
-									mapdata.features[0].properties.eventGroupId = eventGroupId
-									mapdata.features[0].properties.dataType = "conference"
-									mydata.push(myLayer.addData(mapdata.features[0]));
-								});
-							})(i);
-						}			
-						myLayer = L.geoJson(mydata, {
-							       pointToLayer: function (feature, latlng) {
-							      	
-							       if(latlng.lat > maxlat){
-							       		maxlat = latlng.lat
-							       }
-							       if(latlng.lat < minlat){
-							       		minlat = latlng.lat
-							       }
-							       if(latlng.lon > maxlon){
-							       		maxlon = latlng.lon
-							       }
-							       if(latlng.lon < minlon){
-							       		minlat = latlng.lon
-							       }
-							       
-							        mymap.setView([(maxlat+minlat)/2,(maxlon+minlon)/2], zoom);
-							        return L.marker(latlng,{icon: new L.Icon({
-									  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-'+iconColorList[eventGroupList.indexOf(feature.properties.conference)]+'.png'
-									})}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
-							       },
-							       onEachFeature: onEachFeature
-							     }).addTo(mymap); 
-					}
+							for(i=0; i< data.map.events.length; i++)
+							{
+							 (function(i) {
+								$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/" + data.map.events[i].location + ".json?autocomplete=false&access_token=pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw",
+									function(mapdata){
 					
-					mymap.on('click',function(e){
-						hidemenudiv('menu')
-						hidehoverdiv('divtoshow')
-					})
+										year = data.map.events[i].year
+										eventGroupId = data.map.events[i].eventGroupId
+										groupname = data.map.events[i].groupName
+						
+										mapdata.features[0].properties.conference = groupname
+										mapdata.features[0].properties.year = year
+										mapdata.features[0].properties.eventGroupId = eventGroupId
+										mapdata.features[0].properties.dataType = "researcher"
+										mydata.push(myLayer.addData(mapdata.features[0]));
+									});
+								})(i);
+							}			
+							myLayer = L.geoJson(mydata, {
+								       pointToLayer: function (feature, latlng) {
+								      	
+								       if(latlng.lat > maxlat){
+								       		maxlat = latlng.lat
+								       }
+								       if(latlng.lat < minlat){
+								       		minlat = latlng.lat
+								       }
+								       if(latlng.lon > maxlon){
+								       		maxlon = latlng.lon
+								       }
+								       if(latlng.lon < minlon){
+								       		minlat = latlng.lon
+								       }
+								       
+								        mymap.setView([(maxlat+minlat)/2,(maxlon+minlon)/2], zoom);
+								         return L.marker(latlng).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+								       },
+								       onEachFeature: onEachFeature
+								     }).addTo(mymap); 
+						}
+						if(data.type=="conference")
+						{
+							var eventGroupList=[];	
+							var iconColorList=['green','blue','red','yellow','orange','violet','black','grey'];			
+							for(i=0; i< data.map.events.length; i++)
+							{
+							 (function(i) {
+								$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/" + data.map.events[i].location + ".json?autocomplete=false&access_token=pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw",
+									function(mapdata){
+					
+										year = data.map.events[i].year
+										groupname = data.map.events[i].groupName
+										eventGroupId = data.map.events[i].eventGroupId
+										if(eventGroupList.indexOf(groupname)== -1)
+										eventGroupList.push(groupname);
+										
+										mapdata.features[0].properties.conference = groupname
+										mapdata.features[0].properties.year = year
+										mapdata.features[0].properties.eventGroupId = eventGroupId
+										mapdata.features[0].properties.dataType = "conference"
+										mydata.push(myLayer.addData(mapdata.features[0]));
+									});
+								})(i);
+							}			
+							myLayer = L.geoJson(mydata, {
+								       pointToLayer: function (feature, latlng) {
+								      	
+								       if(latlng.lat > maxlat){
+								       		maxlat = latlng.lat
+								       }
+								       if(latlng.lat < minlat){
+								       		minlat = latlng.lat
+								       }
+								       if(latlng.lon > maxlon){
+								       		maxlon = latlng.lon
+								       }
+								       if(latlng.lon < minlon){
+								       		minlat = latlng.lon
+								       }
+								       
+								        mymap.setView([(maxlat+minlat)/2,(maxlon+minlon)/2], zoom);
+								        return L.marker(latlng,{icon: new L.Icon({
+										  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-'+iconColorList[eventGroupList.indexOf(feature.properties.conference)]+'.png'
+										})}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+								       },
+								       onEachFeature: onEachFeature
+								     }).addTo(mymap); 
+						}
+						
+						mymap.on('click',function(e){
+							hidemenudiv('menu')
+							hidehoverdiv('divtoshow')
+						})
+					}
 				});
 			}		
 		}
@@ -705,9 +742,10 @@ $( function(){
 		
 		console.log("timeline data")
 		console.log(data)
-				<#-- remove  pop up progress log -->
-				$.PALM.popUpMessage.remove( uniqueVisWidget );
-				
+			<#-- remove  pop up progress log -->
+			$.PALM.popUpMessage.remove( uniqueVisWidget );
+			if(data.oldVis=="false")
+			{
 				if( data.map.pubDetailsList.length == 0 ){
 					$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No publications satisfy the specified criteria" );
 					return false;
@@ -849,7 +887,8 @@ $( function(){
 										.html(item.year)
 									)
 						)
-				});
+					});
+				}	
 			});
 		}
 		
@@ -863,62 +902,67 @@ $( function(){
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniqueVisWidget );
 				
-				var bubblesTab = $( widgetElem ).find( "#tab_Bubbles" );
-				bubblesTab.html("");
-				
-				if( dataBubble.map.list.length == 0 ){
-					if(objectType == "publication" )
-						$.PALM.callout.generate( bubblesTab , "warning", "No data found!!", "No topics found!" );
-					else
-						$.PALM.callout.generate( bubblesTab , "warning", "No data found!!", "No interests found!" );
-					return false;
+				if(dataBubble.oldVis=="false")
+				{
+					var bubblesTab = $( widgetElem ).find( "#tab_Bubbles" );
+					bubblesTab.html("");
+					
+					if( dataBubble.map.list.length == 0 ){
+						if(objectType == "publication" )
+							$.PALM.callout.generate( bubblesTab , "warning", "No data found!!", "No topics found!" );
+						else
+							$.PALM.callout.generate( bubblesTab , "warning", "No data found!!", "No interests found!" );
+						return false;
+					}
+					
+					visBubbles(dataBubble.map.list, dataBubble.dataList);
 				}
-				
-				
-				visBubbles(dataBubble.map.list, dataBubble.dataList);
 			});
 		}
 				
 		<#-- EVOLUTION TAB -->
 		function tabVisEvolution(uniqueVisWidget, url, widgetElem, tabContent){
+				
+			$.getJSON( url , function( data ) {
 			
-		$.getJSON( url , function( data ) {
-		
-		console.log("evolution data")
-		console.log(data)
-			<#-- remove  pop up progress log -->
-			$.PALM.popUpMessage.remove( uniqueVisWidget );
-			
-			if( data.map.list.length == 0 ){
-				if(objectType == "publication" )
-					$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No topics found!" );
-				else
-					$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No interests found!" );
-				return false;
-			}
-			
-			var tabEvolutionContainer = $( widgetElem ).find( "#tab_Evolution" );
-			tabEvolutionContainer.html("");
+			console.log("evolution data")
+			console.log(data)
+				<#-- remove  pop up progress log -->
+				$.PALM.popUpMessage.remove( uniqueVisWidget );
+				
+				if(data.oldVis=="false")
+				{
+					if( data.map.list.length == 0 ){
+						if(objectType == "publication" )
+							$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No topics found!" );
+						else
+							$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No interests found!" );
+						return false;
+					}
 					
-			var evolutionSection = $( '<div/>' )
-			tabEvolutionContainer.append(evolutionSection);	
-			
-			var newSect = $( '<div/>' ).attr("id","svgContainer")
-								.on("click",function(){
-									hidemenudiv('menu')
-								})
-			evolutionSection.append(newSect);	
-			
-							evolutionSection.addClass('evolutionSection overflow-height')
+					var tabEvolutionContainer = $( widgetElem ).find( "#tab_Evolution" );
+					tabEvolutionContainer.html("");
 							
-							$(".evolutionSection").slimscroll({
-								height: "67vh",
-						        size: "5px",
-					        	allowPageScroll: true,
-					   			touchScrollStep: 50,
-					       });
-			
-				drawDimpleChart(data.map.list, data.map.topicIdMap);
+					var evolutionSection = $( '<div/>' )
+					tabEvolutionContainer.append(evolutionSection);	
+					
+					var newSect = $( '<div/>' ).attr("id","svgContainer")
+										.on("click",function(){
+											hidemenudiv('menu')
+										})
+					evolutionSection.append(newSect);	
+					
+									evolutionSection.addClass('evolutionSection overflow-height')
+									
+									$(".evolutionSection").slimscroll({
+										height: "67vh",
+								        size: "5px",
+							        	allowPageScroll: true,
+							   			touchScrollStep: 50,
+							       });
+					
+						drawDimpleChart(data.map.list, data.map.topicIdMap);
+				}	
 			});
 		}
 
@@ -927,11 +971,14 @@ $( function(){
 			
 			$.getJSON( url , function( data ) {
 
-			console.log("cluster data")
-			console.log(data)
-
-					<#-- remove  pop up progress log -->
-					$.PALM.popUpMessage.remove( uniqueVisWidget );
+				console.log("cluster data")
+				console.log(data)
+		
+				<#-- remove  pop up progress log -->
+				$.PALM.popUpMessage.remove( uniqueVisWidget );
+				
+				if(data.oldVis=="false")
+				{
 					var mainWidget = $( widgetElem ).find( "#boxbody-${wUniqueName}" );
 					var tabContent1 = $( widgetElem ).find( "#tab-content" );					
 					var tabGroupContainer = $( widgetElem ).find( "#tab_Group" );
@@ -977,6 +1024,7 @@ $( function(){
 						else
 							visualizeCluster(data, mainWidget, visType);	
 					}
+				}	
 			});
 		}
 		
@@ -984,361 +1032,363 @@ $( function(){
 		function tabVisList(uniqueVisWidget, url, widgetElem, tabContent, visType, type){
 		
 			$.getJSON( url , function( data ) {
-						console.log("list data")
-						console.log(data)
+				console.log("list data")
+				console.log(data)
+				
+				if(data.oldVis=="false")
+				{
+					if( data.map == null ){
+						$.PALM.callout.generate( tabContent , "warning", "No data found!!", "Insufficient Data!" );
+						return false;
+					}
+					
+					var namesList = data.dataList;
+					
+						//var tabListContainer = $( widgetElem ).find( "#tab_List" );
+						//tabListContainer.html("");	
+					var listSection = $( '<div/>' );
 						
-						if( data.map == null ){
-							$.PALM.callout.generate( tabContent , "warning", "No data found!!", "Insufficient Data!" );
-							return false;
+					<#--	var listOfOptions = ["Co-Authors", "Similar Authors"];
+						var select = $( '<select/>' )
+											.attr({"id":"listTypeOptions","class":"form-control"})
+											.css({"width":"50%","float":"right"})
+														
+													
+						$.each(listOfOptions, function(index, value){
+							select.append(
+									$( '<option/>' )
+									.attr( "value",value )
+									.html( value )
+								)
+						})
+						
+						var listTypeOptions = $( '<div/>' )
+												.css({"height":"5vh"})
+												.addClass( "form-group" )
+												.append(select)
+						
+						tabContent.append(listTypeOptions);-->
+						
+						tabContent.append(listSection);
+						listSection.addClass('_list overflow-height')
+						
+						$("._list").slimscroll({
+							height: "74vh",
+					        size: "5px",
+				        	allowPageScroll: true,
+				   			touchScrollStep: 50,
+				   			//alwaysVisible: true
+				       });
+						
+						<#-- remove  pop up progress log -->
+						$.PALM.popUpMessage.remove( uniqueVisWidget );
+						
+						if(visType == "researchers")
+						{
+							if( data.map.coAuthors.length == 0 ){
+								tabContent.html("")
+								$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No researchers satisfy the criteria!" );
+								return false;
+							}
+							
+							if( data.map.coAuthors.length > 0 ){
+								<#-- build the researcher list -->
+								$.each( data.map.coAuthors, function( index, item){
+									var researcherDiv = 
+									$( '<div/>' )
+										.addClass( 'author cursor-p' )
+										.attr({ 'id' : item.id });
+									var researcherNav =
+									$( '<div/>' )
+										.addClass( 'nav' );
+										
+									if(objectType=="publication" || objectType=="topic" || objectType=="circle")
+										text = item.name
+									if(objectType=="researcher")
+									{
+										text = " <b> " + item.name + " </b> "  ;
+										if(data.idsList.length > 1 && yearFilterPresent=="false")
+										{
+											for(var i=0;i<data.idsList.length;i++)
+											{
+												text = text + " <br />   Co-authored in <b>" + data.map.collaborationMaps[data.idsList[i]][item.id]+  "</b> publication(s) with" + " " + namesList[i];
+											 }
+										 }
+										 else
+										 	text = text + " <br />   Co-authored in <b> " + data.map.collaborationMaps[data.idsList[0]][item.id]+ "</b> publication(s)" ;
+									}
+									if(objectType=="conference")
+									{
+										text = " <b> " + item.name + " </b> "  ;
+										if(data.idsList.length > 1 && yearFilterPresent=="false")
+										{
+											for(var i=0;i<data.idsList.length;i++)
+											{
+												text = text + " <br /> <b>" + data.map.collaborationMaps[data.idsList[i]][item.id]+  "</b> publication(s) in" + " " + namesList[i];
+											 }
+										 }
+										 else
+										 	text = text + " <br /> <b> " + data.map.collaborationMaps[data.idsList[0]][item.id]+ "</b> publication(s)" ;
+									}
+									var researcherDetail =
+									$( '<div/>' )
+										.addClass( 'detail' )
+										.append(
+											$( '<div/>' )
+												.addClass( 'name capitalize' )
+												.html( text )
+										);
+									researcherDiv
+										.append(
+											researcherNav
+										).append(
+											researcherDetail
+										).append('&nbsp;')
+										.on('mouseover', blue)
+										.on('mouseout', originalColor)
+										.on('click', function(d){ 
+											obj = {
+														  type:"listItem",
+												          clientX:d.clientX,
+												          clientY:d.clientY,
+												          itemId:item.id,
+												          objectType:"researcher"
+												};
+													if(item.isAdded)
+														showmenudiv(obj, 'menu')
+													else
+														showhoverdiv(obj, 'divtoshow', item.name.toUpperCase() + " is currently not present in PALM")
+										
+										});
+										
+									if( !item.isAdded ){
+										researcherDetail.addClass( "text-gray" );
+									}
+									listSection
+										.append( 
+											researcherDiv
+										);
+								});						
+							}
 						}
 						
-						var namesList = data.dataList;
-						
-							//var tabListContainer = $( widgetElem ).find( "#tab_List" );
-							//tabListContainer.html("");	
-		  				var listSection = $( '<div/>' );
-							
-						<#--	var listOfOptions = ["Co-Authors", "Similar Authors"];
-							var select = $( '<select/>' )
-												.attr({"id":"listTypeOptions","class":"form-control"})
-												.css({"width":"50%","float":"right"})
-															
-														
-							$.each(listOfOptions, function(index, value){
-								select.append(
-										$( '<option/>' )
-										.attr( "value",value )
-										.html( value )
-									)
-							})
-							
-							var listTypeOptions = $( '<div/>' )
-													.css({"height":"5vh"})
-													.addClass( "form-group" )
-													.append(select)
-							
-							tabContent.append(listTypeOptions);-->
-							
-							tabContent.append(listSection);
-							listSection.addClass('_list overflow-height')
-							
-							$("._list").slimscroll({
-								height: "74vh",
-						        size: "5px",
-					        	allowPageScroll: true,
-					   			touchScrollStep: 50,
-					   			//alwaysVisible: true
-					       });
-		  					
-							<#-- remove  pop up progress log -->
-							$.PALM.popUpMessage.remove( uniqueVisWidget );
-							
-							if(visType == "researchers")
-							{
-								if( data.map.coAuthors.length == 0 ){
-									tabContent.html("")
-									$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No researchers satisfy the criteria!" );
-									return false;
-								}
+						if(visType == "conferences")
+						{
+							if( data.map.events.length == 0 ){
+								tabContent.html("")
+								$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No conferences satisfy the criteria!" );
+								return false;
+							}
+							else
+							{	
+								var previousEG = "";
 								
-								if( data.map.coAuthors.length > 0 ){
-									<#-- build the researcher list -->
-									$.each( data.map.coAuthors, function( index, item){
-										var researcherDiv = 
+								<#-- build the conference list -->
+								$.each( data.map.events, function( index, item){
+									if(type=="researcher")
+									{
+										conferenceDiv = 
 										$( '<div/>' )
-											.addClass( 'author cursor-p' )
+											.addClass( 'author' )
+											<#--.attr({ 'id' : item.location.id });-->
+									}
+									if(type=="conference" || type=="publication" || type=="topic" || type=="circle" )
+									{
+										conferenceDiv = 
+										$( '<div/>' )
+											.addClass( 'author' )
 											.attr({ 'id' : item.id });
-										var researcherNav =
-										$( '<div/>' )
-											.addClass( 'nav' );
-											
-										if(objectType=="publication" || objectType=="topic" || objectType=="circle")
-											text = item.name
-										if(objectType=="researcher")
-										{
-											text = " <b> " + item.name + " </b> "  ;
-											if(data.idsList.length > 1 && yearFilterPresent=="false")
-											{
-												for(var i=0;i<data.idsList.length;i++)
-												{
-													text = text + " <br />   Co-authored in <b>" + data.map.collaborationMaps[data.idsList[i]][item.id]+  "</b> publication(s) with" + " " + namesList[i];
-												 }
-											 }
-											 else
-											 	text = text + " <br />   Co-authored in <b> " + data.map.collaborationMaps[data.idsList[0]][item.id]+ "</b> publication(s)" ;
-										}
-										if(objectType=="conference")
-										{
-											text = " <b> " + item.name + " </b> "  ;
-											if(data.idsList.length > 1 && yearFilterPresent=="false")
-											{
-												for(var i=0;i<data.idsList.length;i++)
-												{
-													text = text + " <br /> <b>" + data.map.collaborationMaps[data.idsList[i]][item.id]+  "</b> publication(s) in" + " " + namesList[i];
-												 }
-											 }
-											 else
-											 	text = text + " <br /> <b> " + data.map.collaborationMaps[data.idsList[0]][item.id]+ "</b> publication(s)" ;
-										}
-										var researcherDetail =
-										$( '<div/>' )
-											.addClass( 'detail' )
-											.append(
-												$( '<div/>' )
-													.addClass( 'name capitalize' )
-													.html( text )
-											);
-										researcherDiv
-											.append(
-												researcherNav
-											).append(
-												researcherDetail
-											).append('&nbsp;')
-											.on('mouseover', blue)
-											.on('mouseout', originalColor)
-											.on('click', function(d){ 
-												obj = {
-															  type:"listItem",
-													          clientX:d.clientX,
-													          clientY:d.clientY,
-													          itemId:item.id,
-													          objectType:"researcher"
-													};
-														if(item.isAdded)
-															showmenudiv(obj, 'menu')
-														else
-															showhoverdiv(obj, 'divtoshow', item.name.toUpperCase() + " is currently not present in PALM")
-											
-											});
-											
-										if( !item.isAdded ){
-											researcherDetail.addClass( "text-gray" );
-										}
-										listSection
-											.append( 
-												researcherDiv
-											);
-									});						
-								}
-							}
-							
-							if(visType == "conferences")
-							{
-								if( data.map.events.length == 0 ){
-									tabContent.html("")
-									$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No conferences satisfy the criteria!" );
-									return false;
-								}
-								else
-								{	
-									var previousEG = "";
+									}
 									
-									<#-- build the conference list -->
-									$.each( data.map.events, function( index, item){
-										if(type=="researcher")
-										{
-											conferenceDiv = 
-											$( '<div/>' )
-												.addClass( 'author' )
-												<#--.attr({ 'id' : item.location.id });-->
-										}
-										if(type=="conference" || type=="publication" || type=="topic" || type=="circle" )
-										{
-											conferenceDiv = 
-											$( '<div/>' )
-												.addClass( 'author' )
-												.attr({ 'id' : item.id });
-										}
-										
-										var eventLocation = "";
-										if(item.location!="")
-											eventLocation = item.location + " : " + item.year;
-										else
-											eventLocation = "Unknown Location : " + item.year;
-											
-										var conferenceNav =
-										$( '<div/>' )
-											.addClass( 'nav' )
-											.append( 
-												$( '<i/>' )
-												.addClass( 'fa fa-angle-right icon font-xs' )
-												.append('&nbsp;')
-											)
-											.append(
-												$( '<span/>' )
-													.addClass( 'name capitalize' )
-													.html( eventLocation )
-											);
-										var conferenceDetail =
-										$( '<div/>' )
-											.addClass( 'detail cursor-p' )
-											.append(
-												$( '<span/>' )
-													.addClass( 'name capitalize bold-text' )
-													.html( " " + item.groupName )
-											)
-											.on('mouseover',blue)
-											.on('mouseout',originalColor)
-											.on('click', function(d){ 
-													if(type=="conference"){
-														obj = {
-																type:"listItem",
-														        clientX:d.clientX,
-														        clientY:d.clientY,
-														        itemId:item.eventGroupId,
-														        objectType:"conference"
-														};
-														showhoverdiv(obj,'divtoshow', "This conference is already added");
-													}
-													else
-													{
-														obj = {
-																  type:"listItem",
-														          clientX:d.clientX,
-														          clientY:d.clientY,
-														          itemId:item.eventGroupId,
-														          objectType:"conference"
-														};
-														if(item.eventGroupIsAdded)
-															showmenudiv(obj, 'menu')
-														else
-															showhoverdiv(obj, 'divtoshow', item.groupName.toUpperCase() + " is currently not present in PALM")
-													}
-											});
-											
-											
-										if(previousEG != item.groupName)	
-										{
-											previousEG = item.groupName;
-											conferenceDiv
-												.append('&nbsp;')
-												.append(
-													conferenceDetail
-												)
-										}	
-											
-										conferenceDiv.append(
-												conferenceNav
-											)
-											
-										if( !item.isAdded )
-											conferenceNav.addClass( "text-gray" );
-										if(!item.eventGroupIsAdded)
-											conferenceDetail.addClass( "text-gray" );
-											
-										listSection
-											.append( 
-												conferenceDiv
-											);
-									});
-								}				
-							}
-							
-							if(visType == "topics")
-							{
-								if( data.map.list.length == 0 ){
-									tabContent.html("")	
-									if(objectType == "publication" )
-										$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No topics found!" );
+									var eventLocation = "";
+									if(item.location!="")
+										eventLocation = item.location + " : " + item.year;
 									else
-										$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No interests found!" );
-										return false;
-								}
-								else
-								{
-									var sortedList = data.map.list.sort();
-									<#-- build the conference list -->
-									$.each( sortedList , function( index, item){
-									
-										var topicDiv = 
-										$( '<div/>' )
-											.addClass( 'author cursor-p' )
-											.attr({ 'id' : item[2] });
-										var topicNav =
-										$( '<div/>' )
-											.addClass( 'nav' )
-											.append(
-												$( '<div/>' )
-													.addClass( 'name capitalize bold-text' )
-													.html( item[0] )
-											);
-										topicDiv
-											.append(
-												topicNav
-											).append('&nbsp;')
-											.on('mouseover',blue)
-											.on('mouseout',originalColor)
-											.on('click', function(d){ 
-												obj = {
+										eventLocation = "Unknown Location : " + item.year;
+										
+									var conferenceNav =
+									$( '<div/>' )
+										.addClass( 'nav' )
+										.append( 
+											$( '<i/>' )
+											.addClass( 'fa fa-angle-right icon font-xs' )
+											.append('&nbsp;')
+										)
+										.append(
+											$( '<span/>' )
+												.addClass( 'name capitalize' )
+												.html( eventLocation )
+										);
+									var conferenceDetail =
+									$( '<div/>' )
+										.addClass( 'detail cursor-p' )
+										.append(
+											$( '<span/>' )
+												.addClass( 'name capitalize bold-text' )
+												.html( " " + item.groupName )
+										)
+										.on('mouseover',blue)
+										.on('mouseout',originalColor)
+										.on('click', function(d){ 
+												if(type=="conference"){
+													obj = {
+															type:"listItem",
+													        clientX:d.clientX,
+													        clientY:d.clientY,
+													        itemId:item.eventGroupId,
+													        objectType:"conference"
+													};
+													showhoverdiv(obj,'divtoshow', "This conference is already added");
+												}
+												else
+												{
+													obj = {
 															  type:"listItem",
 													          clientX:d.clientX,
 													          clientY:d.clientY,
-													          itemId:item[2],
-													          objectType:"topic"
+													          itemId:item.eventGroupId,
+													          objectType:"conference"
 													};
-												showmenudiv(obj, 'menu')
-											});
-											
-										listSection
-											.append( 
-												topicDiv
-											);
-									});
-								}				
-							}
-							if(visType == "publications")
-							{
-								if( data.map.pubDetailsList.length == 0 ){
-									tabContent.html("")								
-									$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No publications satisfy the criteria!" );
-									return false;
-								}
-								else
-								{
-									<#-- build the conference list -->
-									$.each( data.map.pubDetailsList, function( index, item){
-									
-										var conferenceDiv = 
-										$( '<div/>' )
-											.addClass( 'author cursor-p' )
-											.attr({ 'id' : item.id });
-												
-										var conferenceDetail =
-												$( '<div/>' )
-													.addClass( 'name capitalize' )
-													.html( item.title )
-												.append(
-													$( '<span/>' )
-													.addClass( 'name capitalize' )
-													.html( " : " + item.year )
-												)
+													if(item.eventGroupIsAdded)
+														showmenudiv(obj, 'menu')
+													else
+														showhoverdiv(obj, 'divtoshow', item.groupName.toUpperCase() + " is currently not present in PALM")
+												}
+										});
+										
+										
+									if(previousEG != item.groupName)	
+									{
+										previousEG = item.groupName;
 										conferenceDiv
+											.append('&nbsp;')
 											.append(
 												conferenceDetail
-											).append('&nbsp;')
-											.on('mouseover',blue)
-											.on('mouseout',originalColor)
-											.on('click', function(d){ 
-												obj = {
-															  type:"listItem",
-													          clientX:d.clientX,
-													          clientY:d.clientY,
-													          itemId:item.id,
-													          objectType:"publication"
-													};
-												showmenudiv(obj, 'menu')
-											
-											});
-											
-										listSection
-											.append( 
-												conferenceDiv
-											);
-									});	
-								}			
+											)
+									}	
+										
+									conferenceDiv.append(
+											conferenceNav
+										)
+										
+									if( !item.isAdded )
+										conferenceNav.addClass( "text-gray" );
+									if(!item.eventGroupIsAdded)
+										conferenceDetail.addClass( "text-gray" );
+										
+									listSection
+										.append( 
+											conferenceDiv
+										);
+								});
+							}				
+						}
+						
+						if(visType == "topics")
+						{
+							if( data.map.list.length == 0 ){
+								tabContent.html("")	
+								if(objectType == "publication" )
+									$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No topics found!" );
+								else
+									$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No interests found!" );
+									return false;
 							}
-							
-						});
+							else
+							{
+								var sortedList = data.map.list.sort();
+								<#-- build the conference list -->
+								$.each( sortedList , function( index, item){
+								
+									var topicDiv = 
+									$( '<div/>' )
+										.addClass( 'author cursor-p' )
+										.attr({ 'id' : item[2] });
+									var topicNav =
+									$( '<div/>' )
+										.addClass( 'nav' )
+										.append(
+											$( '<div/>' )
+												.addClass( 'name capitalize bold-text' )
+												.html( item[0] )
+										);
+									topicDiv
+										.append(
+											topicNav
+										).append('&nbsp;')
+										.on('mouseover',blue)
+										.on('mouseout',originalColor)
+										.on('click', function(d){ 
+											obj = {
+														  type:"listItem",
+												          clientX:d.clientX,
+												          clientY:d.clientY,
+												          itemId:item[2],
+												          objectType:"topic"
+												};
+											showmenudiv(obj, 'menu')
+										});
+										
+									listSection
+										.append( 
+											topicDiv
+										);
+								});
+							}				
+						}
+						if(visType == "publications")
+						{
+							if( data.map.pubDetailsList.length == 0 ){
+								tabContent.html("")								
+								$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No publications satisfy the criteria!" );
+								return false;
+							}
+							else
+							{
+								<#-- build the conference list -->
+								$.each( data.map.pubDetailsList, function( index, item){
+								
+									var conferenceDiv = 
+									$( '<div/>' )
+										.addClass( 'author cursor-p' )
+										.attr({ 'id' : item.id });
+											
+									var conferenceDetail =
+											$( '<div/>' )
+												.addClass( 'name capitalize' )
+												.html( item.title )
+											.append(
+												$( '<span/>' )
+												.addClass( 'name capitalize' )
+												.html( " : " + item.year )
+											)
+									conferenceDiv
+										.append(
+											conferenceDetail
+										).append('&nbsp;')
+										.on('mouseover',blue)
+										.on('mouseout',originalColor)
+										.on('click', function(d){ 
+											obj = {
+														  type:"listItem",
+												          clientX:d.clientX,
+												          clientY:d.clientY,
+												          itemId:item.id,
+												          objectType:"publication"
+												};
+											showmenudiv(obj, 'menu')
+										
+										});
+										
+									listSection
+										.append( 
+											conferenceDiv
+										);
+								});	
+							}			
+						}
+					}
+				});
 		}
 		
 		<#-- COMPARISON TAB -->
@@ -1351,174 +1401,174 @@ $( function(){
 			
 			console.log("comaprison data");
 			console.log(data);
-			
-			var tabComparisonContainer = $( widgetElem ).find( "#tab_Comparison" );
-			tabComparisonContainer.html("");
-			
-			var extraContainer = $( '<div/>' ).addClass('height67')
-			tabComparisonContainer.append(extraContainer)
-
-			var vennContainer = $( '<div/>' ).attr("id","vennContainer").addClass('height67 fleft width70p');
-			var listContainer = $( '<div/>' ).attr("id","listContainer").addClass('height67 fright width30p');
-			
-			extraContainer.append(vennContainer);
-			extraContainer.append(listContainer);
-			
-			
-			var innerListContainer = $( '<div/>' ).attr("id","innerListContainer").addClass('overflow-height')
-			listContainer.append(innerListContainer);
-			
-							
-							$("#innerListContainer").slimscroll({
-								height: "67vh",
-						        size: "5px",
-					        	allowPageScroll: true,
-					   			touchScrollStep: 50,
-					   			//alwaysVisible: true
-					       });
-			
-			
-			var vennD = $( '<div/>' ).attr("id","venn").addClass('height67');
-			vennContainer.append(vennD);
-			var vennListC = $( '<div/>' );
-			innerListContainer.append(vennListC);
-			var clickFlag = "false";
-			var selectedVenn = "";
-			var chart = venn.VennDiagram()
-			dataComp = data.map.comparisonList
-			
-			<#-- data list are also here // use later-->
-			
-			var div = d3.select("#venn")
-			div.datum(dataComp).call(chart);
-			
-			div.on("click", function(d,i){
-					hidehoverdiv('divtoshow')
-					hidemenudiv('menu')
-					vennListC.html("");
-					var s  = d3.selectAll("path")
-					s.style("stroke-width", 0)
-			            .style("fill-opacity", d.sets.length == 1 ? .25 : .0)
-			            .style("stroke-opacity", 0);
-				})
-			
-			var tooltip = d3.select("body").append("div")
-			    .attr("class", "venntooltip");
-			
-			div.selectAll("path")
-			    .style("stroke-opacity", 0)
-			    .style("stroke", "#fff")
-			    .style("stroke-width", 0)
-			
-			div.selectAll("g")
-			    .on("mouseover", function(d, i) {
-			        // sort all the areas relative to the current item
-			        venn.sortAreas(div, d);
-			
-			        // Display a tooltip with the current size
-			        tooltip.transition().duration(400).style("opacity", .9);
-			        tooltip.text(d.size);
-			        // highlight the current path
-			        var selection = d3.select(this).transition("tooltip").duration(400);
-			        selection.select("path")
-			        	.style("stroke","black")
-			            .style("stroke-width", 3)
-			            .style("fill-opacity", d.sets.length == 1 ? .4 : .1)
-			            .style("stroke-opacity", 1);
-			    })
-			
-			    .on("mousemove", function(d,i) {
-			        tooltip.style("left", (d3.event.pageX) + "px")
-			               .style("top", (d3.event.pageY - 28) + "px");
-			    })
-			
-			    .on("mouseout", function(d, i) {
-			        tooltip.transition().duration(400).style("opacity", 0);
-			        
-			        if(selectedVenn!=d.altLabel){
-			        var selection = d3.select(this).transition("tooltip").duration(400);
-			        selection.select("path")
-			            .style("stroke-width", 0)
-			            .style("fill-opacity", d.sets.length == 1 ? .25 : .0)
-			            .style("stroke-opacity", 0);
-			        }    
-			    })
+			if(data.oldVis=="false")
+			{
+				var tabComparisonContainer = $( widgetElem ).find( "#tab_Comparison" );
+				tabComparisonContainer.html("");
 				
-				.on("click", function(d,i){
+				var extraContainer = $( '<div/>' ).addClass('height67')
+				tabComparisonContainer.append(extraContainer)
+	
+				var vennContainer = $( '<div/>' ).attr("id","vennContainer").addClass('height67 fleft width70p');
+				var listContainer = $( '<div/>' ).attr("id","listContainer").addClass('height67 fright width30p');
 				
-					selectedVenn = d.altLabel;
-					vennListC.html("");
-					vennList(vennListC, d.list, d.idsList)
+				extraContainer.append(vennContainer);
+				extraContainer.append(listContainer);
+				
+				var innerListContainer = $( '<div/>' ).attr("id","innerListContainer").addClass('overflow-height')
+				listContainer.append(innerListContainer);
+				
+								
+								$("#innerListContainer").slimscroll({
+									height: "67vh",
+							        size: "5px",
+						        	allowPageScroll: true,
+						   			touchScrollStep: 50,
+						   			//alwaysVisible: true
+						       });
+				
+				
+				var vennD = $( '<div/>' ).attr("id","venn").addClass('height67');
+				vennContainer.append(vennD);
+				var vennListC = $( '<div/>' );
+				innerListContainer.append(vennListC);
+				var clickFlag = "false";
+				var selectedVenn = "";
+				var chart = venn.VennDiagram()
+				dataComp = data.map.comparisonList
+				
+				<#-- data list are also here // use later-->
+				
+				var div = d3.select("#venn")
+				div.datum(dataComp).call(chart);
+				
+				div.on("click", function(d,i){
+						hidehoverdiv('divtoshow')
+						hidemenudiv('menu')
+						vennListC.html("");
+						var s  = d3.selectAll("path")
+						s.style("stroke-width", 0)
+				            .style("fill-opacity", d.sets.length == 1 ? .25 : .0)
+				            .style("stroke-opacity", 0);
+					})
+				
+				var tooltip = d3.select("body").append("div")
+				    .attr("class", "venntooltip");
+				
+				div.selectAll("path")
+				    .style("stroke-opacity", 0)
+				    .style("stroke", "#fff")
+				    .style("stroke-width", 0)
+				
+				div.selectAll("g")
+				    .on("mouseover", function(d, i) {
+				        // sort all the areas relative to the current item
+				        venn.sortAreas(div, d);
+				
+				        // Display a tooltip with the current size
+				        tooltip.transition().duration(400).style("opacity", .9);
+				        tooltip.text(d.size);
+				        // highlight the current path
+				        var selection = d3.select(this).transition("tooltip").duration(400);
+				        selection.select("path")
+				        	.style("stroke","black")
+				            .style("stroke-width", 3)
+				            .style("fill-opacity", d.sets.length == 1 ? .4 : .1)
+				            .style("stroke-opacity", 1);
+				    })
+				
+				    .on("mousemove", function(d,i) {
+				        tooltip.style("left", (d3.event.pageX) + "px")
+				               .style("top", (d3.event.pageY - 28) + "px");
+				    })
+				
+				    .on("mouseout", function(d, i) {
+				        tooltip.transition().duration(400).style("opacity", 0);
+				        
+				        if(selectedVenn!=d.altLabel){
+				        var selection = d3.select(this).transition("tooltip").duration(400);
+				        selection.select("path")
+				            .style("stroke-width", 0)
+				            .style("fill-opacity", d.sets.length == 1 ? .25 : .0)
+				            .style("stroke-opacity", 0);
+				        }    
+				    })
 					
-					var s  = d3.selectAll("path").filter(function(x) { 
-					return d.altLabel!=x.altLabel; });
-					s.style("stroke-width", 0)
-			            .style("stroke-opacity", 0);
-			        d3.event.stopPropagation();    
-				})
+					.on("click", function(d,i){
 					
+						selectedVenn = d.altLabel;
+						vennListC.html("");
+						vennList(vennListC, d.list, d.idsList)
+						
+						var s  = d3.selectAll("path").filter(function(x) { 
+						return d.altLabel!=x.altLabel; });
+						s.style("stroke-width", 0)
+				            .style("stroke-opacity", 0);
+				        d3.event.stopPropagation();    
+					})
+				}	
 			});
 		}
 		
 		function vennList(vennListC, nameList, idsList){
-									<#-- build the researcher list -->
-									var sortedNamesList = nameList.sort(function(a, b) 
-									{
-										return sortList(a.name, b.name);
-									})
-									$.each( sortedNamesList, function( index, item){
-										var vennDiv = 
-										$( '<div/>' )
-											.addClass( 'author cursor-p' )
-											.attr({ 'id' : item.id });
-										var vennNav =
-										$( '<div/>' )
-											.addClass( 'nav' );
-										var vennDetail =
-										$( '<div/>' )
-											.addClass( 'detail' )
-											.append(
-												$( '<div/>' )
-													.addClass( 'name capitalize' )
-													.html( (index+1)+") "+item.name )
-											);
-										vennDiv
-											.append(
-												vennNav
-											).append(
-												vennDetail
-											)
-											.on('mouseover',blue)
-											.on('mouseout',originalColor)
-											.on('click', function(d){ 
-												console.log(d);
-												
-												obj = {
-														  type:"comparisonListItem",
-												          clientX:d.clientX,
-												          clientY:d.clientY,
-												          itemId:item.id,
-												          objectType:visType.substring(0,visType.length-1)
-												};
-												if(visType == "researchers" || visType == "conferences"){
-													if(item.isAdded)
-														showmenudiv(obj, 'menu')
-													else
-														showhoverdiv(obj, 'divtoshow', item.name.toUpperCase() + " is currently not present in PALM")
-												}		
-												else
-														showmenudiv(obj, 'menu')
-											});
-										if(visType == "researchers" || visType == "conferences"){	
-											if( !item.isAdded ){
-												vennDiv.addClass( "text-gray" );
-											}
-										}
-										vennListC
-											.append( 
-												vennDiv
-											);
-									});
+			<#-- build the researcher list -->
+			var sortedNamesList = nameList.sort(function(a, b) 
+			{
+				return sortList(a.name, b.name);
+			})
+			$.each( sortedNamesList, function( index, item){
+				var vennDiv = 
+				$( '<div/>' )
+					.addClass( 'author cursor-p' )
+					.attr({ 'id' : item.id });
+				var vennNav =
+				$( '<div/>' )
+					.addClass( 'nav' );
+				var vennDetail =
+				$( '<div/>' )
+					.addClass( 'detail' )
+					.append(
+						$( '<div/>' )
+							.addClass( 'name capitalize' )
+							.html( (index+1)+") "+item.name )
+					);
+				vennDiv
+					.append(
+						vennNav
+					).append(
+						vennDetail
+					)
+					.on('mouseover',blue)
+					.on('mouseout',originalColor)
+					.on('click', function(d){ 
+						console.log(d);
+						
+						obj = {
+								  type:"comparisonListItem",
+						          clientX:d.clientX,
+						          clientY:d.clientY,
+						          itemId:item.id,
+						          objectType:visType.substring(0,visType.length-1)
+						};
+						if(visType == "researchers" || visType == "conferences"){
+							if(item.isAdded)
+								showmenudiv(obj, 'menu')
+							else
+								showhoverdiv(obj, 'divtoshow', item.name.toUpperCase() + " is currently not present in PALM")
+						}		
+						else
+								showmenudiv(obj, 'menu')
+					});
+				if(visType == "researchers" || visType == "conferences"){	
+					if( !item.isAdded ){
+						vennDiv.addClass( "text-gray" );
+					}
+				}
+				vennListC
+					.append( 
+						vennDiv
+					);
+			});
 		}
 		<#-- SIMILARITY TAB -->
 		function tabVisSimilar(uniqueVisWidget, url, widgetElem, tabContent){
@@ -1530,174 +1580,177 @@ $( function(){
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniqueVisWidget );
 				
-				var similarTab = $( widgetElem ).find( "#tab_Similar" );
-				similarTab.html("");
-				
-				if( data.map == null ){
-						$.PALM.callout.generate( similarTab , "warning", "No data found!!", "Insufficient Data!" );
-						return false;
-				}
-				
-				if(data.map.names.length==0){
-					$.PALM.callout.generate( similarTab , "warning", "No data found!!", "No similar "+ visType + ", not enough information available" );
-					return false;
-				}
-				else
+				if(data.oldVis=="false")
 				{
-					var similarDiv = $('<div/>')
-								.addClass("similarity")
-								.css('overflow-y','scroll')
-								
-					similarTab.append(similarDiv);
+					var similarTab = $( widgetElem ).find( "#tab_Similar" );
+					similarTab.html("");
 					
-					$(".similarity").slimscroll({
-								height: "67vh",
-						        size: "5px",
-					        	allowPageScroll: true,
-					   			touchScrollStep: 50,
-					   			//alwaysVisible: true
-					});		
+					if( data.map == null ){
+							$.PALM.callout.generate( similarTab , "warning", "No data found!!", "Insufficient Data!" );
+							return false;
+					}
 					
-					var innerDiv = $('<div/>').attr('id','sim_tab')
-					
-					similarDiv.append(innerDiv)	
-					
-					<#-- http://bl.ocks.org/kiranml1/6872226 -->
-					var grid = d3.range(15).map(function(i){
-						return {'x1':0,'y1':0,'x2':0,'y2':480};
-					});
-			
-					var tickVals = grid.map(function(d,i){
-						if(i>0){ return i*10; }
-						else if(i===0){ return "100";}
-					});
-			
-					var xscale = d3.scale.linear()
-									.domain([0,209])
-									.range([0,822]);
-			
-					var yscale = d3.scale.linear()
-									.domain([0,data.map.names.length])
-									.range([0,580]);
-			
-					var colorScale = d3.scale.linear()
-									.domain([0,data.map.names.length])
-									.range(["#cdf0fd", "#d4d4d1"]);
-			
-					var canvas = d3.select('#sim_tab')
-									.append('svg')
-									.attr({'width':700,'height':700})
-					
-					canvas.on("click", function(e) { hidemenudiv('menu'); })		
+					if(data.map.names.length==0){
+						$.PALM.callout.generate( similarTab , "warning", "No data found!!", "No similar "+ visType + ", not enough information available" );
+						return false;
+					}
+					else
+					{
+						var similarDiv = $('<div/>')
+									.addClass("similarity")
+									.css('overflow-y','scroll')
+									
+						similarTab.append(similarDiv);
+						
+						$(".similarity").slimscroll({
+									height: "67vh",
+							        size: "5px",
+						        	allowPageScroll: true,
+						   			touchScrollStep: 50,
+						   			//alwaysVisible: true
+						});		
+						
+						var innerDiv = $('<div/>').attr('id','sim_tab')
+						
+						similarDiv.append(innerDiv)	
+						
+						<#-- http://bl.ocks.org/kiranml1/6872226 -->
+						var grid = d3.range(15).map(function(i){
+							return {'x1':0,'y1':0,'x2':0,'y2':480};
+						});
 				
-					var chart = canvas.append('g')
-									//.attr("transform", "translate(150,0)")
-									.attr('id','bars')
-									.selectAll('rect')
-									.data(data.map.similarity)
+						var tickVals = grid.map(function(d,i){
+							if(i>0){ return i*10; }
+							else if(i===0){ return "100";}
+						});
+				
+						var xscale = d3.scale.linear()
+										.domain([0,209])
+										.range([0,822]);
+				
+						var yscale = d3.scale.linear()
+										.domain([0,data.map.names.length])
+										.range([0,580]);
+				
+						var colorScale = d3.scale.linear()
+										.domain([0,data.map.names.length])
+										.range(["#cdf0fd", "#d4d4d1"]);
+				
+						var canvas = d3.select('#sim_tab')
+										.append('svg')
+										.attr({'width':700,'height':700})
+						
+						canvas.on("click", function(e) { hidemenudiv('menu'); })		
+					
+						var chart = canvas.append('g')
+										//.attr("transform", "translate(150,0)")
+										.attr('id','bars')
+										.selectAll('rect')
+										.data(data.map.similarity)
+										.enter()
+										.append('rect')
+										.attr('height',20)
+										.attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+										.style('fill',function(d,i){ return colorScale(i); })
+										.attr('width',function(d){ return 0; })
+										.on("click", function(e, i){
+											
+											obj = {
+													  type:"similarBar",
+											          clientX:d3.event.clientX,
+											          clientY:d3.event.clientY,
+											          authorId:data.map.ids[i]
+											};
+											
+											showmenudiv(obj,'menu');
+											d3.event.stopPropagation();
+										})
+										.on("mouseover", function(d,i){
+											d3.select(this).style("cursor", "pointer")
+											if(objectType!="topic"){
+												obj = {
+															  type:"similarBar",
+													          clientX:d3.event.clientX,
+													          clientY:d3.event.clientY,
+													          authorId:data.map.ids[i]
+												};
+												
+												var intarr = [] 
+												intarr = Object.keys(data.map.interests[i])
+												var count = 5;
+												if(intarr.length<5)
+													count = intarr.length
+													
+												var str = "Top common interests:";
+												for(var i=0; i<count; i++)
+													str = str +  "<br /> - " + intarr[i] 
+														
+													showhoverdiv(obj,'divtoshow', str);
+											}		
+										})
+										.on("mouseout", function(e,i){
+											hidehoverdiv('divtoshow');
+										})
+			
+			
+					var transit = d3.select("svg").selectAll("rect")
+									    .data(data.map.similarity)
+									    .transition()
+									    .duration(1000) 
+									    .attr("width", function(d) {return xscale(d/2.5); });
+			
+					var transitext = d3.select('#bars')
+									.selectAll('text')
+									.data(data.map.names)
 									.enter()
-									.append('rect')
-									.attr('height',20)
-									.attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
-									.style('fill',function(d,i){ return colorScale(i); })
-									.attr('width',function(d){ return 0; })
+									.append('text')
+									.attr({'x':function(d) {return 0; },'y':function(d,i){ return yscale(i)+32; }})
+									.text(function(d,i){
+										if(objectType=="topic")
+											return data.map.names[i]
+										else
+											return data.map.names[i] + " (Common interests: " + data.map.similarity[i] + ") "; 
+									}).style({'fill':'black','font-size':'13px', 'font-weight':'bold'})
 									.on("click", function(e, i){
-										
-										obj = {
-												  type:"similarBar",
-										          clientX:d3.event.clientX,
-										          clientY:d3.event.clientY,
-										          authorId:data.map.ids[i]
-										};
-										
-										showmenudiv(obj,'menu');
-										d3.event.stopPropagation();
-									})
+											
+											obj = {
+													  type:"similarBar",
+											          clientX:d3.event.clientX,
+											          clientY:d3.event.clientY,
+											          authorId:data.map.ids[i]
+											};
+											
+											showmenudiv(obj,'menu');
+											d3.event.stopPropagation();
+										})
 									.on("mouseover", function(d,i){
-										d3.select(this).style("cursor", "pointer")
-										if(objectType!="topic"){
-											obj = {
-														  type:"similarBar",
-												          clientX:d3.event.clientX,
-												          clientY:d3.event.clientY,
-												          authorId:data.map.ids[i]
-											};
-											
-											var intarr = [] 
-											intarr = Object.keys(data.map.interests[i])
-											var count = 5;
-											if(intarr.length<5)
-												count = intarr.length
+									d3.select(this).style("cursor", "pointer")
+											if(objectType!="topic"){
+												obj = {
+															  type:"similarBar",
+													          clientX:d3.event.clientX,
+													          clientY:d3.event.clientY,
+													          authorId:data.map.ids[i]
+												};
 												
-											var str = "Top common interests:";
-											for(var i=0; i<count; i++)
-												str = str +  "<br /> - " + intarr[i] 
+												var intarr = [] 
+												intarr = Object.keys(data.map.interests[i])
+												var count = 5;
+												if(intarr.length<5)
+													count = intarr.length
 													
-												showhoverdiv(obj,'divtoshow', str);
-										}		
-									})
-									.on("mouseout", function(e,i){
-										hidehoverdiv('divtoshow');
-									})
-		
-		
-				var transit = d3.select("svg").selectAll("rect")
-								    .data(data.map.similarity)
-								    .transition()
-								    .duration(1000) 
-								    .attr("width", function(d) {return xscale(d/2.5); });
-		
-				var transitext = d3.select('#bars')
-								.selectAll('text')
-								.data(data.map.names)
-								.enter()
-								.append('text')
-								.attr({'x':function(d) {return 0; },'y':function(d,i){ return yscale(i)+32; }})
-								.text(function(d,i){
-									if(objectType=="topic")
-										return data.map.names[i]
-									else
-										return data.map.names[i] + " (Common interests: " + data.map.similarity[i] + ") "; 
-								}).style({'fill':'black','font-size':'13px', 'font-weight':'bold'})
-								.on("click", function(e, i){
-										
-										obj = {
-												  type:"similarBar",
-										          clientX:d3.event.clientX,
-										          clientY:d3.event.clientY,
-										          authorId:data.map.ids[i]
-										};
-										
-										showmenudiv(obj,'menu');
-										d3.event.stopPropagation();
-									})
-								.on("mouseover", function(d,i){
-								d3.select(this).style("cursor", "pointer")
-										if(objectType!="topic"){
-											obj = {
-														  type:"similarBar",
-												          clientX:d3.event.clientX,
-												          clientY:d3.event.clientY,
-												          authorId:data.map.ids[i]
-											};
-											
-											var intarr = [] 
-											intarr = Object.keys(data.map.interests[i])
-											var count = 5;
-											if(intarr.length<5)
-												count = intarr.length
-												
-											var str = "Top common interests:";
-											for(var i=0; i<count; i++)
-												str = str +  "<br /> - " + intarr[i] 
-													
-												showhoverdiv(obj,'divtoshow', str);
-										}
-									})
-									.on("mouseout", function(e,i){
-										hidehoverdiv('divtoshow');
-									})
-				}		
+												var str = "Top common interests:";
+												for(var i=0; i<count; i++)
+													str = str +  "<br /> - " + intarr[i] 
+														
+													showhoverdiv(obj,'divtoshow', str);
+											}
+										})
+										.on("mouseout", function(e,i){
+											hidehoverdiv('divtoshow');
+										})
+					}
+				}			
 			});
 		}
 		
