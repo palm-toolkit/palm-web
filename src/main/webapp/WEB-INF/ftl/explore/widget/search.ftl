@@ -1,664 +1,389 @@
 <@security.authorize access="isAuthenticated()">
 	<#assign loggedUser = securityService.getUser() >
 </@security.authorize>
-<div id="boxbody-${wUniqueName}" class="box-body no-padding" >
-  	<div class="box-tools">
-  	<div>
-	    <div class="drop-down">
-	    	<select id="select-drop-down" class="form-control selectpicker" >
-			  <option value="researchers" selected>RESEARCHERS</option>
-			  <option value="conferences">CONFERENCES</option>
-			  <option value="publications">PUBLICATIONS</option>
-			  <option value="topics">TOPICS</option>
-			  <option value="circles">CIRCLES</option>
-			</select>
-	    </div>
-	    
-	    <div class="input-group width100p">
-	      <input type="text" id="search_field" class="form-control input-sm pull-right" placeholder="Click to add text">
-	      <div id="search_button" class="input-group-btn">
-	        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
-	      </div>
-	    </div>
-	   </div> 
-  	</div>
+<div id="boxbody-${wUniqueName}" class="box-body no-padding wsetup">
 
-	<div class="content-list">
-    </div>
-</div>
-<div class="box-footer no-padding">
-	<div class="col-xs-12  no-padding alignCenter">
-		<div class="paging_simple_numbers">
-			<ul id="researcherPaging" class="pagination marginBottom0">
-				<li class="paginate_button disabled toFirst"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
-				<li class="paginate_button disabled toPrev"><a href="#"><i class="fa fa-caret-left"></i></a></li>
-				<li class="paginate_button toCurrent"><span style="padding:3px">Page <select class="page-number" type="text" style="width:50px;padding:2px 0;" ></select> of <span class="total-page">0</span></span></li>
-				<li class="paginate_button toNext"><a href="#"><i class="fa fa-caret-right"></i></a></li>
-				<li class="paginate_button toEnd"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
-			</ul>
-		</div>
-		<#--<span class="paging-info">Displaying records 0 - 0 of 0</span>-->
+	<div id="introduction-title">
+	<div class="fleft width30p"><img style="height:50px" class="site-logo" src="http://haiti.informatik.rwth-aachen.de/lufgi9/wp-content/uploads/2015/04/cropped-RZ_i9_RGB12.png" alt="i9 – Learning Technologies Research Group"></div><div class="fright width70p font35"><strong>PALM</strong> - Visual Analytics Explorer</div>
+	</div>
+
+  	<div id="search-widget" class="nav-tabs-custom display-none">
+  		<div id="search_words" class="fleft width50p" >
+	  		<div class="type_search_words">
+	  		</div>
+	  		<div class="scroll-search-words">
+	  		</div>
+	  	</div>
+  		<div class="vis_options">
+  		</div>
 	</div>
 </div>
 
 <script>
 	$( function(){
 		
-			data = new Object();
-			<#-- add slim scroll -->
-	      $(".content-list").slimscroll({
-				height: "100%",
+		<#-- add slim scroll -->
+	      $(".scroll-search-words").slimscroll({
+				height: "100px",
 		        size: "5px",
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50
 		  });
-		  
-		  var targetContainer = $(".content-list" );
-		  <#-- pagging next -->
-				$( "li.toNext" ).click( function(){
-					if( !$( this ).hasClass( "disabled" ) )
-						itemSearch( $( "#search_field" ).val().trim() , "next", data, targetContainer);
-				});
-				
-				<#-- pagging prev -->
-				$( "li.toPrev" ).click( function(){
-					if( !$( this ).hasClass( "disabled" ) )
-						itemSearch( $( "#search_field" ).val().trim() , "prev", data, targetContainer);
-				});
-				
-				<#-- pagging to first -->
-				$( "li.toFirst" ).click( function(){
-					if( !$( this ).hasClass( "disabled" ) )
-						itemSearch( $( "#search_field" ).val().trim() , "first", data, targetContainer);
-				});
-				
-				<#-- pagging to end -->
-				$( "li.toEnd" ).click( function(){
-					if( !$( this ).hasClass( "disabled" ) )
-						itemSearch( $( "#search_field" ).val().trim() , "end", data, targetContainer);
-				});
-				
-				<#-- jump to specific page -->
-				$( "select.page-number" ).change( function(){
-					itemSearch( $( "#search_field" ).val() , $( this ).val(), data, targetContainer);
-				});
-				
-			
-				<#-- search icon presed -->
-				$( "#search_button" ).click( function(){
-					//searchText = $( "#search_field" ).val();
-					itemSearch( $( "#search_field" ).val() , "first", data, targetContainer);
-				});
-				
-				$( "#search_field" )
-	    			.on( "keypress", function(e) {
-			  			if ( e.keyCode == 13)
-			  			{
-			    			itemSearch( $( "#search_field" ).val() , "first", data, targetContainer);
-			    		}	
-					})
-				
 		
-		<#-- event for searching researcher -->
-		var searchText = $( "#search_field" ).val();
-		var popUp = 0;
-		var itemType = "researchers";
-		var url = "searchResearchers";
+		var names = [];
+		var ids = [];
+		var type = "";
+		var researcherBorderProp = "";
+		var conferenceBorderProp = "";
+		var publicationBorderProp = "";
+		var topicBorderProp = "";
+		var circleBorderProp = "";
+		var resetFlag = "1";
+		var currentVisType = "";
+		var count= 1;
 		<#-- generate unique id for progress log -->
-		var uniqueSearchWidget = $.PALM.utility.generateUniqueId();
-		
+		var uniquePidTopicWidget = $.PALM.utility.generateUniqueId();
 		var options ={
-			source : "<@spring.url '/explore/' />"+url,
+			source : "<@spring.url '/explore/setupStage' />",
 			query: "",
 			queryString : "",
 			page:0,
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
-			
-			// remove header from sidebar
-			var elements = document.getElementsByClassName("box-header");
-		    elements[0].remove();
-		    $('.box-footer').css("margin-top","8px")
-			
 				<#-- show pop up progress log -->
-				$.PALM.popUpMessage.create( "Loading "+itemType+" ..", { uniqueId:uniqueSearchWidget, popUpHeight:40, directlyRemove:false , polling:false});
-			},
-
+						},
 			onRefreshDone: function(  widgetElem , data ){
+				if(data.type != "name"){
+					var introduction_title = document.getElementById("introduction-title")
+					var search_widget = document.getElementById("search-widget")
+					introduction_title.style.display="none";
+					search_widget.style.display="block";
+				}
+				var id = data.id;
+				var wordsContainer = $( widgetElem ).find( ".scroll-search-words" );
+				wordsContainer.css("padding-left","5px")
+					.css("padding-bottom","5px")
+					.css("padding-top","5px")
+				visOptionsContainer = $( widgetElem ).find( ".vis_options" );
+				visOptionsContainer.html( "" );
+		
+				for(var i=0;i<data.name.length;i++){
 				
-				targetContainer.html( "" );
-				//$( "#search_field" ).val("");
-			
-				getData(data, targetContainer, widgetElem);
+							<#-- TO-DO Add css part to palm.css -->
+							nameDiv = $( '<span/>' )
+							.attr("id",data.id[i])
+							.addClass( 'name capitalize search-item' )
+							.html("  "+data.name[i]+ " X ")
+							<#-- click to delete item from search widget -->
+							.on( "click", function(e){
+								this.remove();
+								var i = ids.indexOf(e.delegateTarget.id);
+								names.splice(i, 1);
+								ids.splice(i,1);
+								updateVisDelete( "true", type);
+								if(names.length == 0){
+									wordsContainer.html("");
+									visOptionsContainer.html( "" );
+								}
+							});
 				
-				<#-- drop down change event-->
-				dropDown = $( widgetElem ).find( "#select-drop-down" );
-				var sel = document.getElementById('select-drop-down');
-   				sel.onchange = function() {
-      				itemType = dropDown.val();
+				if(data.replace && i==0){
+					type = data.type;
+							names = [];
+							ids = [];
+							wordsContainer.html( "" );
+							resetFlag = "1";
+							names.push(data.name[i]);
+							ids.push(data.id[i]);
+							
+							if(data.name[i]!=""){
+							wordsContainer
+								.append(nameDiv)
+						
+								if(resetFlag=="1" || currentVisType=="" || type!=data.type){
+									if(type == "researcher"){
+										setBoxes(id, type, "researchers")
+									}
+									if(type == "publication"){
+										setBoxes(id, type, "conferences")
+									}
+									if(type == "conference"){
+										setBoxes(id, type, "publications")
+									}
+									if(type == "topic"){
+										setBoxes(id, type, "publications")
+									}
+									if(type == "circle"){
+										setBoxes(id, type, "researchers")
+									}
+								}
+							}
+							
+					if(i == data.name.length-1)		
+						callRefresh(id,type)
+				}
+				else{
+				<#-- update list of items chosen from search widget -->
+				if(names.indexOf(data.name[i])== -1 ){	
+					if(type!=""){
+						if(type!=data.type){
+							type = data.type;
+							names = [];
+							ids = [];
+							wordsContainer.html( "" );
+							resetFlag = "1";
+						}
+					}
+					else{
+						type = data.type;
+						resetFlag = "0";
+					}
 					
-   					getURL(itemType);
-	   				$( "#search_field" ).val("");
-   					targetContainer.html( "" );
-   					//getData(data, targetContainer, widgetElem);
-   					var obj = $.PALM.boxWidget.getByUniqueName( 'explore_search' ); 
-					obj.options.source = "<@spring.url '/explore/' />"+ url
-   					$.PALM.boxWidget.refresh( obj.element , obj.options );
-				}	
+					names.push(data.name[i]);
+					ids.push(data.id[i]);
+
+							if(data.name[i]!=""){
+								wordsContainer
+								.append(nameDiv)
+
+								if(resetFlag=="1" || currentVisType=="" || type!=data.type){
+									if(type == "researcher"){
+										setBoxes(id, type, "researchers")
+									}
+									if(type == "publication"){
+										setBoxes(id, type, "conferences")
+									}
+									if(type == "conference"){
+										setBoxes(id, type, "publications")
+									}
+									if(type == "topic"){
+										setBoxes(id, type, "publications")
+									}
+									if(type == "circle"){
+										setBoxes(id, type, "researchers")
+									}
+								}
+							}
+							if(i == data.name.length-1)		
+								callRefresh(id,type)
+						}	
+					}
+				}		
+			setBoxes(id, type, currentVisType);
+		}
+	};
+	
+		function callRefresh(id,type){
+							if(type == "researcher"){
+								refreshVisFilter(id, type,  "researchers");
+							}
+							if(type == "publication"){
+								refreshVisFilter(id, type, "conferences");
+							}
+							if(type == "conference"){
+								refreshVisFilter(id, type, "publications");
+							}
+							if(type == "topic"){
+								refreshVisFilter(id, type,  "publications");
+							}
+							if(type == "circle"){
+								refreshVisFilter(id, type,  "researchers");
+							}
+		}
+		
+		function updateVisDelete( deleteFlag, type){
+			dataTransfer = "true";
+			checkedPubValues=[];
+			checkedConfValues=[];
+			checkedTopValues=[];
+			checkedCirValues=[];
+		
+			var queryString = "?deleteFlag="+deleteFlag+"&type="+type+"&dataList="+names+"&idList="+ids+"&dataTransfer="+dataTransfer;
+			
+			<#-- update visualize widget -->
+			var visualizeWidget = $.PALM.boxWidget.getByUniqueName( 'explore_visualize' ); 
+			visualizeWidget.options.queryString = queryString+"&checkedPubValues="+checkedPubValues+"&checkedConfValues="+checkedConfValues+"&checkedTopValues="+checkedTopValues+"&checkedCirValues="+checkedCirValues;
+			$.PALM.boxWidget.refresh( visualizeWidget.element , visualizeWidget.options );
+			
+			<#-- update filter widget -->
+			var filterWidget = $.PALM.boxWidget.getByUniqueName( 'explore_filter' ); 
+			filterWidget.options.queryString = queryString;
+			$.PALM.boxWidget.refresh( filterWidget.element , filterWidget.options );
+			
+		}
+		
+		function refreshVisFilter(id, type, visType){
+			dataTransfer = "true";
+			checkedPubValues=[];
+			checkedConfValues=[];
+			checkedTopValues=[];
+			checkedCirValues=[];
+			var updateString = "?id="+id+"&type="+type+"&dataList="+names+"&idList="+ids+"&visType="+currentVisType+"&dataTransfer="+dataTransfer;
+					
+			<#-- update visualize widget -->
+			var visualizeWidget = $.PALM.boxWidget.getByUniqueName( 'explore_visualize' ); 
+			visualizeWidget.options.queryString = updateString+"&checkedPubValues="+checkedPubValues+"&checkedConfValues="+checkedConfValues+"&checkedTopValues="+checkedTopValues+"&checkedCirValues="+checkedCirValues;
+			$.PALM.boxWidget.refresh( visualizeWidget.element , visualizeWidget.options );
+			
+			<#-- update filter widget -->
+			var filterWidget = $.PALM.boxWidget.getByUniqueName( 'explore_filter' ); 
+			filterWidget.options.queryString = updateString;
+			$.PALM.boxWidget.refresh( filterWidget.element , filterWidget.options );
+		}
+		
+		function setBoxes(id, type, typeOfBox){
+			visOptionsContainer.html("");
+			currentVisType = typeOfBox;
+			resetFlag = "0";
+			var borderProp = "5px ridge #000000 ";
+			<#-- change focus between search options -->
+			if(typeOfBox == "researchers"){
+				researcherBorderProp = borderProp;
+				conferenceBorderProp = "none";
+				publicationBorderProp = "none";
+				topicBorderProp = "none";
+				circleBorderProp = "none";
 			}
-		};	
-		
-		function getURL(itemType){
-					if(itemType == "researchers"){
-	   					url = "searchResearchers";
-	   				}
-	   				if(itemType == "conferences"){
-	   					url = "searchConferences";
-	   				}
-	   				if(itemType == "publications"){
-	   					url = "searchPublications";
-	   				}
-	   				if(itemType == "topics"){
-	   					url = "searchTopics";
-	   				}
-	   				if(itemType == "circles"){
-	   					url = "searchCircles";
-	   				}
-		}
-		
-		function getData(data, targetContainer, widgetElem){
-			<#-- Content List -->
-					<#-- remove  pop up progress log -->
-					$.PALM.popUpMessage.remove( uniqueSearchWidget );
-					//popUp = 0;
-				
-   				   	if(itemType == "researchers"){
-   						
-							if( data.count == 0 ){
-								if( typeof data.query === "undefined" || data.query == "" )
-									$.PALM.callout.generate( targetContainer , "normal", "Currently no researchers found on PALM database" );
-								else
-									$.PALM.callout.generate( targetContainer , "warning", "Empty search results!", "No researchers found with query \"" + data.query + "\"" );
-								return false;
-							}
-							
-							if( data.count > 0 ){
-
-								<#-- build the researcher list -->
-								$.each( data.researchers, function( index, item){
-								
-									var researcherDiv = 
-									$( '<div/>' )
-										.addClass( 'explore' )
-										.attr({ 'id' : item.id });
-										
-									var researcherNav =
-									$( '<div/>' )
-										.addClass( 'nav' );
-										
-									var researcherDetail =
-									$( '<div/>' )
-										.addClass( 'detail' )
-										.append(
-											$( '<div/>' )
-												.addClass( 'name' )
-												.html( item.name )
-										);
-										
-									researcherDiv
-										.append(
-											researcherNav
-										).append(
-											researcherDetail
-										);
-										
-									if( !item.isAdded ){
-										researcherDiv.css("display","none");
-										data.count--;
-									}
-									
-									if( typeof item.aff != 'undefined')
-										researcherDetail.append(
-											$( '<div/>' )
-											.addClass( 'affiliation' )
-											.append('&nbsp;')	
-											.append('&nbsp;')	
-											.append( 
-												$( '<i/>' )
-												.addClass( 'fa fa-institution icon font-xs' )
-											.append('&nbsp;')	
-											).append( 
-												$( '<span/>' )
-												.addClass( 'info font-xs' )
-												.html( item.aff )
-											)
-										);
-
-									researcherDetail
-										.on("mouseover", gray);
-									researcherDetail
-										.on("mouseout", black);
-
-									<#-- add click event -->
-									researcherDetail
-										.on( "click", function(){
-												$( this ).parent().context.style.color="black";
-												itemSelection(item.id, "researcher");
-										} );
-									
-									targetContainer
-										.append( 
-											researcherDiv
-										)
-										.css({ "cursor":"pointer"});
-									
-								});
-								setFooter(data, widgetElem);								
-							}	
-						}	//if			
-						
-						
-					if(itemType == "conferences"){
-   						
-							if( data.count == 0 ){
-								if( typeof data.query === "undefined" || data.query == "" )
-									$.PALM.callout.generate( targetContainer , "normal", "Currently no conferences/journals found on PALM database" );
-								else
-									$.PALM.callout.generate( targetContainer , "warning", "Empty search results!", "No conferences/journals found with query \"" + data.query + "\"" );
-								//return false;
-							}
-							
-							if( data.count > 0 ){
-							
-								// build the conference list
-								$.each( data.eventGroups, function( index, itemEvent ){
-									var eventItem = 
-										$('<div/>')
-										.addClass( "explore" )
-										.attr({ "data-id": itemEvent.id });
-										
-									<#-- hide unevaluated event -->
-									if( !itemEvent.isAdded ){
-										eventItem.css("display","none");
-										data.count--;
-									}
-										
-									<#-- event group -->
-									var eventGroup = $( '<div/>' )
-										.attr({'class':'eventgroup'})
-										.attr({ "data-id": itemEvent.id });
-										
-									<#-- put event group into event item -->
-									eventItem.append( eventGroup );
-										
-									<#-- event menu -->
-									var eventNav = $( '<div/>' )
-										.attr({'class':'nav'});
-									
-									<#-- append to event group -->
-									eventGroup.append( eventNav );
-									
-									<#-- event detail -->
-									var eventDetail = $('<div/>')
-										.addClass( "detail" );
-									
-									<#-- append to event group -->
-									eventGroup.append( eventDetail );
-						
-									<#-- event icon -->
-									var conferenceType="fa fa-file-text-o";
-									var eventIcon = $('<div/>').css("width","4%").css("float","left").append($('<i/>'));
-									if( typeof itemEvent.type !== "undefined" ){
-										if( itemEvent.type == "conference" )
-											conferenceType = "fa fa-file-text-o";
-										else if( itemEvent.type == "journal" )
-											conferenceType = "fa fa-files-o";
-										else if( itemEvent.type == "book" )
-											conferenceType = "fa fa-book";
-									}else{
-										conferenceType = "fa fa-question";
-									}
-									
-
-									<#-- title -->
-
-									if( typeof itemEvent.type != 'undefined')
-										eventDetail.append(
-											$( '<div/>' )
-											.addClass( 'affiliation' )
-											.append('&nbsp;')
-											.append( 
-												$( '<i/>' )
-												.addClass( conferenceType )
-													.append('&nbsp;')
-											).append( 
-												$( '<span/>' )
-												.addClass( 'info font-xs' )
-												.html( typeof itemEvent.abbr != "undefined" ? itemEvent.name  +" (" + itemEvent.abbr + ")" : itemEvent.name )											
-											)
-										);
-									
-									
-									<#-- append detail -->
-									//eventDetail.append( eventIcon ).append('&nbsp;').append( eventName );
-
-									eventDetail
-										.on("mouseover", gray);
-									eventDetail
-										.on("mouseout", black);
-
-									<#-- add click event -->
-									eventDetail.on( "click", function( e){
-										$( this ).parent().context.style.color="black";
-										itemSelection(itemEvent.id, "conference");
-									});
-									
-									targetContainer
-									.append( eventItem )
-									.css({ "cursor":"pointer"});
-									
-																	
-								});
-								
-								setFooter(data, widgetElem);
-							}	
-						}	//if	
-						
-						if(itemType == "publications"){
-   						
-	   						if( data.count == 0 ){
-								if( typeof data.query === "undefined" || data.query == "" )
-									$.PALM.callout.generate( targetContainer , "normal", "Currently no publications found on PALM database" );
-								else
-									$.PALM.callout.generate( targetContainer , "warning", "Empty search results!", "No publications found with query \"" + data.query + "\"" );
-								return false;
-							}
-							
-							if( data.count > 0 ){
-							
-								<#-- build the publication table -->
-								$.each( data.publications, function( index, itemPublication ){
-									var publicationItem = 
-										$('<div/>')
-										.addClass( "explore" )
-										.attr({ "data-id": itemPublication.id });
-										
-									<#-- event menu -->
-									var publicationNav = $( '<div/>' )
-										.attr({'class':'nav'});
-									
-									<#-- append to event group -->
-									publicationItem.append( publicationNav );
-									
-									<#-- event detail -->
-									var publicationDetail = $('<div/>')
-										.addClass( "detail" );
-									
-									<#-- append to event group -->
-									publicationItem.append( publicationDetail );
-						
-									<#-- event icon -->
-									var publicationType="fa fa-file-text-o";
-									var eventIcon = $('<div/>').css("width","4%").css("float","left").append($('<i/>'));
-									if( typeof itemPublication.type !== "undefined" ){
-										if( itemPublication.type == "Conference" )
-											publicationType = "fa fa-file-text-o";
-										else if( itemPublication.type == "Journal" )
-											publicationType = "fa fa-files-o";
-										else if( itemPublication.type == "Book" )
-											publicationType = "fa fa-book";
-										else
-											publicationType = "fa fa-file-text-o";	
-									}else{
-										publicationType = "fa fa-question";
-									}
-									
-
-									<#-- title -->
-
-									if( typeof itemPublication.type != 'undefined')
-										publicationDetail.append(
-											$( '<div/>' )
-											.addClass( 'affiliation' )
-											.append('&nbsp;')
-											.append( 
-												$( '<i/>' )
-												.addClass( publicationType )
-													.append('&nbsp;')
-											).append( 
-												$( '<span/>' )
-												.addClass( 'info font-xs' )
-												.html( itemPublication.title )											
-											)
-										);
-									
-								publicationDetail
-										.on("mouseover", gray);
-									publicationDetail
-										.on("mouseout", black);
-									
-									<#-- add click event -->
-									publicationDetail.on( "click", function( e){
-										$( this ).parent().context.style.color="black";
-										itemSelection(itemPublication.id, "publication");
-									});
-									targetContainer
-									.append( publicationItem )
-									.css({ "cursor":"pointer"});
-								});
-								setFooter(data, widgetElem);
-							}
-						}	//if
-						
-						if(itemType == "topics"){
-   						
-							if( data.count == 0 ){
-								if( typeof data.query === "undefined" || data.query == "" )
-									$.PALM.callout.generate( targetContainer , "normal", "Currently no topics found on PALM database" );
-								else
-									$.PALM.callout.generate( targetContainer , "warning", "Empty search results!", "No topics found with query \"" + data.query + "\"" );
-								//return false;
-							}
-							
-							if( data.count > 0 ){
-							
-								// build the topics list
-								var sortedList = data.topicsList.sort();
-								$.each( sortedList, function( index, item ){
-									var topicItem = 
-										$('<div/>')
-										.addClass( "explore" )
-										.attr({ "data-id": item.id });
-										
-									<#-- topic detail -->
-									var topicDetail = $('<div/>')
-										.addClass( 'name capitalize' )
-										.append(
-											$( '<div/>' )
-											.append('&nbsp;')
-											.append( 
-												$( '<i/>' )
-												.addClass( "fa fa-comments-o" )
-													.append('&nbsp;')
-											).append( 
-												$( '<span/>' )
-												.addClass( 'info font-xs' )
-												.html( item.name )											
-											)
-										);
-										
-									
-									<#-- append to event group -->
-									topicItem.append( topicDetail );
-						
-									topicDetail
-										.on("mouseover", gray);
-									topicDetail
-										.on("mouseout", black);
-
-									<#-- add click event -->
-									topicDetail.on( "click", function( e){
-										$( this ).parent().context.style.color="black";
-										itemSelection(item.id, "topic");
-									});
-									
-									targetContainer
-									.append( topicItem )
-									.css({ "cursor":"pointer"});
-																	
-								});
-								
-								setFooter(data, widgetElem);
-							}	
-						}
-						
-						if(itemType == "circles"){
-	   						if( data.count == 0 ){
-								if( typeof data.query === "undefined" || data.query == "" )
-									$.PALM.callout.generate( targetContainer , "normal", "Currently no circles found on PALM database" );
-								else
-									$.PALM.callout.generate( targetContainer , "warning", "Empty search results!", "No circles found with query \"" + data.query + "\"" );
-								return false;
-							}
-							
-							if( data.count > 0 ){
-							
-								<#-- build the publication table -->
-								$.each( data.circles, function( index, itemCircle ){
-									var circleItem = 
-										$('<div/>')
-										.addClass( "explore" )
-										.attr({ "data-id": itemCircle.id });
-										
-									<#-- event menu -->
-									var circleNav = $( '<div/>' )
-										.attr({'class':'nav'});
-									
-									<#-- append to event group -->
-									circleItem.append( circleNav );
-									
-									<#-- event detail -->
-									var circleDetail = $('<div/>')
-										.addClass( "detail" );
-									
-									<#-- append to event group -->
-									circleItem.append( circleDetail );
-						
-									<#-- title -->
-										circleDetail.append(
-											$( '<div/>' )
-											.addClass( 'affiliation' )
-											.append('&nbsp;')
-											.append( 
-												$( '<i/>' )
-												.addClass( "fa fa-circle-o" )
-													.append('&nbsp;')
-											).append( 
-												$( '<span/>' )
-												.addClass( 'info font-xs' )
-												.html( itemCircle.name )											
-											)
-										);
-									
-								circleDetail
-										.on("mouseover", gray);
-									circleDetail
-										.on("mouseout", black);
-									
-									<#-- add click event -->
-									circleDetail.on( "click", function( e){
-										$( this ).parent().context.style.color="black";
-										itemSelection(itemCircle.id, "circle");
-									});
-									
-									targetContainer
-									.append( circleItem )
-									.css({ "cursor":"pointer"});
-								});
-								setFooter(data, widgetElem);
-							}
-						}
-		}
-		
-		function itemSearch( query , jumpTo, data, targetContainer)
-		{
-			<#-- update setup widget -->
-			var obj = $.PALM.boxWidget.getByUniqueName( 'explore_search' ); 
+			if(typeOfBox == "conferences"){
+				researcherBorderProp = "none";
+				conferenceBorderProp = borderProp;
+				publicationBorderProp = "none";
+				topicBorderProp = "none";
+				circleBorderProp = "none";
+			}
+			if(typeOfBox == "publications"){
+				researcherBorderProp = "none";
+				conferenceBorderProp = "none";
+				publicationBorderProp = borderProp;
+				topicBorderProp = "none";
+				circleBorderProp = "none";
+			}
+			if(typeOfBox == "topics"){
+				researcherBorderProp = "none";
+				conferenceBorderProp = "none";
+				publicationBorderProp = "none";
+				topicBorderProp = borderProp;
+				circleBorderProp = "none";
+			}
+			if(typeOfBox == "circles"){
+				researcherBorderProp = "none";
+				conferenceBorderProp = "none";
+				publicationBorderProp = "none";
+				topicBorderProp = "none";
+				circleBorderProp = borderProp;
+			}
 			
-		
-				var maxPage = parseInt($( obj.element ).find( "span.total-page" ).html()) - 1;
-				
-				if( jumpTo === "next")
-					obj.options.page = obj.options.page + 1;
-				else if( jumpTo === "prev")
-					obj.options.page = obj.options.page - 1;
-				else if( jumpTo === "first")
-					obj.options.page = 0;
-				else if( jumpTo === "end")
-					obj.options.page = maxPage;
-				else
-					obj.options.page = parseInt( jumpTo ) - 1;
+		<#-- dynamic widgets depending on type of search object -->
+				if(type == "researcher" || type == "publication" || type == "conference" || type == "topic" || type == "circle"){
 					
-				$( obj.element ).find( ".paginate_button" ).each(function(){
-					$( this ).removeClass( "disabled" );
-				});
-								
-				if( obj.options.page === 0 ){
-					$( obj.element ).find( "li.toFirst" ).addClass( "disabled" );
-					$( obj.element ).find( "li.toPrev" ).addClass( "disabled" );
-				} else if( obj.options.page > maxPage - 1){
-					$( obj.element ).find( "li.toNext" ).addClass( "disabled" );
-					$( obj.element ).find( "li.toEnd" ).addClass( "disabled" );
+					var specTitle = "Co-Authors";
+					if(type!="researcher"){
+						specTitle = "Researchers"
+					}
+					visOptionsContainer.append(
+									$('<div/>')
+									.addClass('info-box box-home-explore bg-red')
+									.append(
+										$('<i/>')
+										.addClass('fa fa-users fa-lg'))
+										.css("text-align","center")
+									.append(
+										$('<div/>')
+										.addClass('info-box-content info-box-home-text')
+										.append(
+											$('<span/>')
+											.addClass('info-box-number fontsize24')
+										)
+									)		
+									.append($('<h5/>').css("text-align","center").html("Researchers"))
+									.css("border" , researcherBorderProp)
+									.css({ "cursor":"pointer"})
+									.on( "click", function( e){
+										setBoxes(id, type, "researchers")
+										refreshVisFilter(id, type,  "researchers");
+									})
+								)
 				}
 				
-				getURL(itemType);
-				if( jumpTo === "first") // if new searching performed
-					obj.options.source = "<@spring.url '/explore/' />"+ url + "?query=" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
-				else
-					obj.options.source = "<@spring.url '/explore/' />"+ url + "?query=" + query + "&page=" + obj.options.page + "&maxresult=" + obj.options.maxresult;
-	
-				targetContainer.html( "" );
-				$.PALM.boxWidget.refresh( obj.element , obj.options );
-	}
-	
-	function itemSelection(id, type){
-		var queryString = "?id="+id+"&type="+type;
+				if(type == "researcher" || type == "publication" || type == "conference" || type == "topic" || type == "circle"){
+					visOptionsContainer.append(
+									$('<div/>')
+									.addClass('info-box box-home-explore bg-yellow')
+									.append(
+										$('<i/>')
+										.addClass('fa fa-globe fa-lg'))
+										.css("text-align","center")
+									.append(
+										$('<div/>')
+										.addClass('info-box-content info-box-home-text')
+										.append(
+											$('<span/>')
+											.addClass('info-box-number fontsize24')
+										)
+									)		
+									.append($('<h5/>').css("text-align","center").html("Conferences"))
+									.css("border" , conferenceBorderProp)
+									.css({ "cursor":"pointer"})
+									.on( "click", function( e){
+										setBoxes(id, type, "conferences")
+										refreshVisFilter(id, type,  "conferences");
+									})
+								)
+				}
+				
+				if(type == "researcher" || type == "publication" || type == "conference" || type == "topic" || type == "circle"){
+					visOptionsContainer.append(
+									$('<div/>')
+									.addClass('info-box box-home-explore bg-green')
+									.append(
+										$('<i/>')
+										.addClass('fa fa-file-text-o fa-lg'))
+										.css("text-align","center")
+									.append(
+										$('<div/>')
+										.addClass('info-box-content info-box-home-text')
+										.append(
+											$('<span/>')
+											.addClass('info-box-number fontsize24')
+										)
+									)		
+									.append($('<h5/>').css("text-align","center").html("Publications"))
+									.css("border" , publicationBorderProp)
+									.css({ "cursor":"pointer"})
+									.on( "click", function( e){
+										setBoxes(id, type, "publications")
+										refreshVisFilter(id, type,  "publications");
+									})
+								)
+				}
+
+				if(type == "researcher" || type == "publication" || type == "conference" || type == "topic" || type == "circle"){
+					visOptionsContainer.append(
+									$('<div/>')
+									.addClass('info-box box-home-explore bg-blue')
+									.append(
+										$('<i/>')
+										.addClass('fa fa-comments-o fa-lg'))
+										.css("text-align","center")
+									.append(
+										$('<div/>')
+										.addClass('info-box-content info-box-home-text')
+										.append(
+											$('<span/>')
+											.addClass('info-box-number fontsize24')
+										)
+									)		
+									.append($('<h5/>').css("text-align","center").html("Topics"))
+									.css("border" , topicBorderProp)
+									.css({ "cursor":"pointer"})
+									.on( "click", function( e){
+										setBoxes(id, type, "topics")
+										refreshVisFilter(id, type,  "topics");
+									})
+								)
+				}
+		}
 		
-		<#-- update setup widget -->
-		var stageWidget = $.PALM.boxWidget.getByUniqueName( 'explore_setup' ); 
-		stageWidget.options.queryString = queryString;
-		$.PALM.boxWidget.refresh( stageWidget.element , stageWidget.options );
-	}
-	
-	
-	function setFooter(data, widgetElem){
-		var maxPage = Math.ceil(data.totalCount/data.maxresult);
-		var $pageDropdown = $( widgetElem ).find( "select.page-number" );
-		$pageDropdown.html( "" );
-		<#-- set dropdown page -->
-		for( var i=1;i<=maxPage;i++){
-			$pageDropdown.append("<option value='" + i + "'>" + i + "</option>");
-		}
-		<#--// set page number-->
-		$pageDropdown.val( data.page + 1 );
-		$( widgetElem ).find( "span.total-page" ).html( maxPage );
-		var endRecord = (data.page + 1) * data.maxresult;
-		if( data.page == maxPage - 1 ) 
-		endRecord = data.totalCount;
-	
-		if( maxPage == 1 ){
-			$( widgetElem ).find( "li.toNext" ).addClass( "disabled" );
-			$( widgetElem ).find( "li.toEnd" ).addClass( "disabled" );
-		}
-	}
-	
-	function gray(){
-			$( this ).parent().context.style.color="gray";
-	}
-	
-	function black(){
-			$( this ).parent().context.style.color="black";
-	}
 	
 		<#--// register the widget-->
 		$.PALM.options.registeredWidget.push({

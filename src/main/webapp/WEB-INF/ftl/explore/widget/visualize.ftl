@@ -2622,20 +2622,20 @@ $( function(){
 	function itemAdd(id, type){
 		var queryString = "?id="+id+"&type="+type;
 		
-		<#-- update setup widget -->
-		var stageWidget = $.PALM.boxWidget.getByUniqueName( 'explore_setup' ); 
-		stageWidget.options.queryString = queryString;
-		$.PALM.boxWidget.refresh( stageWidget.element , stageWidget.options );
+		<#-- update search widget -->
+		var searchWidget = $.PALM.boxWidget.getByUniqueName( 'explore_search' ); 
+		searchWidget.options.queryString = queryString;
+		$.PALM.boxWidget.refresh( searchWidget.element , searchWidget.options );
 	}
 	
 	function itemReplace(id, type){
 		var replace = true;
 		var queryString = "?id="+id+"&type="+type+"&replace="+replace;
 		
-		<#-- update setup widget -->
-		var stageWidget = $.PALM.boxWidget.getByUniqueName( 'explore_setup' ); 
-		stageWidget.options.queryString = queryString;
-		$.PALM.boxWidget.refresh( stageWidget.element , stageWidget.options );
+		<#-- update search widget -->
+		var searchWidget = $.PALM.boxWidget.getByUniqueName( 'explore_search' ); 
+		searchWidget.options.queryString = queryString;
+		$.PALM.boxWidget.refresh( searchWidget.element , searchWidget.options );
 	}
 	
 	function itemCoAuthors(id, type){
