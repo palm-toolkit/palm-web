@@ -25,7 +25,7 @@
 <div class="menu" id="menu">
  <ul>
  <a id="append" href="#"><li>Add to Search</li></a>
- <a id="replace" href="#"><li>Search only for</li></a>
+ <a id="replace" href="#"><li>Search for</li></a>
  <a id="coauthors" href="#"><li>Add Co-Authors</li></a>
  </ul>
 </div>

@@ -142,7 +142,7 @@
 	   				$( "#search_field" ).val("");
    					targetContainer.html( "" );
    					//getData(data, targetContainer, widgetElem);
-   					var obj = $.PALM.boxWidget.getByUniqueName( 'explore_search' ); 
+   					var obj = $.PALM.boxWidget.getByUniqueName( 'explore_sidebar' ); 
 					obj.options.source = "<@spring.url '/explore/' />"+ url
    					$.PALM.boxWidget.refresh( obj.element , obj.options );
 				}	
