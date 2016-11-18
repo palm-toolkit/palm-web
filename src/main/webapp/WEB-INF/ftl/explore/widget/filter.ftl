@@ -183,7 +183,7 @@
 						filterList = ["Time", "Conferences"];
 					}
 					if(visType=="topics"){
-						filterList = ["Time"];
+						filterList = ["Time", "Conferences"];
 					}
 				}
 				if(objectType=="circle")

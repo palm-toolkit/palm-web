@@ -146,7 +146,7 @@ $( function(){
 					}
 					if(objectType=="topic")
 					{
-						visList = ["Similar", "Evolution", "List"];
+						visList = ["Similar", "Evolution"];
 					}
 				}
 			}
@@ -185,7 +185,7 @@ $( function(){
 					}
 					if(objectType=="topic")
 					{
-						visList = ["Similar", "Evolution", "List"];
+						visList = ["Similar", "Evolution"];
 					}
 				}
 			}	
@@ -1108,7 +1108,7 @@ $( function(){
 									if(objectType=="researcher")
 									{
 										text = " <b> " + item.name + " </b> "  ;
-										if(data.idsList.length > 1 && yearFilterPresent=="false")
+										if(data.idsList.length > 1 )//&& yearFilterPresent=="false")
 										{
 											for(var i=0;i<data.idsList.length;i++)
 											{
