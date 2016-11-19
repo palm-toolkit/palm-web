@@ -215,14 +215,12 @@
 				
 				if(data.oldFilters=="false")
 				{
-				
-					console.log("filterPopUpIds : " +filterPopUpIds)	
 					for(var i=0;i<filterPopUpIds.length;i++)
-					{	console.log(i+ " id to remov: "  +  filterPopUpIds[i]) 
+					{	 
 						<#-- remove  pop up progress log -->
 						$.PALM.popUpMessage.remove( filterPopUpIds[i] );
-						//filterPopUpIds.splice(i,1);
-						//i--;
+						filterPopUpIds.splice(i,1);
+						i--;
 					}
 					if(data.type!="undefined" && data.visType!="undefined")
 					{

@@ -2,7 +2,7 @@
  	 	
  	<@content.header>
 
-		<#include "headerPage.ftl" />
+		<#include "headerPageVA.ftl" />
 		
  	</@content.header>
  	

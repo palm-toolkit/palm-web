@@ -44,6 +44,7 @@
 <script>
 	$( function(){
 		
+		refreshPage = "true";
 			data = new Object();
 			<#-- add slim scroll -->
 	      $(".content-list").slimscroll({
@@ -184,7 +185,17 @@
 							}
 							
 							if( data.count > 0 ){
-
+							
+								console.log("loggedUser: " + data.loggedInAuthorID  )
+								if(refreshPage == "true")
+								{
+									if(data.loggedInAuthorID!="")
+										itemSelection(data.loggedInAuthorID, "researcher")
+									else
+										itemSelection(data.researchers[0].id, "researcher");
+								}
+								refreshPage = "false";
+								
 								<#-- build the researcher list -->
 								$.each( data.researchers, function( index, item){
 								
@@ -624,7 +635,7 @@
 	
 	function itemSelection(id, type){
 		var queryString = "?id="+id+"&type="+type;
-		
+		console.log(queryString)
 		<#-- update search widget -->
 		var searchWidget = $.PALM.boxWidget.getByUniqueName( 'explore_search' ); 
 		searchWidget.options.queryString = queryString;
