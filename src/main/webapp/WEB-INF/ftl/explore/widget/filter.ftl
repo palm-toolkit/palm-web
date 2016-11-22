@@ -126,48 +126,48 @@
 				if(objectType=="researcher")
 				{
 					if(visType=="researchers"){
-						filterList = ["Time","Publications", "Conferences", "Topics","Circles"];
+						filterList = ["Time", "Publications", "Conferences", "Topics", "Circles"];
 					}
 					if(visType=="conferences"){
-						filterList = ["Time","Topics", "Conferences"];
+						filterList = ["Time", "Topics", "Conferences"];
 					}		
 					if(visType=="publications"){
-						filterList = ["Time","Topics", "Conferences"];
+						filterList = ["Time", "Topics", "Conferences"];
 					}
 					if(visType=="topics"){
-						filterList = ["Time","Publications", "Conferences"];
+						filterList = ["Time", "Publications", "Conferences"];
 					}
 				}
 				
 				if(objectType=="conference")
 				{
 					if(visType=="researchers"){
-						filterList = ["Time","Publications", "Topics"];
+						filterList = ["Time", "Topics"]; //,"Publications"
 					}
 					if(visType=="conferences"){
-						filterList = ["Time","Topics"];
+						filterList = ["Time", "Topics"];
 					}		
 					if(visType=="publications"){
-						filterList = ["Time","Topics"];
+						filterList = ["Time", "Topics"];
 					}
 					if(visType=="topics"){
-						filterList = ["Time","Publications"];
+						filterList = ["Time"]; //,"Publications"
 					}
 				}
 				
 				if(objectType=="publication")
 				{
 					if(visType=="researchers"){
-						filterList = ["Time", "Topics", "Conferences"];
+						filterList = ["Time", "Topics" ]//, "Conferences"];
 					}
 					if(visType=="conferences"){
-						filterList = ["Time", "Topics", "Conferences"];
+						filterList = ["Time", "Topics" ]//, "Conferences"];
 					}		
 					if(visType=="publications"){
-						filterList = ["Time","Topics", "Conferences"];
+						filterList = ["Time", "Topics" ]//, "Conferences"];
 					}
 					if(visType=="topics"){
-						filterList = ["Time", "Conferences"];
+						filterList = ["Time" ]//, "Conferences"];
 					}
 				}
 				
@@ -177,28 +177,28 @@
 						filterList = ["Time", "Publications", "Conferences"];
 					}
 					if(visType=="conferences"){
-						filterList = ["Time", "Conferences"];
+						filterList = ["Time", "Publications"];
 					}		
 					if(visType=="publications"){
 						filterList = ["Time", "Conferences"];
 					}
 					if(visType=="topics"){
-						filterList = ["Time", "Conferences"];
+						filterList = ["Time",  "Conferences"]; //, "Publications",
 					}
 				}
 				if(objectType=="circle")
 				{
 					if(visType=="researchers"){
-						filterList = ["Time","Publications", "Conferences", "Topics"];
+						filterList = ["Time", "Publications", "Conferences", "Topics"];
 					}
 					if(visType=="conferences"){
-						filterList = ["Time","Topics", "Conferences"];
+						filterList = ["Time", "Topics", "Conferences"]; // ,"Publications"
 					}		
 					if(visType=="publications"){
-						filterList = ["Time","Topics", "Conferences"];
+						filterList = ["Time", "Topics", "Conferences"];
 					}
 					if(visType=="topics"){
-						filterList = ["Time","Publications", "Conferences"];
+						filterList = ["Time", "Publications", "Conferences"];
 					}
 				}
 				
