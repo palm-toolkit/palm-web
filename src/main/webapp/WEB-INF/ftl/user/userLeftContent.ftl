@@ -66,5 +66,14 @@
         <span>My Circle Bookmarks</span>
       </a>
     </li>
+    
+    <#-- Bookmark recommendation publication -->
+	<li class="treeview" data-link="recommendation">
+      <a href="<@spring.url '/user/book/recommendation' />">
+        <i class="fa fa-file-text-o"></i>
+        <span>My Recommendations</span>
+      </a>
+    </li>
+    
   </ul>
 </section>

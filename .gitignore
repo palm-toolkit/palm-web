@@ -4,3 +4,4 @@
 /target/
 data_index/
 *.log
+/bin/

@@ -36,6 +36,8 @@
 <script src="<@spring.url '/resources/plugins/nv3d/nv.d3.js' />" type="text/javascript"></script>
 <#-- d3 layout for text cloud -->
 <script src="<@spring.url '/resources/scripts/visualization/d3.layout.cloud.js' />" type="text/javascript"></script>
+<#-- d3 tooltip library -->
+<script src="<@spring.url '/resources/scripts/visualization/d3tip.js' />" type="text/javascript"></script>
 
 <#-- used to provide rich tree visualization -->
 <script src="<@spring.url '/resources/plugins/fancytree/jquery.fancytree.js' />" type="text/javascript"></script>
