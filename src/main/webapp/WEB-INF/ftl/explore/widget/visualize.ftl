@@ -857,7 +857,7 @@ $( function(){
 									.append(
 										$('<span/>')
 										.addClass("cd-date")
-										.html(item.year)
+										.html(item.date)
 									)
 						)
 					});
@@ -1149,7 +1149,7 @@ $( function(){
 						{
 							if( data.map.events.length == 0 ){
 								tabContent.html("")
-								$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No conferences satisfy the criteria!" );
+								$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No conferences locations satisfy the criteria!" );
 								return false;
 							}
 							else
@@ -1567,6 +1567,9 @@ $( function(){
 					}
 					else
 					{
+					
+						//if(data.map.names.length == 20)
+						//	height = 720
 						var similarDiv = $('<div/>')
 									.addClass("similarity")
 									.css('overflow-y','scroll')
@@ -1606,10 +1609,11 @@ $( function(){
 						var colorScale = d3.scale.linear()
 										.domain([0,data.map.names.length])
 										.range(["#cdf0fd", "#d4d4d1"]);
-				
+					
+						height = data.map.names.length * 35
 						var canvas = d3.select('#sim_tab')
 										.append('svg')
-										.attr({'width':700,'height':700})
+										.attr({'width':700,'height':height})
 						
 						canvas.on("click", function(e) { hidemenudiv('menu'); })		
 					
@@ -2377,9 +2381,11 @@ $( function(){
 			
 			if(e.type == "clickNode"){
 				$("#coauthors").show();
+				
 				<#-- do not show menu if the object is there in the setup already -->
 				if(names.indexOf(e.data.node.label) != -1){
 					$(".menu").hide();
+					showhoverdiv(e,'divtoshow', 'Already present in search panel')
 				}
 				else
 				{
@@ -2395,7 +2401,18 @@ $( function(){
 				}	
 			}
 			
-			if(e.type == "clickEdge" || e.type == "similarBar" || e.type == "clickLocation" || e.type == "clickPublication" || e.type == "comparisonListItem" || e.type == "listItem" || e.type == "cluster" || e.type == "clusterItem" || e.type == "bubble" || e.type == "evolution"){
+			if(e.type == "comparisonListItem"){
+				if(ids.indexOf(e.itemId) != -1)
+				{
+					$(".menu").hide();
+					showhoverdiv(e,'divtoshow', 'Already present in search panel')
+				}	
+				else
+					$(".menu").show();
+			
+			}
+			
+			if(e.type == "clickEdge" || e.type == "similarBar" || e.type == "clickLocation" || e.type == "clickPublication" || e.type == "listItem" || e.type == "cluster" || e.type == "clusterItem" || e.type == "bubble" || e.type == "evolution"){
 					$(".menu").show();
 	
 				<#-- do not show menu if the object is there in the setup already -->
