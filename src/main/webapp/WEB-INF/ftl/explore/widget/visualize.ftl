@@ -149,7 +149,7 @@ $( function(){
 					visList = ["Timeline", "Group", "List"];
 					if(objectType=="publication")
 					{
-						visList = ["Similar", "List"];
+						visList = ["Similar"];
 					}	
 				}
 				if(visType=="topics"){
