@@ -32,6 +32,7 @@
 
 <#-- used for load D3 visualization library -->
 <script src="<@spring.url '/resources/scripts/d3.min.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/scripts/d3.v4.min.js' />" type="text/javascript"></script>
 <#-- extended d3 library for reuse usege -->
 <script src="<@spring.url '/resources/plugins/nv3d/nv.d3.js' />" type="text/javascript"></script>
 <#-- d3 layout for text cloud -->
@@ -92,6 +93,9 @@
 <script src="<@spring.url '/resources/plugins/sigma/parsers/gexf/gexf-parser.js' />" type="text/javascript"></script>
 <script src="<@spring.url '/resources/plugins/sigma/parsers/gexf/sigma.parsers.gexf.js' />" type="text/javascript"></script>
 
+<#-- START VISUALIZATIONS IMPORTS -->
+<script src="<@spring.url '/resources/scripts/visualizations/co-authors/co-authors-graph.js' />" type="text/javascript"></script>
+<#-- END VISUALIZATIONS IMPORTS -->
 
 <#-- d3 layout for maps - currently unused -->
 <#--
