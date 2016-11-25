@@ -1,6 +1,12 @@
 .coauthor-list{
-
+	font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
-.coauthor-list line{
-/* 	stroke: black; */
+
+.coauthor-list .coauthor-name, 
+.coauthor-list .link-value{
+	fill		: #5A0E56;
+	font-weight	: bold;
+}
+.coauthor-list .link-value{
+	font-size	: 10px;
 }
