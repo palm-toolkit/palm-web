@@ -247,7 +247,7 @@
 										);
 
 									researcherDetail
-										.on("mouseover", gray);
+										.on("mouseover", blue);
 									researcherDetail
 										.on("mouseout", black);
 
@@ -355,7 +355,7 @@
 									//eventDetail.append( eventIcon ).append('&nbsp;').append( eventName );
 
 									eventDetail
-										.on("mouseover", gray);
+										.on("mouseover", blue);
 									eventDetail
 										.on("mouseout", black);
 
@@ -445,7 +445,7 @@
 										);
 									
 								publicationDetail
-										.on("mouseover", gray);
+										.on("mouseover", blue);
 									publicationDetail
 										.on("mouseout", black);
 									
@@ -504,7 +504,7 @@
 									topicItem.append( topicDetail );
 						
 									topicDetail
-										.on("mouseover", gray);
+										.on("mouseover", blue);
 									topicDetail
 										.on("mouseout", black);
 
@@ -573,7 +573,7 @@
 										);
 									
 								circleDetail
-										.on("mouseover", gray);
+										.on("mouseover", blue);
 									circleDetail
 										.on("mouseout", black);
 									
@@ -664,8 +664,8 @@
 		}
 	}
 	
-	function gray(){
-			$( this ).parent().context.style.color="gray";
+	function blue(){
+			$( this ).parent().context.style.color="blue";
 	}
 	
 	function black(){

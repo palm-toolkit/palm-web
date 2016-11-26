@@ -475,6 +475,21 @@ div.d3-tooltip {
   font-weight: bold;
 }
 
+
+.history-list{
+	overflow: scroll;
+}
+.history-list>.explore
+{
+	margin-left: 3px;
+	width:100%;
+	border-left:5px solid transparent;
+	float:left;
+    border-bottom-style: dotted;
+    border-width:0.05px;
+}
+
+
 .content-list{
 	overflow: scroll;
 }
@@ -1343,6 +1358,11 @@ g.arc path {
 
 .wfilter {
 	height:77vh;
+	overflow:hidden;
+}
+
+.whistory {
+	height:70vh;
 	overflow:hidden;
 }
 

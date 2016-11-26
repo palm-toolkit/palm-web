@@ -35,7 +35,7 @@
 		var circleBorderProp = "";
 		var resetFlag = "1";
 		var currentVisType = "";
-		var count= 1;
+		
 		<#-- generate unique id for progress log -->
 		var uniquePidTopicWidget = $.PALM.utility.generateUniqueId();
 		var options ={
@@ -48,6 +48,18 @@
 				<#-- show pop up progress log -->
 						},
 			onRefreshDone: function(  widgetElem , data ){
+			
+			history_data = new Object();
+			count = 1;
+			var retrievedHistoryObject = localStorage.getItem('history_data');
+			
+			if(retrievedHistoryObject!=null)
+			{
+				history_data = JSON.parse(retrievedHistoryObject)
+				count= Object.keys(history_data).length+1;
+			}
+			
+
 				var search_widget = document.getElementById("search-widget")
 				search_widget.style.display="block";
 				var id = data.id;
@@ -57,7 +69,7 @@
 					.css("padding-top","5px")
 				visOptionsContainer = $( widgetElem ).find( ".vis_options" );
 				visOptionsContainer.html( "" );
-		
+				
 				for(var i=0;i<data.name.length;i++){
 				
 							<#-- TO-DO Add css part to palm.css -->
@@ -71,6 +83,8 @@
 								var i = ids.indexOf(e.delegateTarget.id);
 								names.splice(i, 1);
 								ids.splice(i,1);
+								addToHistory();
+
 								updateVisDelete( "true", type);
 								if(names.length == 0){
 									wordsContainer.html("");
@@ -87,6 +101,9 @@
 							names.push(data.name[i]);
 							ids.push(data.id[i]);
 							
+							if(i == data.name.length-1)		
+								addToHistory();
+
 							if(data.name[i]!=""){
 							wordsContainer
 								.append(nameDiv)
@@ -132,11 +149,12 @@
 					
 					names.push(data.name[i]);
 					ids.push(data.id[i]);
-
+					if(i == data.name.length-1)		
+						addToHistory();
+								
 							if(data.name[i]!=""){
 								wordsContainer
 								.append(nameDiv)
-
 								if(resetFlag=="1" || currentVisType=="" || type!=data.type){
 									if(type == "researcher"){
 										setBoxes(id, type, "researchers")
@@ -375,6 +393,39 @@
 				}
 		}
 		
+		function addToHistory()
+		{
+			var historyIds = [];
+			var historyNames = [];
+			
+			var date = new Date();
+			var day = date.getDate();
+			var month = date.getMonth();
+			var year = date.getFullYear();
+			var hour = date.getHours();
+			var minute = date.getMinutes();
+			var second = date.getSeconds();
+			var timestamp = day + "/" + month + "/" + year + " " + hour + ":" + minute + ":" + second;
+			
+			for(var c=0;c<ids.length;c++)
+			historyIds.push(ids[c]);
+			for(var c=0;c<names.length;c++)
+			historyNames.push(names[c]);
+			var historyGroup = new Object();
+			historyGroup.names = historyNames;
+			historyGroup.ids = historyIds;
+			historyGroup.type = type;
+			historyGroup.time = timestamp;
+			history_data[count] = historyGroup;
+			window.localStorage.removeItem(history_data);
+			localStorage.setItem('history_data',JSON.stringify(history_data));
+			
+			<#-- update history widget -->
+			var historyWidget = $.PALM.boxWidget.getByUniqueName( 'explore_history' ); 
+			$.PALM.boxWidget.refresh( historyWidget.element , historyWidget.options );
+			
+			count++;
+		}
 	
 		<#--// register the widget-->
 		$.PALM.options.registeredWidget.push({
