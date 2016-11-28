@@ -142,7 +142,7 @@
 				if(objectType=="conference")
 				{
 					if(visType=="researchers"){
-						filterList = ["Time", "Topics"]; //,"Publications"
+						filterList = ["Time", "Topics", "Publications"];
 					}
 					if(visType=="conferences"){
 						filterList = ["Time", "Topics"];
@@ -151,23 +151,23 @@
 						filterList = ["Time", "Topics"];
 					}
 					if(visType=="topics"){
-						filterList = ["Time"]; //,"Publications"
+						filterList = ["Time", "Publications"]; 
 					}
 				}
 				
 				if(objectType=="publication")
 				{
 					if(visType=="researchers"){
-						filterList = ["Time", "Topics" ]//, "Conferences"];
+						filterList = [ "Topics", "Conferences"];
 					}
 					if(visType=="conferences"){
-						filterList = ["Time", "Topics" ]//, "Conferences"];
+						filterList = [ "Topics", "Conferences"];
 					}		
 					if(visType=="publications"){
-						filterList = ["Time", "Topics" ]//, "Conferences"];
+						filterList = [ "Topics", "Conferences"];
 					}
 					if(visType=="topics"){
-						filterList = ["Time" ]//, "Conferences"];
+						filterList = ["Conferences"];
 					}
 				}
 				
@@ -230,56 +230,58 @@
 			    			var applyButton = $( widgetElem ).find( "#apply_button" );
 			    			applyButton.css("display","block");
 			    			
-			    			targetContainer
-			    				.append(
-			    					$('<div/>')
-			    						.css("width","20%")
-			    						.css("padding-left","6px")
-			    						.css("padding-top","20px")
-			    						.css("float","left")
-			    						.append(
-			    							$('<label/>')
-			    								.attr("for","year_range")
-			    								.html("Year(s):")		
-			    						)
-			    				)	
-								.append(
-									$('<div/>')
-										.css("padding-left","10px")
-										.css("padding-right","10px")
-										.css("width","80%")
-										.css("float","right")
-										.append(
-											$('<input/>')
-												.attr('type','text')
-												.attr('id','year_range')
-										)
-								)				
-							
-							startYear = data.TimeFilter.startYear; 
-							endYear = data.TimeFilter.endYear;	
+			    			if(data.TimeFilter != undefined)
+			    			{
+				    			targetContainer
+				    				.append(
+				    					$('<div/>')
+				    						.css("width","20%")
+				    						.css("padding-left","6px")
+				    						.css("padding-top","20px")
+				    						.css("float","left")
+				    						.append(
+				    							$('<label/>')
+				    								.attr("for","year_range")
+				    								.html("Year(s):")		
+				    						)
+				    				)	
+									.append(
+										$('<div/>')
+											.css("padding-left","10px")
+											.css("padding-right","10px")
+											.css("width","80%")
+											.css("float","right")
+											.append(
+												$('<input/>')
+													.attr('type','text')
+													.attr('id','year_range')
+											)
+									)				
 								
-							$("#year_range").html("");
-							$("#year_range").ionRangeSlider({
-					            hide_min_max: true,
-					            keyboard: true,
-					            min: data.TimeFilter.startYear,
-					            max: data.TimeFilter.endYear,
-					            type: 'double',
-					            step: 1,
-					            grid: true
-				        	});
-				        	
-				        	var $range = $("#year_range");
-				
-							$range.on("change", function () {
-							    var $this = $(this),
-							        value = $this.prop("value").split(";");
-							
-							    startYear = value[0]; 
-							    endYear = value[1];
-							});
-			    		
+								startYear = data.TimeFilter.startYear; 
+								endYear = data.TimeFilter.endYear;	
+									
+								$("#year_range").html("");
+								$("#year_range").ionRangeSlider({
+						            hide_min_max: true,
+						            keyboard: true,
+						            min: data.TimeFilter.startYear,
+						            max: data.TimeFilter.endYear,
+						            type: 'double',
+						            step: 1,
+						            grid: true
+					        	});
+					        	
+					        	var $range = $("#year_range");
+					
+								$range.on("change", function () {
+								    var $this = $(this),
+								        value = $this.prop("value").split(";");
+								
+								    startYear = value[0]; 
+								    endYear = value[1];
+								});
+							}			    		
 			    			var filters = $('<div/>')
 			    						.attr("id","other_filters");
 			    			targetContainer.append(filters);
@@ -304,7 +306,7 @@
 							if(data.publicationFilter != undefined && data.publicationFilter.publicationsList.length!=0){
 								pubList = data.publicationFilter.publicationsList;
 								pubCount = $( '<span/>' )
-								pubSectionHeader = $( '<span/>' ).html("PUBLICATIONS")
+								pubSectionHeader = $( '<span/>' ).addClass('filter-name').html("PUBLICATIONS")
 												.append('&nbsp;')
 												.append(
 													$('<span/>')
@@ -329,7 +331,7 @@
 							if(data.conferenceFilter != undefined && data.conferenceFilter.eventsList.length!=0){
 								confList = data.conferenceFilter.eventsList;
 								confCount = $( '<span/>' )
-								confSectionHeader = $( '<span/>' ).html("CONFERENCES")
+								confSectionHeader = $( '<span/>' ).addClass('filter-name').html("CONFERENCES")
 												.append('&nbsp;')
 												.append(
 													$('<span/>')
@@ -355,7 +357,7 @@
 							if(data.topicFilter != undefined && data.topicFilter.topicDetailsList.length!=0){
 							 	topList = data.topicFilter.topicDetailsList;
 								topCount = $( '<span/>' )
-							 	topSectionHeader = $( '<span/>' ).html("TOPICS/INTERESTS")
+							 	topSectionHeader = $( '<span/>' ).addClass('filter-name').html("TOPICS/INTERESTS")
 												.append('&nbsp;')
 												.append(
 													$('<span/>')
@@ -380,7 +382,7 @@
 							if(data.circleFilter != undefined && data.circleFilter.circles.length!=0){
 								cirList = data.circleFilter.circles;
 								cirCount = $( '<span/>' )
-								cirSectionHeader = $( '<span/>' ).html("CIRCLES ")
+								cirSectionHeader = $( '<span/>' ).addClass('filter-name').html("CIRCLES ")
 												.append('&nbsp;')
 												.append(
 													$('<span/>')

@@ -125,7 +125,7 @@ iframe.externalContent{
 	.box-home-explore{
 		display:inline-block;
 		float:none;
-		max-width:100px;
+		max-width:90px;
 		margin: 5px 20px 5px 0;
 		padding: 15px 0px 0px 0;
 		max-height:70px;
@@ -1176,6 +1176,12 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 	font-size:10pt;
 	height:22px;
 	margin:5px;
+	width:80px
+}
+
+.filter-name {
+	margin: 0px 5px;
+	font-weight: bold;
 }
 
 .search-item{
@@ -1228,7 +1234,7 @@ g.arc path {
 .venntooltip {
 	position: absolute;
   	text-align: center;
-  	width: 70px;
+  	width: 160px;
   	height: 24px;
   	background: #333;
   	color: #ddd;

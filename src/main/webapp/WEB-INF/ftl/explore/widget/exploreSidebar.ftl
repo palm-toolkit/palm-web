@@ -185,8 +185,6 @@
 							}
 							
 							if( data.count > 0 ){
-							
-								console.log("loggedUser: " + data.loggedInAuthorID  )
 								if(refreshPage == "true")
 								{
 									if(data.loggedInAuthorID!="")
@@ -597,9 +595,7 @@
 			<#-- update search widget -->
 			var obj = $.PALM.boxWidget.getByUniqueName( 'explore_sidebar' ); 
 			
-		
 				var maxPage = parseInt($( obj.element ).find( "span.total-page" ).html()) - 1;
-				
 				if( jumpTo === "next")
 					obj.options.page = obj.options.page + 1;
 				else if( jumpTo === "prev")
@@ -635,7 +631,6 @@
 	
 	function itemSelection(id, type){
 		var queryString = "?id="+id+"&type="+type;
-		console.log(queryString)
 		<#-- update search widget -->
 		var searchWidget = $.PALM.boxWidget.getByUniqueName( 'explore_search' ); 
 		searchWidget.options.queryString = queryString;
@@ -644,6 +639,7 @@
 	
 	
 	function setFooter(data, widgetElem){
+	
 		var maxPage = Math.ceil(data.totalCount/data.maxresult);
 		var $pageDropdown = $( widgetElem ).find( "select.page-number" );
 		$pageDropdown.html( "" );

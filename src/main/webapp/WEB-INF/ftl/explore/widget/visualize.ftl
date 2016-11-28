@@ -2,7 +2,7 @@
 	<#assign loggedUser = securityService.getUser() >
 </@security.authorize>
 <div id="boxbody-${wUniqueName}" class="box-body no-padding wfilter">
-  	<div class="visualize_widget" class="nav-tabs-custom">
+  	<div class="visualize_widget" class="nav-tabs-custom"  oncontextmenu="return false;">
   	
 	</div>
 	<div id="divtoshow" class="fix-pos display-none">test</div>
@@ -326,9 +326,48 @@ $( function(){
 				var canvasDiv = $('<div/>').attr({'id': 'canvas'});
 				tabContent.html("");
 				tabContent.append(canvasDiv);
-			
+				s = new sigma(),
+	    		cam = s.addCamera();
+	    		
+	    		// Initialize two distinct renderers, each with its own settings:
+				s.addRenderer({
+					  container: document.getElementById('canvas'),
+		              type: 'canvas',
+					  camera: cam,
+					  settings: {
+					    labelColor: 'node',
+		            	enableEdgeHovering: 'true',
+		            	edgeHoverColor: 'edge',
+		            	edgeHoverExtremities: 'true',
+		            	//maxEdgeSize: 5,
+		            	autoRescale:  ['nodeSize'],
+		            	maxNodeSize: 1,
+		            	doubleClickZoomingRatio: 1.7,
+		            	labelThreshold: 7,
+		            	zoomMax: 50,
+		            	defaultLabelSize: 13,
+		            	edgeColor:"default",
+		            	//rescaleIgnoreSize:"true"
+					  }
+				});
+				s.settings({
+					    labelColor: 'node',
+		            	enableEdgeHovering: 'true',
+		            	edgeHoverColor: 'edge',
+		            	edgeHoverExtremities: 'true',
+		            	//maxEdgeSize: 5,
+		            	autoRescale:  ['nodeSize'],
+		            	maxNodeSize: 5,
+		            	doubleClickZoomingRatio: 1.7,
+		            	//labelThreshold: 14,
+		            	zoomMax: 50,
+		            	//defaultLabelSize: 12,
+		            	edgeColor:"default",
+		            	//rescaleIgnoreSize:"true"
+					  })
+	    		
 				<#-- initialize sigma.js renderer for gephi-->
-				s = new sigma({
+				<#--s = new sigma({
 		            renderer: {
 		              container: document.getElementById('canvas'),
 		              type: 'canvas'
@@ -347,7 +386,7 @@ $( function(){
 		            	
 		            	//defaultHoverLabelBGColor: "pink"
 		            }
-		        });
+		        });-->
 		    var edgeSizes = [];
 			if(reload!="true"){
 			$.getJSON( url , function( data ) {
@@ -375,6 +414,23 @@ $( function(){
 					
 					if(data.oldVis=="false")
 					{
+						if(s.graph.nodes().length < 20)
+						{
+							// Zoom out - single frame :
+							s.camera.goTo({
+							  x: 15,
+							  y: 0,
+							  ratio: 0.2
+							});
+						}
+					
+						s.renderers[0].bind("render", function (e) {
+							cameraX = e.target.camera.x;
+							cameraY = e.target.camera.y;
+							cameraRatio = e.target.camera.ratio;
+						});
+					
+						
 						s.graph.nodes().forEach(function(n) {
 					        n.originalColor = n.color;
 					      });
@@ -383,7 +439,7 @@ $( function(){
 					        edgeSizes.push(e.size)
 					      });
 					      
-						s.bind('overNode', function(e){
+						s.bind('rightClickNode', function(e){
 							var nodeId = e.data.node.id,
 	            			toKeep = s.graph.neighbors(nodeId);
 					        toKeep[nodeId] = e.data.node;
@@ -405,6 +461,16 @@ $( function(){
 					        // Since the data has been modified, we need to
 					        // call the refresh method to make the colors
 					        // update effective.
+					        s.refresh();
+						})
+						
+						s.bind('clickStage', function(e){
+					        s.graph.nodes().forEach(function(n) {
+					            n.color = n.originalColor;
+					        });
+					        s.graph.edges().forEach(function(e) {
+					            e.color = e.originalColor;
+					        });
 					        s.refresh();
 						})
 						
@@ -436,18 +502,31 @@ $( function(){
 						})
 					}
 				}); 
-				//s.refresh();
+				s.refresh();
 				url="";
 			});
 		}
 		else{
-		console.log(graphFile)
+				console.log(graphFile)
 				<#-- gephi network -->
 				sigma.parsers.gexf( "<@spring.url '/resources/gexf/'/>" + graphFile ,s,function() {
 					s.refresh();
+					s.refresh();
+					
+					// Zoom out - single frame :
+					s.camera.goTo({
+					  x: cameraX,
+					  y: cameraY,
+					  ratio: cameraRatio
+					});
+					
+					s.renderers[0].bind("render", function (e) {
+							cameraX = e.target.camera.x;
+							cameraY = e.target.camera.y;
+							cameraRatio = e.target.camera.ratio;
+						});
 					
 					if(s.graph.nodes().length==0 && s.graph.edges().length==0){
-						console.log("condition met")
 						tabContent.html("")
 						$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No authors satisfy the specified criteria!" );
 						return false;
@@ -461,7 +540,7 @@ $( function(){
 				        edgeSizes.push(e.size)
 				      });
 				      
-					s.bind('overNode', function(e){
+					s.bind('rightClickNode', function(e){
 						var nodeId = e.data.node.id,
             			toKeep = s.graph.neighbors(nodeId);
 				        toKeep[nodeId] = e.data.node;
@@ -485,6 +564,17 @@ $( function(){
 				        // update effective.
 				        s.refresh();
 					})
+					
+					s.bind('clickStage', function(e){
+				        s.graph.nodes().forEach(function(n) {
+				            n.color = n.originalColor;
+				        });
+				        s.graph.edges().forEach(function(e) {
+				            e.color = e.originalColor;
+				        });
+				        s.refresh();
+					})
+					
 					s.bind('clickNode', function(e){
 						
 						if(e.data.node.attributes.isadded==false){
@@ -756,87 +846,86 @@ $( function(){
 									.click(function(e){
 										hidemenudiv('menu');
 									})
-						
+
 						if(prevYear!=item.year)
 						{			 
-						 section.append(h2)
-						 prevYear = item.year
+							 section.append(h2)
+							 prevYear = item.year
 						}		
 						section.append(inner)
 							
 						if(item.type=="CONFERENCE")	
 						{
-									inner.append(
-										$('<div/>')
-											.addClass("cd-timeline-img cd-conference")
-											.attr({ "title" : "Conference" })
-											.append(
-												$('<img/>')
-													.attr("src","<@spring.url '/resources/images/document.svg' />")
-											)
+							inner.append(
+								$('<div/>')
+									.addClass("cd-timeline-img cd-conference")
+									.attr({ "title" : "Conference" })
+									.append(
+										$('<img/>')
+											.attr("src","<@spring.url '/resources/images/document.svg' />")
 									)
+							)
 						}
 						else if(item.type=="JOURNAL")	
 						{
-									inner.append(
-										$('<div/>')
-											.addClass("cd-timeline-img cd-journal")
-											.attr({ "title" : "Journal" })
-											.append(
-												$('<img/>')
-													.attr("src","<@spring.url '/resources/images/newspaper.svg' />")
-											)
+							inner.append(
+								$('<div/>')
+									.addClass("cd-timeline-img cd-journal")
+									.attr({ "title" : "Journal" })
+									.append(
+										$('<img/>')
+											.attr("src","<@spring.url '/resources/images/newspaper.svg' />")
 									)
+							)
 						}
 						else if(item.type=="WORKSHOP")	
 						{
-									inner.append(
-										$('<div/>')
-											.addClass("cd-timeline-img cd-workshop")
-											.attr({ "title" : "Workshop" })
-											.append(
-												$('<img/>')
-													.attr("src","<@spring.url '/resources/images/copy.svg' />")
-											)
+							inner.append(
+								$('<div/>')
+									.addClass("cd-timeline-img cd-workshop")
+									.attr({ "title" : "Workshop" })
+									.append(
+										$('<img/>')
+											.attr("src","<@spring.url '/resources/images/copy.svg' />")
 									)
+							)
 						}
 						else if(item.type=="INFORMAL")	
 						{
-									inner.append(
-										$('<div/>')
-											.addClass("cd-timeline-img cd-informal")
-											.attr({ "title" : "Informal" })
-											.append(
-												$('<img/>')
-													.attr("src","<@spring.url '/resources/images/copy.svg' />")
-											)
+							inner.append(
+								$('<div/>')
+									.addClass("cd-timeline-img cd-informal")
+									.attr({ "title" : "Informal" })
+									.append(
+										$('<img/>')
+											.attr("src","<@spring.url '/resources/images/copy.svg' />")
 									)
+							)
 						}
 						else if(item.type=="BOOK")	
 						{
-									inner.append(
-										$('<div/>')
-											.addClass("cd-timeline-img cd-book")
-											.attr({ "title" : "Book" })
-											.append(
-												$('<img/>')
-													.attr("src","<@spring.url '/resources/images/open-book.svg' />")
-											)
+							inner.append(
+								$('<div/>')
+									.addClass("cd-timeline-img cd-book")
+									.attr({ "title" : "Book" })
+									.append(
+										$('<img/>')
+											.attr("src","<@spring.url '/resources/images/open-book.svg' />")
 									)
+							)
 						}
 						else	
 						{
-									inner.append(
-										$('<div/>')
-											.addClass("cd-timeline-img cd-unknown")
-											.attr({ "title" : "Unknown" })
-											.append(
-												$('<img/>')
-													.attr("src","<@spring.url '/resources/images/exclamation.svg' />")
-											)
+							inner.append(
+								$('<div/>')
+									.addClass("cd-timeline-img cd-unknown")
+									.attr({ "title" : "Unknown" })
+									.append(
+										$('<img/>')
+											.attr("src","<@spring.url '/resources/images/exclamation.svg' />")
 									)
+							)
 						}
-						
 						inner.append(
 								$('<div/>')
 									.addClass("cd-timeline-content cursor-p")
@@ -882,9 +971,9 @@ $( function(){
 					
 					if( dataBubble.map.list.length == 0 ){
 						if(objectType == "publication" )
-							$.PALM.callout.generate( bubblesTab , "warning", "No data found!!", "No topics found!" );
+							$.PALM.callout.generate( bubblesTab , "warning", "No data found!!", "No topics satisfy the specified criteria!" );
 						else
-							$.PALM.callout.generate( bubblesTab , "warning", "No data found!!", "No interests found!" );
+							$.PALM.callout.generate( bubblesTab , "warning", "No data found!!", "No interests satisfy the specified criteria!" );
 						return false;
 					}
 					
@@ -907,9 +996,9 @@ $( function(){
 				{
 					if( data.map.list.length == 0 ){
 						if(objectType == "publication" )
-							$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No topics found!" );
+							$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No topics satisfy the specified criteria!" );
 						else
-							$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No interests found!" );
+							$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No interests satisfy the specified criteria!" );
 						return false;
 					}
 					
@@ -1060,7 +1149,7 @@ $( function(){
 						{
 							if( data.map.coAuthors.length == 0 ){
 								tabContent.html("")
-								$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No researchers satisfy the criteria!" );
+								$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No researchers satisfy the specified criteria!" );
 								return false;
 							}
 							
@@ -1149,7 +1238,7 @@ $( function(){
 						{
 							if( data.map.events.length == 0 ){
 								tabContent.html("")
-								$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No conferences locations satisfy the criteria!" );
+								$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No conferences locations satisfy the specified criteria!" );
 								return false;
 							}
 							else
@@ -1262,9 +1351,9 @@ $( function(){
 							if( data.map.list.length == 0 ){
 								tabContent.html("")	
 								if(objectType == "publication" )
-									$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No topics found!" );
+									$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No topics satisfy the specified criteria!" );
 								else
-									$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No interests found!" );
+									$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No interests satisfy the specified criteria!" );
 									return false;
 							}
 							else
@@ -1313,7 +1402,7 @@ $( function(){
 						{
 							if( data.map.pubDetailsList.length == 0 ){
 								tabContent.html("")								
-								$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No publications satisfy the criteria!" );
+								$.PALM.callout.generate( tabContent , "warning", "No data found!!", "No publications satisfy the specified criteria!" );
 								return false;
 							}
 							else
@@ -1438,7 +1527,12 @@ $( function(){
 				
 				        // Display a tooltip with the current size
 				        tooltip.transition().duration(400).style("opacity", .9);
-				        tooltip.text(d.size);
+				        if(objectType == "researcher" && visType == "researchers")
+				        	str = "co-authors"
+				        else
+				        	str = visType;	
+				        tooltip.text(d.size + " "+ str);
+				        
 				        // highlight the current path
 				        var selection = d3.select(this).transition("tooltip").duration(400);
 				        selection.select("path")
@@ -1610,7 +1704,7 @@ $( function(){
 										.domain([0,data.map.names.length])
 										.range(["#cdf0fd", "#d4d4d1"]);
 					
-						height = data.map.names.length * 35
+						height = data.map.names.length * 40
 						var canvas = d3.select('#sim_tab')
 										.append('svg')
 										.attr({'width':700,'height':height})
@@ -2171,9 +2265,9 @@ $( function(){
 			//chart.addMeasureAxis("z", "Weight");
 			var s = chart.addSeries(s_attr, chart_type);
 			
-			var myLegend = chart.addLegend(0, 10, 500, 400, "right");
-			if(dimple.getUniqueValues(data,"Author").length<2)
-				chart.legends = [];
+			//var myLegend = chart.addLegend(0, 10, 500, 400, "right");
+			//if(dimple.getUniqueValues(data,"Author").length<2)
+			//	chart.legends = [];
 				
 			chart.draw();
 			y.shapes.selectAll("text")
@@ -2181,7 +2275,7 @@ $( function(){
 			
 			$('#chartTab').contents().appendTo("#svgContainer");
 			
-			if(dimple.getUniqueValues(data,"Author").length>1){
+			<#-- if(dimple.getUniqueValues(data,"Author").length>1){
 				chart.legends = [];
 				// Get a unique list of Owner values to use when filtering
 				var filterValues = dimple.getUniqueValues(data, "Author");
@@ -2217,7 +2311,7 @@ $( function(){
 				    y.shapes.selectAll("text")
 				      .call(wrap, 50);
 				  });
-			}
+			}-->
 				
 			svg.selectAll("circle")
 				.on("click",function(e){

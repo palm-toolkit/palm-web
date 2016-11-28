@@ -83,13 +83,14 @@
 								var i = ids.indexOf(e.delegateTarget.id);
 								names.splice(i, 1);
 								ids.splice(i,1);
-								addToHistory();
 
 								updateVisDelete( "true", type);
 								if(names.length == 0){
 									wordsContainer.html("");
 									visOptionsContainer.html( "" );
 								}
+								else
+									addToHistory();
 							});
 				
 				if(data.replace && i==0){
@@ -283,12 +284,15 @@
 			}
 			
 		<#-- dynamic widgets depending on type of search object -->
-				if(type == "researcher" || type == "publication" || type == "conference" || type == "topic" || type == "circle"){
-					
 					var specTitle = "Co-Authors";
+					
 					if(type!="researcher"){
-						specTitle = "Researchers"
+						specTitle = "Researchers";
+						//caption = "Corresponding researchers";
 					}
+					
+					var caption = "Click to generate/refresh "+"\n"+"visualization";
+					
 					visOptionsContainer.append(
 									$('<div/>')
 									.addClass('info-box box-home-explore bg-red')
@@ -304,17 +308,17 @@
 											.addClass('info-box-number fontsize24')
 										)
 									)		
-									.append($('<h5/>').css("text-align","center").html("Researchers"))
+									.append($('<h5/>').css("text-align","center").html(specTitle))
 									.css("border" , researcherBorderProp)
 									.css({ "cursor":"pointer"})
+									.attr("title",caption)
 									.on( "click", function( e){
 										setBoxes(id, type, "researchers")
 										refreshVisFilter(id, type,  "researchers");
 									})
 								)
-				}
 				
-				if(type == "researcher" || type == "publication" || type == "conference" || type == "topic" || type == "circle"){
+				//	caption = "Corresponding " + "<br/>" +"conferences";
 					visOptionsContainer.append(
 									$('<div/>')
 									.addClass('info-box box-home-explore bg-yellow')
@@ -333,14 +337,14 @@
 									.append($('<h5/>').css("text-align","center").html("Conferences"))
 									.css("border" , conferenceBorderProp)
 									.css({ "cursor":"pointer"})
+									.attr("title",caption)
 									.on( "click", function( e){
 										setBoxes(id, type, "conferences")
 										refreshVisFilter(id, type,  "conferences");
 									})
 								)
-				}
 				
-				if(type == "researcher" || type == "publication" || type == "conference" || type == "topic" || type == "circle"){
+				//	caption = "Corresponding publications";	
 					visOptionsContainer.append(
 									$('<div/>')
 									.addClass('info-box box-home-explore bg-green')
@@ -359,14 +363,16 @@
 									.append($('<h5/>').css("text-align","center").html("Publications"))
 									.css("border" , publicationBorderProp)
 									.css({ "cursor":"pointer"})
+									.attr("title",caption)
 									.on( "click", function( e){
 										setBoxes(id, type, "publications")
 										refreshVisFilter(id, type,  "publications");
 									})
 								)
-				}
 
-				if(type == "researcher" || type == "publication" || type == "conference" || type == "topic" || type == "circle"){
+				//	caption = "Corresponding topics";
+				//	if(type!="publication" && type!="topic")
+				//		caption = "Corresponding interests";
 					visOptionsContainer.append(
 									$('<div/>')
 									.addClass('info-box box-home-explore bg-blue')
@@ -385,12 +391,12 @@
 									.append($('<h5/>').css("text-align","center").html("Topics"))
 									.css("border" , topicBorderProp)
 									.css({ "cursor":"pointer"})
+									.attr("title",caption)
 									.on( "click", function( e){
 										setBoxes(id, type, "topics")
 										refreshVisFilter(id, type,  "topics");
 									})
 								)
-				}
 		}
 		
 		function addToHistory()
