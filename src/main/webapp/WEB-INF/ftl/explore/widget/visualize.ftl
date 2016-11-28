@@ -339,15 +339,12 @@ $( function(){
 		            	enableEdgeHovering: 'true',
 		            	edgeHoverColor: 'edge',
 		            	edgeHoverExtremities: 'true',
-		            	//maxEdgeSize: 5,
 		            	autoRescale:  ['nodeSize'],
-		            	maxNodeSize: 1,
 		            	doubleClickZoomingRatio: 1.7,
 		            	labelThreshold: 7,
 		            	zoomMax: 50,
 		            	defaultLabelSize: 13,
 		            	edgeColor:"default",
-		            	//rescaleIgnoreSize:"true"
 					  }
 				});
 				s.settings({
@@ -355,15 +352,11 @@ $( function(){
 		            	enableEdgeHovering: 'true',
 		            	edgeHoverColor: 'edge',
 		            	edgeHoverExtremities: 'true',
-		            	//maxEdgeSize: 5,
 		            	autoRescale:  ['nodeSize'],
 		            	maxNodeSize: 5,
 		            	doubleClickZoomingRatio: 1.7,
-		            	//labelThreshold: 14,
 		            	zoomMax: 50,
-		            	//defaultLabelSize: 12,
 		            	edgeColor:"default",
-		            	//rescaleIgnoreSize:"true"
 					  })
 	    		
 				<#-- initialize sigma.js renderer for gephi-->
