@@ -1817,32 +1817,37 @@ $( function(){
 		}
 		
 		function visualizeCluster(data, tabContainer , visType){
-			var margin = {top: -300, right: -100, bottom: 200, left: -5};
-			
+			var margin = {top: 0, right: 100, bottom: 200, left: 100};
+
 			var color = d3.scale.ordinal()
     						.range(customColors); 
 			var width = tabContainer.width();
 			var height = tabContainer.width();  //	screen.height * 0.68; 
+			var packdim = width/1.5;
+			if(data.length < 5)
+				packdim = width/3
+			if(data.length == 1)
+				packdim = width/4	
 				
 			var zoom = d3.behavior.zoom()
-						.scaleExtent([0, 10])
+						.scaleExtent([0, 20])
 						.on("zoom", zoomed);
 						
 			clusters = new Array(getClusters(data)); 
 			
 			nodes = data.map(function(d) {
 				  if(visType == "researchers" || visType=="publications"){
-			      	new_data = {cluster: d.cluster, radius: 20, id: d.id, name: d.name, clusterTerms : d.clusterTerms, nodeTerms : d.nodeTerms};
+			      	new_data = {cluster: d.cluster, radius: 10, id: d.id, name: d.name, clusterTerms : d.clusterTerms, nodeTerms : d.nodeTerms};
 				  }
 				  if(visType == "conferences"){
-			      	new_data = {cluster: d.cluster, radius: 20, id: d.id, name: d.name, abr: d.abr, clusterTerms : d.clusterTerms, nodeTerms : d.nodeTerms};
+			      	new_data = {cluster: d.cluster, radius: 10, id: d.id, name: d.name, abr: d.abr, clusterTerms : d.clusterTerms, nodeTerms : d.nodeTerms};
 				  }
 				  if (!clusters[d.cluster]) {clusters[d.cluster] = new_data;}
 				  return new_data;
 				});
 			d3.layout.pack()
 			    .sort(null)
-			    .size([width, height])
+			    .size([packdim, packdim])
 			    .children(function(d) { return d.values; })
 			    .value(function(d) { return d.radius * d.radius; })
 			    .nodes({values: d3.nest()
@@ -1860,7 +1865,7 @@ $( function(){
 			vis_researcher = d3.select(".clusters").append("svg")
 							    .attr("width", width)
 							    .attr("height", height)
-							      .append("g")
+							    .append("g")
 							    .call(zoom).append("g")
 							    .on("click",function(){
 									hidemenudiv('menu');			
@@ -1877,7 +1882,7 @@ $( function(){
 					      .enter()
 					     .append("g")
 			      .attr("class", "node")
-			      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+			      .attr("transform", function(d) { return "translate(" + (margin.left + d.x) + "," + (margin.top + d.y) + ")"; })
 					.on("click", function(d){
 			         console.log(d);
 			         obj = {
@@ -1916,10 +1921,44 @@ $( function(){
 			  node.append("circle")
 			      .attr("r", function(d) { return d.r; })
 			      .style("fill", function(d) { return color(d.cluster); })
+			  
+			  g = node.append('g')
+    			.attr('transform', function(d){ 
+	    			if(visType == "researchers" )
+    					return 'translate(' + [- d.r + (0.3 * d.r) , - d.r + (0.4 * d.r)] + ')' 
+				    if(visType == "conferences" )
+				    	return 'translate(' + [- d.r + (0.35 * d.r) , - d.r + (0.3 * d.r)] + ')'
+				    if(visType == "publications" )
+				    	return 'translate(' + [- d.r + (0.33 * d.r) , - d.r + (0.6 * d.r)] + ')'
+    				});
+			  
+			  g.append("foreignObject")
+			    .attr("width", function(d){return 2 * d.r * Math.cos(Math.PI / 4)})
+			    .attr("height", function(d){return 2 * d.r * Math.cos(Math.PI / 4)})
+			    .append("xhtml:p")
+			    .text( function(d){return d.name})    
+			    .style("font-size", function(d){
+			    console.log("radius:"+ d.r)
+			    	if(visType == "researchers" )
+			    	{	
+			    		if(d.name.split(' ').length > 2)
+			    			return ((0.33 * d.r) - (d.name.split(' ').length ) ) + "px";
+			    		return (0.33 * d.r) + "px";
+			    	}
+			    	if(visType == "conferences" )
+			    	{	
+			    		return (0.188 * d.r) + "px";
+			    	}	
+			    	if(visType == "publications" )
+			    	{	
+			    		return (0.13 * d.r) + "px";
+			    	}
+			    })
+			      
 			//if(visType!="publications")
 			//{
-			  node.append("svg:text")
-			      .attr("dy", ".3em")
+			 <#-- node.append("svg:text")
+			      .attr("dy", "0.3em")
 			      .style("text-anchor", "middle")
 			      .text(function(d) { 
 			      	if(visType=="researchers" || visType=="publications")
@@ -1934,7 +1973,7 @@ $( function(){
 				    }
 				    else
 				    	return Math.min(2 * d.r, (2 * d.r - 1) / 120 * 10) + "px"; 
-			      })
+			      })-->
 			//}
 			
 			node.transition()
@@ -1978,9 +2017,10 @@ $( function(){
 			    .data(groups)
 			      .attr("d", groupPath)
 			    .enter().insert("path", "g")
+				  .attr("transform", function(d) { return "translate(" + (margin.left) + "," + (margin.top) + ")"; })
 			      .style("fill", groupFill)
 			      .style("stroke", groupFill)
-			      .style("stroke-width", 100)
+			      .style("stroke-width", 50)
 			      .style("stroke-linejoin", "round")
 			      .style("opacity", .3)
 			      .attr("d", groupPath)
