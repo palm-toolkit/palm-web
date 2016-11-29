@@ -10,15 +10,13 @@
   </div>
 <div class="menu" id="menu">
  <ul>
+ <a id="coauthors" href="#"><li>Highlight Co-Authors</li></a>
  <a id="append" href="#"><li>Add to Search</li></a>
  <a id="replace" href="#"><li>Search for</li></a>
- <a id="coauthors" href="#"><li>Add Co-Authors</li></a>
- </ul>
+</ul>
 </div>
 </div>
- 	
 <script>
-
 		
 <#-- jquery -->
 $( function(){
@@ -433,6 +431,8 @@ $( function(){
 					      });
 					      
 						s.bind('rightClickNode', function(e){
+						console.log("eeright")
+						console.log(e)
 							var nodeId = e.data.node.id,
 	            			toKeep = s.graph.neighbors(nodeId);
 					        toKeep[nodeId] = e.data.node;
@@ -2729,10 +2729,30 @@ $( function(){
 	});
 	
 	$('#coauthors').click(function(e){
-	var targetVal = $(this).parent().parent()[0].value.data.node.attributes.authorid;
-	 hidemenudiv('menu');
-	 itemCoAuthors(targetVal,"researcher");
-	 return false;
+	console.log("ee")
+	console.log(e)
+	 var nodeId = $(this).parent().parent()[0].value.data.node.id,
+	            			toKeep = s.graph.neighbors(nodeId);
+					        toKeep[nodeId] = e.data.node;
+					
+					        s.graph.nodes().forEach(function(n) {
+					          if (toKeep[n.id])
+					            n.color = n.originalColor;
+					          else
+					            n.color = '#c9c0c2';
+					        });
+					
+					        s.graph.edges().forEach(function(e) {
+					          if (toKeep[e.source] && toKeep[e.target])
+					            e.color = e.originalColor;
+					          else
+					            e.color = '#c9c0c2';
+					        });
+					
+					        // Since the data has been modified, we need to
+					        // call the refresh method to make the colors
+					        // update effective.
+					        s.refresh();
 	});
 	
 	function itemAdd(id, type){
@@ -2754,16 +2774,16 @@ $( function(){
 		$.PALM.boxWidget.refresh( searchWidget.element , searchWidget.options );
 	}
 	
-	function itemCoAuthors(id, type){
+	<#--function itemCoAuthors(id, type){
 		dataTransfer = "true";
 		authoridForCoAuthors = id;
 		var updateString = "?type="+type+"&dataList="+names+"&idList="+ids+"&visType="+visType+"&dataTransfer="+dataTransfer+"&authoridForCoAuthors="+authoridForCoAuthors;
 					
 			<#-- update visualize widget -->
-			var visualizeWidget = $.PALM.boxWidget.getByUniqueName( 'explore_visualize' ); 
+			<#-- var visualizeWidget = $.PALM.boxWidget.getByUniqueName( 'explore_visualize' ); 
 			visualizeWidget.options.queryString = updateString;
 			$.PALM.boxWidget.refresh( visualizeWidget.element , visualizeWidget.options );
-	}	
+	}	-->
 	
 	function sortList(a,b){
 			a = a.toLowerCase();

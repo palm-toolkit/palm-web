@@ -379,7 +379,7 @@
 							}	
 							
 							<#-- CIRCLES FILTER -->
-							if(data.circleFilter != undefined && data.circleFilter.circles.length!=0){
+							if(data.circleFilter != undefined && data.circleFilter.circles !=undefined && data.circleFilter.circles.length!=0){
 								cirList = data.circleFilter.circles;
 								cirCount = $( '<span/>' )
 								cirSectionHeader = $( '<span/>' ).addClass('filter-name').html("CIRCLES ")

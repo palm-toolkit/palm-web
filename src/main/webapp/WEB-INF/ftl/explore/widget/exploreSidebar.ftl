@@ -45,7 +45,9 @@
 	$( function(){
 		
 		refreshPage = "true";
-			data = new Object();
+		var listPopUpIds = [];
+		data = new Object();
+		
 			<#-- add slim scroll -->
 	      $(".content-list").slimscroll({
 				height: "100%",
@@ -111,8 +113,6 @@
 		var popUp = 0;
 		var itemType = "researchers";
 		var url = "searchResearchers";
-		<#-- generate unique id for progress log -->
-		var uniqueSearchWidget = $.PALM.utility.generateUniqueId();
 		
 		var options ={
 			source : "<@spring.url '/explore/' />"+url,
@@ -122,31 +122,44 @@
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
 			
+			<#-- generate unique id for progress log -->
+			var uniqueSearchWidget = $.PALM.utility.generateUniqueId();
+		
 				<#-- show pop up progress log -->
 				$.PALM.popUpMessage.create( "Loading "+itemType+" ..", { uniqueId:uniqueSearchWidget, popUpHeight:40, directlyRemove:false , polling:false});
+				listPopUpIds.push(uniqueSearchWidget);
 			},
 
 			onRefreshDone: function(  widgetElem , data ){
+				if(data.oldList == undefined)
+				{
+					for(var i=0;i<listPopUpIds.length;i++)
+					{	 
+						<#-- remove  pop up progress log -->
+						$.PALM.popUpMessage.remove( listPopUpIds[i] );
+						listPopUpIds.splice(i,1);
+						i--;
+					}
+					targetContainer.html( "" );
+					//$( "#search_field" ).val("");
 				
-				targetContainer.html( "" );
-				//$( "#search_field" ).val("");
-			
-				getData(data, targetContainer, widgetElem);
-				
-				<#-- drop down change event-->
-				dropDown = $( widgetElem ).find( "#select-drop-down" );
-				var sel = document.getElementById('select-drop-down');
-   				sel.onchange = function() {
-      				itemType = dropDown.val();
+					getData(data, targetContainer, widgetElem);
 					
-   					getURL(itemType);
-	   				$( "#search_field" ).val("");
-   					targetContainer.html( "" );
-   					//getData(data, targetContainer, widgetElem);
-   					var obj = $.PALM.boxWidget.getByUniqueName( 'explore_sidebar' ); 
-					obj.options.source = "<@spring.url '/explore/' />"+ url
-   					$.PALM.boxWidget.refresh( obj.element , obj.options );
-				}	
+					<#-- drop down change event-->
+					dropDown = $( widgetElem ).find( "#select-drop-down" );
+					var sel = document.getElementById('select-drop-down');
+	   				sel.onchange = function() {
+	      				itemType = dropDown.val();
+						
+	   					getURL(itemType);
+		   				$( "#search_field" ).val("");
+	   					targetContainer.html( "" );
+	   					//getData(data, targetContainer, widgetElem);
+	   					var obj = $.PALM.boxWidget.getByUniqueName( 'explore_sidebar' ); 
+						obj.options.source = "<@spring.url '/explore/' />"+ url
+	   					$.PALM.boxWidget.refresh( obj.element , obj.options );
+					}
+				}		
 			}
 		};	
 		
@@ -169,11 +182,8 @@
 		}
 		
 		function getData(data, targetContainer, widgetElem){
-			<#-- Content List -->
-					<#-- remove  pop up progress log -->
-					$.PALM.popUpMessage.remove( uniqueSearchWidget );
-					//popUp = 0;
-				
+					
+					<#-- Content List -->
    				   	if(itemType == "researchers"){
    						
 							if( data.count == 0 ){
