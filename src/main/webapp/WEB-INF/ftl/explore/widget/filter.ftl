@@ -95,7 +95,7 @@
 					
 			},
 			onRefreshDone: function(  widgetElem , data ){
-			
+			console.log("currentTabName: " + currentTabName)
 			$(".widget_body").slimscroll({
 				height: "75vh",
 		        size: "5px",
@@ -222,6 +222,7 @@
 						filterPopUpIds.splice(i,1);
 						i--;
 					}
+					
 					if(data.type!="undefined" && data.visType!="undefined")
 					{
 						targetContainer.html("");
@@ -232,7 +233,11 @@
 			    			
 			    			if(data.TimeFilter != undefined)
 			    			{
-				    			targetContainer
+			    				yearFilter = $('<div/>')
+				    					.attr("id","year_filter")
+				    					.css("width","100%")
+				    			targetContainer.append(yearFilter)		
+				    			yearFilter
 				    				.append(
 				    					$('<div/>')
 				    						.css("width","20%")
@@ -404,8 +409,38 @@
 							}
 						}						
 					}
+				
+					<#-- hide filters in specific cases -->
+					var other_filters = document.getElementById("other_filters")
+					if(other_filters!=null)
+					{
+				 		if(currentTabName == "Comparison")
+				 			other_filters.style.display = "none";
+						else
+							other_filters.style.display = "block";
+			 		}
+			 		var year_filter = document.getElementById("year_filter")
+					if(year_filter!=null)
+					{
+				 		if(currentTabName == "Similar")
+				 		{
+				 			year_filter.style.display = "none";
+				 			other_filters.style.visibility = "hidden";
+						}
+						else
+						{
+							year_filter.style.display = "block";
+							other_filters.style.visibility = "visible";
+						}	
+			 		}
+						
+				
 				});
+				
+							
+			
 			}
+			
 		};	
 		
 		function togglePub(source) {

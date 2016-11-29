@@ -10,7 +10,6 @@
   </div>
 <div class="menu" id="menu">
  <ul>
- <a id="coauthors" href="#"><li>Highlight Co-Authors</li></a>
  <a id="append" href="#"><li>Add to Search</li></a>
  <a id="replace" href="#"><li>Search for</li></a>
 </ul>
@@ -39,7 +38,11 @@ $( function(){
 		var pops_publications = [];
 		var pops_topics = [];
 		var visPopUpIds = [];
-		
+		var cameraX = 0;
+		var cameraY = 0;
+		var cameraRatio = 1;
+		var visItem = "";
+		currentTabName = "";
 		<#-- do not load data again if already loaded -->
 		var loadedList = [];
 		var dataLoadedFlag = "0";
@@ -205,15 +208,35 @@ $( function(){
 				 		hidehoverdiv('divtoshow');
 				 		hidemenudiv('menu')
 
-				 		var other_filters = document.getElementById("other_filters")
+	
+						<#-- hide filters in specific cases -->
+						var other_filters = document.getElementById("other_filters")
+						
 						if(other_filters!=null)
 						{
-					 		if(item == "Comparison")
-					 			other_filters.style.visibility = "hidden";
+					 		if(e.target.title == "Comparison")
+					 			other_filters.style.display = "none";
 							else
-								other_filters.style.visibility = "visible";
+								other_filters.style.display = "block";
 				 		}
+				 		var year_filter = document.getElementById("year_filter")
+						if(year_filter!=null)
+						{
+					 		if(e.target.title == "Similar")
+					 		{
+					 			year_filter.style.display = "none";
+					 			other_filters.style.visibility = "hidden";
+							}
+							else
+							{
+								year_filter.style.display = "block";
+								other_filters.style.visibility = "visible";
+							}	
+				 		}
+				 		
 				 		currentTab = index;
+				 		currentTabName = e.target.title;
+				 		console.log("2:" + currentTabName)
 						loadVis(data.type, visType, e.target.title, widgetElem, names, ids, tabContent, data.authoridForCoAuthors);
 					});
 					
@@ -228,6 +251,8 @@ $( function(){
 					visualizationTabsHeaders.append( tabHeader );
 					visualizationTabsContents.append( tabContent );
 					if(item == visList[currentTab]){
+						currentTabName = item;
+				 		console.log("1:" + currentTabName)
 						loadVis(data.type, visType, item, widgetElem, names, ids, tabContent, data.authoridForCoAuthors);
 					}
 				});
@@ -247,7 +272,6 @@ $( function(){
 				if(visType != "topics")
 					visPopUpIds.push(pops_topics);	
 
-
 				for(var i=0;i<visPopUpIds.length;i++)
 				{	
 					<#-- remove  pop up progress log -->
@@ -256,7 +280,7 @@ $( function(){
 				}
 				
 				<#-- generate unique id for progress log -->
-				var uniqueVisWidget = $.PALM.utility.generateUniqueId();
+				uniqueVisWidget = $.PALM.utility.generateUniqueId();
 				
 				<#-- to show the gephi network again -->
 				if(loadedList.indexOf(visItem)!= -1){
@@ -389,7 +413,7 @@ $( function(){
 				$.PALM.popUpMessage.remove( uniqueVisWidget );
 				
 				<#-- gephi network -->
-				graphFile=data.map.graphFile;
+				
 				sigma.parsers.gexf( "<@spring.url '/resources/gexf/'/>" + data.map.graphFile ,s,function() {
 					//s.refresh();
 					s.refresh();
@@ -405,6 +429,7 @@ $( function(){
 					
 					if(data.oldVis=="false")
 					{
+						graphFile=data.map.graphFile;
 						if(s.graph.nodes().length < 20)
 						{
 							// Zoom out - single frame :
@@ -2507,7 +2532,6 @@ $( function(){
 			div.style.display = "block";
 			
 			if(e.type == "clickNode"){
-				$("#coauthors").show();
 				
 				<#-- do not show menu if the object is there in the setup already -->
 				if(names.indexOf(e.data.node.label) != -1){
@@ -2541,9 +2565,6 @@ $( function(){
 			
 			if(e.type == "clickEdge" || e.type == "similarBar" || e.type == "clickLocation" || e.type == "clickPublication" || e.type == "listItem" || e.type == "cluster" || e.type == "clusterItem" || e.type == "bubble" || e.type == "evolution"){
 					$(".menu").show();
-	
-				<#-- do not show menu if the object is there in the setup already -->
-					$("#coauthors").hide();
 			}
 			
 			<#-- append is invalid if the types are different -->
@@ -2728,33 +2749,6 @@ $( function(){
 		return false;
 	});
 	
-	$('#coauthors').click(function(e){
-	console.log("ee")
-	console.log(e)
-	 var nodeId = $(this).parent().parent()[0].value.data.node.id,
-	            			toKeep = s.graph.neighbors(nodeId);
-					        toKeep[nodeId] = e.data.node;
-					
-					        s.graph.nodes().forEach(function(n) {
-					          if (toKeep[n.id])
-					            n.color = n.originalColor;
-					          else
-					            n.color = '#c9c0c2';
-					        });
-					
-					        s.graph.edges().forEach(function(e) {
-					          if (toKeep[e.source] && toKeep[e.target])
-					            e.color = e.originalColor;
-					          else
-					            e.color = '#c9c0c2';
-					        });
-					
-					        // Since the data has been modified, we need to
-					        // call the refresh method to make the colors
-					        // update effective.
-					        s.refresh();
-	});
-	
 	function itemAdd(id, type){
 		var queryString = "?id="+id+"&type="+type;
 		
@@ -2774,16 +2768,6 @@ $( function(){
 		$.PALM.boxWidget.refresh( searchWidget.element , searchWidget.options );
 	}
 	
-	<#--function itemCoAuthors(id, type){
-		dataTransfer = "true";
-		authoridForCoAuthors = id;
-		var updateString = "?type="+type+"&dataList="+names+"&idList="+ids+"&visType="+visType+"&dataTransfer="+dataTransfer+"&authoridForCoAuthors="+authoridForCoAuthors;
-					
-			<#-- update visualize widget -->
-			<#-- var visualizeWidget = $.PALM.boxWidget.getByUniqueName( 'explore_visualize' ); 
-			visualizeWidget.options.queryString = updateString;
-			$.PALM.boxWidget.refresh( visualizeWidget.element , visualizeWidget.options );
-	}	-->
 	
 	function sortList(a,b){
 			a = a.toLowerCase();
