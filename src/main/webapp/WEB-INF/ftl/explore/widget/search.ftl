@@ -59,7 +59,6 @@
 				count= Object.keys(history_data).length+1;
 			}
 			
-
 				var search_widget = document.getElementById("search-widget")
 				search_widget.style.display="block";
 				var id = data.id;
@@ -72,61 +71,61 @@
 				
 				for(var i=0;i<data.name.length;i++){
 				
-							<#-- TO-DO Add css part to palm.css -->
-							nameDiv = $( '<span/>' )
-							.attr("id",data.id[i])
-							.addClass( 'name capitalize search-item' )
-							.html("  "+data.name[i]+ " X ")
-							<#-- click to delete item from search widget -->
-							.on( "click", function(e){
-								this.remove();
-								var i = ids.indexOf(e.delegateTarget.id);
-								names.splice(i, 1);
-								ids.splice(i,1);
+					<#-- TO-DO Add css part to palm.css -->
+					nameDiv = $( '<span/>' )
+					.attr("id",data.id[i])
+					.addClass( 'name capitalize search-item' )
+					.html("  "+data.name[i]+ " X ")
+					<#-- click to delete item from search widget -->
+					.on( "click", function(e){
+						this.remove();
+						var i = ids.indexOf(e.delegateTarget.id);
+						names.splice(i, 1);
+						ids.splice(i,1);
 
-								updateVisDelete( "true", type);
-								if(names.length == 0){
-									wordsContainer.html("");
-									visOptionsContainer.html( "" );
-								}
-								else
-									addToHistory();
-							});
+						updateVisDelete( "true", type);
+						if(names.length == 0){
+							wordsContainer.html("");
+							visOptionsContainer.html( "" );
+						}
+						else
+							addToHistory();
+					});
 				
 				if(data.replace && i==0){
 					type = data.type;
-							names = [];
-							ids = [];
-							wordsContainer.html( "" );
-							resetFlag = "1";
-							names.push(data.name[i]);
-							ids.push(data.id[i]);
-							
-							if(i == data.name.length-1)		
-								addToHistory();
+					names = [];
+					ids = [];
+					wordsContainer.html( "" );
+					resetFlag = "1";
+					names.push(data.name[i]);
+					ids.push(data.id[i]);
+					
+					if(i == data.name.length-1)		
+						addToHistory();
 
-							if(data.name[i]!=""){
-							wordsContainer
-								.append(nameDiv)
-						
-								if(resetFlag=="1" || currentVisType=="" || type!=data.type){
-									if(type == "researcher"){
-										setBoxes(id, type, "researchers")
-									}
-									if(type == "publication"){
-										setBoxes(id, type, "conferences")
-									}
-									if(type == "conference"){
-										setBoxes(id, type, "publications")
-									}
-									if(type == "topic"){
-										setBoxes(id, type, "publications")
-									}
-									if(type == "circle"){
-										setBoxes(id, type, "researchers")
-									}
-								}
+					if(data.name[i]!=""){
+					wordsContainer
+						.append(nameDiv)
+				
+						if(resetFlag=="1" || currentVisType=="" || type!=data.type){
+							if(type == "researcher"){
+								setBoxes(id, type, "researchers")
 							}
+							if(type == "publication"){
+								setBoxes(id, type, "conferences")
+							}
+							if(type == "conference"){
+								setBoxes(id, type, "publications")
+							}
+							if(type == "topic"){
+								setBoxes(id, type, "publications")
+							}
+							if(type == "circle"){
+								setBoxes(id, type, "researchers")
+							}
+						}
+					}
 							
 					if(i == data.name.length-1)		
 						callRefresh(id,type)
@@ -219,7 +218,6 @@
 			var filterWidget = $.PALM.boxWidget.getByUniqueName( 'explore_filter' ); 
 			filterWidget.options.queryString = queryString;
 			$.PALM.boxWidget.refresh( filterWidget.element , filterWidget.options );
-			
 		}
 		
 		function refreshVisFilter(id, type, visType){
@@ -245,7 +243,7 @@
 			visOptionsContainer.html("");
 			currentVisType = typeOfBox;
 			resetFlag = "0";
-			var borderProp = "5px ridge #000000 ";
+			var borderProp = "5px solid #000000 ";
 			<#-- change focus between search options -->
 			if(typeOfBox == "researchers"){
 				researcherBorderProp = borderProp;
@@ -294,109 +292,116 @@
 					var caption = "Click to generate/refresh "+"\n"+"visualization";
 					
 					visOptionsContainer.append(
-									$('<div/>')
-									.addClass('info-box box-home-explore bg-red')
-									.append(
-										$('<i/>')
-										.addClass('fa fa-users fa-lg'))
-										.css("text-align","center")
-									.append(
-										$('<div/>')
-										.addClass('info-box-content info-box-home-text')
-										.append(
-											$('<span/>')
-											.addClass('info-box-number fontsize24')
-										)
-									)		
-									.append($('<h5/>').css("text-align","center").html(specTitle))
-									.css("border" , researcherBorderProp)
-									.css({ "cursor":"pointer"})
-									.attr("title",caption)
-									.on( "click", function( e){
-										setBoxes(id, type, "researchers")
-										refreshVisFilter(id, type,  "researchers");
-									})
-								)
+						$('<div/>')
+						.addClass('info-box box-home-explore bg-red')
+						.append(
+							$('<i/>')
+							.addClass('fa fa-users fa-lg'))
+							.css("text-align","center")
+						.append(
+							$('<div/>')
+							.addClass('info-box-content info-box-home-text')
+							.append(
+								$('<span/>')
+								.addClass('info-box-number fontsize24')
+							)
+						)		
+						.append($('<h5/>').css("text-align","center").html(specTitle))
+						.css("border" , researcherBorderProp)
+						.css({ "cursor":"pointer"})
+						.attr("title",caption)
+						.on( "click", function( e){
+							setBoxes(id, type, "researchers")
+							refreshVisFilter(id, type,  "researchers");
+						})
+					)
 				
 				//	caption = "Corresponding " + "<br/>" +"conferences";
 					visOptionsContainer.append(
-									$('<div/>')
-									.addClass('info-box box-home-explore bg-yellow')
-									.append(
-										$('<i/>')
-										.addClass('fa fa-globe fa-lg'))
-										.css("text-align","center")
-									.append(
-										$('<div/>')
-										.addClass('info-box-content info-box-home-text')
-										.append(
-											$('<span/>')
-											.addClass('info-box-number fontsize24')
-										)
-									)		
-									.append($('<h5/>').css("text-align","center").html("Conferences"))
-									.css("border" , conferenceBorderProp)
-									.css({ "cursor":"pointer"})
-									.attr("title",caption)
-									.on( "click", function( e){
-										setBoxes(id, type, "conferences")
-										refreshVisFilter(id, type,  "conferences");
-									})
-								)
-				
+						$('<div/>')
+						.addClass('info-box box-home-explore bg-yellow')
+						.append(
+							$('<i/>')
+							.addClass('fa fa-globe fa-lg'))
+							.css("text-align","center")
+						.append(
+							$('<div/>')
+							.addClass('info-box-content info-box-home-text')
+							.append(
+								$('<span/>')
+								.addClass('info-box-number fontsize24')
+							)
+						)		
+						.append($('<h5/>').css("text-align","center").html("Conferences"))
+						.css("border" , conferenceBorderProp)
+						.css({ "cursor":"pointer"})
+						.attr("title",caption)
+						.on( "click", function( e){
+							setBoxes(id, type, "conferences")
+							refreshVisFilter(id, type,  "conferences");
+						})
+					)
+	
 				//	caption = "Corresponding publications";	
 					visOptionsContainer.append(
-									$('<div/>')
-									.addClass('info-box box-home-explore bg-green')
-									.append(
-										$('<i/>')
-										.addClass('fa fa-file-text-o fa-lg'))
-										.css("text-align","center")
-									.append(
-										$('<div/>')
-										.addClass('info-box-content info-box-home-text')
-										.append(
-											$('<span/>')
-											.addClass('info-box-number fontsize24')
-										)
-									)		
-									.append($('<h5/>').css("text-align","center").html("Publications"))
-									.css("border" , publicationBorderProp)
-									.css({ "cursor":"pointer"})
-									.attr("title",caption)
-									.on( "click", function( e){
-										setBoxes(id, type, "publications")
-										refreshVisFilter(id, type,  "publications");
-									})
-								)
+						$('<div/>')
+						.addClass('info-box box-home-explore bg-green')
+						.append(
+							$('<i/>')
+							.addClass('fa fa-file-text-o fa-lg'))
+							.css("text-align","center")
+						.append(
+							$('<div/>')
+							.addClass('info-box-content info-box-home-text')
+							.append(
+								$('<span/>')
+								.addClass('info-box-number fontsize24')
+							)
+						)		
+						.append($('<h5/>').css("text-align","center").html("Publications"))
+						.css("border" , publicationBorderProp)
+						.css({ "cursor":"pointer"})
+						.attr("title",caption)
+						.on( "click", function( e){
+							setBoxes(id, type, "publications")
+							refreshVisFilter(id, type,  "publications");
+						})
+					)
 
 				//	caption = "Corresponding topics";
 				//	if(type!="publication" && type!="topic")
 				//		caption = "Corresponding interests";
+				
+				specTitle = "Topics";
+				if(type!="publication"){
+					specTitle = "Interests";
+					//caption = "Corresponding researchers";
+				}
+				
 					visOptionsContainer.append(
-									$('<div/>')
-									.addClass('info-box box-home-explore bg-blue')
-									.append(
-										$('<i/>')
-										.addClass('fa fa-comments-o fa-lg'))
-										.css("text-align","center")
-									.append(
-										$('<div/>')
-										.addClass('info-box-content info-box-home-text')
-										.append(
-											$('<span/>')
-											.addClass('info-box-number fontsize24')
-										)
-									)		
-									.append($('<h5/>').css("text-align","center").html("Topics"))
-									.css("border" , topicBorderProp)
-									.css({ "cursor":"pointer"})
-									.attr("title",caption)
-									.on( "click", function( e){
-										setBoxes(id, type, "topics")
-										refreshVisFilter(id, type,  "topics");
-									})
-								)
+						$('<div/>')
+						.addClass('info-box box-home-explore bg-blue')
+						.append(
+							$('<i/>')
+							.addClass('fa fa-comments-o fa-lg'))
+							.css("text-align","center")
+						.append(
+							$('<div/>')
+							.addClass('info-box-content info-box-home-text')
+							.append(
+								$('<span/>')
+								.addClass('info-box-number fontsize24')
+							)
+						)		
+						.append($('<h5/>').css("text-align","center").html(specTitle))
+						.css("border" , topicBorderProp)
+						.css({ "cursor":"pointer"})
+						.attr("title",caption)
+						.on( "click", function( e){
+							setBoxes(id, type, "topics")
+							refreshVisFilter(id, type,  "topics");
+						})
+					)
 		}
 		
 		function addToHistory()

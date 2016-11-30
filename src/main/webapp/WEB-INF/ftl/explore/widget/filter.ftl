@@ -95,7 +95,6 @@
 					
 			},
 			onRefreshDone: function(  widgetElem , data ){
-			console.log("currentTabName: " + currentTabName)
 			$(".widget_body").slimscroll({
 				height: "75vh",
 		        size: "5px",

@@ -37,13 +37,13 @@ $( function(){
 		var pops_conferences = [];
 		var pops_publications = [];
 		var pops_topics = [];
+		var pops_list = [];
 		var visPopUpIds = [];
 		var cameraX = 0;
 		var cameraY = 0;
 		var cameraRatio = 1;
 		var visItem = "";
 		currentTabName = "";
-		<#-- do not load data again if already loaded -->
 		var loadedList = [];
 		var dataLoadedFlag = "0";
 		var loadedLoc = [];
@@ -194,13 +194,34 @@ $( function(){
 					var tabContent = $( '<div/>' )
 						.attr({ "id" : "tab_" + tabHeaderText })
 						.addClass( "tab-pane" )
-						//.css("height","70vh")
-						//.css("overflow","scroll");
+
+					var headerCaption = new Object();
+					headerCaption["researcher-researchers-Network"] = "Co-authors network: \nNetwork of selected researchers and their co-authors \n\nNodes are colored as per node degree. \nEdges are weighted by number of co-authorships. \nIf multiple researchers are selected, common co-authors are shown. \nRight click for highlighting co-authors"
+					headerCaption["researcher-researchers-Group"] = "Clustered authors: \nCo-authors clustered based on interests \n\nConvex hulls enclose individual clusters. \nIf multiple researchers are selected, common co-authors are shown."
+					headerCaption["researcher-researchers-Similar"] = "Similar researchers: \nResearchers similar to selected researchers, based on interests \n\nMay or may not be co-authors. \nFilters not applicable!"
+					headerCaption["researcher-researchers-List"] = "List of co-authors: \nCo-authors with number of co-authorships \n\nIf multiple researchers are selected, common co-authors are shown."
+					headerCaption["researcher-researchers-Comparison"] = "Comparison: \nVenn diagram to compare selected researchers based on co-authors"
+					
+					headerCaption["researcher-conferences-Locations"] = "Geographical locations: \nConference event locations on world map. \n\nLocations of the events attended by the selected researchers, if conferences are added and geographical information is available. \nIf multiple researchers are selected, conference locations where they have publications together are shown."
+					headerCaption["researcher-conferences-Group"] = "Clustered conferences: \nConferences clustered based on interests \n\nConvex hulls enclose individual clusters. \nIf multiple researchers are selected, conference where they have publications together are clustered."
+					headerCaption["researcher-conferences-List"] = "List of conferences and their respective events: \nConference events attended by selected authors , with year and location information. \n\nIf multiple researchers are selected, conference locations where they have publications together are shown."
+					headerCaption["researcher-conferences-Comparison"] = "Comparison: \nVenn diagram to compare selected researchers based on conferences \n\nResult might be different from other conference visualizations, in case researchers have attended same conferences, but not co-authored."
+										
+					headerCaption["researcher-publications-Timeline"] = "Publications timeline: \nPublications in chronological order"
+					headerCaption["researcher-publications-Group"] = "Clustered publications: \nPublications clustered based on topics \n\nConvex hulls enclose individual clusters. \nIf multiple researchers are selected, common publications are clustered."
+					headerCaption["researcher-publications-List"] = "List of publications"
+					headerCaption["researcher-publications-Comparison"] = "Comparison: \nVenn diagram to compare selected researchers based on publications"
+					
+					headerCaption["researcher-topics-Bubbles"] = "Bubble chart: \nInterests of the researchers in form of discs \n\nA disc representing an interest, has a portion each of the selected researchers. \nDiscs are sorted by weights of the interests."
+					headerCaption["researcher-topics-Evolution"] = "Evolution of interests: \nChart to depict interests of selected authors over the years. \n\nInterests corresponding to each year are marked by points."
+					headerCaption["researcher-topics-List"] = "List of topics of interest"
+					headerCaption["researcher-topics-Comparison"] = "Comparison: \nVenn diagram to compare selected researchers based on interests"
+					
 					
 					var tabHeader = $( '<li/>' )
 						.append(
 							$( '<a/>' )
-							.attr({ "href": "#tab_" + tabHeaderText, "data-toggle":"tab" , "aria-expanded" : "true", "title" : tabHeaderText})
+							.attr({ "href": "#tab_" + tabHeaderText, "data-toggle":"tab" , "aria-expanded" : "true", "title" : headerCaption[objectType + "-" + visType + "-" + item]})
 							.html( tabHeaderText )
 						);
 						
@@ -214,7 +235,7 @@ $( function(){
 						
 						if(other_filters!=null)
 						{
-					 		if(e.target.title == "Comparison")
+					 		if(e.target.text == "Comparison")
 					 			other_filters.style.display = "none";
 							else
 								other_filters.style.display = "block";
@@ -222,7 +243,7 @@ $( function(){
 				 		var year_filter = document.getElementById("year_filter")
 						if(year_filter!=null)
 						{
-					 		if(e.target.title == "Similar")
+					 		if(e.target.text == "Similar")
 					 		{
 					 			year_filter.style.display = "none";
 					 			other_filters.style.visibility = "hidden";
@@ -235,9 +256,10 @@ $( function(){
 				 		}
 				 		
 				 		currentTab = index;
-				 		currentTabName = e.target.title;
-				 		console.log("2:" + currentTabName)
-						loadVis(data.type, visType, e.target.title, widgetElem, names, ids, tabContent, data.authoridForCoAuthors);
+				 		currentTabName = e.target.text;
+				 		console.log("here")
+				 		console.log(e)
+						loadVis(data.type, visType, e.target.text, widgetElem, names, ids, tabContent, data.authoridForCoAuthors);
 					});
 					
 					if(currentTab>visList.length-1)
@@ -252,7 +274,6 @@ $( function(){
 					visualizationTabsContents.append( tabContent );
 					if(item == visList[currentTab]){
 						currentTabName = item;
-				 		console.log("1:" + currentTabName)
 						loadVis(data.type, visType, item, widgetElem, names, ids, tabContent, data.authoridForCoAuthors);
 					}
 				});
@@ -271,16 +292,19 @@ $( function(){
 					visPopUpIds.push(pops_publications);	
 				if(visType != "topics")
 					visPopUpIds.push(pops_topics);	
-
+				if(visItem != "List")
+					visPopUpIds.push(pops_list)
+				console.log(pops_list)
 				for(var i=0;i<visPopUpIds.length;i++)
 				{	
 					<#-- remove  pop up progress log -->
 					$.PALM.popUpMessage.remove( visPopUpIds[i] );
+					console.log("del: " + visPopUpIds[i])
 					visPopUpIds.splice(i,1);
 				}
 				
 				<#-- generate unique id for progress log -->
-				uniqueVisWidget = $.PALM.utility.generateUniqueId();
+				var uniqueVisWidget = $.PALM.utility.generateUniqueId();
 				
 				<#-- to show the gephi network again -->
 				if(loadedList.indexOf(visItem)!= -1){
@@ -306,6 +330,8 @@ $( function(){
 							pops_publications.push(uniqueVisWidget);		
 						if(visType == "topics")
 							pops_topics.push(uniqueVisWidget);	
+						if(visItem == "List")
+							pops_list.push(uniqueVisWidget);
 						
 					}
 					var url = "<@spring.url '/explore/visualize' />"+"?visTab="+visItem+"&type="+type+"&visType="+visType+"&dataList="+names+"&idList="+ids+"&checkedPubValues="+checkedPubValues+"&checkedConfValues="+checkedConfValues+"&checkedTopValues="+checkedTopValues+"&checkedCirValues="+checkedCirValues+"&startYear="+startYear+"&endYear="+endYear+"&yearFilterPresent="+yearFilterPresent+"&deleteFlag="+deleteFlag+"&authoridForCoAuthors="+authoridForCoAuthors;
@@ -522,7 +548,9 @@ $( function(){
 				}); 
 				s.refresh();
 				url="";
-			});
+			}).fail(function() {
+	   	 		$.PALM.popUpMessage.remove( uniquePid );
+	  		});
 		}
 		else{
 				console.log(graphFile)
@@ -784,7 +812,9 @@ $( function(){
 							hidehoverdiv('divtoshow')
 						})
 					}
-				});
+				}).fail(function() {
+			   	 		$.PALM.popUpMessage.remove( uniquePid );
+			  		});
 			}		
 		}
 		
@@ -969,7 +999,9 @@ $( function(){
 						)
 					});
 				}	
-			});
+			}).fail(function() {
+	   	 		$.PALM.popUpMessage.remove( uniquePid );
+	  		});
 		}
 		
 		<#-- BUBBLES TAB -->
@@ -997,7 +1029,9 @@ $( function(){
 					
 					visBubbles(dataBubble.map.list, dataBubble.dataList);
 				}
-			});
+			}).fail(function() {
+	   	 		$.PALM.popUpMessage.remove( uniquePid );
+	  		});
 		}
 				
 		<#-- EVOLUTION TAB -->
@@ -1043,7 +1077,9 @@ $( function(){
 					
 						drawDimpleChart(data.map.list, data.map.topicIdMap);
 				}	
-			});
+			}).fail(function() {
+	   	 		$.PALM.popUpMessage.remove( uniquePid );
+	  		});
 		}
 
 		<#-- GROUP TAB -->
@@ -1105,7 +1141,9 @@ $( function(){
 							visualizeCluster(data, mainWidget, visType);	
 					}
 				}	
-			});
+			}).fail(function() {
+	   	 		$.PALM.popUpMessage.remove( uniquePid );
+	  		});
 		}
 		
 		<#-- LIST TAB -->
@@ -1468,7 +1506,9 @@ $( function(){
 							}			
 						}
 					}
-				});
+				}).fail(function() {
+			   	 		$.PALM.popUpMessage.remove( uniquePid );
+			  		});
 		}
 		
 		<#-- COMPARISON TAB -->
@@ -1590,7 +1630,9 @@ $( function(){
 				        d3.event.stopPropagation();    
 					})
 				}	
-			});
+			}).fail(function() {
+	   	 		$.PALM.popUpMessage.remove( uniquePid );
+	  		});
 		}
 		
 		function vennList(vennListC, nameList, idsList){
@@ -1727,7 +1769,10 @@ $( function(){
 										.append('svg')
 										.attr({'width':700,'height':height})
 						
-						canvas.on("click", function(e) { hidemenudiv('menu'); })		
+						canvas.on("click", function(e) { 
+							hidemenudiv('menu'); 
+							hidehoverdiv('divtoshow');
+						})		
 					
 						var chart = canvas.append('g')
 										//.attr("transform", "translate(150,0)")
@@ -1768,16 +1813,19 @@ $( function(){
 												if(intarr.length<5)
 													count = intarr.length
 													
-												var str = "Top common interests:";
+												var str = "Common interests [" + data.map.similarity[i] + "]: <br/>";
+												if(objectType == "publication")
+													str = "Common topics: <br/>";
 												for(var i=0; i<count; i++)
 													str = str +  "<br /> - " + intarr[i] 
-														
-													showhoverdiv(obj,'divtoshow', str);
+												str = str + " ...."		
+													
+												showhoverdiv(obj,'divtoshow', str);
 											}		
 										})
-										.on("mouseout", function(e,i){
-											hidehoverdiv('divtoshow');
-										})
+										//.on("mouseout", function(e,i){
+										//	hidehoverdiv('divtoshow');
+										//})
 			
 			
 					var transit = d3.select("svg").selectAll("rect")
@@ -1793,10 +1841,10 @@ $( function(){
 									.append('text')
 									.attr({'x':function(d) {return 0; },'y':function(d,i){ return yscale(i)+32; }})
 									.text(function(d,i){
-										if(objectType=="topic")
+										//if(objectType=="topic")
 											return data.map.names[i]
-										else
-											return data.map.names[i] + " (Common interests: " + data.map.similarity[i] + ") "; 
+										//else
+											//return data.map.names[i] + " (Common interests: " + data.map.similarity[i] + ") "; 
 									}).style({'fill':'black','font-size':'13px', 'font-weight':'bold'})
 									.on("click", function(e, i){
 											
@@ -1826,19 +1874,24 @@ $( function(){
 												if(intarr.length<5)
 													count = intarr.length
 													
-												var str = "Top common interests:";
+												var str = "Common interests [" + data.map.similarity[i] + "]: <br/>";
+												if(objectType == "publication")
+													str = "Common topics: <br/>";
 												for(var i=0; i<count; i++)
 													str = str +  "<br /> - " + intarr[i] 
+												str = str + " ...."	
 														
 													showhoverdiv(obj,'divtoshow', str);
 											}
 										})
-										.on("mouseout", function(e,i){
-											hidehoverdiv('divtoshow');
-										})
+										//.on("mouseout", function(e,i){
+										//	hidehoverdiv('divtoshow');
+										//})
 					}
 				}			
-			});
+			}).fail(function() {
+	   	 		$.PALM.popUpMessage.remove( uniquePid );
+	  		});
 		}
 		
 		function visualizeCluster(data, tabContainer , visType){
@@ -1930,7 +1983,7 @@ $( function(){
 							visType : visType 
 						};
 						
-						var str = d.name;
+						var str = d.name + "<br />";
 						for(var i=0; i<d.nodeTerms.length; i++)
 							str = str +  "<br /> - " + d.nodeTerms[i] 
 						
@@ -2078,7 +2131,9 @@ $( function(){
 							visType : visType 
 						}; 
 						
-				   var str = "Cluster topics/interests:";
+				   var str = "Interests of cluster: <br/>";
+				   if(objectType == "publication")
+				   	str = "Topics of cluster: <br/>";
 						for(var i=0; i<d.values[0].clusterTerms.length; i++)
 							str = str +  "<br /> - " + d.values[0].clusterTerms[i] 
 									
@@ -2382,9 +2437,7 @@ $( function(){
 									
 					showmenudiv(obj,'menu');
 				
-				console.log(topicIdMap[e.y])
 				d3.event.stopPropagation(); 
-				//console.log(d3.event.pageX + " : " + d3.event.pageY );
 			  })
 		}
 		

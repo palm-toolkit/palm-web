@@ -9,7 +9,7 @@
 			  <option value="researchers" selected>RESEARCHERS</option>
 			  <option value="conferences">CONFERENCES</option>
 			  <option value="publications">PUBLICATIONS</option>
-			  <option value="topics">TOPICS</option>
+			  <option value="topics">TOPICS/INTERESTS</option>
 			  <option value="circles">CIRCLES</option>
 			</select>
 	    </div>
@@ -106,7 +106,8 @@
 			    			itemSearch( $( "#search_field" ).val() , "first", data, targetContainer);
 			    		}	
 					})
-				
+					
+				$( "#search_field" ).val("");
 		
 		<#-- event for searching researcher -->
 		var searchText = $( "#search_field" ).val();
