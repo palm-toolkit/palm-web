@@ -361,7 +361,10 @@
 							if(data.topicFilter != undefined && data.topicFilter.topicDetailsList.length!=0){
 							 	topList = data.topicFilter.topicDetailsList;
 								topCount = $( '<span/>' )
-							 	topSectionHeader = $( '<span/>' ).addClass('filter-name').html("TOPICS/INTERESTS")
+								var filterName = "Topics"
+								if(objectType != "Publication")
+									filterName = "Interests"
+							 	topSectionHeader = $( '<span/>' ).addClass('filter-name').html(filterName)
 												.append('&nbsp;')
 												.append(
 													$('<span/>')

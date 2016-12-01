@@ -15,6 +15,7 @@
 </ul>
 </div>
 </div>
+
 <script>
 		
 <#-- jquery -->
@@ -28,6 +29,18 @@ $( function(){
    			touchScrollStep: 50,
 		});
 
+		var visHeaderMenu = document.getElementById("widget-explore_visualize").getElementsByClassName("box-tools pull-right")[0];
+		var fullscr= $('<button/>')
+					.addClass('btn btn-box-tool toggle-expand-btn')
+						.append(
+							$('<i/>')
+							.addClass('fa fa-expand')
+						)
+		fullscr.appendTo(visHeaderMenu)
+		$(".toggle-expand-btn").click(function (e) {
+		  $(this).closest('.box').toggleClass('panel-fullscreen');
+		});
+		
 		var visType = "";
 		var defaultVisType = "";
 		var objectType = "";
@@ -723,7 +736,8 @@ $( function(){
 							 (function(i) {
 								$.getJSON("https://api.mapbox.com/geocoding/v5/mapbox.places/" + data.map.events[i].location + ".json?autocomplete=false&access_token=pk.eyJ1IjoibWd1bGlhbmkiLCJhIjoiY2lyNTJ5N3JrMDA1amh5bWNkamhtemN6ciJ9.uBTppyCUU7bF58hUUVxZaw",
 									function(mapdata){
-					
+										console.log("mapdata")
+										console.log(mapdata)
 										year = data.map.events[i].year
 										eventGroupId = data.map.events[i].eventGroupId
 										groupname = data.map.events[i].groupName
@@ -1587,6 +1601,8 @@ $( function(){
 				        tooltip.transition().duration(400).style("opacity", .9);
 				        if(objectType == "researcher" && visType == "researchers")
 				        	str = "co-authors"
+						else if((objectType == "researcher" || objectType == "conference" || objectType == "circle") && visType == "topics")
+							str = "interests"
 				        else
 				        	str = visType;	
 				        tooltip.text(d.size + " "+ str);

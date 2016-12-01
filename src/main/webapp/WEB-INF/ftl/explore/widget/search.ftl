@@ -289,7 +289,7 @@
 						//caption = "Corresponding researchers";
 					}
 					
-					var caption = "Click to generate/refresh "+"\n"+"visualization";
+					var caption = "Click to generate/refresh "+"\n"+"visualizations";
 					
 					visOptionsContainer.append(
 						$('<div/>')
