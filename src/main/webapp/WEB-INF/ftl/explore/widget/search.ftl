@@ -427,6 +427,15 @@
 			historyGroup.ids = historyIds;
 			historyGroup.type = type;
 			historyGroup.time = timestamp;
+			
+			if(count == 21)
+			{
+				for(var i=1; i<21; i++)
+				{
+					history_data[i] = history_data[i+1]
+				}	
+				count--;
+			}
 			history_data[count] = historyGroup;
 			window.localStorage.removeItem(history_data);
 			localStorage.setItem('history_data',JSON.stringify(history_data));

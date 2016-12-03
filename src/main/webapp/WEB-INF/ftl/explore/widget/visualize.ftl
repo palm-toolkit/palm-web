@@ -15,7 +15,20 @@
 </ul>
 </div>
 </div>
-
+<style>
+.panel-fullscreen {
+	display: block;
+	z-index: 9999;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	overflow: auto;
+}
+</style>
 <script>
 		
 <#-- jquery -->
@@ -39,6 +52,7 @@ $( function(){
 		fullscr.appendTo(visHeaderMenu)
 		$(".toggle-expand-btn").click(function (e) {
 		  $(this).closest('.box').toggleClass('panel-fullscreen');
+		  
 		});
 		
 		var visType = "";
@@ -61,6 +75,7 @@ $( function(){
 		var dataLoadedFlag = "0";
 		var loadedLoc = [];
 		var graphFile;
+		var fullscreen = 0;
 		var options ={
 			source : "<@spring.url '/explore/visualize' />",
 			query: "",
@@ -402,7 +417,7 @@ $( function(){
 		            	edgeHoverExtremities: 'true',
 		            	autoRescale:  ['nodeSize'],
 		            	doubleClickZoomingRatio: 1.7,
-		            	labelThreshold: 7,
+		            	labelThreshold: 4,
 		            	zoomMax: 50,
 		            	defaultLabelSize: 13,
 		            	edgeColor:"default",
@@ -478,6 +493,15 @@ $( function(){
 							  ratio: 0.2
 							});
 						}
+						if(s.graph.nodes().length > 200)
+						{
+							// Zoom out - single frame :
+							s.camera.goTo({
+							  x: 0,
+							  y: 0,
+							  ratio: 1.5
+							});
+						}
 					
 						s.renderers[0].bind("render", function (e) {
 							cameraX = e.target.camera.x;
@@ -541,7 +565,7 @@ $( function(){
 						})
 						
 						s.bind('overEdge',function(e){
-							if(!(edgeSizes.every( (val, i, arr) => val == arr[0] )))
+							if(!(edgeSizes.every( (val, i, arr) => val == arr[0] == 1)))
 							showhoverdiv(e,'divtoshow', "co-authored " + Math.round(e.data.edge.weight / 0.1) + " time(s)");
 						})
 						s.bind('outEdge',function(e){
@@ -1780,7 +1804,9 @@ $( function(){
 										.domain([0,data.map.names.length])
 										.range(["#cdf0fd", "#d4d4d1"]);
 					
-						height = data.map.names.length * 40
+						height = data.map.names.length * 50
+						if(data.map.names.length <6)
+							height = data.map.names.length * 40
 						var canvas = d3.select('#sim_tab')
 										.append('svg')
 										.attr({'width':700,'height':height})
@@ -2304,6 +2330,20 @@ $( function(){
 						};
 					if(namesList.length<2)					
 					showhoverdiv(obj,'divtoshow', d[0]);		    	
+		    })
+		    .on("mousemove",function(d,i){
+			d3.select(this).style("cursor", "pointer")
+					obj = {
+							type:"bubble",
+							clientX:d3.event.clientX,
+							clientY:d3.event.clientY,
+							name:namesList[i]
+						};
+					if(namesList.length<2)					
+					showhoverdiv(obj,'divtoshow', d[0]);		    	
+		    })
+		    .on("mouseout",function(d,i){
+		    	hidehoverdiv('divtoshow');
 		    })      			  
 		
 		arcGs = nodes.selectAll("g.arc")
@@ -2330,6 +2370,20 @@ $( function(){
 					if(namesList.length>1)				
 						showhoverdiv(obj,'divtoshow',namesList[i]);		    	
 		    })
+		     .on("mousemove",function(d,i){
+		    d3.select(this).style("cursor", "pointer")
+					obj = {
+							type:"bubble",
+							clientX:d3.event.clientX,
+							clientY:d3.event.clientY,
+							name:namesList[i]
+						};
+					if(namesList.length>1)				
+						showhoverdiv(obj,'divtoshow',namesList[i]);		    	
+		    })
+		    .on("mouseout",function(d,i){
+		    	hidehoverdiv('divtoshow');
+		    })    
 		   <#-- .on("click",function(d,i){
 		    	console.log("arc")
 		    	console.log(d);
@@ -2498,7 +2552,7 @@ $( function(){
 	
 	<#-- javascript -->
 		function showhoverdiv(e,divid, text){
-			hidemenudiv('menu')
+			//hidemenudiv('menu')
 			document.getElementById(divid).innerHTML = text;
 		    var left;
 			var top;
@@ -2546,29 +2600,56 @@ $( function(){
 			console.log("vis TYPE: " + visType.substring(0,visType.length-1));
 			console.log("object TYPE: " + objectType);
 			console.log(e)
-			
+			fullscreen = document.getElementsByClassName("panel-fullscreen")[0]
+			console.log("panel-fullscreen: " + fullscreen)
 			var left;
 			var top;
 			var collapse = $( "body" ).hasClass( "sidebar-collapse" );
 			
-			if(e.type == "listItem" || e.type == "comparisonListItem" || e.type == "similarBar" || e.type=="clickPublication" || e.type == "cluster" || e.type == "clusterItem" || e.type == "bubble" || e.type == "evolution"){
+			if(e.type == "listItem" || e.type == "comparisonListItem" || e.type=="clickPublication" || e.type == "cluster" || e.type == "clusterItem" || e.type == "bubble" || e.type == "evolution"){
 			   
 			   console.log(collapse)
-		    	if(collapse)
+		    	if(collapse || fullscreen != undefined)
 				{
-				    left  = (e.clientX) + "px";
-				    top  = (e.clientY - 140) + "px";
+				    left  = (e.clientX);
+				    top  = (e.clientY - 140);
 			    }
 			    else
 			    {
-			    	left  = (e.clientX - 330) + "px";
-				    top  = (e.clientY - 140) + "px";
+			    	left  = (e.clientX - 330);
+				    top  = (e.clientY - 140);
+			    }
+		    }
+		    
+		    if(e.type == "similarBar"){
+			   
+			   console.log(collapse)
+		    	if(collapse || fullscreen != undefined)
+				{
+				    left  = (e.clientX);
+				    top  = (e.clientY - 145);
+			    }
+			    else
+			    {
+			    	left  = (e.clientX - 330);
+				    top  = (e.clientY - 145);
 			    }
 		    }
 		    
 		    if(e.type == "clickLocation"){
-			    left  = (e.clientX) + "px";
-			    top  = (e.clientY + 100) + "px";
+		    
+		    if(collapse || fullscreen != undefined)
+				{
+				    left  = (e.clientX - 50);
+				    if(e.clientX > 700)
+				    	left  = (e.clientX - 180);
+			   		top  = (e.clientY + 100);
+			    }
+			    else
+			    {
+			    	left  = (e.clientX);
+			   		top  = (e.clientY + 100);
+			    }
 		    }
 		    
 		    <#--if(){
@@ -2578,17 +2659,26 @@ $( function(){
 
 		    if(e.type == "clickNode" || e.type == "clickEdge"){
 		    	console.log(collapse)
-		    	if(collapse)
+		    	if(collapse || fullscreen != undefined)
 				{
-					left  = (e.data.captor.clientX) + "px";
-				    top  = (e.data.captor.clientY  - 150) + "px";
+					left  = (e.data.captor.clientX);
+				    top  = (e.data.captor.clientY  - 150);
 			    }
 			    else
 			    {
-				    left  = (e.data.captor.clientX - 350) + "px";
-				    top  = (e.data.captor.clientY  - 150) + "px";
+				    left  = (e.data.captor.clientX - 350);
+				    top  = (e.data.captor.clientY  - 150);
 			    }
 		    }
+		    
+		    if(fullscreen != undefined && e.type!="clickLocation")
+		    	top = top + 120;
+		    if(fullscreen != undefined && e.type=="clickLocation")
+		    	left = left + 140;
+		    	
+		    	top = top +  "px";
+		    	left = left  + "px"
+		    	console.log("top: " + top)
 		    
 		    <#--if(){
 			    left  = (e.clientX - 330) + "px";
