@@ -1172,16 +1172,23 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 	font-size:15px;
 }
 
-.text-field{
+.text-field {
 	font-size:10pt;
 	height:22px;
 	margin:5px;
 	width:80px
 }
 
+.text-field-cluster {
+	font-size:8pt;
+	height:22px;
+	margin:5px;
+	width:40px
+}
+
 .filter-name {
 	margin: 0px 5px;
-	font-weight: bold;
+	//font-weight: bold;
 }
 
 .search-item{

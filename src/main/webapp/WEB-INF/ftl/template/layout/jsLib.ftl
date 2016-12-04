@@ -48,8 +48,7 @@
 <script src="<@spring.url '/resources/scripts/visualization/d3.layout.cloud.js' />" type="text/javascript"></script>
 
 <#-- leaflet -->
- <script src="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.js"></script>
-<script src="<@spring.url '/resources/geojson/geojson-tiles.js' />" type="text/javascript"></script>
+<script src="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.js"></script>
 
 <#-- timeline -->
 <script src="<@spring.url '/resources/plugins/timeline/main.js' />" type="text/javascript"></script>

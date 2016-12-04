@@ -59,7 +59,7 @@ $( function(){
 		var defaultVisType = "";
 		var objectType = "";
 		var visList = [];
-		var currentTab = 0;
+		var currentTab = 1;
 		var pops_researchers = [];
 		var pops_conferences = [];
 		var pops_publications = [];
@@ -76,6 +76,11 @@ $( function(){
 		var loadedLoc = [];
 		var graphFile;
 		var fullscreen = 0;
+		var seedVal = 10;
+	    var noOfClustersVal = 2;
+	    var foldsVal = 2;
+	    var iterationsVal = 5;
+		
 		var options ={
 			source : "<@spring.url '/explore/visualize' />",
 			query: "",
@@ -285,8 +290,6 @@ $( function(){
 				 		
 				 		currentTab = index;
 				 		currentTabName = e.target.text;
-				 		console.log("here")
-				 		console.log(e)
 						loadVis(data.type, visType, e.target.text, widgetElem, names, ids, tabContent, data.authoridForCoAuthors);
 					});
 					
@@ -322,12 +325,11 @@ $( function(){
 					visPopUpIds.push(pops_topics);	
 				if(visItem != "List")
 					visPopUpIds.push(pops_list)
-				console.log(pops_list)
+
 				for(var i=0;i<visPopUpIds.length;i++)
 				{	
 					<#-- remove  pop up progress log -->
 					$.PALM.popUpMessage.remove( visPopUpIds[i] );
-					console.log("del: " + visPopUpIds[i])
 					visPopUpIds.splice(i,1);
 				}
 				
@@ -1134,7 +1136,7 @@ $( function(){
 				if(data.oldVis=="false")
 				{
 					var mainWidget = $( widgetElem ).find( "#boxbody-${wUniqueName}" );
-					var tabContent1 = $( widgetElem ).find( "#tab-content" );					
+					//var tabContent1 = $( widgetElem ).find( "#tab-content" );					
 					var tabGroupContainer = $( widgetElem ).find( "#tab_Group" );
 					tabGroupContainer.html("");
 					
@@ -1142,6 +1144,9 @@ $( function(){
 						$.PALM.callout.generate( tabGroupContainer , "warning", "No data found!!", "Insufficient Data!" );
 						return false;
 					}
+					
+					clusteringOptions(tabContent, widgetElem, mainWidget, data.map)
+					
 					var groupSection = $( '<div/>' ).addClass("clusters")
 
 					tabContent.append(groupSection);
@@ -2058,7 +2063,6 @@ $( function(){
 			    .append("xhtml:p")
 			    .text( function(d){return d.name})    
 			    .style("font-size", function(d){
-			    console.log("radius:"+ d.r)
 			    	if(visType == "researchers" )
 			    	{	
 			    		if(d.name.split(' ').length > 2)
@@ -2263,6 +2267,181 @@ $( function(){
 		function zoomed() {
 		  vis_researcher.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 		}
+		
+		function clusteringOptions(tabContent, widgetElem, mainWidget, data){
+			console.log(data)
+			var clustering_div = $( '<div/>' )
+			console.log("objectType: " + objectType)
+			console.log("visType: " + visType)
+			console.log("ids: " + ids)
+			//var url = "<@spring.url '/explore/clusterAlternateAlgo' />"+"?dataSetIds="+data.dataSet+"&type="+objectType+"&visType="+visType+"&idList="+ids;
+			
+			<#-- cluster algos list -->
+			var listOfOptions = [ "X-Means", "K-Means", "EM", "Hierarchical", "DBSCAN"];
+			var select = $( '<select/>' )
+								.attr({"id":"cluster_type","class":"form-control"})
+								.css({"height":"35px", "width":"100px"})
+										
+			$.each(listOfOptions, function(index, value){
+				select.append(
+						$( '<option/>' )
+						.attr( "value", value )
+						.html( value )
+					)
+			})
+			
+			select.val(data.algo).change();
+			var cluster_type = $( '<div/>' )
+									.css({"height":"5vh"})
+									.css({"width":"20%","float":"left"})
+									.addClass( "form-group" )
+									.append(select)
+									
+			var cluster_type_options = $( '<div/>' )
+									.css({"height":"5vh"})
+									.css({"width":"70%","float":"left"})
+									.addClass( "form-group" )
+									
+			var cluster_type_options_apply = $( '<div/>' )
+									.css({"height":"5vh"})
+									.css({"width":"10%","float":"right"})
+									.addClass( "form-group" )
+									.append(
+										$('<input/>')
+										.attr({
+									        type: "button",
+									        id: "cluster_button",
+									        value: 'Apply'
+									    })
+									    .on("click", function(){
+									    
+										     var cluster_drop_down = $( widgetElem ).find( "#cluster_type" );
+										     var algo = cluster_drop_down.val();
+										     seedVal = $( "#seed" ).val();
+										     noOfClustersVal = $( "#no_of_clusters" ).val();
+										     foldsVal = $( "#folds" ).val();
+										     iterationsVal = $( "#iterations" ).val();
+										     url = "<@spring.url '/explore/clusterAlternateAlgo' />"+"?dataSetIds="+data.dataSet+"&type="+objectType+"&visType="+visType+"&algo="+algo+"&idList="+ids+"&seedVal="+seedVal+"&noOfClustersVal="+noOfClustersVal+"&foldsVal="+foldsVal+"&iterationsVal="+iterationsVal;
+			
+									    	$.getJSON( url , function( data ) {
+									    		console.log(data)
+									    		
+												if( data == 0 || data == null )
+												{
+													$.PALM.callout.generate( tabGroupContainer , "warning", "No data found!!", "No authors satisfy the specified criteria!" );
+													return false;
+												}
+												else
+												{
+													var clustersContainer = $( widgetElem ).find( ".clusters" );
+													clustersContainer.html("");
+													if(visType == "researchers")
+														visualizeCluster(data.coauthors, mainWidget, visType);
+													if(visType == "conferences")
+														visualizeCluster(data.conferences, mainWidget, visType);
+													if(visType == "publications")
+														visualizeCluster(data.publications, mainWidget, visType);
+													
+													if( $( "#seed" ).val() == "" )
+														$( "#seed" ).val(data.seedVal) 
+													if( $( "#no_of_clusters" ).val() == "" )
+														$( "#no_of_clusters" ).val(data.noOfClustersVal) 
+													if( $( "#folds" ).val() == "" )
+														$( "#folds" ).val(data.foldsVal) 
+													if( $( "#iterations" ).val() == "" )
+														$( "#iterations" ).val(data.iterationsVal) 
+													
+									    		}
+									    	});
+									    })
+									)						
+			
+			 seed = $( '<span/>' ).html("Seed:")
+								.append('&nbsp;')
+								.append(
+									$('<input/>')
+									.attr("id" , "seed")
+									.addClass('text-field-cluster')
+									.attr("value", data.seedVal)
+								 )
+			var cl_name = "Clusters:"					 
+			if(data.algo == "X-Means")
+				cl_name = "Min. clusters:"					 
+			 no_of_clusters = $( '<span/>' ).html(cl_name)
+								.append('&nbsp;')
+								.append(
+									$('<input/>')
+									.attr("id" , "no_of_clusters")
+									.addClass('text-field-cluster')
+									.attr("value", data.noOfClustersVal)
+								 )
+			
+			 folds = $( '<span/>' ).html("Folds:")
+								.append('&nbsp;')
+								.append(
+									$('<input/>')
+									.attr("id" , "folds")
+									.addClass('text-field-cluster')
+									.attr("value", data.foldsVal)
+								 )
+			
+			 iterations = $( '<span/>' ).html("Iterations:")
+								.append('&nbsp;')
+								.append(
+									$('<input/>')
+									.attr("id" , "iterations")
+									.addClass('text-field-cluster')
+									.attr("value", data.iterationsVal)
+								 )
+			
+			tabContent.append(clustering_div);
+			clustering_div.append(cluster_type);
+			clustering_div.append(cluster_type_options);
+			clustering_div.append(cluster_type_options_apply);
+			clusteringOptionsFields(cluster_type_options, "K-Means")
+			
+			var cluster_drop_down = $( widgetElem ).find( "#cluster_type" );
+			var sel_cluster_type = document.getElementById('cluster_type');
+			sel_cluster_type.onchange = function() {
+					var cluster_type_val = cluster_drop_down.val();
+					cluster_type_options.html("")
+					clusteringOptionsFields(cluster_type_options, cluster_type_val)	
+			}
+			
+			return tabContent;
+					
+	}
+	
+	function clusteringOptionsFields(cluster_type_options, cluster_type_val){
+		if(cluster_type_val == "K-Means")
+		{
+			cluster_type_options.append(seed);
+			cluster_type_options.append(no_of_clusters);
+		}	
+		if(cluster_type_val == "X-Means")
+		{
+			cluster_type_options.append(seed);
+			cluster_type_options.append(no_of_clusters);
+			cluster_type_options.append(iterations);
+		}
+		if(cluster_type_val == "EM")
+		{
+			cluster_type_options.append(seed);
+			cluster_type_options.append(iterations);
+			cluster_type_options.append(folds);
+		}
+		if(cluster_type_val == "Hierarchical")
+		{
+			cluster_type_options.append(no_of_clusters);
+		}
+		if(cluster_type_val == "DBSCAN")
+		{
+			cluster_type_options.append(no_of_clusters);
+		}
+		return cluster_type_options;
+	}
+	
+		
 		
 		function visBubbles(data, namesList){
 		
@@ -2942,5 +3121,6 @@ $( function(){
 	function originalColor(){
 		$( this ).parent().context.style.color=color;
 	}
+	
 	
 </script>
