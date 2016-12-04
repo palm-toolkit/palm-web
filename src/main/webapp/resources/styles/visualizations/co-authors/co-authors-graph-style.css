@@ -10,3 +10,68 @@
 .coauthor-list .link-value{
 	font-size	: 10px;
 }
+
+.coauthor-list .disabled{
+	opacity 	: 0.3;
+}
+/*----------------LEGEND-----------------*/
+.coauthor-list .divLegend{
+	position		: absolute;
+	border-radius	: 5px;
+    box-shadow		: inset 0 0 10px grey;
+    margin-top		: 5px;
+}
+
+.coauthor-list .divLegend .title{
+	color		: #5A0E56;
+	font-weight	: bold;
+}
+
+.coauthor-list .divLegend .title-legend{
+    font-size : 17px;   
+    padding	  : 5px;	
+}
+
+.coauthor-list ul.listElemLegend{
+	list-style	: none;
+	width     	: 370px;
+	font-weight : bold;
+	font-size	: 12px;
+	padding		: 5px;
+}
+
+.coauthor-list .divLegend li{
+	display 	  : inline-block;
+	width   	  : 100%;
+	margin-bottom : 5px;
+}
+.coauthor-list .divLegend .title-label{
+	position : absolute;
+	width	 : 35%;
+}
+
+.coauthor-list .divLegend .measurement{
+	width 	    : 63%;
+	margin-left : 36%;
+}
+
+.coauthor-list .divLegend .measurement-units,
+.coauthor-list .divLegend .measurement-labels{ 
+	display			: flex;
+	justify-content	: space-between;
+	text-align		: right;
+} 
+
+.coauthor-list .divLegend .measurement-labels >*:first-child{
+	text-align		: left;
+}
+.coauthor-list .divLegend .measurement-units{
+	font-size 	: 25px;
+}
+
+.coauthor-list .divLegend .measurement-units .line-nrCollaborations{
+	border		 : 0px solid transparent;
+    border-bottom: 14px solid #CCB5CB;
+    font-size	 : 0px;
+    padding-right: 33px;
+}

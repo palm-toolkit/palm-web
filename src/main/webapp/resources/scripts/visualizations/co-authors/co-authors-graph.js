@@ -17,7 +17,7 @@ $.COAUTHOR.graph.options = {
 	coauthorIconColor : ["#BB11A2", "#10E5BD" , "#DBFB65"],
 	coauthorLinkColor: "#CCB5CB",
 	topicIconColor : "#ead6fd",
-	scaleTopicIconColor : d3.scaleLinear().range([0, 6])
+	scaleTopicIconColor : d3.scale.linear().interpolate(d3.interpolateHcl).range([d3.rgb("#ead6fd"), d3.rgb('#050018')])
 };
 
 $.COAUTHOR.graph.graphData = function (data){
@@ -29,7 +29,7 @@ $.COAUTHOR.graph.graphData = function (data){
 		var link = new Object();
 			link.source = data.author.id;
 			link.target = d.id;
-			link.value 	= d.coautorTimes;
+			link.value 	= d.coauthorTimes;
 			linksArray.push(link);
 	});
 	graphCoauthors.links = linksArray;
@@ -140,6 +140,12 @@ $.COAUTHOR.graph.graphData = function (data){
 	dataGraph.topics = graphTopics;
 	
 	return dataGraph;
+	
+	/**TODO
+	 * sort Coauthors by Affiliation and by Importance   **/
+	function sortCoauthorsByAffiliationAndImportance_decreasing(){
+		
+	}
 }
 $.COAUTHOR.graph.nodes = function (graphData, nodesContainer, mode, distance){
 	var graphOptions = this.options;
@@ -167,7 +173,7 @@ $.COAUTHOR.graph.nodes = function (graphData, nodesContainer, mode, distance){
 				var maxValue = d3.max(graphData.nodes, function(d){ return d.value});
 				graphOptions.scaleTopicIconColor.domain( [ minValue, maxValue ] );
 				
-				return d3.rgb(graphOptions.topicIconColor).darker( graphOptions.scaleTopicIconColor(d.value) );
+				return graphOptions.scaleTopicIconColor(d.value);
 			}
 		})
 		.style("font-family", "fontawesome")
@@ -195,6 +201,9 @@ $.COAUTHOR.graph.nodes = function (graphData, nodesContainer, mode, distance){
 	
 	this.nodesPosition(node, distance, mode);	
 	this.nodes.textPosition(text);
+	
+	node.on("mouseover", this.interactions.nodeMouseOver )
+		.on("mouseleave", this.interactions.nodeMouseLeave );
 }
 
 $.COAUTHOR.graph.nodes.textPosition = function(text, mode){
@@ -274,10 +283,9 @@ $.COAUTHOR.graph.nodesPosition = function (node, radius, mode){
 $.COAUTHOR.graph.links = function (graphData, linksContainer){
 	var graphOptions = this.options;
 	
-	var link = linksContainer.append("g")
-		.attr("class", "links")
-		.selectAll("line").data(graphData.links)
-		.enter().append("g");
+	var link = linksContainer.selectAll("line")
+		.data(graphData.links)
+		.enter().append("g").attr("class", "link");
 	
 	var line = link.append("line")
 		.attr("class", "link-line")
@@ -354,10 +362,7 @@ $.COAUTHOR.graph.create = function(containerID, data) {
 	this.nodes(topicsData, nodesContainer, "topic", distanceToCenter);
 	
 	//-------------- legend
-	var legendContainer = gGraph.append("g")
-		.attr("class", "gLegend");
-	
-	this.legend(legendContainer);
+	this.legend(containerID);
 	
 	function zoomed() {
 		gGraph.attr("transform", d3.event.transform);
@@ -375,10 +380,139 @@ $.COAUTHOR.graph.create = function(containerID, data) {
 		return simulation;
 	}
 }
-$.COAUTHOR.graph.legend = function (legendContainer){
-
+$.COAUTHOR.graph.legend = function (containerID){
+	var graphOptions = this.options;
+	var legendContainer  = $("<div/>").addClass("divLegend");
+	
+	legendContainer.append($("<span/>").addClass("title-legend title").text("Legend"));
+	legendContainer.append(function(){
+			var ul = $("<ul/>").addClass("listElemLegend");
+	
+			var liCoauthorImportance  = createLegendElement("<div/>", "divCoauthorImportance", "Coauthor Importance", ["High", "", "", "", "Low"], {"icon":"fa fa-user", "repetition" : 5});
+			var liTopicImportance     = createLegendElement("<div/>", "divTopicImportance", "Topic Importance", ["High", "", "", "", "Low"],{"icon":"fa fa-square", "repetition" : 5});
+			var liNrCollaborations    = createLegendElement("<div/>", "divNrCollaborations", "Number Collaborations", [">50", "", "", "", "<10"], {"icon":"line-nrCollaborations", "repetition" : 5});
+			var liCoauthorAffiliation = createLegendElement("<div/>", "divCoauthorAffiliation", "Coauthor Affiliation", ["Same University", "National University", "International University"], {"icon":"fa fa-user", "repetition" : 3});
+			
+			ul.append(liCoauthorImportance);
+			ul.append(liTopicImportance);
+			ul.append(liNrCollaborations);
+			ul.append(liCoauthorAffiliation);
+			
+			return ul;
+		});
+	$(containerID).append(legendContainer);
+	
+	styleCoauthorImportanceLegend("#divCoauthorImportance"   + " .measurement-units");
+	styleTopicImportanceLegend("#divTopicImportance"         + " .measurement-units");
+	styleNrCollaborationsLegend("#divNrCollaborations"       + " .measurement-units");
+	styleCoauthorAffiliationLegend("#divCoauthorAffiliation" + " .measurement-units");
+	
+	function createLegendElement(elementHTML, id, title, labels, measurementUnit){
+		var liElem = $("<li/>");
+		var elementLegend  = $(elementHTML).attr("id", id);
+			elementLegend.append($("<span/>").addClass("title-label title").text(title));
+			elementLegend.append($("<div/>").addClass("measurement")
+				.append(function(){
+					var divMeasurementLabels = $("<div/>").addClass("measurement-labels");
+					if (labels != undefined)
+						for (var i = 0; i < labels.length; i++)
+							divMeasurementLabels.append( $("<span/>").text(labels[i]) );
+					return divMeasurementLabels;
+				})
+				.append(function(){
+					var divMeasurementUnits = $("<div/>").addClass("measurement-units");
+					if (measurementUnit != undefined)
+						for (var i = 0; i < measurementUnit.repetition; i++){
+							divMeasurementUnits.append( $("<span/>").addClass(measurementUnit.icon));
+						}
+					return divMeasurementUnits;
+				}));
+		liElem.append(elementLegend);
+		
+		return liElem;
+	}
+	
+	function styleCoauthorImportanceLegend(containerID){
+		var initialFontSize = 40;
+		var children = $(containerID).children();
+		for (var i  = 0; i < children.length; i++){
+			$(children[i]).css("fontSize", (initialFontSize - 5*i) + "px");
+			$(children[i]).css("margin-top", 5*i + "px");
+		}
+	}
+	function styleTopicImportanceLegend(containerID){
+		var children = $(containerID).children();
+		graphOptions.scaleTopicIconColor.domain([5, 0])
+		for (var i  = 0; i < children.length; i++){
+			$(children[i]).css("color", graphOptions.scaleTopicIconColor(i));
+		}
+	}
+	function styleNrCollaborationsLegend(containerID){
+		var initialBorderTopSize = 14;
+		var children = $(containerID).children();
+		for (var i  = 0; i < children.length; i++){
+			$(children[i]).css("border-bottom-width", (initialBorderTopSize - 3*i) + "px");
+		}
+	}
+	function styleCoauthorAffiliationLegend(containerID){
+		var initialBorderTopSize = 17;
+		var children = $(containerID).children();
+		for (var i  = 0; i < children.length; i++){
+			$(children[i]).css("color", graphOptions.coauthorIconColor[i]);
+		}
+	}
 }
 
+$.COAUTHOR.graph.interactions = {
+	nodeMouseOver : function(node){
+				if (Object.keys(node).indexOf("coauthorTimes") >= 0){ //co-author mouseover
+					highlightNodeCoauthor(this, node);
+					highlightCoauthorTopics(this, node);
+				}else { // topic mouseover
+					highlightNodeTopic(this, node);
+				} 
+	},
+	nodeMouseLeave : function(){
+				d3.selectAll(".coauthor-list .node").classed("disabled", false);
+				d3.selectAll(".coauthor-list .link").classed("disabled", false);
+	}
+};
+	
+function highlightNodeCoauthor(nodeDOM, nodeObject){
+		d3.selectAll(".coauthor-list .gCoauthors .node").classed("disabled", function(n){
+			return ( neighbouring(n, nodeObject) == true) ? false : true;
+		});				
+		d3.select(nodeDOM).classed("disabled", false);
+	
+		d3.selectAll(".coauthor-list .gCoauthors .link").classed("disabled", function(link) {
+			return (link.source === nodeObject || link.target === nodeObject) ? false : true;
+		});
+}
+
+function highlightCoauthorTopics(nodeDOM, nodeObject){
+	d3.selectAll(".coauthor-list .gTopics .node").classed("disabled", true);
+}
+
+function neighbouring(a, b){
+	var linkedByIndex = {};
+	d3.selectAll(".coauthor-list .link").nodes().forEach( function(link){
+		linkedByIndex[d3.select(link).datum().source.index + "," + d3.select(link).datum().target.index] = 1;
+	});
+	
+	return linkedByIndex[a.index + "," + b.index];
+}
+
+function highlightNodeTopic(nodeDOM, nodeObject){
+	d3.selectAll(".coauthor-list .gTopics .node").classed("disabled", true);				
+	d3.select(nodeDOM).classed("disabled", false);
+
+}
+/**TODO
+ * -Implement these functions when I have data
+ * **/	
+
+function highlightTopicCoauthors(node){
+	
 }
 
 
