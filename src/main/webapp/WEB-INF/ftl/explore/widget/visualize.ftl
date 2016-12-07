@@ -516,6 +516,7 @@ $( function(){
 					        n.originalColor = n.color;
 					      });
 					    s.graph.edges().forEach(function(e) {
+					    console.log(e.size)
 					        e.originalColor = e.color;
 					        edgeSizes.push(e.size)
 					      });
@@ -567,7 +568,7 @@ $( function(){
 						})
 						
 						s.bind('overEdge',function(e){
-							if(!(edgeSizes.every( (val, i, arr) => val == arr[0] == 1)))
+							//if(!(edgeSizes.every( (val, i, arr) => val == arr[0] == 1)))
 							showhoverdiv(e,'divtoshow', "co-authored " + Math.round(e.data.edge.weight / 0.1) + " time(s)");
 						})
 						s.bind('outEdge',function(e){
@@ -1156,6 +1157,7 @@ $( function(){
 						data = data.map.coauthors;
 						if( data == 0 || data == null )
 						{
+							tabContent.html("")
 							$.PALM.callout.generate( tabGroupContainer , "warning", "No data found!!", "No authors satisfy the specified criteria!" );
 							return false;
 						}
@@ -1166,6 +1168,7 @@ $( function(){
 						data = data.map.conferences;
 						if( data == 0 || data == null )
 						{
+							tabContent.html("")
 							$.PALM.callout.generate( tabGroupContainer , "warning", "No data found!!", "No conferences satisfy the specified criteria!" );
 							return false;
 						}
@@ -1177,6 +1180,7 @@ $( function(){
 						data = data.map.publications;
 						if( data == 0 || data == null )
 						{
+							tabContent.html("")
 							$.PALM.callout.generate( tabGroupContainer , "warning", "No data found!!", "No publications satisfy the specified criteria!" );
 							return false;
 						}
@@ -2066,7 +2070,7 @@ $( function(){
 			    	if(visType == "researchers" )
 			    	{	
 			    		if(d.name.split(' ').length > 2)
-			    			return ((0.33 * d.r) - (d.name.split(' ').length ) ) + "px";
+			    			return ((0.33 * d.r) - (d.name.split(' ').length )*1.3 ) + "px";
 			    		return (0.33 * d.r) + "px";
 			    	}
 			    	if(visType == "conferences" )
@@ -2314,45 +2318,64 @@ $( function(){
 									        value: 'Apply'
 									    })
 									    .on("click", function(){
-									    
-										     var cluster_drop_down = $( widgetElem ).find( "#cluster_type" );
-										     var algo = cluster_drop_down.val();
-										     seedVal = $( "#seed" ).val();
-										     noOfClustersVal = $( "#no_of_clusters" ).val();
-										     foldsVal = $( "#folds" ).val();
-										     iterationsVal = $( "#iterations" ).val();
-										     url = "<@spring.url '/explore/clusterAlternateAlgo' />"+"?dataSetIds="+data.dataSet+"&type="+objectType+"&visType="+visType+"&algo="+algo+"&idList="+ids+"&seedVal="+seedVal+"&noOfClustersVal="+noOfClustersVal+"&foldsVal="+foldsVal+"&iterationsVal="+iterationsVal;
-			
-									    	$.getJSON( url , function( data ) {
-									    		console.log(data)
-									    		
-												if( data == 0 || data == null )
-												{
-													$.PALM.callout.generate( tabGroupContainer , "warning", "No data found!!", "No authors satisfy the specified criteria!" );
-													return false;
-												}
-												else
-												{
-													var clustersContainer = $( widgetElem ).find( ".clusters" );
-													clustersContainer.html("");
-													if(visType == "researchers")
-														visualizeCluster(data.coauthors, mainWidget, visType);
-													if(visType == "conferences")
-														visualizeCluster(data.conferences, mainWidget, visType);
-													if(visType == "publications")
-														visualizeCluster(data.publications, mainWidget, visType);
-													
-													if( $( "#seed" ).val() == "" )
-														$( "#seed" ).val(data.seedVal) 
-													if( $( "#no_of_clusters" ).val() == "" )
-														$( "#no_of_clusters" ).val(data.noOfClustersVal) 
-													if( $( "#folds" ).val() == "" )
-														$( "#folds" ).val(data.foldsVal) 
-													if( $( "#iterations" ).val() == "" )
-														$( "#iterations" ).val(data.iterationsVal) 
-													
-									    		}
-									    	});
+										    
+										    var cluster_drop_down = $( widgetElem ).find( "#cluster_type" );
+										    var algo = cluster_drop_down.val();
+										    seedVal = $( "#seed" ).val();
+										    noOfClustersVal = $( "#no_of_clusters" ).val();
+										    foldsVal = $( "#folds" ).val();
+										    iterationsVal = $( "#iterations" ).val();
+										    
+											 if(noOfClustersVal > 20)
+										     {
+										     	//$.PALM.callout.generate( tabGroupContainer , "warning", "maximum clusters possible: 20", "No authors satisfy the specified criteria!" );
+												//	return false;
+										     	alert("maximum clusters possible: 20")
+										     }
+										     else if (iterationsVal < 1)
+										     {
+										     	alert("Minimum Iterations: 1")
+										     }
+										     else
+										     {
+												<#-- generate unique id for progress log -->
+												var uniqueVisWidget = $.PALM.utility.generateUniqueId();
+					
+										    	$.PALM.popUpMessage.create( "Executing clustering algorithm ", { uniqueId:uniqueVisWidget, popUpHeight:40, directlyRemove:false , polling:false});
+											     
+											     url = "<@spring.url '/explore/clusterAlternateAlgo' />"+"?dataSetIds="+data.dataSet+"&type="+objectType+"&visType="+visType+"&algo="+algo+"&idList="+ids+"&seedVal="+seedVal+"&noOfClustersVal="+noOfClustersVal+"&foldsVal="+foldsVal+"&iterationsVal="+iterationsVal;
+				
+										    	$.getJSON( url , function( data ) {
+										    		console.log(data)
+										    		$.PALM.popUpMessage.remove( uniqueVisWidget );
+													if( data == 0 || data == null )
+													{
+														$.PALM.callout.generate( tabGroupContainer , "warning", "No data found!!", "No authors satisfy the specified criteria!" );
+														return false;
+													}
+													else
+													{
+														var clustersContainer = $( widgetElem ).find( ".clusters" );
+														clustersContainer.html("");
+														if(visType == "researchers")
+															visualizeCluster(data.coauthors, mainWidget, visType);
+														if(visType == "conferences")
+															visualizeCluster(data.conferences, mainWidget, visType);
+														if(visType == "publications")
+															visualizeCluster(data.publications, mainWidget, visType);
+														
+														if( $( "#seed" ).val() == "" )
+															$( "#seed" ).val(data.seedVal) 
+														if( $( "#no_of_clusters" ).val() == "" )
+															$( "#no_of_clusters" ).val(data.noOfClustersVal) 
+														if( $( "#folds" ).val() == "" )
+															$( "#folds" ).val(data.foldsVal) 
+														if( $( "#iterations" ).val() == "" )
+															$( "#iterations" ).val(data.iterationsVal) 
+														
+										    		}
+										    	});
+										    }	
 									    })
 									)						
 			
@@ -2363,6 +2386,9 @@ $( function(){
 									.attr("id" , "seed")
 									.addClass('text-field-cluster')
 									.attr("value", data.seedVal)
+									.bind('keyup paste', function(){
+								        this.value = this.value.replace(/[^0-9]/g, '')
+									})
 								 )
 			var cl_name = "Clusters:"					 
 			if(data.algo == "X-Means")
@@ -2374,7 +2400,13 @@ $( function(){
 									.attr("id" , "no_of_clusters")
 									.addClass('text-field-cluster')
 									.attr("value", data.noOfClustersVal)
+									.attr("min","0")
+									.attr("max","20")
+									.bind('keyup paste', function(){
+								        this.value = this.value.replace(/[^0-9]/g, '')
+									})
 								 )
+								 
 			
 			 folds = $( '<span/>' ).html("Folds:")
 								.append('&nbsp;')
@@ -2383,6 +2415,9 @@ $( function(){
 									.attr("id" , "folds")
 									.addClass('text-field-cluster')
 									.attr("value", data.foldsVal)
+									.bind('keyup paste', function(){
+								        this.value = this.value.replace(/[^0-9]/g, '')
+									})
 								 )
 			
 			 iterations = $( '<span/>' ).html("Iterations:")
@@ -2392,6 +2427,9 @@ $( function(){
 									.attr("id" , "iterations")
 									.addClass('text-field-cluster')
 									.attr("value", data.iterationsVal)
+									.bind('keyup paste', function(){
+								        this.value = this.value.replace(/[^0-9]/g, '')
+									})
 								 )
 			
 			tabContent.append(clustering_div);
@@ -2436,7 +2474,7 @@ $( function(){
 		}
 		if(cluster_type_val == "DBSCAN")
 		{
-			cluster_type_options.append(no_of_clusters);
+//			cluster_type_options.append(no_of_clusters);
 		}
 		return cluster_type_options;
 	}
@@ -2574,16 +2612,23 @@ $( function(){
 	      .attr("dy", ".3em")
 	      .style("text-anchor", "middle")
 	      .text(function(d) { return [d[0]]; })
-	      .style("font-size", function(d) { 
+	      .style("font-size", function(d) {
+
 			      	if(this.getComputedTextLength()!=0)
 			      	{
-				      return Math.min(2 * d.r, (2 * d.r - 1) / this.getComputedTextLength() * 10) + "px";
+			      		var size = Math.min(2 * d.r, (2 * d.r - 1) / this.getComputedTextLength() * 10);
+			      		if(d[0].split(' ').length == 1)
+				      		size = size/2;
+				      	return size + "px";
 				    }
 				    else
-				    	return Math.min(2 * d.r, (2 * d.r - 1) / 120 * 10) + "px"; 
+				    {
+				    	var size = Math.min(2 * d.r, (2 * d.r - 1) / 120 * 10);
+				    	//if(d[0].split(' ').length == 1)
+				      	//	size = size/1.5;
+				      	return size + "px";
+				     } 	 
 			      })
-			
-		
 		}
 		
 		function zoomedBubbles() {
