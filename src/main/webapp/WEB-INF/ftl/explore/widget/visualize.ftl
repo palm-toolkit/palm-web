@@ -59,7 +59,7 @@ $( function(){
 		var defaultVisType = "";
 		var objectType = "";
 		var visList = [];
-		var currentTab = 1;
+		var currentTab = 0;
 		var pops_researchers = [];
 		var pops_conferences = [];
 		var pops_publications = [];
@@ -2281,10 +2281,10 @@ $( function(){
 			//var url = "<@spring.url '/explore/clusterAlternateAlgo' />"+"?dataSetIds="+data.dataSet+"&type="+objectType+"&visType="+visType+"&idList="+ids;
 			
 			<#-- cluster algos list -->
-			var listOfOptions = [ "X-Means", "K-Means", "EM", "Hierarchical", "DBSCAN"];
+			var listOfOptions = [ "X-Means", "K-Means", "FarthestFirst", "EM", "Hierarchical"];
 			var select = $( '<select/>' )
 								.attr({"id":"cluster_type","class":"form-control"})
-								.css({"height":"35px", "width":"100px"})
+								.css({"height":"35px", "width":"130px"})
 										
 			$.each(listOfOptions, function(index, value){
 				select.append(
@@ -2472,9 +2472,10 @@ $( function(){
 		{
 			cluster_type_options.append(no_of_clusters);
 		}
-		if(cluster_type_val == "DBSCAN")
+		if(cluster_type_val == "FarthestFirst")
 		{
-//			cluster_type_options.append(no_of_clusters);
+			cluster_type_options.append(seed);
+			cluster_type_options.append(no_of_clusters);
 		}
 		return cluster_type_options;
 	}
