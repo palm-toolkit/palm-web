@@ -199,8 +199,6 @@ $( function(){
 				}
 			}	
 			
-			
-			
 				<#-- create tabs according to visualization type-->
 				var visualizationTabs = $( '<div/>' )
 													.attr({"id":"tab_visualization"})
@@ -228,28 +226,7 @@ $( function(){
 						.attr({ "id" : "tab_" + tabHeaderText })
 						.addClass( "tab-pane" )
 
-					var headerCaption = new Object();
-					headerCaption["researcher-researchers-Network"] = "Co-authors network: \nNetwork of selected researchers and their co-authors \n\nNodes are colored as per node degree. \nEdges are weighted by number of co-authorships. \nIf multiple researchers are selected, common co-authors are shown. \nRight click for highlighting co-authors"
-					headerCaption["researcher-researchers-Group"] = "Clustered authors: \nCo-authors clustered based on interests \n\nConvex hulls enclose individual clusters. \nIf multiple researchers are selected, common co-authors are shown."
-					headerCaption["researcher-researchers-Similar"] = "Similar researchers: \nResearchers similar to selected researchers, based on interests \n\nMay or may not be co-authors. \nFilters not applicable!"
-					headerCaption["researcher-researchers-List"] = "List of co-authors: \nCo-authors with number of co-authorships \n\nIf multiple researchers are selected, common co-authors are shown."
-					headerCaption["researcher-researchers-Comparison"] = "Comparison: \nVenn diagram to compare selected researchers based on co-authors"
-					
-					headerCaption["researcher-conferences-Locations"] = "Geographical locations: \nConference event locations on world map. \n\nLocations of the events attended by the selected researchers, if conferences are added and geographical information is available. \nIf multiple researchers are selected, conference locations where they have publications together are shown."
-					headerCaption["researcher-conferences-Group"] = "Clustered conferences: \nConferences clustered based on interests \n\nConvex hulls enclose individual clusters. \nIf multiple researchers are selected, conference where they have publications together are clustered."
-					headerCaption["researcher-conferences-List"] = "List of conferences and their respective events: \nConference events attended by selected authors , with year and location information. \n\nIf multiple researchers are selected, conference locations where they have publications together are shown."
-					headerCaption["researcher-conferences-Comparison"] = "Comparison: \nVenn diagram to compare selected researchers based on conferences \n\nResult might be different from other conference visualizations, in case researchers have attended same conferences, but not co-authored."
-										
-					headerCaption["researcher-publications-Timeline"] = "Publications timeline: \nPublications in chronological order"
-					headerCaption["researcher-publications-Group"] = "Clustered publications: \nPublications clustered based on topics \n\nConvex hulls enclose individual clusters. \nIf multiple researchers are selected, common publications are clustered."
-					headerCaption["researcher-publications-List"] = "List of publications"
-					headerCaption["researcher-publications-Comparison"] = "Comparison: \nVenn diagram to compare selected researchers based on publications"
-					
-					headerCaption["researcher-topics-Bubbles"] = "Bubble chart: \nInterests of the researchers in form of discs \n\nA disc representing an interest, has a portion each of the selected researchers. \nDiscs are sorted by weights of the interests."
-					headerCaption["researcher-topics-Evolution"] = "Evolution of interests: \nChart to depict interests of selected authors over the years. \n\nInterests corresponding to each year are marked by points."
-					headerCaption["researcher-topics-List"] = "List of topics of interest"
-					headerCaption["researcher-topics-Comparison"] = "Comparison: \nVenn diagram to compare selected researchers based on interests"
-					
+					<#include "headerToolTip.ftl" />
 					
 					var tabHeader = $( '<li/>' )
 						.append(
@@ -2058,7 +2035,7 @@ $( function(){
 				    if(visType == "conferences" )
 				    	return 'translate(' + [- d.r + (0.35 * d.r) , - d.r + (0.3 * d.r)] + ')'
 				    if(visType == "publications" )
-				    	return 'translate(' + [- d.r + (0.33 * d.r) , - d.r + (0.6 * d.r)] + ')'
+				    	return 'translate(' + [- d.r + (0.33 * d.r) , - d.r + (0.5 * d.r)] + ')'
     				});
 			  
 			  g.append("foreignObject")
@@ -2297,13 +2274,13 @@ $( function(){
 			select.val(data.algo).change();
 			var cluster_type = $( '<div/>' )
 									.css({"height":"5vh"})
-									.css({"width":"20%","float":"left"})
+									.css({"width":"25%","float":"left"})
 									.addClass( "form-group" )
 									.append(select)
 									
 			var cluster_type_options = $( '<div/>' )
 									.css({"height":"5vh"})
-									.css({"width":"70%","float":"left"})
+									.css({"width":"65%","float":"left"})
 									.addClass( "form-group" )
 									
 			var cluster_type_options_apply = $( '<div/>' )

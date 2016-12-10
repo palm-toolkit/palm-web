@@ -514,7 +514,7 @@
 			
 			$(".top_list").slimscroll({
 				height: "23vh",
-		        size: "10px",
+		        size: "12px",
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50,
 	   			color: '#008000'
