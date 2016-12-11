@@ -509,7 +509,7 @@
 			itemSection.addClass('top_list')
 				.css('overflow-y','scroll')
 				.css('height', 'auto')
-				.css('background-color', color)
+				.css('background-color', "#e2e5e0")
 				.css('max-height', '23vh')
 			
 			$(".top_list").slimscroll({

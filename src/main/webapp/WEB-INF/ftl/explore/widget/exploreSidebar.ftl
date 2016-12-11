@@ -5,7 +5,7 @@
   	<div class="box-tools">
   	<div>
 	    <div class="drop-down">
-	    	<select id="select-drop-down" class="form-control selectpicker" >
+	    	<select id="select-drop-down" class="form-control selectpicker show-tick" data-style="btn-primary" data-header="Select a category">
 			  <option value="researchers" selected>RESEARCHERS</option>
 			  <option value="conferences">CONFERENCES</option>
 			  <option value="publications">PUBLICATIONS</option>
@@ -14,7 +14,7 @@
 			</select>
 	    </div>
 	    
-	    <div class="input-group width100p">
+	    <div class="input-group">
 	      <input type="text" id="search_field" class="form-control input-sm pull-right" placeholder="Click to add text">
 	      <div id="search_button" class="input-group-btn">
 	        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>

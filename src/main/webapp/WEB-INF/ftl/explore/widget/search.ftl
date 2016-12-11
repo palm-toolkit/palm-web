@@ -32,7 +32,10 @@
 		var conferenceBorderProp = "";
 		var publicationBorderProp = "";
 		var topicBorderProp = "";
-		var circleBorderProp = "";
+		var researcherBackground = "#a8dd97";
+		var conferenceBackground = "#a8dd97";
+		var publicationBackground = "#a8dd97";
+		var topicBackground = "#a8dd97";
 		var resetFlag = "1";
 		var currentVisType = "";
 		
@@ -71,18 +74,22 @@
 				
 				for(var i=0;i<data.name.length;i++){
 				
-					<#-- TO-DO Add css part to palm.css -->
 					nameDiv = $( '<span/>' )
 					.attr("id",data.id[i])
 					.addClass( 'name capitalize search-item' )
-					.html("  "+data.name[i]+ " X ")
+					.html("  "+data.name[i])
+					.append($( '<span/>' )
+						.addClass( 'name capitalize search-item-del' )
+						.html("X")
 					<#-- click to delete item from search widget -->
 					.on( "click", function(e){
-						this.remove();
-						var i = ids.indexOf(e.delegateTarget.id);
+					
+						console.log(e)
+						$(this).parent().remove();
+						var i = ids.indexOf(e.delegateTarget.parentNode.childNodes[0].parentElement.id);
 						names.splice(i, 1);
 						ids.splice(i,1);
-
+						console.log(names)
 						updateVisDelete( "true", type);
 						if(names.length == 0){
 							wordsContainer.html("");
@@ -90,7 +97,7 @@
 						}
 						else
 							addToHistory();
-					});
+					}))
 				
 				if(data.replace && i==0){
 					type = data.type;
@@ -243,42 +250,47 @@
 			visOptionsContainer.html("");
 			currentVisType = typeOfBox;
 			resetFlag = "0";
-			var borderProp = "5px solid #000000 ";
+			var borderProp = "3px solid #000000 ";
 			<#-- change focus between search options -->
 			if(typeOfBox == "researchers"){
 				researcherBorderProp = borderProp;
 				conferenceBorderProp = "none";
 				publicationBorderProp = "none";
 				topicBorderProp = "none";
-				circleBorderProp = "none";
+				researcherBackground = "#db845c";
+				conferenceBackground = "#a8dd97";
+				publicationBackground = "#a8dd97";
+				topicBackground = "#a8dd97";
 			}
 			if(typeOfBox == "conferences"){
 				researcherBorderProp = "none";
 				conferenceBorderProp = borderProp;
 				publicationBorderProp = "none";
 				topicBorderProp = "none";
-				circleBorderProp = "none";
+				researcherBackground = "#a8dd97";
+				conferenceBackground = "#db845c";
+				publicationBackground = "#a8dd97";
+				topicBackground = "#a8dd97";
 			}
 			if(typeOfBox == "publications"){
 				researcherBorderProp = "none";
 				conferenceBorderProp = "none";
 				publicationBorderProp = borderProp;
 				topicBorderProp = "none";
-				circleBorderProp = "none";
+				researcherBackground = "#a8dd97";
+				conferenceBackground = "#a8dd97";
+				publicationBackground = "#db845c";
+				topicBackground = "#a8dd97";
 			}
 			if(typeOfBox == "topics"){
 				researcherBorderProp = "none";
 				conferenceBorderProp = "none";
 				publicationBorderProp = "none";
 				topicBorderProp = borderProp;
-				circleBorderProp = "none";
-			}
-			if(typeOfBox == "circles"){
-				researcherBorderProp = "none";
-				conferenceBorderProp = "none";
-				publicationBorderProp = "none";
-				topicBorderProp = "none";
-				circleBorderProp = borderProp;
+				researcherBackground = "#a8dd97";
+				conferenceBackground = "#a8dd97";
+				publicationBackground = "#a8dd97";
+				topicBackground = "#db845c";
 			}
 			
 		<#-- dynamic widgets depending on type of search object -->
@@ -293,7 +305,7 @@
 					
 					visOptionsContainer.append(
 						$('<div/>')
-						.addClass('info-box box-home-explore bg-red')
+						.addClass('info-box box-home-explore')
 						.append(
 							$('<i/>')
 							.addClass('fa fa-users fa-lg'))
@@ -307,8 +319,7 @@
 							)
 						)		
 						.append($('<h5/>').css("text-align","center").html(specTitle))
-						.css("border" , researcherBorderProp)
-						.css({ "cursor":"pointer"})
+						.css({ "cursor":"pointer", "border":researcherBorderProp, "color":"black", "background-color":researcherBackground})
 						.attr("title",caption)
 						.on( "click", function( e){
 							setBoxes(id, type, "researchers")
@@ -317,9 +328,15 @@
 					)
 				
 				//	caption = "Corresponding " + "<br/>" +"conferences";
+				
+				var specTitle = "Events";
+					
+					if(type!="conference"){
+						specTitle = "Conferences";
+					}
 					visOptionsContainer.append(
 						$('<div/>')
-						.addClass('info-box box-home-explore bg-yellow')
+						.addClass('info-box box-home-explore')
 						.append(
 							$('<i/>')
 							.addClass('fa fa-globe fa-lg'))
@@ -332,9 +349,8 @@
 								.addClass('info-box-number fontsize24')
 							)
 						)		
-						.append($('<h5/>').css("text-align","center").html("Conferences"))
-						.css("border" , conferenceBorderProp)
-						.css({ "cursor":"pointer"})
+						.append($('<h5/>').css("text-align","center").html(specTitle))
+						.css({ "cursor":"pointer", "border":conferenceBorderProp, "color":"black", "background-color":conferenceBackground})
 						.attr("title",caption)
 						.on( "click", function( e){
 							setBoxes(id, type, "conferences")
@@ -345,7 +361,7 @@
 				//	caption = "Corresponding publications";	
 					visOptionsContainer.append(
 						$('<div/>')
-						.addClass('info-box box-home-explore bg-green')
+						.addClass('info-box box-home-explore')
 						.append(
 							$('<i/>')
 							.addClass('fa fa-file-text-o fa-lg'))
@@ -359,8 +375,7 @@
 							)
 						)		
 						.append($('<h5/>').css("text-align","center").html("Publications"))
-						.css("border" , publicationBorderProp)
-						.css({ "cursor":"pointer"})
+						.css({ "cursor":"pointer", "border":publicationBorderProp, "color":"black", "background-color":publicationBackground})
 						.attr("title",caption)
 						.on( "click", function( e){
 							setBoxes(id, type, "publications")
@@ -380,7 +395,7 @@
 				
 					visOptionsContainer.append(
 						$('<div/>')
-						.addClass('info-box box-home-explore bg-blue')
+						.addClass('info-box box-home-explore')
 						.append(
 							$('<i/>')
 							.addClass('fa fa-comments-o fa-lg'))
@@ -394,8 +409,7 @@
 							)
 						)		
 						.append($('<h5/>').css("text-align","center").html(specTitle))
-						.css("border" , topicBorderProp)
-						.css({ "cursor":"pointer"})
+						.css({ "cursor":"pointer", "border":topicBorderProp, "color":"black", "background-color":topicBackground})
 						.attr("title",caption)
 						.on( "click", function( e){
 							setBoxes(id, type, "topics")

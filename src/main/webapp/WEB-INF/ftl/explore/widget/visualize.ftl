@@ -493,7 +493,6 @@ $( function(){
 					        n.originalColor = n.color;
 					      });
 					    s.graph.edges().forEach(function(e) {
-					    console.log(e.size)
 					        e.originalColor = e.color;
 					        edgeSizes.push(e.size)
 					      });
