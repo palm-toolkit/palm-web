@@ -5,7 +5,7 @@
   	<div class="box-tools">
   	<div>
 	    <div class="drop-down">
-	    	<select id="select-drop-down" class="form-control selectpicker show-tick" data-style="btn-primary" data-header="Select a category">
+	    	<select id="select-drop-down" class="form-control selectpicker" data-style="btn-primary" data-header="Select a category">
 			  <option value="researchers" selected>RESEARCHERS</option>
 			  <option value="conferences">CONFERENCES</option>
 			  <option value="publications">PUBLICATIONS</option>

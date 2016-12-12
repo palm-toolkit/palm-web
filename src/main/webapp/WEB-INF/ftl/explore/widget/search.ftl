@@ -32,10 +32,10 @@
 		var conferenceBorderProp = "";
 		var publicationBorderProp = "";
 		var topicBorderProp = "";
-		var researcherBackground = "#a8dd97";
-		var conferenceBackground = "#a8dd97";
-		var publicationBackground = "#a8dd97";
-		var topicBackground = "#a8dd97";
+		var researcherBackground = "#c0c5bf";
+		var conferenceBackground = "#c0c5bf";
+		var publicationBackground = "#c0c5bf";
+		var topicBackground = "#c0c5bf";
 		var resetFlag = "1";
 		var currentVisType = "";
 		
@@ -116,9 +116,9 @@
 						.append(nameDiv)
 				
 						if(resetFlag=="1" || currentVisType=="" || type!=data.type){
-							if(type == "researcher"){
+							<#-- if(type == "researcher"){ -->
 								setBoxes(id, type, "researchers")
-							}
+							<#--}
 							if(type == "publication"){
 								setBoxes(id, type, "conferences")
 							}
@@ -130,7 +130,7 @@
 							}
 							if(type == "circle"){
 								setBoxes(id, type, "researchers")
-							}
+							}-->
 						}
 					}
 							
@@ -163,9 +163,9 @@
 								wordsContainer
 								.append(nameDiv)
 								if(resetFlag=="1" || currentVisType=="" || type!=data.type){
-									if(type == "researcher"){
-										setBoxes(id, type, "researchers")
-									}
+									<#-- if(type == "researcher"){ -->
+									setBoxes(id, type, "researchers")
+									<#--}
 									if(type == "publication"){
 										setBoxes(id, type, "conferences")
 									}
@@ -177,7 +177,7 @@
 									}
 									if(type == "circle"){
 										setBoxes(id, type, "researchers")
-									}
+									}-->
 								}
 							}
 							if(i == data.name.length-1)		
@@ -258,38 +258,38 @@
 				publicationBorderProp = "none";
 				topicBorderProp = "none";
 				researcherBackground = "#db845c";
-				conferenceBackground = "#a8dd97";
-				publicationBackground = "#a8dd97";
-				topicBackground = "#a8dd97";
+				conferenceBackground = "#c0c5bf";
+				publicationBackground = "#c0c5bf";
+				topicBackground = "#c0c5bf";
 			}
 			if(typeOfBox == "conferences"){
 				researcherBorderProp = "none";
 				conferenceBorderProp = borderProp;
 				publicationBorderProp = "none";
 				topicBorderProp = "none";
-				researcherBackground = "#a8dd97";
+				researcherBackground = "#c0c5bf";
 				conferenceBackground = "#db845c";
-				publicationBackground = "#a8dd97";
-				topicBackground = "#a8dd97";
+				publicationBackground = "#c0c5bf";
+				topicBackground = "#c0c5bf";
 			}
 			if(typeOfBox == "publications"){
 				researcherBorderProp = "none";
 				conferenceBorderProp = "none";
 				publicationBorderProp = borderProp;
 				topicBorderProp = "none";
-				researcherBackground = "#a8dd97";
-				conferenceBackground = "#a8dd97";
+				researcherBackground = "#c0c5bf";
+				conferenceBackground = "#c0c5bf";
 				publicationBackground = "#db845c";
-				topicBackground = "#a8dd97";
+				topicBackground = "#c0c5bf";
 			}
 			if(typeOfBox == "topics"){
 				researcherBorderProp = "none";
 				conferenceBorderProp = "none";
 				publicationBorderProp = "none";
 				topicBorderProp = borderProp;
-				researcherBackground = "#a8dd97";
-				conferenceBackground = "#a8dd97";
-				publicationBackground = "#a8dd97";
+				researcherBackground = "#c0c5bf";
+				conferenceBackground = "#c0c5bf";
+				publicationBackground = "#c0c5bf";
 				topicBackground = "#db845c";
 			}
 			
@@ -320,6 +320,7 @@
 						)		
 						.append($('<h5/>').css("text-align","center").html(specTitle))
 						.css({ "cursor":"pointer", "border":researcherBorderProp, "color":"black", "background-color":researcherBackground})
+						.addClass('box-border')
 						.attr("title",caption)
 						.on( "click", function( e){
 							setBoxes(id, type, "researchers")
@@ -351,6 +352,7 @@
 						)		
 						.append($('<h5/>').css("text-align","center").html(specTitle))
 						.css({ "cursor":"pointer", "border":conferenceBorderProp, "color":"black", "background-color":conferenceBackground})
+						.addClass('box-border')
 						.attr("title",caption)
 						.on( "click", function( e){
 							setBoxes(id, type, "conferences")
@@ -376,6 +378,7 @@
 						)		
 						.append($('<h5/>').css("text-align","center").html("Publications"))
 						.css({ "cursor":"pointer", "border":publicationBorderProp, "color":"black", "background-color":publicationBackground})
+						.addClass('box-border')
 						.attr("title",caption)
 						.on( "click", function( e){
 							setBoxes(id, type, "publications")
@@ -410,6 +413,7 @@
 						)		
 						.append($('<h5/>').css("text-align","center").html(specTitle))
 						.css({ "cursor":"pointer", "border":topicBorderProp, "color":"black", "background-color":topicBackground})
+						.addClass('box-border')
 						.attr("title",caption)
 						.on( "click", function( e){
 							setBoxes(id, type, "topics")

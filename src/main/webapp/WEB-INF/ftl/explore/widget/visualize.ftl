@@ -1,7 +1,7 @@
 <@security.authorize access="isAuthenticated()">
 	<#assign loggedUser = securityService.getUser() >
 </@security.authorize>
-<div id="boxbody-${wUniqueName}" class="box-body no-padding wfilter">
+<div id="boxbody-${wUniqueName}" class="box-body no-padding wvisualize">
   	<div class="visualize_widget" class="nav-tabs-custom"  oncontextmenu="return false;">
   	
 	</div>
@@ -121,17 +121,17 @@ $( function(){
 			if(ids.length>1)
 			{
 				if(visType=="researchers"){
-					visList = ["Network", "Group", "List", "Comparison"];
+					visList = ["Network", "List", "Group", "Comparison"];
 					if(objectType=="researcher")
 					{
-						visList = ["Network", "Group", "Similar", "List", "Comparison"];
+						visList = ["Network", "List", "Group", "Similar", "Comparison"];
 					}
 				}
 				if(visType=="conferences"){
-					visList = ["Locations", "Group", "List", "Comparison"];
+					visList = ["Locations", "List", "Group", "Comparison"];
 					if(objectType=="conference")
 					{
-						visList = ["Locations", "Similar", "List"]; //comparison doesn't make sense here
+						visList = ["Locations", "List", "Similar"]; //comparison doesn't make sense here
 					}
 					if(objectType=="publication")
 					{
@@ -139,9 +139,9 @@ $( function(){
 					}
 				}		
 				if(visType=="publications"){
-					visList = ["Timeline", "Group", "List", "Comparison"];
+					visList = ["Timeline", "List", "Group", "Comparison"];
 					if(objectType=="conference")
-						visList = ["Timeline", "Group", "List"]; //comparison doesn't make sense here
+						visList = ["Timeline", "List", "Group"]; //comparison doesn't make sense here
 					if(objectType=="publication")
 					{
 						visList = ["Timeline", "Similar"]; //comparison doesn't make sense here
@@ -162,25 +162,25 @@ $( function(){
 			else
 			{
 				if(visType=="researchers"){
-					visList = ["Network", "Group", "List"];
+					visList = ["Network", "List", "Group"];
 					if(objectType=="researcher")
 					{
-						visList = ["Network", "Group", "Similar", "List"];
+						visList = ["Network", "List", "Group", "Similar"];
 					}
 				}
 				if(visType=="conferences"){
-					visList = ["Locations", "Group", "List"];
+					visList = ["Locations", "List", "Group"];
 					if(objectType=="publication")
 					{
 						visList = ["Locations", "List"];
 					}
 					if(objectType=="conference")
 					{
-						visList = ["Locations", "Similar", "List"];
+						visList = ["Locations", "List", "Similar"];
 					}
 				}		
 				if(visType=="publications"){
-					visList = ["Timeline", "Group", "List"];
+					visList = ["Timeline", "List", "Group"];
 					if(objectType=="publication")
 					{
 						visList = ["Similar"];
@@ -1854,14 +1854,7 @@ $( function(){
 										//	hidehoverdiv('divtoshow');
 										//})
 			
-			
-					var transit = d3.select("svg").selectAll("rect")
-									    .data(data.map.similarity)
-									    .transition()
-									    .duration(1000) 
-									    .attr("width", function(d) {return xscale(d/2.5); });
-			
-					var transitext = d3.select('#bars')
+								var transitext = d3.select('#bars')
 									.selectAll('text')
 									.data(data.map.names)
 									.enter()
@@ -1914,6 +1907,14 @@ $( function(){
 										//.on("mouseout", function(e,i){
 										//	hidehoverdiv('divtoshow');
 										//})
+			
+					var transit = d3.select("svg").selectAll("rect")
+									    .data(data.map.similarity)
+									    .transition()
+									    .duration(1000) 
+									    .attr("width", function(d) {return xscale(d/2.5); });
+			
+					
 					}
 				}			
 			}).fail(function() {
@@ -2260,7 +2261,7 @@ $( function(){
 			var listOfOptions = [ "X-Means", "K-Means", "FarthestFirst", "EM", "Hierarchical"];
 			var select = $( '<select/>' )
 								.attr({"id":"cluster_type","class":"form-control"})
-								.css({"height":"35px", "width":"130px"})
+								.css({"height":"30px", "width":"130px", "padding-top":"4px"})
 										
 			$.each(listOfOptions, function(index, value){
 				select.append(
@@ -2272,27 +2273,25 @@ $( function(){
 			
 			select.val(data.algo).change();
 			var cluster_type = $( '<div/>' )
-									.css({"height":"5vh"})
-									.css({"width":"25%","float":"left"})
+									.css({"height":"5vh", "float":"left"})
 									.addClass( "form-group" )
 									.append(select)
 									
 			var cluster_type_options = $( '<div/>' )
-									.css({"height":"5vh"})
-									.css({"width":"65%","float":"left"})
+									.css({"height":"5vh", "float":"left", "margin": "0px 0px 0px 5px"})
 									.addClass( "form-group" )
 									
 			var cluster_type_options_apply = $( '<div/>' )
-									.css({"height":"5vh"})
-									.css({"width":"10%","float":"right"})
+									.css({"height":"5vh","float":"left"})
 									.addClass( "form-group" )
 									.append(
 										$('<input/>')
 										.attr({
 									        type: "button",
 									        id: "cluster_button",
-									        value: 'Apply'
+									        value: 'Apply Algorithm'
 									    })
+									    .addClass("apply-button btn btn-success btn-sm")
 									    .on("click", function(){
 										    
 										    var cluster_drop_down = $( widgetElem ).find( "#cluster_type" );
@@ -3112,6 +3111,7 @@ $( function(){
 	function itemAdd(id, type){
 		var queryString = "?id="+id+"&type="+type;
 		
+		$('#search_words').effect('highlight',{color:"black"}, 1000);
 		<#-- update search widget -->
 		var searchWidget = $.PALM.boxWidget.getByUniqueName( 'explore_search' ); 
 		searchWidget.options.queryString = queryString;
@@ -3122,6 +3122,7 @@ $( function(){
 		var replace = true;
 		var queryString = "?id="+id+"&type="+type+"&replace="+replace;
 		
+		$('#search_words').effect('highlight',{color:"black"}, 1000);
 		<#-- update search widget -->
 		var searchWidget = $.PALM.boxWidget.getByUniqueName( 'explore_search' ); 
 		searchWidget.options.queryString = queryString;
