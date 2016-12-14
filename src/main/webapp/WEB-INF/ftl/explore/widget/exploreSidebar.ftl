@@ -5,7 +5,7 @@
   	<div class="box-tools">
   	<div>
 	    <div class="drop-down">
-	    	<select id="select-drop-down" class="form-control selectpicker" data-style="btn-primary" data-header="Select a category">
+	    	<select id="select-drop-down" class="form-control selectpicker" data-style="btn-primary">
 			  <option value="researchers" selected>RESEARCHERS</option>
 			  <option value="conferences">CONFERENCES</option>
 			  <option value="publications">PUBLICATIONS</option>
@@ -15,7 +15,7 @@
 	    </div>
 	    
 	    <div class="input-group">
-	      <input type="text" id="search_field" class="form-control input-sm pull-right" placeholder="Click to add text">
+	      <input type="text" id="search_field" class="clearable form-control input-sm pull-right" placeholder="Click to add text">
 	      <div id="search_button" class="input-group-btn">
 	        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
 	      </div>
@@ -56,12 +56,10 @@
 	   			touchScrollStep: 50
 		  });
 		  
-		  // remove header from sidebar
-			var elements = document.getElementsByClassName("box-header");
-		    elements[0].remove();
-		    $('.box-footer').css("margin-top","8px")
+		  $('.fa-info').each(function(){
+		        $(this).parent('button').css('cursor','default')
+		  });
 			
-		  
 		  var targetContainer = $(".content-list" );
 		  <#-- pagging next -->
 				$( "li.toNext" ).click( function(){
@@ -679,6 +677,20 @@
 			$( this ).parent().context.style.color="black";
 	}
 	
+	function tog(v){return v?'addClass':'removeClass';} 
+  
+  $(document).on('input', '.clearable', function(){
+    $(this)[tog(this.value)]('x');
+  }).on('mousemove', '.x', function( e ){
+    $(this)[tog(this.offsetWidth-18 < e.clientX-this.getBoundingClientRect().left)]('onX');   
+  }).on('click', '.onX', function(){
+    $(this).removeClass('x onX').val('');
+    var e = jQuery.Event("keypress");
+	e.which = 13; //choose the one you want
+	e.keyCode = 13;
+	$("#search_field").trigger(e);
+  });
+  
 		<#--// register the widget-->
 		$.PALM.options.registeredWidget.push({
 			"type":"${wType}",

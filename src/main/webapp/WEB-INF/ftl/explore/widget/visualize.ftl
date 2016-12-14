@@ -394,7 +394,6 @@ $( function(){
 		            	enableEdgeHovering: 'true',
 		            	edgeHoverColor: 'edge',
 		            	edgeHoverExtremities: 'true',
-		            	autoRescale:  ['nodeSize'],
 		            	doubleClickZoomingRatio: 1.7,
 		            	labelThreshold: 4,
 		            	zoomMax: 50,
@@ -405,8 +404,6 @@ $( function(){
 				s.settings({
 					    labelColor: 'node',
 		            	enableEdgeHovering: 'true',
-		            	edgeHoverColor: 'edge',
-		            	edgeHoverExtremities: 'true',
 		            	autoRescale:  ['nodeSize'],
 		            	maxNodeSize: 5,
 		            	doubleClickZoomingRatio: 1.7,
@@ -497,9 +494,7 @@ $( function(){
 					        edgeSizes.push(e.size)
 					      });
 					      
-						s.bind('rightClickNode', function(e){
-						console.log("eeright")
-						console.log(e)
+						s.bind('clickNode rightClickNode', function(e){
 							var nodeId = e.data.node.id,
 	            			toKeep = s.graph.neighbors(nodeId);
 					        toKeep[nodeId] = e.data.node;
@@ -518,9 +513,6 @@ $( function(){
 					            e.color = '#c9c0c2';
 					        });
 					
-					        // Since the data has been modified, we need to
-					        // call the refresh method to make the colors
-					        // update effective.
 					        s.refresh();
 						})
 						
@@ -537,7 +529,7 @@ $( function(){
 						s.bind('clickNode', function(e){
 							if(e.data.node.attributes.isadded==false){
 								var text = e.data.node.label;
-								showhoverdiv(e,'divtoshow', text.toUpperCase() + " is currently not present in PALM");
+								showhoverdiv(e,'divtoshow', text.toUpperCase() + " is currently not added to PALM");
 							}
 							else
 							showmenudiv(e,'menu');
@@ -553,7 +545,16 @@ $( function(){
 						
 						
 						s.bind('clickEdge', function(e){
-							showmenudiv(e,'menu');
+							hidehoverdiv('divtoshow');
+							hidemenudiv('menu');
+							if(e.data.edge.attributes.sourceauthorisadded && e.data.edge.attributes.targetauthorisadded)
+								showmenudiv(e,'menu');
+							else if(e.data.edge.attributes.sourceauthorisadded && !e.data.edge.attributes.targetauthorisadded)
+								showhoverdiv(e,'divtoshow', e.data.edge.target.toUpperCase() + " is currently not added to PALM");
+							else if(!e.data.edge.attributes.sourceauthorisadded && e.data.edge.attributes.targetauthorisadded)
+								showhoverdiv(e,'divtoshow', e.data.edge.source.toUpperCase() + " is currently not added to PALM");		
+							else
+								showhoverdiv(e,'divtoshow', "Both "+ e.data.edge.source.toUpperCase() + " and " + e.data.edge.target.toUpperCase() + " are currently not added to PALM");
 						})
 						
 						s.bind('clickStage',function(e){
@@ -602,7 +603,7 @@ $( function(){
 				        edgeSizes.push(e.size)
 				      });
 				      
-					s.bind('rightClickNode', function(e){
+					s.bind('clickNode rightClickNode', function(e){
 						var nodeId = e.data.node.id,
             			toKeep = s.graph.neighbors(nodeId);
 				        toKeep[nodeId] = e.data.node;
@@ -641,7 +642,7 @@ $( function(){
 						
 						if(e.data.node.attributes.isadded==false){
 							var text = e.data.node.label;
-							showhoverdiv(e,'divtoshow', text.toUpperCase() + " is currently not present in PALM");
+							showhoverdiv(e,'divtoshow', text.toUpperCase() + " is currently not added to PALM");
 						}
 						else
 						showmenudiv(e,'menu');
@@ -657,7 +658,16 @@ $( function(){
 					
 					
 					s.bind('clickEdge', function(e){
-						showmenudiv(e,'menu');
+						hidehoverdiv('divtoshow');
+							hidemenudiv('menu');
+							if(e.data.edge.attributes.sourceauthorisadded && e.data.edge.attributes.targetauthorisadded)
+								showmenudiv(e,'menu');
+							else if(e.data.edge.attributes.sourceauthorisadded && !e.data.edge.attributes.targetauthorisadded)
+								showhoverdiv(e,'divtoshow', e.data.edge.target.toUpperCase() + " is currently not added to PALM");
+							else if(!e.data.edge.attributes.sourceauthorisadded && e.data.edge.attributes.targetauthorisadded)
+								showhoverdiv(e,'divtoshow', e.data.edge.source.toUpperCase() + " is currently not added to PALM");		
+							else
+								showhoverdiv(e,'divtoshow', "Both "+ e.data.edge.source.toUpperCase() + " and " + e.data.edge.target.toUpperCase() + " are currently not added to PALM");
 					})
 					
 					s.bind('clickStage',function(e){
@@ -1298,7 +1308,7 @@ $( function(){
 													if(item.isAdded)
 														showmenudiv(obj, 'menu')
 													else
-														showhoverdiv(obj, 'divtoshow', item.name.toUpperCase() + " is currently not present in PALM")
+														showhoverdiv(obj, 'divtoshow', item.name.toUpperCase() + " is currently not added to PALM")
 										
 										});
 										
@@ -1393,7 +1403,7 @@ $( function(){
 													if(item.eventGroupIsAdded)
 														showmenudiv(obj, 'menu')
 													else
-														showhoverdiv(obj, 'divtoshow', item.groupName.toUpperCase() + " is currently not present in PALM")
+														showhoverdiv(obj, 'divtoshow', item.groupName.toUpperCase() + " is currently not added to PALM")
 												}
 										});
 										
@@ -1704,7 +1714,7 @@ $( function(){
 							if(item.isAdded)
 								showmenudiv(obj, 'menu')
 							else
-								showhoverdiv(obj, 'divtoshow', item.name.toUpperCase() + " is currently not present in PALM")
+								showhoverdiv(obj, 'divtoshow', item.name.toUpperCase() + " is currently not added to PALM")
 						}		
 						else
 								showmenudiv(obj, 'menu')
@@ -2944,7 +2954,7 @@ $( function(){
 		    return false;
 		}
 		
-		<#-- JQUERY -->
+	<#-- JQUERY -->
 
 	$('#append').click(function(e){
 		var targetVal = [];
@@ -3108,10 +3118,11 @@ $( function(){
 		return false;
 	});
 	
+	
 	function itemAdd(id, type){
 		var queryString = "?id="+id+"&type="+type;
 		
-		$('#search_words').effect('highlight',{color:"black"}, 1000);
+		$('#search_words').effect('highlight',{color:"black"}, 800);
 		<#-- update search widget -->
 		var searchWidget = $.PALM.boxWidget.getByUniqueName( 'explore_search' ); 
 		searchWidget.options.queryString = queryString;
@@ -3122,7 +3133,7 @@ $( function(){
 		var replace = true;
 		var queryString = "?id="+id+"&type="+type+"&replace="+replace;
 		
-		$('#search_words').effect('highlight',{color:"black"}, 1000);
+		$('#search_words').effect('highlight',{color:"black"}, 800);
 		<#-- update search widget -->
 		var searchWidget = $.PALM.boxWidget.getByUniqueName( 'explore_search' ); 
 		searchWidget.options.queryString = queryString;
