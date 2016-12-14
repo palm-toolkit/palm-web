@@ -18,7 +18,7 @@
 		
 		<#-- unique options in each widget -->
 		var options ={
-			source : "<@spring.url '/researcher/similarAuthorListTopicLevelRevised' />",
+			source : "<@spring.url '/circle/similarCircleList' />",
 			query: "",
 			queryString : "",
 			page:0,
@@ -38,7 +38,7 @@
 								<#-- $( "body .tooltip" ).remove(); -->
 
 								<#-- build the researcher list -->
-								$.each( data.similarAuthors, function( index, item){
+								$.each( data.similarCircles, function( index, item){
 									var researcherDiv = 
 									$( '<div/>' )
 										.addClass( 'author' )
@@ -113,7 +113,7 @@
 												.addClass( 'info font-xs' )
 												.attr('data-toggle', 'collapse')
 												.attr('href', '#similarity_topics_list_' + index)
-												.html( "Degree Similarity: " + ((Math.round(item.similarity * 100) / 100))*100 + "%"))
+												.html( "Degree Similarity: " + ( (Math.round(item.similarity * 100) / 100))*100 + "%"))
 										);
 										researcherDetail.append(
 													$('<div/>')

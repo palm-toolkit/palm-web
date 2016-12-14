@@ -13,7 +13,7 @@
 
 		<#-- set widget unique options -->
 		var options ={
-			source : "<@spring.url '/researcher/topicCompositionUniCloud' />",
+			source : "<@spring.url '/circle/topicCompositionNCloud' />",
 			queryString : "",
 			id: "",
 			onRefreshStart: function( widgetElem ){
@@ -23,7 +23,7 @@
 			onRefreshDone: function(  widgetElem , data ){
 			
 				<#-- check for interest evolution widget -->
-				var topicModelEvolutionWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_topicmodel_evolution' ); 
+				var topicModelEvolutionWidget = $.PALM.boxWidget.getByUniqueName( 'circle_topicmodel_evolution' ); 
 				if( typeof topicModelEvolutionWidget !== "undefined" && !topicModelEvolutionWidget.executed){
 					$.PALM.boxWidget.refresh( topicModelEvolutionWidget.element , topicModelEvolutionWidget.options );
 				}
@@ -123,17 +123,17 @@ function visualizeTextCloud( words ){
   .font("Impact")
   .fontSize(function(d) {
 		var fontsize = d.size;
-		if( fontsize < 50 )
+		if( fontsize < 20 )
 			fontsize = 10;
-		else if( fontsize < 70 && fontsize >= 50 )
+		else if( fontsize < 30 && fontsize >= 20 )
 			fontsize = 12;
-		else if( fontsize < 100 && fontsize >= 70 )
+		else if( fontsize < 40 && fontsize >= 30 )
 			fontsize = 14;
-		else if( fontsize < 130 && fontsize >= 100 )
+		else if( fontsize < 60 && fontsize >= 40 )
 			fontsize = 16;	
-		else if( fontsize < 160 && fontsize >= 130 )
+		else if( fontsize < 80 && fontsize >= 60 )
 			fontsize = 18;
-		else if( fontsize < 180 && fontsize >= 160 )
+		else if( fontsize < 100 && fontsize >= 80 )
 			fontsize = 20;
 		else 
 			fontsize = 22;
@@ -171,7 +171,7 @@ function visualizeTextCloud( words ){
       })
       .text(function(d) { return d.text; })
       .on("click", function (d, i){
-         	var publicationTimeLineWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_publication' ); 
+         	var publicationTimeLineWidget = $.PALM.boxWidget.getByUniqueName( 'circle_publication' ); 
 			
 			if( typeof publicationTimeLineWidget !== "undefined" ){
 				publicationTimeLineWidget.options.queryString = "?id=" + data.author.id + "&year=all&query=" + d.text;

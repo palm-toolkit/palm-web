@@ -1,5 +1,5 @@
 <div id="boxbody-${wUniqueName}" class="box-body no-padding">
-  	<div class="similarauthor-list">
+  	<div class="similarevent-list">
     </div>
 </div>
 
@@ -7,7 +7,7 @@
 	$( function(){
 
 		<#-- add slim scroll -->
-       $("#boxbody-${wUniqueName}>.similarauthor-list").slimscroll({
+       $("#boxbody-${wUniqueName}>.similarevent-list").slimscroll({
 			height: "300px",
 	        size: "6px",
 			allowPageScroll: true,
@@ -18,18 +18,18 @@
 		
 		<#-- unique options in each widget -->
 		var options ={
-			source : "<@spring.url '/researcher/similarAuthorListTopicLevelRevised' />",
+			source : "<@spring.url '/venue/similarEventList' />",
 			query: "",
 			queryString : "",
 			page:0,
 			maxresult:20,
 			onRefreshStart: function(  widgetElem  ){
 				<#-- show pop up progress log -->
-				<#--$.PALM.popUpMessage.create( "loading similarauthor list" );-->
+				<#--$.PALM.popUpMessage.create( "loading similarevent list" );-->
 						},
 			onRefreshDone: function(  widgetElem , data ){
 
-							var targetContainer = $( widgetElem ).find( ".similarauthor-list" );
+							var targetContainer = $( widgetElem ).find( ".similarevent-list" );
 							<#-- remove previous list -->
 							targetContainer.html( "" );
 							
@@ -38,10 +38,10 @@
 								<#-- $( "body .tooltip" ).remove(); -->
 
 								<#-- build the researcher list -->
-								$.each( data.similarAuthors, function( index, item){
+								$.each( data.similarEvents, function( index, item){
 									var researcherDiv = 
 									$( '<div/>' )
-										.addClass( 'author' )
+										.addClass( 'event' )
 										.attr({ 'id' : item.id });
 										
 									var researcherNav =
@@ -179,7 +179,7 @@
 								
 							}
 							else{
-							<#-- no coauthor -->
+							<#-- no coevent -->
 							<#--
 								$pageDropdown.append("<option value='0'>0</option>");
 								$( widgetElem ).find( "span.total-page" ).html( 0 );

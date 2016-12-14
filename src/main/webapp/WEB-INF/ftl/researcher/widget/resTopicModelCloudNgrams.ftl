@@ -13,7 +13,7 @@
 
 		<#-- set widget unique options -->
 		var options ={
-			source : "<@spring.url '/researcher/topicCompositionUniCloud' />",
+			source : "<@spring.url '/researcher/topicCompositionNCloud' />",
 			queryString : "",
 			id: "",
 			onRefreshStart: function( widgetElem ){
@@ -134,11 +134,11 @@ function visualizeTextCloud( words ){
 		else if( fontsize < 160 && fontsize >= 130 )
 			fontsize = 18;
 		else if( fontsize < 180 && fontsize >= 160 )
-			fontsize = 20;
-		else 
 			fontsize = 22;
+		else 
+			fontsize = 24;
 		return fontsize;
-	})
+	}) 	
   .on("end", draw)
   .start();
 
