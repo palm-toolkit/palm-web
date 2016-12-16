@@ -679,17 +679,17 @@
 	
 	function tog(v){return v?'addClass':'removeClass';} 
   
-  $(document).on('input', '.clearable', function(){
-    $(this)[tog(this.value)]('x');
-  }).on('mousemove', '.x', function( e ){
-    $(this)[tog(this.offsetWidth-18 < e.clientX-this.getBoundingClientRect().left)]('onX');   
-  }).on('click', '.onX', function(){
-    $(this).removeClass('x onX').val('');
-    var e = jQuery.Event("keypress");
-	e.which = 13; //choose the one you want
-	e.keyCode = 13;
-	$("#search_field").trigger(e);
-  });
+	$(document).on('input', '.clearable', function(){
+    	$(this)[tog(this.value)]('x');
+  		}).on('mousemove', '.x', function( e ){
+    			$(this)[tog(this.offsetWidth-18 < e.clientX-this.getBoundingClientRect().left)]('onX');   
+  			}).on('click', '.onX', function(){
+    			$(this).removeClass('x onX').val('');
+    			var e = jQuery.Event("keypress");
+				e.which = 13; 
+				e.keyCode = 13;
+				$(this).trigger(e);
+  			});
   
 		<#--// register the widget-->
 		$.PALM.options.registeredWidget.push({

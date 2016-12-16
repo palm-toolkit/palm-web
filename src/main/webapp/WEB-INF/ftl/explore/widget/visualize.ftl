@@ -3,7 +3,6 @@
 </@security.authorize>
 <div id="boxbody-${wUniqueName}" class="box-body no-padding wvisualize">
   	<div class="visualize_widget" class="nav-tabs-custom"  oncontextmenu="return false;">
-  	
 	</div>
 	<div id="divtoshow" class="fix-pos display-none">test</div>
 	<div id="chartTab">
@@ -52,7 +51,8 @@ $( function(){
 		fullscr.appendTo(visHeaderMenu)
 		$(".toggle-expand-btn").click(function (e) {
 		  $(this).closest('.box').toggleClass('panel-fullscreen');
-		  
+		  hidehoverdiv('divtoshow');
+		  hidemenudiv('menu');
 		});
 		
 		var visType = "";
@@ -257,11 +257,13 @@ $( function(){
 					 		{
 					 			year_filter.style.display = "none";
 					 			other_filters.style.visibility = "hidden";
+					 			appButton.style.display = "none";
 							}
 							else
 							{
 								year_filter.style.display = "block";
 								other_filters.style.visibility = "visible";
+								appButton.style.display = "block";
 							}	
 				 		}
 				 		
@@ -460,6 +462,7 @@ $( function(){
 					if(data.oldVis=="false")
 					{
 						graphFile=data.map.graphFile;
+						console.log("graphFile: " + graphFile)
 						if(s.graph.nodes().length < 20)
 						{
 							// Zoom out - single frame :
@@ -495,6 +498,8 @@ $( function(){
 					      });
 					      
 						s.bind('clickNode rightClickNode', function(e){
+						
+							console.log(e)
 							var nodeId = e.data.node.id,
 	            			toKeep = s.graph.neighbors(nodeId);
 					        toKeep[nodeId] = e.data.node;
@@ -527,12 +532,14 @@ $( function(){
 						})
 						
 						s.bind('clickNode', function(e){
-							if(e.data.node.attributes.isadded==false){
-								var text = e.data.node.label;
-								showhoverdiv(e,'divtoshow', text.toUpperCase() + " is currently not added to PALM");
-							}
-							else
-							showmenudiv(e,'menu');
+							if(e.data.captor.ctrlKey == false){ 
+								if(e.data.node.attributes.isadded==false){
+									var text = e.data.node.label;
+									showhoverdiv(e,'divtoshow', text.toUpperCase() + " is currently not added to PALM");
+								}
+								else
+								showmenudiv(e,'menu');
+							}	
 						})
 						
 						s.bind('overEdge',function(e){
@@ -640,12 +647,14 @@ $( function(){
 					
 					s.bind('clickNode', function(e){
 						
-						if(e.data.node.attributes.isadded==false){
-							var text = e.data.node.label;
-							showhoverdiv(e,'divtoshow', text.toUpperCase() + " is currently not added to PALM");
-						}
-						else
-						showmenudiv(e,'menu');
+						if(e.data.captor.ctrlKey == false){ 
+								if(e.data.node.attributes.isadded==false){
+									var text = e.data.node.label;
+									showhoverdiv(e,'divtoshow', text.toUpperCase() + " is currently not added to PALM");
+								}
+								else
+								showmenudiv(e,'menu');
+							}
 					})
 					
 					s.bind('overEdge',function(e){
@@ -1228,7 +1237,8 @@ $( function(){
 					        size: "5px",
 				        	allowPageScroll: true,
 				   			touchScrollStep: 50,
-				   			//alwaysVisible: true
+				   			alwaysVisible: true,
+				   			railVisible: true
 				       });
 						
 						<#-- remove  pop up progress log -->
@@ -1766,11 +1776,12 @@ $( function(){
 						similarTab.append(similarDiv);
 						
 						$(".similarity").slimscroll({
-									height: "67vh",
-							        size: "5px",
-						        	allowPageScroll: true,
-						   			touchScrollStep: 50,
-						   			//alwaysVisible: true
+							height: "67vh",
+					        size: "5px",
+				        	allowPageScroll: true,
+				   			touchScrollStep: 50,
+				   			//alwaysVisible: true,
+		   					//railVisible: true
 						});		
 						
 						var innerDiv = $('<div/>').attr('id','sim_tab')

@@ -103,7 +103,7 @@
 				var targetContainer = $( widgetElem ).find( ".widget_body" );
 				targetContainer.html("");	
 				
-				var appButton = document.getElementById("apply_button")
+				appButton = document.getElementById("apply_button")
 		 		appButton.style.display = "none";
 		 		//appButton.style.visibility = "hidden";
 				
@@ -225,8 +225,10 @@
 					{
 		    			if(ids.length!=0)
 		    			{
-
-							appButton.style.display = "block";
+							if(currentTabName == "Similar")
+					 			appButton.style.display = "none";
+							else
+								appButton.style.display = "block";
 										    			
 			    			if(data.TimeFilter != undefined)
 			    			{
@@ -347,7 +349,7 @@
 														$('<input/>')
 														.attr("id" , "top_filter_search")
 														.attr("placeholder","Shortlist filter")
-														.addClass('text-field')
+														.addClass('text-field clearable')
 												 	)
 								//fillTopicFilter(topList,"");	
 								fillFilter(topList, "", topCount, topicsFilter, topSectionHeader, 'topicCB', 'hsla(240, 83%, 47%, 0.2)')			 	
@@ -371,7 +373,7 @@
 													$('<input/>')
 														.attr("id" , "pub_filter_search")
 														.attr("placeholder","Shortlist filter")
-														.addClass('text-field')
+														.addClass('text-field clearable')
 											 	)
 								//fillPublicationFilter(pubList,"");
 								fillFilter(pubList, "", pubCount, publicationsFilter, pubSectionHeader, 'publicationCB', 'hsla(120, 100%, 50%, 0.2)')
@@ -395,7 +397,7 @@
 														$('<input/>')
 															.attr("id" , "conf_filter_search")
 															.attr("placeholder","Shortlist filter")
-															.addClass('text-field')
+															.addClass('text-field clearable')
 												 	)
 								
 								//fillConferenceFilter(confList,"");
@@ -422,7 +424,7 @@
 													$('<input/>')
 														.attr("id" , "cir_filter_search")
 														.attr("placeholder","Shortlist filter")
-														.addClass('text-field')
+														.addClass('text-field clearable')
 											 	)
 											 	
 								//fillCircleFilter(cirList,"");
@@ -454,14 +456,8 @@
 							other_filters.style.visibility = "visible";
 						}	
 			 		}
-						
-				
 				});
-				
-							
-			
 			}
-			
 		};	
 		
 		function togglePub(source) {

@@ -1196,6 +1196,7 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 	left-margin:2px;
 	background-color:#db845c;
 	font-size:14px;
+	font-weight: bold;
 	border:1px solid black;
 	border-radius:0.5em;
 	display:inline-block;
@@ -1461,6 +1462,11 @@ g.arc path {
 .vis_options {
 	background-color: #838383;
 	height: 100px;
+}
+
+.clear_search {
+	padding-top: 10px;
+	vertical-align: top;
 }
 .clearable{
   background:url(http://i.imgur.com/z7ZSYjt.png) no-repeat right -10px center;

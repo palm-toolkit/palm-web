@@ -11,6 +11,8 @@
 	  	</div>
   		<div class="vis_options">
   		</div>
+  		<div class="clear_search">
+  		</div>
 	</div>
 </div>
 
@@ -51,7 +53,7 @@
 				<#-- show pop up progress log -->
 						},
 			onRefreshDone: function(  widgetElem , data ){
-			
+			console.log("REFRESHED")
 			history_data = new Object();
 			count = 1;
 			var retrievedHistoryObject = localStorage.getItem('history_data');
@@ -80,7 +82,8 @@
 					.html("  "+data.name[i])
 					.append($( '<span/>' )
 						.addClass( 'name capitalize search-item-del' )
-						.html("X")
+						.append($( '<i/>' ).addClass('fa fa-times'))
+						//.html("X")
 					<#-- click to delete item from search widget -->
 					.on( "click", function(e){
 					
@@ -184,8 +187,10 @@
 								callRefresh(id,type)
 						}	
 					}
-				}		
-			setBoxes(id, type, currentVisType);
+				}	
+				
+			if(data.name.length>0)		
+				setBoxes(id, type, currentVisType);
 		}
 	};
 	
@@ -420,6 +425,39 @@
 							refreshVisFilter(id, type,  "topics");
 						})
 					)
+					
+					visOptionsContainer.append(
+								$('<i/>')
+									.addClass('fa fa-remove fa-lg clear_search cursor-p')
+									.attr("title","Clear search")
+									.on("click",function(e){
+									
+									// clear current names and ids lists
+									names = [];
+									ids = [];
+										
+									// send blank values in query string and refresh search widget	
+									id="";
+									type="";
+									var queryString = "?id="+id+"&type="+type;
+									<#-- update search widget -->
+									var searchWidget = $.PALM.boxWidget.getByUniqueName( 'explore_search' ); 
+									searchWidget.options.queryString = queryString;
+									$.PALM.boxWidget.refresh( searchWidget.element , searchWidget.options );
+										
+									// remove DOM elements from search widget 	
+									$(".search-item").each(function(){
+										$(this).remove();
+									})
+									$(".box-home-explore").each(function(){
+										$(this).remove();
+									})
+									
+									// clear visualization and filter widget
+									refreshVisFilter(id, type, visType)
+										
+									})
+							)
 		}
 		
 		function addToHistory()
