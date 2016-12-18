@@ -320,7 +320,7 @@
 						console.log(outerScrollVisible)-->													
 						
 						$("#other_filters").slimscroll({
-							height: "57vh",
+							height: "51vh",
 					        size: "7px",
 					    	allowPageScroll: true,
 							touchScrollStep: 50,

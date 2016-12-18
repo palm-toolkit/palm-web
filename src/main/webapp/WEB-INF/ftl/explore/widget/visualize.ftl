@@ -5,12 +5,15 @@
   	<div class="visualize_widget" class="nav-tabs-custom"  oncontextmenu="return false;">
 	</div>
 	<div id="divtoshow" class="fix-pos display-none">test</div>
+	<div id="divhold" class="fix-pos display-none">test</div>
 	<div id="chartTab">
   </div>
 <div class="menu" id="menu">
  <ul>
- <a id="append" href="#"><li>Add to Search</li></a>
- <a id="replace" href="#"><li>Search for</li></a>
+ <li id="menu_header" value="placeholder"></li>
+ <a id="append" href="#"><li>Add to Criteria</li></a>
+ <a id="replace" href="#"><li>Replace Criteria By</li></a>
+ <a id="openURL" href="#"><li>Go to URL</li></a>
 </ul>
 </div>
 </div>
@@ -52,6 +55,7 @@ $( function(){
 		$(".toggle-expand-btn").click(function (e) {
 		  $(this).closest('.box').toggleClass('panel-fullscreen');
 		  hidehoverdiv('divtoshow');
+		  hidehoverdiv('divhold');
 		  hidemenudiv('menu');
 		});
 		
@@ -102,6 +106,7 @@ $( function(){
 
 				targetContainer.html("");			
 				hidehoverdiv('divtoshow');
+		  		hidehoverdiv('divhold');
 				hidemenudiv('menu')
 				
 				<#-- update type of visualization depending on selection-->
@@ -237,6 +242,7 @@ $( function(){
 						
 				 	tabHeader.on("click",function(e){
 				 		hidehoverdiv('divtoshow');
+				 		hidehoverdiv('divhold');
 				 		hidemenudiv('menu')
 
 	
@@ -522,6 +528,7 @@ $( function(){
 						})
 						
 						s.bind('clickStage', function(e){
+							hidehoverdiv('divhold');
 					        s.graph.nodes().forEach(function(n) {
 					            n.color = n.originalColor;
 					        });
@@ -535,7 +542,7 @@ $( function(){
 							if(e.data.captor.ctrlKey == false){ 
 								if(e.data.node.attributes.isadded==false){
 									var text = e.data.node.label;
-									showhoverdiv(e,'divtoshow', text.toUpperCase() + " is currently not added to PALM");
+									showhoverdiv(e,'divhold', text.toUpperCase() + " is currently not added to PALM");
 								}
 								else
 								showmenudiv(e,'menu');
@@ -544,29 +551,30 @@ $( function(){
 						
 						s.bind('overEdge',function(e){
 							//if(!(edgeSizes.every( (val, i, arr) => val == arr[0] == 1)))
-							showhoverdiv(e,'divtoshow', "co-authored " + Math.round(e.data.edge.weight / 0.1) + " time(s)");
+							showhoverdiv(e,'divhold', "co-authored " + Math.round(e.data.edge.weight / 0.1) + " time(s)");
 						})
 						s.bind('outEdge',function(e){
-							hidehoverdiv('divtoshow');
+							hidehoverdiv('divhold');
 						})
 						
 						
 						s.bind('clickEdge', function(e){
+		  					hidehoverdiv('divhold');
 							hidehoverdiv('divtoshow');
 							hidemenudiv('menu');
 							if(e.data.edge.attributes.sourceauthorisadded && e.data.edge.attributes.targetauthorisadded)
 								showmenudiv(e,'menu');
 							else if(e.data.edge.attributes.sourceauthorisadded && !e.data.edge.attributes.targetauthorisadded)
-								showhoverdiv(e,'divtoshow', e.data.edge.target.toUpperCase() + " is currently not added to PALM");
+								showhoverdiv(e,'divhold', e.data.edge.target.toUpperCase() + " is currently not added to PALM");
 							else if(!e.data.edge.attributes.sourceauthorisadded && e.data.edge.attributes.targetauthorisadded)
-								showhoverdiv(e,'divtoshow', e.data.edge.source.toUpperCase() + " is currently not added to PALM");		
+								showhoverdiv(e,'divhold', e.data.edge.source.toUpperCase() + " is currently not added to PALM");		
 							else
-								showhoverdiv(e,'divtoshow', "Both "+ e.data.edge.source.toUpperCase() + " and " + e.data.edge.target.toUpperCase() + " are currently not added to PALM");
+								showhoverdiv(e,'divhold', "Both "+ e.data.edge.source.toUpperCase() + " and " + e.data.edge.target.toUpperCase() + " are currently not added to PALM");
 						})
 						
 						s.bind('clickStage',function(e){
 							hidemenudiv('menu');
-							hidehoverdiv('divtoshow');
+							hidehoverdiv('divhold');
 						})
 					}
 				}); 
@@ -636,6 +644,7 @@ $( function(){
 					})
 					
 					s.bind('clickStage', function(e){
+						hidehoverdiv('divhold');
 				        s.graph.nodes().forEach(function(n) {
 				            n.color = n.originalColor;
 				        });
@@ -650,7 +659,7 @@ $( function(){
 						if(e.data.captor.ctrlKey == false){ 
 								if(e.data.node.attributes.isadded==false){
 									var text = e.data.node.label;
-									showhoverdiv(e,'divtoshow', text.toUpperCase() + " is currently not added to PALM");
+									showhoverdiv(e,'divhold', text.toUpperCase() + " is currently not added to PALM");
 								}
 								else
 								showmenudiv(e,'menu');
@@ -659,29 +668,30 @@ $( function(){
 					
 					s.bind('overEdge',function(e){
 						if(!(edgeSizes.every( (val, i, arr) => val == arr[0] )))
-						showhoverdiv(e,'divtoshow', "co-authored " + Math.round(e.data.edge.weight / 0.1) + " time(s)");
+						showhoverdiv(e,'divhold', "co-authored " + Math.round(e.data.edge.weight / 0.1) + " time(s)");
 					})
 					s.bind('outEdge',function(e){
-						hidehoverdiv('divtoshow');
+						hidehoverdiv('divhold');
 					})
 					
 					
 					s.bind('clickEdge', function(e){
+		  				hidehoverdiv('divhold');
 						hidehoverdiv('divtoshow');
 							hidemenudiv('menu');
 							if(e.data.edge.attributes.sourceauthorisadded && e.data.edge.attributes.targetauthorisadded)
 								showmenudiv(e,'menu');
 							else if(e.data.edge.attributes.sourceauthorisadded && !e.data.edge.attributes.targetauthorisadded)
-								showhoverdiv(e,'divtoshow', e.data.edge.target.toUpperCase() + " is currently not added to PALM");
+								showhoverdiv(e,'divhold', e.data.edge.target.toUpperCase() + " is currently not added to PALM");
 							else if(!e.data.edge.attributes.sourceauthorisadded && e.data.edge.attributes.targetauthorisadded)
-								showhoverdiv(e,'divtoshow', e.data.edge.source.toUpperCase() + " is currently not added to PALM");		
+								showhoverdiv(e,'divhold', e.data.edge.source.toUpperCase() + " is currently not added to PALM");		
 							else
-								showhoverdiv(e,'divtoshow', "Both "+ e.data.edge.source.toUpperCase() + " and " + e.data.edge.target.toUpperCase() + " are currently not added to PALM");
+								showhoverdiv(e,'divhold', "Both "+ e.data.edge.source.toUpperCase() + " and " + e.data.edge.target.toUpperCase() + " are currently not added to PALM");
 					})
 					
 					s.bind('clickStage',function(e){
 						hidemenudiv('menu');
-						hidehoverdiv('divtoshow');
+						hidehoverdiv('divhold');
 					})
 					
 				}); 
@@ -846,6 +856,7 @@ $( function(){
 						mymap.on('click',function(e){
 							hidemenudiv('menu')
 							hidehoverdiv('divtoshow')
+		  					hidehoverdiv('divhold');
 						})
 					}
 				}).fail(function() {
@@ -871,6 +882,7 @@ $( function(){
 							type:"clickLocation",
 							clientX:e.layerPoint.x,
 							clientY:e.layerPoint.y,
+							itemName: feature.properties.conference,
 							eventGroupId:feature.properties.eventGroupId
 						};
 	      		
@@ -1021,7 +1033,9 @@ $( function(){
 														  type:"clickPublication",
 												          clientX:e.pageX,
 												          clientY:e.pageY,
-												          pubId:item.id
+												          itemName: item.title,
+												          pubId:item.id,
+												          pubUrl: item.url
 												};
 												showmenudiv(obj,'menu');
 												e.stopPropagation()
@@ -1313,13 +1327,13 @@ $( function(){
 												          clientX:d.clientX,
 												          clientY:d.clientY,
 												          itemId:item.id,
+												          itemName:item.name,
 												          objectType:"researcher"
 												};
 													if(item.isAdded)
 														showmenudiv(obj, 'menu')
 													else
 														showhoverdiv(obj, 'divtoshow', item.name.toUpperCase() + " is currently not added to PALM")
-										
 										});
 										
 									if( !item.isAdded ){
@@ -1397,6 +1411,7 @@ $( function(){
 													        clientX:d.clientX,
 													        clientY:d.clientY,
 													        itemId:item.eventGroupId,
+													        itemName: item.groupName,
 													        objectType:"conference"
 													};
 													showhoverdiv(obj,'divtoshow', "This conference is already added");
@@ -1408,6 +1423,7 @@ $( function(){
 													          clientX:d.clientX,
 													          clientY:d.clientY,
 													          itemId:item.eventGroupId,
+													          itemName: item.groupName,
 													          objectType:"conference"
 													};
 													if(item.eventGroupIsAdded)
@@ -1485,6 +1501,7 @@ $( function(){
 												          clientX:d.clientX,
 												          clientY:d.clientY,
 												          itemId:item[2],
+												          itemName: item[0],
 												          objectType:"topic"
 												};
 											showmenudiv(obj, 'menu')
@@ -1531,11 +1548,13 @@ $( function(){
 										.on('mouseout',originalColor)
 										.on('click', function(d){ 
 											obj = {
-														  type:"listItem",
-												          clientX:d.clientX,
-												          clientY:d.clientY,
-												          itemId:item.id,
-												          objectType:"publication"
+													  type:"listItem",
+											          clientX:d.clientX,
+											          clientY:d.clientY,
+											          itemId:item.id,
+											          itemName:item.title,
+											          pubUrl:item.url,
+											          objectType:"publication"
 												};
 											showmenudiv(obj, 'menu')
 										
@@ -1605,6 +1624,7 @@ $( function(){
 				
 				div.on("click", function(d,i){
 						hidehoverdiv('divtoshow')
+		  				hidehoverdiv('divhold');
 						hidemenudiv('menu')
 						vennListC.html("");
 						var s  = d3.selectAll("path")
@@ -1718,6 +1738,8 @@ $( function(){
 						          clientX:d.clientX,
 						          clientY:d.clientY,
 						          itemId:item.id,
+						          itemName:item.name,
+						          pubUrl:item.url,
 						          objectType:visType.substring(0,visType.length-1)
 						};
 						if(visType == "researchers" || visType == "conferences"){
@@ -1820,6 +1842,7 @@ $( function(){
 						canvas.on("click", function(e) { 
 							hidemenudiv('menu'); 
 							hidehoverdiv('divtoshow');
+		  					hidehoverdiv('divhold');
 						})		
 					
 						var chart = canvas.append('g')
@@ -1834,12 +1857,18 @@ $( function(){
 										.style('fill',function(d,i){ return colorScale(i); })
 										.attr('width',function(d){ return 0; })
 										.on("click", function(e, i){
-											
+											if(visType == "publications")
+												url = data.map.urls[i]
+											else
+												url = ""
+													
 											obj = {
 													  type:"similarBar",
 											          clientX:d3.event.clientX,
 											          clientY:d3.event.clientY,
-											          authorId:data.map.ids[i]
+											          itemName:data.map.names[i],
+											          authorId:data.map.ids[i],
+											          pubUrl: url
 											};
 											
 											showmenudiv(obj,'menu');
@@ -1852,6 +1881,7 @@ $( function(){
 															  type:"similarBar",
 													          clientX:d3.event.clientX,
 													          clientY:d3.event.clientY,
+													          itemName:data.map.names[i],
 													          authorId:data.map.ids[i]
 												};
 												
@@ -1888,12 +1918,18 @@ $( function(){
 											//return data.map.names[i] + " (Common interests: " + data.map.similarity[i] + ") "; 
 									}).style({'fill':'black','font-size':'13px', 'font-weight':'bold'})
 									.on("click", function(e, i){
-											
+											if(visType == "publications")
+												url = data.map.urls[i]
+											else
+												url = ""
+												
 											obj = {
 													  type:"similarBar",
 											          clientX:d3.event.clientX,
 											          clientY:d3.event.clientY,
-											          authorId:data.map.ids[i]
+											          itemName:data.map.names[i],
+											          authorId:data.map.ids[i],
+											          pubUrl:url
 											};
 											
 											showmenudiv(obj,'menu');
@@ -1906,6 +1942,7 @@ $( function(){
 															  type:"similarBar",
 													          clientX:d3.event.clientX,
 													          clientY:d3.event.clientY,
+													          itemName:data.map.names[i],
 													          authorId:data.map.ids[i]
 												};
 												
@@ -1963,8 +2000,11 @@ $( function(){
 			clusters = new Array(getClusters(data)); 
 			
 			nodes = data.map(function(d) {
-				  if(visType == "researchers" || visType=="publications"){
+				  if(visType == "researchers"){
 			      	new_data = {cluster: d.cluster, radius: 10, id: d.id, name: d.name, clusterTerms : d.clusterTerms, nodeTerms : d.nodeTerms};
+				  }
+				  if(visType == "publications"){
+			      	new_data = {cluster: d.cluster, radius: 10, id: d.id, name: d.name, url:d.url, clusterTerms : d.clusterTerms, nodeTerms : d.nodeTerms};
 				  }
 				  if(visType == "conferences"){
 			      	new_data = {cluster: d.cluster, radius: 10, id: d.id, name: d.name, abr: d.abr, clusterTerms : d.clusterTerms, nodeTerms : d.nodeTerms};
@@ -2017,6 +2057,8 @@ $( function(){
 							clientX:d3.event.clientX,
 							clientY:d3.event.clientY,
 							clusterItem: d.id,
+							itemName:d.name,
+							pubUrl: d.url,
 							visType : visType 
 						};
 			         showmenudiv(obj,'menu');
@@ -2029,6 +2071,7 @@ $( function(){
 							clientX:d3.event.clientX,
 							clientY:d3.event.clientY,
 							clusterItem: d.id,
+							itemName:d.name,
 							visType : visType 
 						};
 						
@@ -2036,11 +2079,12 @@ $( function(){
 						for(var i=0; i<d.nodeTerms.length; i++)
 							str = str +  "<br /> - " + d.nodeTerms[i] 
 						
-			      		showhoverdiv(obj, 'divtoshow', str); 
+			      		showhoverdiv(obj, 'divhold', str); 
 			      }) 
 			      .on("mouseout", function(e,i){
-									hidehoverdiv('divtoshow');
-								})
+						hidehoverdiv('divtoshow');
+				        hidehoverdiv('divhold');
+				  })
 			
 			 <#-- node.append("title")
 			      .text(function(d) { return d.name + "\n" + d.clusterTerms; }); -->
@@ -2160,6 +2204,7 @@ $( function(){
 							clientX:d3.event.clientX,
 							clientY:d3.event.clientY,
 							clusterItems: list,
+							itemName:"All " + visType + " in cluster" ,
 							visType : visType 
 						};
 			         showmenudiv(obj,'menu');
@@ -2185,11 +2230,12 @@ $( function(){
 						for(var i=0; i<d.values[0].clusterTerms.length; i++)
 							str = str +  "<br /> - " + d.values[0].clusterTerms[i] 
 									
-			      showhoverdiv(obj, 'divtoshow', str); 
+			      showhoverdiv(obj, 'divhold', str); 
 			     }) 
 			     .on("mouseout", function(e,i){
-									hidehoverdiv('divtoshow');
-								})
+					hidehoverdiv('divtoshow');
+		  			hidehoverdiv('divhold');
+				})
 				<#--.append("title")
 			      .text(function(d) { 
 			      return d.values[0].clusterTerms; });    -->
@@ -2475,157 +2521,159 @@ $( function(){
 		}
 		return cluster_type_options;
 	}
-	
-		
 		
 		function visBubbles(data, namesList){
-		
-		var color = d3.scale.ordinal().range(customColors),
-		    diameter = 500;
-		    
-		var zoom = d3.behavior.zoom()
-						.scaleExtent([0, 15])
-						.on("zoom", zoomedBubbles);    
-		    
-		var bubble = d3.layout.pack()
-		      .value(function(d) { return d3.sum(d[1]); })
-		      .sort(function(a, b) {
-				    return -(a.value - b.value);
-				})
-		      .size([diameter, diameter])
-		      .padding(1.5),
-		    arc = d3.svg.arc().innerRadius(0),
-		    pie = d3.layout.pie();
-		
-		svg = d3.select("#tab_Bubbles").append("svg")
-		    .attr("width", diameter)
-		    .attr("height", diameter)
-		    .attr("class", "bubble")
-		      .append("g")
-		    .call(zoom).append("g")
-		    .on("click",function(){
-		    	hidehoverdiv('divtoshow');
-				hidemenudiv('menu')
-		    })
-		    
-	   var rect2 = svg.append("rect")
-						    .attr("width", diameter)
-						    .attr("height", diameter)
-						    .style("fill", "none")
-						    .style("pointer-events", "all"); 
-		
-		var container = svg.append("g");
-
-		container.append("g")
-		
-		var nodes = container.selectAll("g.node")
-		    .data(bubble.nodes({children: data}).filter(function(d) { return !d.children; }));
-		nodes.enter().append("g")
-		    .attr("class", "node")
-		    .attr("transform", function(d) { return "translate(" + (d.x + 50) + "," + (d.y - 40) + ")"; })
-			.on("click", function(d){
-					obj = {
-							type:"bubble",
-							clientX:d3.event.clientX,
-							clientY:d3.event.clientY,
-							topicId:d[2]
-						};
-									
-					showmenudiv(obj,'menu'); 
-					d3.event.stopPropagation();       	
-			} )
-			.on("mouseover",function(d,i){
-			d3.select(this).style("cursor", "pointer")
-					obj = {
-							type:"bubble",
-							clientX:d3.event.clientX,
-							clientY:d3.event.clientY,
-							name:namesList[i]
-						};
-					if(namesList.length<2)					
-					showhoverdiv(obj,'divtoshow', d[0]);		    	
-		    })
-		    .on("mousemove",function(d,i){
-			d3.select(this).style("cursor", "pointer")
-					obj = {
-							type:"bubble",
-							clientX:d3.event.clientX,
-							clientY:d3.event.clientY,
-							name:namesList[i]
-						};
-					if(namesList.length<2)					
-					showhoverdiv(obj,'divtoshow', d[0]);		    	
-		    })
-		    .on("mouseout",function(d,i){
-		    	hidehoverdiv('divtoshow');
-		    })      			  
-		
-		arcGs = nodes.selectAll("g.arc")
-		    .data(function(d) {
-		      return pie(d[1]).map(function(m) { m.r = d.r; return m; });
-		    })
-		    
-		var arcEnter = arcGs.enter().append("g").attr("class", "arc");
-		
-		arcEnter.append("path")
-		    .attr("d", function(d) {
-		      arc.outerRadius(d.r);
-		      return arc(d);
-		    })
-		    .style("fill", function(d, i) { return color(i); })
-		    .on("mouseover",function(d,i){
-		    d3.select(this).style("cursor", "pointer")
-					obj = {
-							type:"bubble",
-							clientX:d3.event.clientX,
-							clientY:d3.event.clientY,
-							name:namesList[i]
-						};
-					if(namesList.length>1)				
-						showhoverdiv(obj,'divtoshow',namesList[i]);		    	
-		    })
-		     .on("mousemove",function(d,i){
-		    d3.select(this).style("cursor", "pointer")
-					obj = {
-							type:"bubble",
-							clientX:d3.event.clientX,
-							clientY:d3.event.clientY,
-							name:namesList[i]
-						};
-					if(namesList.length>1)				
-						showhoverdiv(obj,'divtoshow',namesList[i]);		    	
-		    })
-		    .on("mouseout",function(d,i){
-		    	hidehoverdiv('divtoshow');
-		    })    
-		   <#-- .on("click",function(d,i){
-		    	console.log("arc")
-		    	console.log(d);
-		    	console.log(namesList[i])
-		    })-->
-		
-		
-		nodes.append("text")
-	      .attr("dy", ".3em")
-	      .style("text-anchor", "middle")
-	      .text(function(d) { return [d[0]]; })
-	      .style("font-size", function(d) {
-
-			      	if(this.getComputedTextLength()!=0)
-			      	{
-			      		var size = Math.min(2 * d.r, (2 * d.r - 1) / this.getComputedTextLength() * 10);
-			      		if(d[0].split(' ').length == 1)
-				      		size = size/2;
-				      	return size + "px";
-				    }
-				    else
-				    {
-				    	var size = Math.min(2 * d.r, (2 * d.r - 1) / 120 * 10);
-				    	//if(d[0].split(' ').length == 1)
-				      	//	size = size/1.5;
-				      	return size + "px";
-				     } 	 
-			      })
+			
+			var color = d3.scale.ordinal().range(customColors),
+			    diameter = 500;
+			    
+			var zoom = d3.behavior.zoom()
+							.scaleExtent([0, 15])
+							.on("zoom", zoomedBubbles);    
+			    
+			var bubble = d3.layout.pack()
+			      .value(function(d) { return d3.sum(d[1]); })
+			      .sort(function(a, b) {
+					    return -(a.value - b.value);
+					})
+			      .size([diameter, diameter])
+			      .padding(1.5),
+			    arc = d3.svg.arc().innerRadius(0),
+			    pie = d3.layout.pie();
+			
+			svg = d3.select("#tab_Bubbles").append("svg")
+			    .attr("width", diameter)
+			    .attr("height", diameter)
+			    .attr("class", "bubble")
+			      .append("g")
+			    .call(zoom).append("g")
+			    .on("click",function(){
+			    	hidehoverdiv('divtoshow');
+			  		hidehoverdiv('divhold');
+					hidemenudiv('menu')
+			    })
+			    
+		   var rect2 = svg.append("rect")
+							    .attr("width", diameter)
+							    .attr("height", diameter)
+							    .style("fill", "none")
+							    .style("pointer-events", "all"); 
+			
+			var container = svg.append("g");
+	
+			container.append("g")
+			
+			var nodes = container.selectAll("g.node")
+			    .data(bubble.nodes({children: data}).filter(function(d) { return !d.children; }));
+			nodes.enter().append("g")
+			    .attr("class", "node")
+			    .attr("transform", function(d) { return "translate(" + (d.x + 50) + "," + (d.y - 40) + ")"; })
+				.on("click", function(d){
+						obj = {
+								type:"bubble",
+								clientX:d3.event.clientX,
+								clientY:d3.event.clientY,
+								itemName:d[0],
+								topicId:d[2]
+							};
+										
+						showmenudiv(obj,'menu'); 
+						d3.event.stopPropagation();       	
+				} )
+				.on("mouseover",function(d,i){
+				d3.select(this).style("cursor", "pointer")
+						obj = {
+								type:"bubble",
+								clientX:d3.event.clientX,
+								clientY:d3.event.clientY,
+								name:namesList[i]
+							};
+						if(namesList.length<2)					
+						showhoverdiv(obj,'divhold', d[0]);		    	
+			    })
+			    .on("mousemove",function(d,i){
+				d3.select(this).style("cursor", "pointer")
+						obj = {
+								type:"bubble",
+								clientX:d3.event.clientX,
+								clientY:d3.event.clientY,
+								name:namesList[i]
+							};
+						if(namesList.length<2)					
+						showhoverdiv(obj,'divhold', d[0]);		    	
+			    })
+			    .on("mouseout",function(d,i){
+			    	hidehoverdiv('divtoshow');
+			  		hidehoverdiv('divhold');
+			    })      			  
+			
+			arcGs = nodes.selectAll("g.arc")
+			    .data(function(d) {
+			      return pie(d[1]).map(function(m) { m.r = d.r; return m; });
+			    })
+			    
+			var arcEnter = arcGs.enter().append("g").attr("class", "arc");
+			
+			arcEnter.append("path")
+			    .attr("d", function(d) {
+			      arc.outerRadius(d.r);
+			      return arc(d);
+			    })
+			    .style("fill", function(d, i) { return color(i); })
+			    .on("mouseover",function(d,i){
+			    d3.select(this).style("cursor", "pointer")
+						obj = {
+								type:"bubble",
+								clientX:d3.event.clientX,
+								clientY:d3.event.clientY,
+								name:namesList[i]
+							};
+						if(namesList.length>1)				
+							showhoverdiv(obj,'divhold',namesList[i]);		    	
+			    })
+			     .on("mousemove",function(d,i){
+			    d3.select(this).style("cursor", "pointer")
+						obj = {
+								type:"bubble",
+								clientX:d3.event.clientX,
+								clientY:d3.event.clientY,
+								name:namesList[i]
+							};
+						if(namesList.length>1)				
+							showhoverdiv(obj,'divhold',namesList[i]);		    	
+			    })
+			    .on("mouseout",function(d,i){
+			    	hidehoverdiv('divtoshow');
+			  		hidehoverdiv('divhold');
+			    })    
+			   <#-- .on("click",function(d,i){
+			    	console.log("arc")
+			    	console.log(d);
+			    	console.log(namesList[i])
+			    })-->
+			
+			
+			nodes.append("text")
+		      .attr("dy", ".3em")
+		      .style("text-anchor", "middle")
+		      .text(function(d) { return [d[0]]; })
+		      .style("font-size", function(d) {
+	
+				      	if(this.getComputedTextLength()!=0)
+				      	{
+				      		var size = Math.min(2 * d.r, (2 * d.r - 1) / this.getComputedTextLength() * 10);
+				      		if(d[0].split(' ').length == 1)
+					      		size = size/2;
+					      	return size + "px";
+					    }
+					    else
+					    {
+					    	var size = Math.min(2 * d.r, (2 * d.r - 1) / 120 * 10);
+					    	//if(d[0].split(' ').length == 1)
+					      	//	size = size/1.5;
+					      	return size + "px";
+					     } 	 
+				      })
 		}
 		
 		function zoomedBubbles() {
@@ -2719,10 +2767,13 @@ $( function(){
 				
 			svg.selectAll("circle")
 				.on("click",function(e){
+				console.log("ee dimple")
+				console.log(e)
 					obj = {
 							type:"evolution",
 							clientX:d3.event.clientX,
 							clientY:d3.event.clientY,
+							itemName:e.y,
 							topicId:topicIdMap[e.y]
 						};
 									
@@ -2773,7 +2824,9 @@ $( function(){
 	
 	<#-- javascript -->
 		function showhoverdiv(e,divid, text){
-			//hidemenudiv('menu')
+			if(divid != "divhold")
+				hidemenudiv('menu')
+				
 			document.getElementById(divid).innerHTML = text;
 		    var left;
 			var top;
@@ -2817,6 +2870,7 @@ $( function(){
 		}
 		function showmenudiv(e,divid){
 			hidehoverdiv('divtoshow')
+	        hidehoverdiv('divhold');
 			console.log("names in here:  " + names)
 			console.log("vis TYPE: " + visType.substring(0,visType.length-1));
 			console.log("object TYPE: " + objectType);
@@ -2826,7 +2880,13 @@ $( function(){
 			var left;
 			var top;
 			var collapse = $( "body" ).hasClass( "sidebar-collapse" );
-			
+			console.log("PUB URL: " + e.pubUrl)
+			$('#menu_header').html(e.itemName)
+			if(e.type == "clickNode")
+				$('#menu_header').html(e.data.node.label)
+			if(e.type == "clickEdge")
+				$('#menu_header').html(e.data.edge.source + " & " + e.data.edge.target)
+				
 			if(e.type == "listItem" || e.type == "comparisonListItem" || e.type=="clickPublication" || e.type == "cluster" || e.type == "clusterItem" || e.type == "bubble" || e.type == "evolution"){
 			   
 			   console.log(collapse)
@@ -2859,7 +2919,7 @@ $( function(){
 		    
 		    if(e.type == "clickLocation"){
 		    
-		    if(collapse || fullscreen != undefined)
+		    	if(collapse || fullscreen != undefined)
 				{
 				    left  = (e.clientX - 50);
 				    if(e.clientX > 700)
@@ -2916,7 +2976,7 @@ $( function(){
 				<#-- do not show menu if the object is there in the setup already -->
 				if(names.indexOf(e.data.node.label) != -1){
 					$(".menu").hide();
-					showhoverdiv(e,'divtoshow', 'Already present in search panel')
+					showhoverdiv(e,'divhold', 'Already present in criteria panel')
 				}
 				else
 				{
@@ -2936,7 +2996,7 @@ $( function(){
 				if(ids.indexOf(e.itemId) != -1)
 				{
 					$(".menu").hide();
-					showhoverdiv(e,'divtoshow', 'Already present in search panel')
+					showhoverdiv(e,'divtoshow', 'Already present in criteria panel')
 				}	
 				else
 					$(".menu").show();
@@ -2948,12 +3008,18 @@ $( function(){
 			}
 			
 			<#-- append is invalid if the types are different -->
-					if(visType.substring(0,visType.length-1)!=objectType)
-					{
-						$("#append").hide();
-					}
-					else
-						$("#append").show();
+			if(visType.substring(0,visType.length-1)!=objectType)
+			{
+				$("#append").hide();
+			}
+			else
+				$("#append").show();
+		
+			console.log('visType:: ' + visType)
+			if(visType != "publications" || e.pubUrl == undefined || e.pubUrl == "")
+				$("#openURL").hide();
+			else
+				$("#openURL").show();	
 				
 			<#-- set the value of clicked node in the menu -->
 			div.value = e;
@@ -3126,6 +3192,16 @@ $( function(){
 		
 		hidemenudiv('menu');
 		console.log("targetVAL in replace: " + targetVal)
+		return false;
+	});
+	
+	$('#openURL').click(function(e){
+		console.log("open")
+		console.log($(this).parent().parent()[0].value.pubUrl)
+		//location.href = $(this).parent().parent()[0].value.pubUrl;
+		window.open($(this).parent().parent()[0].value.pubUrl,'_blank');
+		hidemenudiv('menu');
+		console.log(e)
 		return false;
 	});
 	

@@ -1176,7 +1176,7 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 	font-size:10pt;
 	height:22px;
 	margin:5px;
-	width:90px;
+	width:100px;
 }
 
 .text-field-cluster {
@@ -1259,7 +1259,7 @@ g.arc path {
   	border-radius: 8px;
   	opacity: 0;
 }
-#divtoshow	{
+#divtoshow, #divhold	{
 	background-color:Black;
   	color:White;
   	font-weight:normal;
@@ -1269,7 +1269,7 @@ g.arc path {
   	z-index: 100;
 }
 .menu 	{
-	width: 100px;
+	width: 130px;
 	position:absolute;
 	display: none;
 	box-shadow: 0 0 10px #713C3C;
@@ -1288,6 +1288,13 @@ g.arc path {
 .menu ul li:hover	{
 	background-color: #F7BA4B;
    	color: #444343;
+}
+#menu_header {
+	padding: 6%;
+	height: 80%;
+	font-size:12px;
+	background: #808080;
+	color: #fff;
 }
 
 #select-drop-down {
@@ -1381,7 +1388,7 @@ g.arc path {
 }
 
 .wfilter {
-	height:71vh;
+	height:65vh;
 	overflow:hidden;
 }
 .wvisualize {

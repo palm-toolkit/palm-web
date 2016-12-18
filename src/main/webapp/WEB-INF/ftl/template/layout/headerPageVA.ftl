@@ -18,8 +18,8 @@
     <span class="sr-only">Toggle navigation</span>
   </a>
   
-  	<div class="navbar-header" style="width:20%;text-align:right">
-	    <a class="btn btn-info btn-sm"  id="va-help" role="button" data-url="<@spring.url '/menu/va-help' />" title="Visual Analytics in PALM" style="margin-top:4px"><i class="fa fa-info-circle"></i>  Help</a>
+  	<div class="navbar-header" style="width:83%;text-align:right">
+	    <a class="btn btn-info btn-sm"  id="va-help" role="button" data-url="<@spring.url '/menu/va-help' />" title="Visual Analytics in PALM" style="margin-top:4px"><i class="fa fa-info-circle"></i> Explorer Help</a>
 	  </div>
   
   <#-- Navbar Right Menu -->
