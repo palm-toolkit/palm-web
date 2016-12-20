@@ -1,0 +1,10 @@
+.similar_researchers .similar-author circle{
+	fill: transparent;
+	stroke: grey;
+}
+.similar_researchers .similar-author text{
+	font-family : fontawesome;
+	text-anchor : middle;
+	dominant-baseline : central;
+	fill :  #73A2F8;
+}
