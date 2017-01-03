@@ -1,5 +1,20 @@
 <div id="boxbody-${wUniqueName}" class="box-body no-padding">
-	<div class="similar_researchers"></div>
+	<div class="similar_researchers">
+		<div class="similarity-criteria">
+			<div class="container">
+  				<span class="title font-small"> Similarity Based On: </span>
+  				<div class="dropdown">
+    				<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Topics of Interest
+   						<span class="caret"></span>
+   					</button>
+    				<ul class="dropdown-menu">
+      					<li><a href="#">Published Publications</a></li>
+      					<li><a href="#">Published Venues</a></li>
+    				</ul>
+  				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <script>
 	$( function(){
@@ -18,7 +33,7 @@
 		
 
 		  
-		  data = {
+		  data1 = {
   "author": {
     "id": "88267d19-2ec7-4076-9aa0-bbffbf1235f9",
     "name": "Christopher D Manning",
@@ -47,6 +62,14 @@
       "isAdded": false,
       "coauthorTimes": 1,
       "commonInterests": [],
+      "similarTopics" : [
+      	{"name": "optimization value", "value" : 0.1},
+      	{"name": "linear something", "value" : 1},
+      	{"name": "topic segmentation", "value" : 0.5},
+      	{"name": "user evaluation", "value" : 0.9},
+      	{"name": "frameworks ", "value" : 0.5},
+      	{"name": "mashine learning", "value" : 0.2}
+      ],
       "index": 1,
       "x": 325.6447892100572,
       "y": 182.29184998713515,
@@ -523,12 +546,39 @@
   ]
 };
 		
-		createSimilarResearchers("#boxbody-${wUniqueName} .similar_researchers", data);
+		createSimilarResearchers("#boxbody-${wUniqueName} .similar_researchers", data1);
 		$.PALM.popUpMessage.remove( uniquePidSimilarResearchers );
 		
+		$( ".similar-author" ).click( function( event ){
+			
+			$.PALM.popUpIframe.create( $(this).data("url") , {popUpHeight:"456px"}, $(this).attr("title") );
+			var _thisData = d3.select(this).datum();
+			if (_thisData.similarTopics != undefined && _thisData.similarTopics.length > 0){
+				$.get( "<@spring.url '/researcher/papersByTopicAndAuthor' />?id=" + _thisData.id + "&topic=" + JSON.stringify(_thisData.similarTopics),
+					function( response ){
+						var data = response.topicPapers[0].papers;
+						response.topicPapers.forEach(function(topic, i){
+							if (topic.papers.length > 0) 
+								$( ".similar_researchers #accordion" ).children("div")[i].append($(addList(topic.papers))[0]);
+							else
+								$( ".similar_researchers #accordion-container" ).children("div")[i].append($("<p/>").text("No paper available"));
+						});		
+						$("#boxbody-${wUniqueName} .similar_researchers #accordion .content-list").slimscroll({
+							height: "100%",
+	        				size: "6px",
+							allowPageScroll: true,
+   							touchScrollStep: 50,
+   							alwaysVisible: true,
+   							railVisible: true   						
+	    				});			
+				}).done(function() {
+    				$( ".similar_researchers #accordion-container .loading-icon" ).remove();
+  				});
+			}							
+	});
 		<#-- source : "<@spring.url '/researcher/similarAuthorList' />", -->
 	    <#-- unique options in each widget -->
-<#--		var options ={
+	<#--	var options ={
 			source : "<@spring.url '/researcher/coAuthorList' />",
 			query: "",
 			queryString : "",
@@ -536,21 +586,22 @@
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
 				<#-- show pop up progress log -->
-<#--				$.PALM.popUpMessage.create( "loading similar researchers list", {uniqueId: uniquePidSimilarResearchers, popUpHeight:40, directlyRemove:false , polling:false});
+	<#--			$.PALM.popUpMessage.create( "loading similar researchers list", {uniqueId: uniquePidSimilarResearchers, popUpHeight:40, directlyRemove:false , polling:false});
 			},
-			onRefreshDone: function(  widgetElem , data ){
+	<#--		onRefreshDone: function(  widgetElem , data ){
 				var targetContainer = $( widgetElem ).find( ".similar_researchers" );
 				<#-- remove previous list -->
-<#--				targetContainer.html( "" );	
-				data = [ {"author" : {"id" : 11121, "name" : "ligia", "photo":"http://nlp.stanford.edu/manning/images/Christopher_Manning_027_132x132.jpg" }},{"name": "Ana"} ];	
-		 		
+	<#--			targetContainer.html( "" );	
+				
+				data.author.photo = "http://nlp.stanford.edu/manning/images/Christopher_Manning_027_132x132.jpg";
+				
 				if( data.count == 0 ){
 					$.PALM.callout.generate( targetContainer , "warning", "Empty Similar Researchers!", "Researcher does not have any similar researchers on PALM (insufficient data)" );
 					return false;
 				}							
 				if( data.count > 0 ){ 
 					<#-- remove any remaing tooltip -->
-<#--					$( "body .tooltip" ).remove(); 
+	<#--				$( "body .tooltip" ).remove(); 
 					 createSimilarResearchers("#boxbody-${wUniqueName} .similar_researchers", data);
 				} 
 

@@ -1,10 +1,94 @@
-.similar_researchers .similar-author circle{
-	fill: transparent;
-	stroke: grey;
+.similar_researchers .similarity-criteria{
+	position: absolute;
+	width	: 20%;
 }
-.similar_researchers .similar-author text{
+.similar_researchers .similarity-criteria .container{
+    width: 100%;
+}
+
+.similar_researchers .similarity-criteria .title{
+    width: 130px;
+    float: left;
+}
+.similar_researchers .similarity-criteria .dropdown{
+    float: left;
+}
+
+.similar_researchers .similarity-criteria .dropdown-menu{
+    box-shadow		: 0 6px 12px rgba(0,0,0,.175);
+    border			: 1px solid #ccc;
+    border-radius	: 4px;
+}
+
+.similar_researchers .similar-authors-elements .similar-author:hover{
+	cursor : pointer;
+}
+
+.similar_researchers .similar-author circle{
+	fill		: #ebebeb;
+	stroke		: #dadada;
+	stroke-width: 2px;
+}
+.similar_researchers .similar-author .missing-photo-icon{
 	font-family : fontawesome;
 	text-anchor : middle;
 	dominant-baseline : central;
-	fill :  #73A2F8;
+	fill :  #808080;
 }
+.similar_researchers .tooltip-similar-author .tooltip-stroke{
+	fill	: #EBEBEB;
+	stroke 	: #dadada;
+}
+
+.similar_researchers .font-small{
+	font-size : 85% !important;
+}
+
+.similar_researchers .width-small{
+	width : 85% !important;
+}
+
+.similar_researchers .tooltip-content .font-small{
+	font-size : 35% !important;
+}
+
+.similar_researchers text{
+	font-family	: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	fill 		: #333;
+	font-size 	: 14px;
+}
+.similar_researchers .tooltip-content text{
+	font-size 	: 7px;
+}
+.similar_researchers .name,
+.similar_researchers .paper,
+.similar_researchers .hindex{
+	font-weight: 600;
+}
+
+.similar_researchers .title{
+	display: block;
+    font-weight: 600;
+    color: inherit;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+.similar_researchers #accordion-container .loading-icon{
+	position: relative;
+    top: 50px;
+    left: 50%;
+    margin-left: -15px;
+    margin-top: -15px;
+    color: #000;
+    font-size: 30px;
+}
+.similar_researchers #accordion{
+	padding-right: 5px;
+}
+
+.similar_researchers #accordion .ui-accordion-content {
+	margin		: 0;
+	padding	  	: .5em;
+	font-size	: 12px;
+}
+
+
