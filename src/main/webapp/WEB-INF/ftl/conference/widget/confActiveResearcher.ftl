@@ -35,7 +35,10 @@
 <script>
 
 $( function(){
-	activeResearcherOperator.initActiveResearcherInConfWindow("Educational Data Mining 2013","http://data.linkededucation.org/resource/lak/conference/edm2013");
+	<#--activeResearcherOperator.initActiveResearcherInConfWindow("Educational Data Mining 2013","http://data.linkededucation.org/resource/lak/conference/edm2013");-->
+	
+	$.activeResearchers.init("#widget-${wUniqueName}", "Educational Data Mining 2013","http://data.linkededucation.org/resource/lak/conference/edm2013");
+	$.activeResearchers.data("<@spring.url '/resources/json/activeScholar.json' />");
 });
 
 var activeResearcherOperator = 
@@ -72,7 +75,8 @@ var activeResearcherOperator =
 						"translate(" + width / 2 + "," + height / 2 + ")");
 						
 				
-		var linkGraphSVG = graphSVG.append("g").attr("class", "links"), episodeGraphSVG = graphSVG.append("g").attr(
+		var linkGraphSVG = graphSVG.append("g").attr("class", "links"), 
+			episodeGraphSVG = graphSVG.append("g").attr(
 				"class", "episodes"), nodeGraphSVG = graphSVG.append("g").attr("class", "nodes");
 		
 		//console.log("activeResearcherInConf?confURI="+encodeURI(conferenceURI));

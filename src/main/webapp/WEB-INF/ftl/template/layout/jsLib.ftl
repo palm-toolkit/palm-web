@@ -96,6 +96,7 @@
 <#-- START VISUALIZATIONS IMPORTS -->
 <script src="<@spring.url '/resources/scripts/visualizations/co-authors/co-authors-graph.js' />" type="text/javascript"></script>
 <script src="<@spring.url '/resources/scripts/visualizations/similarity/similar-researchers.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/scripts/visualizations/key-element/key-researchers-conference.js' />" type="text/javascript"></script>
 <#-- END VISUALIZATIONS IMPORTS -->
 
 <#-- d3 layout for maps - currently unused -->

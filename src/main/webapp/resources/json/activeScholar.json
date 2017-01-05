@@ -1,7 +1,7 @@
 {  
    "perspectives":[  
       {  
-         "count":"",
+         "count":2,
          "description":"",
          "name":"aic",
          "slug":"",
@@ -9,7 +9,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":6,
          "description":"",
          "name":"individual differences",
          "slug":"",
@@ -17,7 +17,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":40,
          "description":"",
          "name":"knowledge tracing",
          "slug":"",
@@ -25,7 +25,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":3,
          "description":"",
          "name":"moodle",
          "slug":"",
@@ -33,7 +33,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":4,
          "description":"",
          "name":"affective computing",
          "slug":"",
@@ -41,7 +41,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":10,
          "description":"",
          "name":"engagement",
          "slug":"",
@@ -49,7 +49,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":22,
          "description":"",
          "name":"affective persistence",
          "slug":"",
@@ -57,7 +57,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":10,
          "description":"",
          "name":"bayesian knowledge tracing",
          "slug":"",
@@ -65,7 +65,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":8,
          "description":"",
          "name":"motivation",
          "slug":"",
@@ -73,7 +73,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":8,
          "description":"",
          "name":"frustration",
          "slug":"",
@@ -81,7 +81,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":7,
          "description":"",
          "name":"affect",
          "slug":"",
@@ -89,7 +89,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":5,
          "description":"",
          "name":"affect sequences",
          "slug":"",
@@ -97,7 +97,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":1,
          "description":"",
          "name":"classification",
          "slug":"",
@@ -105,7 +105,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":2,
          "description":"",
          "name":"clustering",
          "slug":"",
@@ -113,7 +113,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":3,
          "description":"",
          "name":"after-school program",
          "slug":"",
@@ -121,7 +121,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":6,
          "description":"",
          "name":"educational games",
          "slug":"",
@@ -129,7 +129,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":7,
          "description":"",
          "name":"self-regulated learning",
          "slug":"",
@@ -137,7 +137,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":9,
          "description":"",
          "name":"adaptive and non-adaptive testing",
          "slug":"",
@@ -145,7 +145,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":11,
          "description":"",
          "name":"machine learning",
          "slug":"",
@@ -153,7 +153,7 @@
          "type":"perspective"
       },
       {  
-         "count":"",
+         "count":12,
          "description":"",
          "name":"personality",
          "slug":"",
