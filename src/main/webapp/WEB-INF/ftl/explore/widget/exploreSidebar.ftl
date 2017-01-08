@@ -198,8 +198,8 @@
 								{
 									if(data.loggedInAuthorID!="")
 										itemSelection(data.loggedInAuthorID, "researcher")
-									else
-										itemSelection(data.researchers[0].id, "researcher");
+									//else
+										//itemSelection(data.researchers[0].id, "researcher");
 								}
 								refreshPage = "false";
 								

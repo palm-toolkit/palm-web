@@ -428,8 +428,9 @@
 					
 					visOptionsContainer.append(
 								$('<i/>')
-									.addClass('fa fa-remove fa-lg clear_search cursor-p')
-									.attr("title","Clear search")
+									.addClass('fa fa-trash fa-lg clear_search cursor-p')
+									.css('color','#c0c5bf')
+									.attr("title","Clear all visualization criteria")
 									.on("click",function(e){
 									
 									// clear current names and ids lists

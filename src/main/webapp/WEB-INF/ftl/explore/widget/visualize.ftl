@@ -1119,7 +1119,7 @@ $( function(){
 									evolutionSection.addClass('evolutionSection overflow-height')
 									
 									$(".evolutionSection").slimscroll({
-										height: "67vh",
+										height: "69vh",
 								        size: "5px",
 							        	allowPageScroll: true,
 							   			touchScrollStep: 50,
@@ -2683,10 +2683,10 @@ $( function(){
 		function drawDimpleChart(data, topicIdMap){
 			
 			var numberOfTopics = dimple.getUniqueValues(data, "Topic");
-			if(numberOfTopics.length * 40 > 500)
-				height = numberOfTopics.length * 40
+			if(numberOfTopics.length * 40.5 > 510)
+				height = numberOfTopics.length * 40.5
 			else
-				height = 500
+				height = 510
 					
 			var svg = dimple.newSvg("#chartTab", "100%", height);
 			var chart = new dimple.chart(svg, data);
