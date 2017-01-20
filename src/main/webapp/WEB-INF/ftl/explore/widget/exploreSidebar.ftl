@@ -15,7 +15,7 @@
 	    </div>
 	    
 	    <div class="input-group">
-	      <input type="text" id="search_field" class="clearable form-control input-sm pull-right" placeholder="Click to add text">
+	      <input type="text" id="search_field" class="clearable form-control input-sm pull-right" placeholder="Search">
 	      <div id="search_button" class="input-group-btn">
 	        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
 	      </div>

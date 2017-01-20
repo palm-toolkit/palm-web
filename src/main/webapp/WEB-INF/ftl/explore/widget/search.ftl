@@ -335,7 +335,7 @@
 				
 				//	caption = "Corresponding " + "<br/>" +"conferences";
 				
-				var specTitle = "Events";
+				var specTitle = "Conf. Events";
 					
 					if(type!="conference"){
 						specTitle = "Conferences";

@@ -141,6 +141,15 @@ Main components
 .cd-timeline-img.cd-informal {
   background: #000000;
 }
+.cd-timeline-img.cd-theses {
+  background: #408080;
+}
+.cd-timeline-img.cd-editorship {
+  background: #ff8000;
+}
+.cd-timeline-img.cd-specialissue {
+  background: #ff80c0;
+}
 .cd-timeline-img.cd-unknown {
   background: #551a8b;
 }

@@ -935,8 +935,8 @@ $( function(){
 				var inner;	
 				$.each( data.map.pubDetailsList, function( index, item){
 					
-						h2=$('<h2/>').css("text-align","center").html(item.year)	
-					
+						 h2=$('<h2/>').css("text-align","center").html(item.year)	
+						 
 						 inner = $('<div/>')
 									.addClass("cd-timeline-block")
 									.click(function(e){
@@ -944,8 +944,19 @@ $( function(){
 									})
 
 						if(prevYear!=item.year)
-						{			 
+						{		
+						var categoriesMap = data.map.yearWisePublicationCategories[item.year];
+						var keys = Object.keys(categoriesMap)
+							var categoriesStr = "";
+							 for(var i = 0; i<keys.length; i++)
+							 {
+							 	categoriesStr = categoriesStr + " " + keys[i] + "S:  " + categoriesMap[keys[i]];
+							 	if(i!=keys.length-1)
+							 		categoriesStr = categoriesStr + "  ||  "
+							 }	 
+							 yearWiseCategories = $('<span/>').css({"margin":"auto","display":"table", "position":"inherit", "font-size":"13px", "background-color":"lightslategray", "color":"white", "padding":"5px"}).html(categoriesStr)
 							 section.append(h2)
+							 section.append(yearWiseCategories)
 							 prevYear = item.year
 						}		
 						section.append(inner)
@@ -957,7 +968,7 @@ $( function(){
 									.addClass("cd-timeline-img cd-conference")
 									.attr({ "title" : "Conference" })
 									.append(
-										$('<img/>')
+										$( '<img/>' )
 											.attr("src","<@spring.url '/resources/images/document.svg' />")
 									)
 							)
@@ -1007,6 +1018,42 @@ $( function(){
 									.append(
 										$('<img/>')
 											.attr("src","<@spring.url '/resources/images/open-book.svg' />")
+									)
+							)
+						}
+						else if(item.type=="THESES")	
+						{
+							inner.append(
+								$('<div/>')
+									.addClass("cd-timeline-img cd-theses")
+									.attr({ "title" : "Theses" })
+									.append(
+										$('<img/>')
+											.attr("src","<@spring.url '/resources/images/open-book.svg' />")
+									)
+							)
+						}
+						else if(item.type=="EDITORSHIP")	
+						{
+							inner.append(
+								$('<div/>')
+									.addClass("cd-timeline-img cd-editorship")
+									.attr({ "title" : "Editorship" })
+									.append(
+										$('<img/>')
+											.attr("src","<@spring.url '/resources/images/newspaper.svg' />")
+									)
+							)
+						}
+						else if(item.type=="SPECIALISSUE")	
+						{
+							inner.append(
+								$('<div/>')
+									.addClass("cd-timeline-img cd-specialissue")
+									.attr({ "title" : "Special Issue" })
+									.append(
+										$('<img/>')
+											.attr("src","<@spring.url '/resources/images/document.svg' />")
 									)
 							)
 						}
@@ -2190,7 +2237,7 @@ $( function(){
 				  .attr("transform", function(d) { return "translate(" + (margin.left) + "," + (margin.top) + ")"; })
 			      .style("fill", groupFill)
 			      .style("stroke", groupFill)
-			      .style("stroke-width", 50)
+			      .style("stroke-width", 100)
 			      .style("stroke-linejoin", "round")
 			      .style("opacity", .3)
 			      .attr("d", groupPath)
@@ -2703,9 +2750,9 @@ $( function(){
 				y = chart.addMeasureAxis("y", y_attr);
 			}
 			else{
-				y_attr = ["Topic", "Author"];
+				y_attr = ["Topic", "Name"];
 				y_order = "Topic";
-				s_attr = "Author";
+				s_attr = "Name";
 				chart_type = dimple.plot.bubble
 				desc = true;
 				y = chart.addCategoryAxis("y", y_attr);
