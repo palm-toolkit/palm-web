@@ -299,6 +299,7 @@
       {  
          "episode":1,
          "description":"",
+         "id"  : "c2f0b6cf-1165-48f0-b71f-e7c8a6eb157c",
          "name":"Ryan S.J.d. Baker (6)",
          "links":[  
             "affect",
@@ -319,6 +320,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "b38b82b4-e78b-4f7e-b61e-815dceb54f68",
          "name":"Danielle S. Mcnamara (5)",
          "links":[  
             "individual differences",
@@ -331,6 +333,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "0799975d-6e9f-4ca3-bfbe-70bceca37d39",
          "name":"Neil T. Heffernan (5)",
          "links":[  
             "affect detection",
@@ -349,6 +352,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "0799975d-6e9f-4ca3-bfbe-70bceca37d39",
          "name":"Arthur C. Graesser (4)",
          "links":[  
             "after-school program",
@@ -361,6 +365,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "0799975d-6e9f-4ca3-bfbe-70bceca37d39",
          "name":"Kenneth R. Koedinger (4)",
          "links":[  
             "aic",
@@ -376,6 +381,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Tiffany Barnes (4)",
          "links":[  
             "knowledge tracing"
@@ -387,6 +393,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Andrew S. Lan (3)",
          "links":[  
             "adaptive and non-adaptive testing",
@@ -400,6 +407,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Christoph Studer (3)",
          "links":[  
             "adaptive and non-adaptive testing",
@@ -413,6 +421,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Daniel Seaton (3)",
          "links":[  
             "bayesian knowledge tracing",
@@ -426,6 +435,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"David E. Pritchard (3)",
          "links":[  
             "bayesian knowledge tracing",
@@ -439,6 +449,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "c083d654-cf42-4edd-a2d4-5e2b77da3e6b",
          "name":"Erica L. Snow (3)",
          "links":[  
             "individual differences",
@@ -451,6 +462,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"G. Tanner Jackson (3)",
          "links":[  
             "individual differences",
@@ -463,6 +475,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Joseph E. Beck (3)",
          "links":[  
             "educational data mining",
@@ -477,6 +490,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Richard G. Baraniuk (3)",
          "links":[  
             "adaptive and non-adaptive testing",
@@ -490,6 +504,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Steve Ritter (3)",
          "links":[  
             "aggregate learning",
@@ -506,6 +521,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Tristan Nixon (3)",
          "links":[  
             "aggregate learning",
@@ -522,6 +538,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Vasile Rus (3)",
          "links":[  
             "assessment"
@@ -533,6 +550,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Yutao Wang (3)",
          "links":[  
             "educational data mining",
@@ -546,6 +564,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Alireza Davoodi (2)",
          "links":[  
             "educational games",
@@ -558,6 +577,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Andrew E. Waters (2)",
          "links":[  
             "personalized learning"
@@ -569,6 +589,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Angela Bovo (2)",
          "links":[  
             "analysis",
@@ -584,6 +605,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Brett Van De Sande (2)",
          "links":[  
             "data mining"
@@ -595,6 +617,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"C. Conati (2)",
          "links":[  
             "educational games",
@@ -607,6 +630,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"C. Romero (2)",
          "links":[  
             "classification",
@@ -619,6 +643,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Colm Mcguinness (2)",
          "links":[  
             "ability",
@@ -635,6 +660,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Dan Stefanescu (2)",
          "links":[  
             "assessment"
@@ -646,6 +672,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Emma Brunskill (2)",
          "links":[  
             "educational games",
@@ -659,6 +686,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Geraldine Gray (2)",
          "links":[  
             "ability",
@@ -675,6 +703,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Henry Hua (2)",
          "links":[  
             "after-school program"
@@ -686,6 +715,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Ivon Arroyo (2)",
          "links":[  
             "classification",
@@ -700,6 +730,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Jack Mostow (2)",
          "links":[  
             "item response theory",
@@ -713,6 +744,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"Jesus G. Boticario (2)",
          "links":[  
             "adaptive systems",
@@ -729,6 +761,7 @@
       {  
          "episode":1,
          "description":"",
+         "id" : "d099001e-449e-4f99-8d42-928c7e00e474",
          "name":"John C. Stamper (2)",
          "links":[  
             "aic"

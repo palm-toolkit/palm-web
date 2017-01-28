@@ -3,10 +3,6 @@
   font-family: Abel,"Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 15px;
 }
-#widget-${wUniqueName} .box-body .episode > rect {
-  stroke: #fff;
-  stroke-width: 1.5px;
-}
 
 #widget-${wUniqueName} .box-body path {
   fill: none;
@@ -16,18 +12,44 @@
   cursor: pointer;
 }
 
-#widget-${wUniqueName} .box-body .all-episodes {
-  fill: #aaa;
-}
 
 #widget-${wUniqueName} .box-body .detail a text:hover, #widget-${wUniqueName} .box-body text .all-episodes:hover {
   text-decoration: underline;
 }
-</style>
-<div class="box-body">
-	
-</div>
 
+#widget-${wUniqueName} ..box-body .episode > rect{
+	fill : #666;
+}
+
+#widget-${wUniqueName} .light-gradient-stop-color-1{
+	stop-color : #d4d4d4;	
+}
+#widget-${wUniqueName} .light-gradient-stop-color-2{
+	stop-color : #e6e6e6;	
+}
+
+#widget-${wUniqueName} .dark-gradient-stop-color-1{
+	stop-color : #f39c12;	
+}
+#widget-${wUniqueName} .dark-gradient-stop-color-2{
+	stop-color : #e6e6e6;	
+}
+</style>
+<div class="box-body no-padding">
+	<div class="filter-criteria key-researchers-criteria">
+		<div class="container">
+  			<span class="title font-small"> Based On: </span>
+  			<div class="dropdown">
+    			<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Number of publications <span class="caret"></span> </button>
+    			<ul class="dropdown-menu">
+      				<li><a href="#">Resercher's H-index</a></li>
+      				<li><a href="#">Publications' Citations</a></li>
+    			</ul>
+  			</div>
+		</div>
+	</div>
+</div>
+<#include "/resPublication.ftl">
 <div class="box-footer">
 	
 </div>

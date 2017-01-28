@@ -44,7 +44,6 @@
 <link href="<@spring.url '/resources/styles/palm.css' />" rel="stylesheet" type="text/css" />
 
 <#-- START VISUALIZATIONS IMPORTS -->
-<link href="<@spring.url '/resources/styles/visualizations/co-authors/co-authors-graph-style.css' />" rel="stylesheet" type="text/css" />
-<link href="<@spring.url '/resources/styles/visualizations/similarity/similar-researchers-style.css' />" rel="stylesheet" type="text/css" />
+<link href="<@spring.url '/resources/styles/visualizations/visualizations.css' />" rel="stylesheet" type="text/css" />
 
 <#-- END VISUALIZATIONS IMPORTS -->

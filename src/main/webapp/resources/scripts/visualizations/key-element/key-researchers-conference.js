@@ -2,19 +2,19 @@ $.activeResearchers = {};
 $.activeResearchers.variables ={
 		containerId : undefined,
 		width : 1100,
-		height: 700,
-		h	  : 700,
+		height: 600,
+		h	  : 600,
 		U	  : 200,
 		K 	  : 22, 
 		S 	  : 20,
 		s 	  : 8,
-		R 	  : 110,
+		R 	  : 90,
 		initialDegree : 40, 
 		o 	  : 15, 
 		t 	  : 10, 
 		transitionDuration : 1000, 
 		easeType : "elastic", 
-		highLightColor : "#0da4d3",
+		highLightColor : "#f39c12",
 		L	  : {},
 		k 	  : {},
 		line  : undefined,
@@ -22,7 +22,9 @@ $.activeResearchers.variables ={
 };
 $.activeResearchers.init = function(containerId, conferenceName, conferenceURI){
 	var vars = $.activeResearchers.variables;
-	vars.containerId = containerId;
+	vars.containerId = containerId;	
+	vars.width  = $(containerId).width();
+	vars.radius = Math.min( $.SIMILAR.variables.width / 2 , $.SIMILAR.variables.height  );
 	
 	var mappedJsonObject, mergedJsonObjectArray, combinedJsonObject, linkObject, episodeConceptLinkJsonArray;
 
@@ -52,12 +54,17 @@ $.activeResearchers.init = function(containerId, conferenceName, conferenceURI){
 	var linkGraphSVG 	= graphSVG.append("g").attr("class", "links"); 
 	var episodeGraphSVG = graphSVG.append("g").attr("class", "episodes");
 	var nodeGraphSVG 	= graphSVG.append("g").attr("class", "nodes");	
+	
+	createLightGradientColor(graphSVG);
+	createDarkGradientColor(graphSVG);
 };
 $.activeResearchers.data = function( url ){
 	d3.json(url, function(error, originJsonObject) {
-		var mappedJsonObject = d3.map(originJsonObject);		
+		if (originJsonObject != undefined && originJsonObject.episodes != undefined)
+			originJsonObject.episodes = originJsonObject.episodes.slice(0, 20);
+		var mappedJsonObject      = d3.map(originJsonObject);		
 		var mergedJsonObjectArray = d3.merge(mappedJsonObject.values());
-		var combinedJsonObject = {};
+		var combinedJsonObject 	  = {};
 			
 			
 		mergedJsonObjectArray.forEach(function(thisJsonObject) {	
@@ -211,6 +218,18 @@ $.activeResearchers.visualize.interactions = {
 			};
 			
 			highLightElements();
+		},
+		click : function (episode){			
+			var keywordText = undefined;
+			
+			for (var i = 0; i < episode.links.length; i++)
+				keywordText += episode.links[i] + " ";
+			
+			keywordText = "learning";
+			var queryString = "?id=" + episode.id + "&year=all&query=" + keywordText;
+			$.get( $.publicationList.variables.currentURL + "/researcher/publicationList" + queryString , function( response ){ 
+				console.log(response); // response is a list of publications
+			});
 		}
 }
 
@@ -225,23 +244,25 @@ $.activeResearchers.visualize.elements.episodes = function(episodesData, mappedJ
 		.on("mouseover", function(d){
 			$.activeResearchers.visualize.interactions.mouseoverEpisode(d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
 		})
-		.on("mouseout", $.activeResearchers.visualize.interactions.mouseleaveEpisodes);//.on("click", G);
+		.on("mouseout", $.activeResearchers.visualize.interactions.mouseleaveEpisodes)
+		.on("click", $.activeResearchers.visualize.interactions.click);
 	
 	episode.append("rect")
 		.attr("x", vars.U / -2)
 		.attr("y", vars.K / -2)
+		.attr("rx", 2)
+		.attr("ry", 2)
 		.attr("width", vars.U)
 		.attr("height", vars.K)
+		.attr("fill", "url(#light-box-gradient)")
 		.transition(transition)
 			.attr("x", function(Z) { return Z.x; })
 			.attr("y", function(Z) { return Z.y; });
 	episode.append("text")
-		.attr("x", function(Z) { return vars.U / -2 + vars.t; })
+		.style("text-anchor", "middle")
 		.attr("y", function(Z) { return vars.K / -2 + vars.o; })
-		.attr("fill", "#fff")
 		.text(function(Z) { return Z.name; })
 		.transition(transition)
-			.attr("x", function(Z) { return Z.x + vars.t; })
 			.attr("y", function(Z) { return Z.y + vars.o; });
 	
 	episodes.exit().selectAll("rect")
@@ -250,7 +271,6 @@ $.activeResearchers.visualize.elements.episodes = function(episodesData, mappedJ
 			.attr("y", function(Z) { return vars.K / -2; });
 	episodes.exit().selectAll("text")
 		.transition(transition)
-			.attr("x", function(Z) { return vars.U / -2 + vars.t; })
 			.attr("y", function(Z) { return vars.K / -2 + vars.o; });
 	episodes.exit().transition().duration(vars.transitionDuration).remove();
 };
@@ -287,8 +307,6 @@ $.activeResearchers.visualize.elements.nodes = function(nodesData, mappedJsonObj
 	
 	node.transition(transition)
 		.attr("transform", function(n) {
-			console.log("N.: ");
-			console.log(n);
 			if (n === vars.L.node) return null;
 			var translate = (n.isGroup) ? n.y + (7 + n.count) : n.y;
 		return "translate(" + n.xOffset + ",0)rotate(" + (n.x - 90) + ")translate(" + translate + ")";
@@ -297,7 +315,7 @@ $.activeResearchers.visualize.elements.nodes = function(nodesData, mappedJsonObj
 		.attr("r", function(n) {
 			if (n == vars.L.node) return 100;
 			else 
-				if (n.count != undefined) 
+				if (n.isGroup) 
 					return 4 + radiusRange( n.count );
 				else 
 					return 4.5;
@@ -368,7 +386,7 @@ function highLightElements() {
 	var linkGraphSVG 	= d3.select(vars.containerId + " svg g.links"); 	
 	
 	episodeGraphSVG.selectAll("rect")
-		.attr("fill", function(d) { return changeElementColor(d, "#000", vars.highLightColor, "#000"); });
+		.attr("fill", function(d) { return changeElementColor(d, "url(#light-box-gradient)", "url(#dark-box-gradient)", "url(#light-box-gradient)");});
 	
 	linkGraphSVG.selectAll("path")
 		.attr("stroke", function(d) { return changeElementColor(d, "#aaa", vars.highLightColor, "#aaa"); })
@@ -408,4 +426,65 @@ function changeElementColor(X, aa, Z, Y)
 		return aa;
 	}
 	return $.activeResearchers.variables.k.map[X.key] ? Z : aa;
+}
+function createLightGradientColor(svg){
+	var gradient = svg.append("defs")
+	  .append("linearGradient")
+	    .attr("id", "light-box-gradient")
+	    .attr("x1", "0%")
+	    .attr("y1", "0%")
+	    .attr("x2", "0%")
+	    .attr("y2", "100%");
+
+
+	gradient.append("stop")
+		.attr("class", "light-gradient-stop-color-1")
+	    .attr("offset", "0%")
+	    .attr("stop-opacity", 1);
+
+	gradient.append("stop")
+		.attr("class", "light-gradient-stop-color-2")
+	    .attr("offset", "50%")
+	    .attr("stop-opacity", 1);
+	
+	gradient.append("stop")
+		.attr("class", "light-gradient-stop-color-2")
+		.attr("offset", "50%")
+		.attr("stop-opacity", 1);
+
+	gradient.append("stop")
+		.attr("class", "light-gradient-stop-color-1")
+		.attr("offset", "100%")
+		.attr("stop-opacity", 1);
+}
+
+function createDarkGradientColor(svg){
+	var gradient = svg.append("defs")
+	  .append("linearGradient")
+	    .attr("id", "dark-box-gradient")
+	    .attr("x1", "0%")
+	    .attr("y1", "0%")
+	    .attr("x2", "0%")
+	    .attr("y2", "100%");
+
+
+	gradient.append("stop")
+		.attr("class", "dark-gradient-stop-color-1")
+	    .attr("offset", "0%")
+	    .attr("stop-opacity", 1);
+
+	gradient.append("stop")
+		.attr("class", "dark-gradient-stop-color-2")
+	    .attr("offset", "50%")
+	    .attr("stop-opacity", 1);
+	
+	gradient.append("stop")
+		.attr("class", "dark-gradient-stop-color-2")
+		.attr("offset", "50%")
+		.attr("stop-opacity", 1);
+
+	gradient.append("stop")
+		.attr("class", "dark-gradient-stop-color-1")
+		.attr("offset", "100%")
+		.attr("stop-opacity", 1);
 }
