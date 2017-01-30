@@ -1,6 +1,9 @@
 $.activeResearchers = {};
 $.activeResearchers.variables ={
-		containerId : undefined,
+		widgetUniqueName : undefined,
+		isUserLogged 	 : undefined,
+		currentURL       : undefined,
+		containerId 	 : undefined,		
 		width : 1100,
 		height: 600,
 		h	  : 600,
@@ -20,11 +23,14 @@ $.activeResearchers.variables ={
 		line  : undefined,
 		diagonal : undefined
 };
-$.activeResearchers.init = function(containerId, conferenceName, conferenceURI){
+$.activeResearchers.init = function(widgetUniqueName, conferenceName, conferenceURI, currentURL, isUserLogged){
 	var vars = $.activeResearchers.variables;
-	vars.containerId = containerId;	
-	vars.width  = $(containerId).width();
-	vars.radius = Math.min( $.SIMILAR.variables.width / 2 , $.SIMILAR.variables.height  );
+	vars.containerId 	  = "#widget-" + widgetUniqueName;	
+	vars.width  		  = $(vars.containerId).width();
+	vars.radius 		  = Math.min( $.SIMILAR.variables.width / 2 , $.SIMILAR.variables.height  );
+	vars.widgetUniqueName = widgetUniqueName;
+	vars.currentURL		  = currentURL;
+	vars.isUserLogged	  = isUserLogged;
 	
 	var mappedJsonObject, mergedJsonObjectArray, combinedJsonObject, linkObject, episodeConceptLinkJsonArray;
 
@@ -219,16 +225,45 @@ $.activeResearchers.visualize.interactions = {
 			
 			highLightElements();
 		},
-		click : function (episode){			
-			var keywordText = undefined;
+		click : function (episode){		
+			var vars = $.activeResearchers.variables;
+			var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
+			var keywordText = thisWidget.element.find("#publist-search").val() || "";
+			var queryString = "?id=" + episode.id + "&year=all&query=" + keywordText + "&queryKeywords=" + episode.links;
 			
-			for (var i = 0; i < episode.links.length; i++)
-				keywordText += episode.links[i] + " ";
+			thisWidget.options.queryString = queryString;
+			thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 			
-			keywordText = "learning";
-			var queryString = "?id=" + episode.id + "&year=all&query=" + keywordText;
-			$.get( $.publicationList.variables.currentURL + "/researcher/publicationList" + queryString , function( response ){ 
-				console.log(response); // response is a list of publications
+			//show the widget 
+			thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).removeClass("hidden");
+			
+			//get publications from json
+			var url = vars.currentURL + "/resources/json/publicationList.json"
+			$.get( vars.currentURL + "/researcher/publicationList" + queryString , function( response ){ 
+				// this has to be data that is returned by server 
+				console.log(response);
+				response.queryKeywords = episode.links;
+				response.query = keywordText;
+				for (var i = 0 ; i < response.publications.length; i++){
+					if ( i % 2 == 0 && i % 3 == 0)
+						response.publications[i].keyword = [ episode.links[0] ];
+					else
+						if ( i % 2 == 0 )
+							response.publications[i].keyword = [ episode.links[1] ];
+						else
+							response.publications[i].keyword = [ episode.links[0], episode.links[1] ];
+				}
+				//--------------------------------------
+				
+				$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( response.author.name );
+				
+				var mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
+				$.publicationList.init( response.status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged );
+				$.publicationList.visualize( mainContainer, response);
+				
+				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
+				
+				
 			});
 		}
 }

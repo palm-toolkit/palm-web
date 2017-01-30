@@ -1,20 +1,23 @@
 <@security.authorize access="isAuthenticated()">
 	<#assign currentUser = securityService.getUser() >
 </@security.authorize>
-<div id="boxbody${wUniqueName}" class="box-body">
+<div id="publications-box-${wUniqueName}" class="box box-body hidden">
+	<div class="box-header"> 
+		<div class="box-title-container">
+          	<h3 class="box-title">Publications: <span class="author_name"></span> </h3>
+        </div>
+	</div>
 	<div class="box-content">
+	<div class="box-footer"> </div>
 	</div>
 </div>
 
-<#--
-<div class="box-footer">
-</div>
--->
 <script>
 	$( function(){
 		<#-- add slimscroll to widget body -->
-		$("#boxbody${wUniqueName} .box-content").slimscroll({
-			height: "660px",
+		$("#publications-box-${wUniqueName} .box-content ").slimscroll({
+			height : "100%",
+			width : "50%",
 	        size: "6px",
 			allowPageScroll: true,
    			touchScrollStep: 50,
@@ -22,6 +25,8 @@
     		alwaysVisible: true
 	    });
 
+		$("#publications-box-${wUniqueName} .box-content").css({"max-height": "660px", width:"100%"});
+	
 		function getCurrentUser(){
 			<#if currentUser??>
 				return true;
@@ -31,9 +36,8 @@
 		}
 		
 		var url = "<@spring.url '/resources/json/publicationList.json' />";
-		d3.json(url, function(error, originJsonObject){
-			var data = originJsonObject;
-			$.publicationList.init( data, "${wUniqueName}", "<@spring.url ''/>", getCurrentUser() );
+		d3.json(url, function(error, data){
+			$.publicationList.init( data.status, "${wUniqueName}", "<@spring.url ''/>", getCurrentUser() );
 		} );
 	
 		<#-- set widget unique options -->
@@ -57,8 +61,8 @@
 			"type":"${wType}",
 			"group": "${wGroup}",
 			"source": "${wSource}",
-			"selector": "#widget-${wUniqueName}",
-			"element": $( "#widget-${wUniqueName}" ),
+			"selector": "#publications-box-${wUniqueName}",
+			"element": $( "#publications-box-${wUniqueName}" ),
 			"options": options
 		});
 	});<#-- end document ready -->

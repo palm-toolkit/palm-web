@@ -1,28 +1,27 @@
 $.publicationList = {};
 $.publicationList.variables = {
-		currentURL : undefined,
 		widgetUniqueName : undefined,
-		isUserLogged : undefined
+		currentURL 	  	 : undefined,
+		isUserLogged 	 : undefined,
+		data		 	 : undefined
 };
 
-$.publicationList.init = function( originJsonObject, widgetUniqueName, currentURL, isUserLogged ){
+$.publicationList.init = function( status, widgetUniqueName, currentURL, isUserLogged ){
 	$.publicationList.variables.widgetUniqueName = widgetUniqueName;
-	$.publicationList.variables.currentURL 		 = currentURL;
+	$.publicationList.variables.currentURL 	     = currentURL;
 	$.publicationList.variables.isUserLogged 	 = isUserLogged;
-	
-	var mainContainer = $("#widget-" + widgetUniqueName + " .box-content");
+
+	var mainContainer = $("#publications-box-" + widgetUniqueName + " .box-content");
 	mainContainer.html( "" );
 		
-	if( originJsonObject.status != "ok"){
+	if( status != "ok"){
 		$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher does not have any publication on PALM database" );
 		return false;
 	}
-		
-	$.publicationList.visualize( mainContainer, originJsonObject);
-
 };
 
 $.publicationList.visualize = function( mainContainer, data){
+	$.publicationList.variables.data = data;
 	mainContainer.append( $.publicationList.visualize.filter( data ) );
 	
 	if ( typeof data.publications === 'undefined') {
@@ -44,40 +43,50 @@ $.publicationList.visualize = function( mainContainer, data){
 $.publicationList.visualize.filter =  function( data ){
 	var filterContainer = $( '<div/>' ).addClass( "pull-left" )
 		.css({'width':'100%','margin':'0 10px 15px 0'});
-	filterContainer.append( $.publicationList.visualize.filter.search( { author : data.author } ) );
+	filterContainer.append( $.publicationList.visualize.filter.search( { author : data.author, query : data.query } ) );
 	filterContainer.append( $.publicationList.visualize.filter.year( {author: data.author, totalPublication : data.totalPublication, years: data.years, query: data.query, count : data.count} ) );
+	filterContainer.append( $.publicationList.visualize.filter.keyword( data ) );
 
 	return filterContainer;
 };
 
 $.publicationList.visualize.filter.search = function( data ){
 	var filterSearch = $( '<div/>' ).addClass( "input-group" )
-		.css({'width':'100%'})
-		.append( $( '<input/>' ).attr({'type':'text', 'id':'publist-search', 'class':'form-control input-sm pull-right'})
-					.keyup(function(e){
-						if(e.keyCode == 13){
-							var thisWidget = $.PALM.boxWidget.getByUniqueName( $.publicationList.variables.widgetUniqueName ); 
-							// find keyword if any 
-							var keywordText = filterSearch.find( "#publist-search" ).val();
-							
-							thisWidget.options.queryString = "?id=" + data.author.id + "&year=all&query=" + keywordText;			
-							thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
-							$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
-						}
-					}) )
-		.append( $( '<div/>' ).attr({'id':'publist-search-button-cont', 'class':'input-group-btn', 'title':'Will automatically search for all ' + data.author.name + '\'s publications'})
-					.append( $( '<button/>' ).attr({'id':'publist-search-button', 'class':'btn btn-sm btn-default'})
-							.append( $( '<i/>' ).attr({'class':'fa fa-search'}) ) )
-					.on( "click", function(){
+		.css({'width':'100%'});
+	
+	var publistSearch = $( '<input/>' ).attr({'type':'text', 'id':'publist-search', 'class':'form-control input-sm pull-right'})
+				.keyup(function(e){
+					if(e.keyCode == 13){
 						var thisWidget = $.PALM.boxWidget.getByUniqueName( $.publicationList.variables.widgetUniqueName ); 
-						// find keyword if any
+						// find keyword if any 
 						var keywordText = filterSearch.find( "#publist-search" ).val();
-			
-						thisWidget.options.queryString = "?id=" + data.author.id + "&year=all&query=" + keywordText;
-						// add overlay 
+							
+						thisWidget.options.queryString = "?id=" + data.author.id + "&year=all&query=" + keywordText;			
 						thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 						$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
-					} ) );	
+					}
+				});
+	
+	var buttonSearch = $( '<div/>' ).attr({'id':'publist-search-button-cont', 'class':'input-group-btn', 'title':'Will automatically search for all ' + data.author.name + '\'s publications'})
+				.append( $( '<button/>' ).attr({'id':'publist-search-button', 'class':'btn btn-sm btn-default'})
+				.append( $( '<i/>' ).attr({'class':'fa fa-search'}) ) );
+	buttonSearch.on( "click", function(){
+		var thisWidget = $.PALM.boxWidget.getByUniqueName( $.publicationList.variables.widgetUniqueName ); 
+		// find keyword if any
+		var keywordText = filterSearch.find( "#publist-search" ).val();
+
+		thisWidget.options.queryString = "?id=" + data.author.id + "&year=all&query=" + keywordText;
+		// add overlay 
+		thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+		$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
+	} ); 
+	
+	if (data.query != undefined && data.query != "")
+			publistSearch.val( data.query );
+	
+	filterSearch.append( publistSearch );
+	filterSearch.append( buttonSearch );	
+
 	return filterSearch;
 }
 
@@ -91,33 +100,60 @@ $.publicationList.visualize.filter.year = function ( data ){
 		filterYear.append( createYearContainer( "btn btn-default btn-xs", "year-" + item, item, "?id=" + data.author.id + "&year=" + item, false, item) );
 	});
 	
-	if( typeof data.query !== "undefined" ){
+	if( typeof data.query !== "undefined" && data.query.trim().length > 0){
 		filterYear.append( createYearContainer( "btn btn-default btn-xs active", "year-query", data.query, "?id=" + data.author.id + "query=" + data.query, true, data.query + "(" + data.count + ")") );
 	}
 	
+	var thisWidget = $.PALM.boxWidget.getByUniqueName( $.publicationList.variables.widgetUniqueName ); 		
+	
 	// find active option 
-//	var currentQueryArray = this.queryString.split( "&" );
-//	$.each( currentQueryArray , function( index, partQuery){
-//		if( partQuery.lastIndexOf( 'year', 0) === 0 && typeof data.query === "undefined" )
-//			filterYear.find( "#" + partQuery.replace( "=","-") ).prop("checked", true).parent().addClass( "active" );
-//		else if( partQuery.lastIndexOf( 'maxresult', 0) === 0 )
-//			filterYear.find( "#" + partQuery.replace( "=","-") ).prop("checked", true).parent().addClass( "active" );
-//		else if( partQuery.lastIndexOf( 'query', 0) === 0 )
-//			filterSearch.find( "#publist-search" ).val( partQuery.substring(6, partQuery.length) );
-//			
-//	}); 
+	var currentQueryArray = thisWidget.options.queryString.split( "&" );
+	$.each( currentQueryArray , function( index, partQuery){
+		if( partQuery.lastIndexOf( 'year', 0) === 0 && typeof data.query === "undefined" )
+			filterYear.find( "#" + partQuery.replace( "=","-") ).prop("checked", true).parent().addClass( "active" );
+		else if( partQuery.lastIndexOf( 'maxresult', 0) === 0 )
+			filterYear.find( "#" + partQuery.replace( "=","-") ).prop("checked", true).parent().addClass( "active" );			
+	}); 
 	
 	// assign click functionality to year filter 
-	filterYear.on( "change", "input", function(e){
-		var thisWidget = $.PALM.boxWidget.getByUniqueName( $.publicationList.variables.widgetUniqueName ); 		
+	filterYear.on( "change", "input", function(e){		
+		var thisWidget  = $.PALM.boxWidget.getByUniqueName( $.publicationList.variables.widgetUniqueName ); 
+		var queryString = $( this ).data( "link" );
 		
-		thisWidget.options.queryString = $( this ).data( "link" );
-		//add overlay
-		thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+		var queryKeywordsStr = ""; 
+		var currentQueryArray = thisWidget.options.queryString.split( "&" );
+		$.each( currentQueryArray , function( index, partQuery){
+			if( partQuery.lastIndexOf( 'queryKeywords', 0) === 0 ){
+				queryString += "&" + partQuery;	
+				queryKeywordsStr = partQuery.substring(14, partQuery.length)
+			}
+		}); 
 		
-		$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
+		thisWidget.options.queryString = queryString;
+		
+		$.get( $.publicationList.variables.currentURL + "/researcher/publicationList" + queryString , function( response ){
+			var mainContainer = $("#publications-box-" + $.publicationList.variables.widgetUniqueName + " .box-content");
+			//****
+			var keywordText = thisWidget.element.find("#publist-search").val() || undefined;
+			response.queryKeywords = queryKeywordsStr.split(",");
+			response.query = keywordText;
+			for (var i = 0 ; i < response.publications.length; i++){
+				if ( i % 2 == 0 && i % 3 == 0)
+					response.publications[i].keyword = [ queryKeywordsStr.split(",")[0] ];
+				else
+					if ( i % 2 == 0 )
+						response.publications[i].keyword = [ queryKeywordsStr.split(",")[1] ];
+					else
+						response.publications[i].keyword = [ queryKeywordsStr.split(",")[0], queryKeywordsStr.split(",")[1] ];
+			}
+			//****
+			$.publicationList.init( response.status, $.publicationList.variables.widgetUniqueName, $.publicationList.variables.currentURL, $.publicationList.variables.isUserLogged );
+			$.publicationList.visualize( mainContainer, response);
+			
+			thisWidget.element.find( "#publications-box-" + $.publicationList.variables.widgetUniqueName ).find(".overlay").remove();
+		});
 	});
-	
+
 	return filterYear;
 	
 	function createYearContainer( className, inputID, inputValue, data_link, checked, text){
@@ -127,7 +163,62 @@ $.publicationList.visualize.filter.year = function ( data ){
 	}
 }
 
+$.publicationList.visualize.filter.keyword = function ( data ){
+	var filterKeyword = $( '<div/>' ).attr({'class':'btn-group','data-toggle':'buttons'})
+			.css({'display':'block'});
+	
+	$.each( data.queryKeywords, function( index, item ){
+		filterKeyword.append( createKeywordContainer( "btn btn-default btn-xs active", "keyword-" + item, item, "?id=" + data.author.id + "&keyword=" + item, true, item) );
+	});
+	
+	// assign click functionality to year filter 
+	filterKeyword.on( "change", "input[type=checkbox]", function(e){
+		var thisWidget = $.PALM.boxWidget.getByUniqueName( $.publicationList.variables.widgetUniqueName ); 		
+			thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+		
+		var checked_keywords = $(this).parents(".btn-group").find("input:checked");	
+		
+		var data = jQuery.extend(true, {}, $.publicationList.variables.data);
+		
+		if ( data != undefined ){
+			var filteredPublications = data.publications;
+			var i = 0;
+			while ( i <= filteredPublications.length - 1){
+				var pub = filteredPublications[i];
+				var intersection = checked_keywords.filter( function( ind, input) { return pub.keyword != undefined && pub.keyword.indexOf( input.value ) != -1; })
+				if ( intersection.length == 0 ){
+					filteredPublications.splice(i, 1);
+				}else
+					i++;				
+			};
+				
+			data.publications = filteredPublications;
+			
+			thisWidget.element.find("ul.timeline").remove();	
+			thisWidget.element.find(".callout.callout-warning").remove();
+			
+			if ( typeof data.publications === 'undefined' || data.publications.length == 0) {
+					$.PALM.callout.generate( thisWidget.element.find( "#publications-box-" + $.publicationList.variables.widgetUniqueName ) , "warning", "Empty Publications !", "No publication found." );
+					thisWidget.element.find( ".overlay" ).remove();
+					return false;
+			}
+				
+			thisWidget.element.find(".box-content").append( $.publicationList.visualize.publications( data ) );		
+			thisWidget.element.find( ".overlay" ).remove();
+		}
+	});
+	
+	return filterKeyword;
+	
+	function createKeywordContainer( className, inputID, inputValue, data_link, checked, text){
+		return $( "<label/>" ).attr({ "class": className })
+			.append( $( "<input/>" ).attr({ "type":"checkbox", "id":inputID, "name":"filterkeyword", "value":inputValue , "data-link": data_link, "checked": checked}) )
+			.append( text );
+	}
+}
 $.publicationList.visualize.publications = function ( data ){
+	var dataCopy = jQuery.extend(true, {}, data);
+	
 	var timeLineContainer = $( '<ul/>' ).addClass( "timeline" );
 	
 	var timeLineGroupYear = "";
@@ -144,13 +235,13 @@ $.publicationList.visualize.publications = function ( data ){
 	var liTimeGroup;
 
 	// add empty object, to add more loop 
-	data.publications.push( { "date":"endpublication"} );
-	
-	var marginLeft = 10;
-	
-	$.each( data.publications, function( index, item ){
+	dataCopy.publications.push( { "date":"endpublication"} );
+
+	$.each( dataCopy.publications, function( index, item ){
 		// timeline group  
-		timelineGroup_header( index, item, timeLineContainer, timeLineGroupYear, liTimeGroup, noOf);
+		var obj = timelineGroup_header( index, item, timeLineContainer, timeLineGroupYear, liTimeGroup, noOf);
+		timeLineGroupYear = obj.timeLineGroupYear;
+		liTimeGroup 	  = obj.liTimeGroup;
 		
 		if( typeof item.title !== "undefined" ){
 			var publicationItem = $( '<li/>' );
@@ -159,6 +250,9 @@ $.publicationList.visualize.publications = function ( data ){
 
 			//timeline container 
 			var timelineItem = $( '<div/>' ).addClass( "timeline-item" );
+			if (item.keyword != undefined && item.keyword.length > 0)
+				timelineItem.data("keyword", item.keyword);
+			
 			timelineItem.append( createTimelineTime( item ) );
 			timelineItem.append( createTimelineHeader( item ) );
 			timelineItem.append( createTimelineBody( item ) );
@@ -172,6 +266,8 @@ $.publicationList.visualize.publications = function ( data ){
 }
 
 function timelineGroup_header( index, item, timeLineContainer, timeLineGroupYear, liTimeGroup, noOf){
+	var marginLeft = 10;
+	
 	if( typeof item.date !== 'undefined' ){ //timeline HEADERS
 		if( timeLineGroupYear !== item.date.substring(0, 4) ){			
 			if( typeof liTimeGroup !== "undefined" ){	
@@ -222,7 +318,12 @@ function timelineGroup_header( index, item, timeLineContainer, timeLineGroupYear
 			timeLineContainer.append( liTimeGroup2 );
 			timeLineGroupYear = null;
 		}
-	} 
+	}
+	
+	return {
+			timeLineGroupYear : timeLineGroupYear,
+			liTimeGroup       : liTimeGroup
+		   };
 	
 	function createVenueTypeBox(className, marginLeft, html){
 		return $( '<span/>' ).addClass( className )

@@ -2133,7 +2133,8 @@ a:focus {
 }
 .btn-default {
     background-color: #f4f4f4;
-    color: #444;
+    /* color: #444; */
+    color: #8c8c8c;
     border-color: #ddd
 }
 .btn-default:hover,
