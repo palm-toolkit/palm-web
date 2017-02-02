@@ -17,39 +17,73 @@
   text-decoration: underline;
 }
 
-#widget-${wUniqueName} ..box-body .episode > rect{
-	fill : #666;
+#widget-${wUniqueName} .episode text {
+	fill : #0073b7;
+}
+
+#widget-${wUniqueName} .episode.clicked text {
+	font-weight : bold;
 }
 
 #widget-${wUniqueName} .light-gradient-stop-color-1{
-	stop-color : #d4d4d4;	
+	stop-color : #d4d4d4  ;	<#-- #000 -->
 }
 #widget-${wUniqueName} .light-gradient-stop-color-2{
-	stop-color : #e6e6e6;	
+	stop-color : #eee;	<#-- rgb(102, 102, 102) -->
 }
 
 #widget-${wUniqueName} .dark-gradient-stop-color-1{
-	stop-color : #f39c12;	
+	stop-color : #c0cfd8;	
 }
 #widget-${wUniqueName} .dark-gradient-stop-color-2{
 	stop-color : #e6e6e6;	
 }
+
+#widget-${wUniqueName} .clicked-gradient-stop-color-1{
+	stop-color : #d2c7b0;	
+}
+#widget-${wUniqueName} .clicked-gradient-stop-color-2{
+	stop-color : #eee;	
+}
+
+#widget-${wUniqueName} .light-color{
+	stroke : #999;
+}
+#widget-${wUniqueName} .dark-color{
+	stroke : #0073b7;
+}
+#widget-${wUniqueName} .clicked-color{
+	stroke :  #f39c12;
+}
+#widget-publications-${wUniqueName}	{
+	position: relative;
+    height: 100%;
+}
+#widget-publications-${wUniqueName}>div{
+    height: 100%;
+}
+
 </style>
-<div class="box-body no-padding">
-	<div class="filter-criteria key-researchers-criteria">
-		<div class="container">
-  			<span class="title font-small"> Based On: </span>
-  			<div class="dropdown">
-    			<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Number of publications <span class="caret"></span> </button>
-    			<ul class="dropdown-menu">
-      				<li><a href="#">Resercher's H-index</a></li>
-      				<li><a href="#">Publications' Citations</a></li>
-    			</ul>
-  			</div>
+<div class="box-body no-padding container-fluid">
+		<div class="container-box filter-box key-researchers-criteria row">
+			<div class="filter col-md-4">
+  				<span class="title font-small col-md-3"> Based On: </span>
+  				<div class="dropdown col-md-9">
+    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Number of publications <span class="caret"></span> </button>
+    				<ul class="dropdown-menu">
+      					<li><a href="#">Resercher's H-index</a></li>
+      					<li><a href="#">Publications' Citations</a></li>
+    				</ul>
+  				</div>
+			</div>
 		</div>
-	</div>
+		<div class="container-box visualization-box row">
+			<div class="visualization-main col-md-12"></div>
+			<div class="visualization-details hidden col-md-4">
+				<#include "/resPublication.ftl">
+			</div>
+		</div>
 </div>
-<#include "/resPublication.ftl">
 <div class="box-footer"></div>
 
 <script>

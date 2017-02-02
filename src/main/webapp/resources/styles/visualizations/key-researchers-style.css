@@ -1,0 +1,21 @@
+@media screen and (max-width: 1366px) {
+	#widget-conference_key_researcher .visualization-details .timeline{
+		font-size : 85%;
+	}
+	#widget-conference_key_researcher .visualization-details .timeline-item .timeline-header{
+		font-size : 14px;
+	}
+	#widget-conference_key_researcher .visualization-details .timeline-item .time{
+		font-size : 10px;
+	}
+}
+
+#widget-conference_key_researcher .box-title-container{
+	width : 80%;
+}
+
+#widget-conference_key_researcher .callout-warning{
+	position: absolute;
+    top		: 40%;
+    width	: 98%;
+}

@@ -3,14 +3,19 @@ $.publicationList.variables = {
 		widgetUniqueName : undefined,
 		currentURL 	  	 : undefined,
 		isUserLogged 	 : undefined,
-		data		 	 : undefined
+		data		 	 : undefined,
+		yearFilterRequest: null,
+		height			 : 0
 };
 
-$.publicationList.init = function( status, widgetUniqueName, currentURL, isUserLogged ){
+$.publicationList.init = function( status, widgetUniqueName, currentURL, isUserLogged, height ){
 	$.publicationList.variables.widgetUniqueName = widgetUniqueName;
 	$.publicationList.variables.currentURL 	     = currentURL;
 	$.publicationList.variables.isUserLogged 	 = isUserLogged;
+	$.publicationList.variables.height			 = height;
 
+	$("#widget-" + widgetUniqueName + " .visualization-details" ).height( height );
+	
 	var mainContainer = $("#publications-box-" + widgetUniqueName + " .box-content");
 	mainContainer.html( "" );
 		
@@ -109,7 +114,7 @@ $.publicationList.visualize.filter.year = function ( data ){
 	// find active option 
 	var currentQueryArray = thisWidget.options.queryString.split( "&" );
 	$.each( currentQueryArray , function( index, partQuery){
-		if( partQuery.lastIndexOf( 'year', 0) === 0 && typeof data.query === "undefined" )
+		if( partQuery.lastIndexOf( 'year', 0) === 0 && ( typeof data.query === "undefined" || data.query == ""))
 			filterYear.find( "#" + partQuery.replace( "=","-") ).prop("checked", true).parent().addClass( "active" );
 		else if( partQuery.lastIndexOf( 'maxresult', 0) === 0 )
 			filterYear.find( "#" + partQuery.replace( "=","-") ).prop("checked", true).parent().addClass( "active" );			
@@ -117,7 +122,8 @@ $.publicationList.visualize.filter.year = function ( data ){
 	
 	// assign click functionality to year filter 
 	filterYear.on( "change", "input", function(e){		
-		var thisWidget  = $.PALM.boxWidget.getByUniqueName( $.publicationList.variables.widgetUniqueName ); 
+		var vars 		= $.publicationList.variables;
+		var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
 		var queryString = $( this ).data( "link" );
 		
 		var queryKeywordsStr = ""; 
@@ -129,12 +135,18 @@ $.publicationList.visualize.filter.year = function ( data ){
 			}
 		}); 
 		
+		thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
+		thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+		
+		if ( vars.yearFilterRequest != null)
+			vars.yearFilterRequest.abort();
+		
 		thisWidget.options.queryString = queryString;
 		
-		$.get( $.publicationList.variables.currentURL + "/researcher/publicationList" + queryString , function( response ){
-			var mainContainer = $("#publications-box-" + $.publicationList.variables.widgetUniqueName + " .box-content");
+		vars.yearFilterRequest = $.get( vars.currentURL + "/researcher/publicationList" + queryString , function( response ){
+			var mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
 			//****
-			var keywordText = thisWidget.element.find("#publist-search").val() || undefined;
+			var keywordText = thisWidget.element.find("#publist-search").val() || "";
 			response.queryKeywords = queryKeywordsStr.split(",");
 			response.query = keywordText;
 			for (var i = 0 ; i < response.publications.length; i++){
@@ -147,10 +159,11 @@ $.publicationList.visualize.filter.year = function ( data ){
 						response.publications[i].keyword = [ queryKeywordsStr.split(",")[0], queryKeywordsStr.split(",")[1] ];
 			}
 			//****
-			$.publicationList.init( response.status, $.publicationList.variables.widgetUniqueName, $.publicationList.variables.currentURL, $.publicationList.variables.isUserLogged );
+			$.publicationList.init( response.status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged, vars.height );
 			$.publicationList.visualize( mainContainer, response);
 			
-			thisWidget.element.find( "#publications-box-" + $.publicationList.variables.widgetUniqueName ).find(".overlay").remove();
+			thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
+			vars.yearFilterRequest = null;
 		});
 	});
 

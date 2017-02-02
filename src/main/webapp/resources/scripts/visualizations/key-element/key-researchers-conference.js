@@ -1,3 +1,19 @@
+$( window ).resize(function() {
+	var oldWidth =  $.activeResearchers.variables.width;
+	var visualization = $( $.activeResearchers.variables.containerId + " .visualization-main" );
+	if ( visualization != undefined)
+		 $.activeResearchers.variables.width = visualization.width();
+	
+	//resizeSVG(oldWidth);
+});
+function resizeSVG(oldWidth){
+	var vars = $.activeResearchers.variables;
+	var svg  = d3.select(vars.containerId +" .visualization-main svg" );
+	var newWidth = svg.node().getBoundingClientRect().width;
+	svg.attr("transform", "translate(" + vars.width/2 + " , " + vars.height/2 + ")scale(" +( (newWidth / oldWidth) * 100) + ")");
+	
+}
+
 $.activeResearchers = {};
 $.activeResearchers.variables ={
 		widgetUniqueName : undefined,
@@ -12,30 +28,34 @@ $.activeResearchers.variables ={
 		S 	  : 20,
 		s 	  : 8,
 		R 	  : 90,
-		initialDegree : 40, 
+		initialDegree : 30, 
 		o 	  : 15, 
 		t 	  : 10, 
 		transitionDuration : 1000, 
 		easeType : "elastic", 
-		highLightColor : "#f39c12",
+		highLightColor : "#0073b7", //"#f39c12",
+		clickedColor : "#f39c12",
 		L	  : {},
 		k 	  : {},
 		line  : undefined,
-		diagonal : undefined
+		diagonal : undefined,
+		publicationRequest : null
 };
 $.activeResearchers.init = function(widgetUniqueName, conferenceName, conferenceURI, currentURL, isUserLogged){
 	var vars = $.activeResearchers.variables;
 	vars.containerId 	  = "#widget-" + widgetUniqueName;	
-	vars.width  		  = $(vars.containerId).width();
-	vars.radius 		  = Math.min( $.SIMILAR.variables.width / 2 , $.SIMILAR.variables.height  );
+	vars.width  		  = $(vars.containerId + " .visualization-main" ).width();
+	vars.radius 		  = Math.min( vars.width / 2 ,vars.height  );
 	vars.widgetUniqueName = widgetUniqueName;
 	vars.currentURL		  = currentURL;
 	vars.isUserLogged	  = isUserLogged;
 	
+	$(vars.containerId + " .visualization-main" ).height( vars.height );
+	
 	var mappedJsonObject, mergedJsonObjectArray, combinedJsonObject, linkObject, episodeConceptLinkJsonArray;
 
 	var r = d3.layout.tree()
-		.size([360, vars.h / 2 - vars.R])
+		.size([200, vars.h / 4 - vars.R])
 		.separation(function(Y, X) {
 			return (Y.parent == X.parent ? 1 : 2) / Y.depth;
 		});
@@ -51,18 +71,23 @@ $.activeResearchers.init = function(widgetUniqueName, conferenceName, conference
 		.interpolate("bundle")
 		.tension(0.5);
 			
-	var graphSVG = d3.select(vars.containerId +" .box-body").append("svg")
+	var graphSVG = d3.select(vars.containerId +" .box-body .visualization-main" ).append("svg")
 		.attr("width",  vars.width)
 		.attr("height", vars.height)
-		.append("g")
-			.attr("transform", "translate(" + vars.width / 2 + "," + vars.height / 2 + ")");
-							
+		.attr("viewBox", -vars.width / 2 + " " + -vars.height / 2 + " " +  vars.width + " " +  vars.height)
+		.attr("preserveAspectRatio", "xMinYMin")
+		.append("g");
+		//	.attr("transform", "translate(" + vars.width / 2 + "," + vars.height / 2 + ")");
+	
+	
 	var linkGraphSVG 	= graphSVG.append("g").attr("class", "links"); 
 	var episodeGraphSVG = graphSVG.append("g").attr("class", "episodes");
 	var nodeGraphSVG 	= graphSVG.append("g").attr("class", "nodes");	
 	
-	createLightGradientColor(graphSVG);
-	createDarkGradientColor(graphSVG);
+	
+	createGradientColor(graphSVG, "light-box-gradient", "light-gradient-stop-color-1", "light-gradient-stop-color-2");
+	createGradientColor(graphSVG, "dark-box-gradient",  "dark-gradient-stop-color-1",  "dark-gradient-stop-color-2");
+	createGradientColor(graphSVG, "clicked-box-gradient", "clicked-gradient-stop-color-1",  "clicked-gradient-stop-color-2");
 };
 $.activeResearchers.data = function( url ){
 	d3.json(url, function(error, originJsonObject) {
@@ -95,8 +120,7 @@ $.activeResearchers.data = function( url ){
 		console.log(combinedJsonObject);
 		
 		var episodeConceptLinkJsonArray = prepareData(mappedJsonObject, combinedJsonObject);
-		$.activeResearchers.visualize(mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
-			
+		$.activeResearchers.visualize(mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);	
 	});
 	
 	function prepareData(mappedJsonObject, combinedJsonObject){
@@ -175,13 +199,11 @@ $.activeResearchers.visualize = function( mappedJsonObject, combinedJsonObject, 
 $.activeResearchers.visualize.links = function(episodeConceptLinkJsonArray){
 	var vars = $.activeResearchers.variables;
 	var linkGraphSVG = d3.select(vars.containerId + " svg g.links");
-	var paths = linkGraphSVG.selectAll("path").data(episodeConceptLinkJsonArray, this.key);
-	var enter = paths
-		.enter().append("path")
-		.attr("class", "link")
+	var group = linkGraphSVG.selectAll("g").data(episodeConceptLinkJsonArray, this.key).enter().append("g").attr("class", "link");
+	var paths = group	
+		.append("path")
 		.attr("d", function(Z) {
-			var Y = Z.source ? 
-						{ x : Z.source.x, y : Z.source.y } : { x : 0, y : 0};
+			var Y = Z.source ? { x : Z.source.x, y : Z.source.y } : { x : 0, y : 0};
 			return vars.diagonal({
 						source : Y,
 						target : Y
@@ -190,9 +212,17 @@ $.activeResearchers.visualize.links = function(episodeConceptLinkJsonArray){
 	paths.attr("d", function(X) {
 				return vars.line([[X.x1, X.y1], [X.x1, X.y1], [X.x1, X.y1]]);
 		});
-	paths.merge(enter)
-		.transition().duration(vars.transitionDuration).ease(d3.easeElastic)
+	paths.transition().duration(vars.transitionDuration).ease(d3.easeElastic)
 			.attr("d", function(X) { return vars.line([[X.x1, X.y1], [X.target.xOffset * vars.s, 0],[X.x2, X.y2]]); });	
+	
+	group.append("text")
+		.attr("class", "link-text hidden")
+		.attr("fill", "#000")
+		.attr("dx", function (d){ return d.target.x < 180 ?  "-0.35em" : "0.35em";})
+		.attr("dy", "0.35em")
+		.style("font-weight", "bold")
+		.attr("text-anchor", function (d){ return d.target.x < 180 ? "start" : "end"; })
+		.text(function( d, i ) { return i + "publ."});				
 }
 
 $.activeResearchers.visualize.elements = function(mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
@@ -218,53 +248,123 @@ $.activeResearchers.visualize.interactions = {
 			mouseOnEpisode(episode, linkObject, episodeConceptLinkJsonArray);
 		},
 		mouseleaveEpisode:  function(episode){
-			vars.k = {
-					node : null,
-					map : {}
-			};
-			
+			if ( !d3.select(this).classed("clicked") ){
+				$.activeResearchers.variables.k = {
+						node : null,
+						map : {}
+				};
+			}
+
 			highLightElements();
 		},
 		click : function (episode){		
-			var vars = $.activeResearchers.variables;
+			var vars 		= $.activeResearchers.variables;
 			var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
 			var keywordText = thisWidget.element.find("#publist-search").val() || "";
 			var queryString = "?id=" + episode.id + "&year=all&query=" + keywordText + "&queryKeywords=" + episode.links;
 			
-			thisWidget.options.queryString = queryString;
-			thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
-			
-			//show the widget 
-			thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).removeClass("hidden");
-			
-			//get publications from json
-			var url = vars.currentURL + "/resources/json/publicationList.json"
-			$.get( vars.currentURL + "/researcher/publicationList" + queryString , function( response ){ 
-				// this has to be data that is returned by server 
-				console.log(response);
-				response.queryKeywords = episode.links;
-				response.query = keywordText;
-				for (var i = 0 ; i < response.publications.length; i++){
-					if ( i % 2 == 0 && i % 3 == 0)
-						response.publications[i].keyword = [ episode.links[0] ];
-					else
-						if ( i % 2 == 0 )
-							response.publications[i].keyword = [ episode.links[1] ];
-						else
-							response.publications[i].keyword = [ episode.links[0], episode.links[1] ];
+			if ( vars.clickedNode != null){
+				if ( vars.clickedNode.node.id === episode.id)
+					removeHighlightClickedNode( );
+				else {
+					highlightClickedNode( this );
+					getPublicationAuthor( this );
 				}
-				//--------------------------------------
+			}
+			else {
+				highlightClickedNode( this );
+				getPublicationAuthor( this );
+			}
+			
+			resize();
+			
+			function highlightClickedNode( elem ){
+				d3.selectAll("g.episode").classed("clicked", false);
+				d3.select(elem).classed("clicked", true);		
+				vars.clickedNode = jQuery.extend(true, {}, vars.k);
+			}
+			function removeHighlightClickedNode( ){
+				d3.selectAll("g.episode").classed("clicked", false);	
+				vars.clickedNode = undefined;
+				thisWidget.element.find( ".visualization-details" ).addClass("hidden");
+				thisWidget.element.find(".visualization-main").removeClass("col-md-8").addClass("col-md-12");
 				
-				$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( response.author.name );
+				if ( vars.publicationRequest != null ){
+					vars.publicationRequest.abort();
+					vars.publicationRequest = null;
+				}
+			}
+			function resize(){		
+				//.attr("viewBox", -vars.width / 2 + " " + -vars.height / 2 + " " +  vars.width + " " +  vars.height)
+
+				var svg = d3.select(".visualization-main svg");
+				var bbox = svg.node().getBBox();
+				var vis = $( $.activeResearchers.variables.containerId + " .visualization-main" );
+				var visSize = {
+						width : vis.width(),
+						height: vis.height(),
+						x : -vis.width()/2,
+						y : -vis.height()/2  
+					};
+
 				
-				var mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
-				$.publicationList.init( response.status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged );
-				$.publicationList.visualize( mainContainer, response);
 				
+				svg.attr("viewBox", (visSize.x)+" "+(visSize.y)+" "+(visSize.width)+" "+(visSize.height));
+				svg.attr("width", (visSize.width));
+				svg.attr("height",(visSize.height));
+				
+				var nodesGr = d3.select(".visualization-main svg .nodes");
+				var bboxGr = nodesGr.node().getBBox();
+				
+				if (bboxGr.width > visSize.width)
+					scale = visSize.width/bboxGr.width;
+				
+				 d3.select(".visualization-main svg>g").attr("transform", "scale(" + scale + ")");
+				
+					
+			}
+			
+			function getPublicationAuthor( author ){
+				var vars 		= $.activeResearchers.variables;
+				var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
+				var keywordText = thisWidget.element.find("#publist-search").val() || "";
+				var queryString = "?id=" + episode.id + "&year=all&query=" + keywordText + "&queryKeywords=" + episode.links;
+				thisWidget.options.queryString = queryString;
+				
+				thisWidget.element.find(".visualization-main").removeClass("col-md-12").addClass("col-md-8");
 				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
-				
-				
-			});
+				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+				thisWidget.element.find( ".visualization-details" ).removeClass("hidden");
+
+				if ( vars.publicationRequest != null){
+					vars.publicationRequest.abort();
+				}
+				vars.publicationRequest = $.get( vars.currentURL + "/researcher/publicationList" + queryString , function( response ){ 
+					// this has to be data that is returned by server 
+					response.queryKeywords = episode.links;
+					response.query = keywordText;
+					for (var i = 0 ; i < response.publications.length; i++){
+						if ( i % 2 == 0 && i % 3 == 0)
+							response.publications[i].keyword = [ episode.links[0] ];
+						else
+							if ( i % 2 == 0 )
+								response.publications[i].keyword = [ episode.links[1] ];
+							else
+								response.publications[i].keyword = [ episode.links[0], episode.links[1] ];
+					}
+					//--------------------------------------
+						
+					$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( response.author.name );
+						
+					var mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
+					$.publicationList.init( response.status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged, vars.height - 10);
+					$.publicationList.visualize( mainContainer, response);
+					
+					thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
+						
+					vars.publicationRequest = null;
+				});
+			}
 		}
 }
 
@@ -276,18 +376,37 @@ $.activeResearchers.visualize.elements.episodes = function(episodesData, mappedJ
 	var episodes 		= episodeGraphSVG.selectAll(".episode").data(episodesData, this.key);
 	var episode 		= episodes.enter().append("g")
 		.attr("class", "episode")
-		.on("mouseover", function(d){
-			$.activeResearchers.visualize.interactions.mouseoverEpisode(d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
-		})
-		.on("mouseout", $.activeResearchers.visualize.interactions.mouseleaveEpisodes)
+		.on("mouseover", function(d){ $.activeResearchers.visualize.interactions.mouseoverEpisode(d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray); })
+		.on("mouseout", $.activeResearchers.visualize.interactions.mouseleaveEpisode)
 		.on("click", $.activeResearchers.visualize.interactions.click);
-	
 	episode.append("rect")
+		.attr("class", "rect-base light-color")
 		.attr("x", vars.U / -2)
 		.attr("y", vars.K / -2)
 		.attr("rx", 2)
 		.attr("ry", 2)
 		.attr("width", vars.U)
+		.attr("height", vars.K)
+		.attr("fill", "transparent")
+		.attr("stroke-width", "0.5px")
+		.transition(transition)
+			.attr("x", function(Z) { return Z.x; })
+			.attr("y", function(Z) { return Z.y; });
+	
+	/*TODO
+	 * range based on the h-index or the criteria used for ranking
+	 */
+	var range = d3.scaleLinear()
+		.domain([episodesData.length, 0])
+		.range([vars.U/4, vars.U]);
+	
+	episode.append("rect")
+		.classed("rect-filling", true)
+		.attr("x", vars.U / -2)
+		.attr("y", vars.K / -2)
+		.attr("rx", 2)
+		.attr("ry", 2)
+		.attr("width", function( d, i ){ return range(i)})
 		.attr("height", vars.K)
 		.attr("fill", "url(#light-box-gradient)")
 		.transition(transition)
@@ -325,7 +444,7 @@ $.activeResearchers.visualize.elements.nodes = function(nodesData, mappedJsonObj
 		.on("mouseover", function(d){ 
 			$.activeResearchers.visualize.interactions.mouseoverEpisode( d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
 		})
-		.on("mouseout", $.activeResearchers.visualize.interactions.mouseleaveEpisodes);//.on("click", G);
+		.on("mouseout", $.activeResearchers.visualize.interactions.mouseleaveEpisode);//.on("click", G);
 	
 	var radiusRange = d3.scaleLinear()
 		.domain([1, d3.max(nodesData, function(n){ return n.count; })])
@@ -346,6 +465,7 @@ $.activeResearchers.visualize.elements.nodes = function(nodesData, mappedJsonObj
 			var translate = (n.isGroup) ? n.y + (7 + n.count) : n.y;
 		return "translate(" + n.xOffset + ",0)rotate(" + (n.x - 90) + ")translate(" + translate + ")";
 	});
+
 	circle
 		.attr("r", function(n) {
 			if (n == vars.L.node) return 100;
@@ -382,7 +502,6 @@ $.activeResearchers.visualize.elements.nodes = function(nodesData, mappedJsonObj
 	
 	nodes.exit().transition().duration(vars.transitionDuration).remove();
 };
-
 function getLowerCase(str) {
 	return str.toLowerCase().replace(/[ .,()]/g, "-");
 }
@@ -399,17 +518,18 @@ function mouseOnEpisode(episode, linkObject, episodeConceptLinkJsonArray){
 		vars.k.map[episode.parent.canonicalKey + "-to-" + episode.canonicalKey] = true;
 		vars.k.map[episode.canonicalKey + "-to-" + episode.parent.canonicalKey] = true;
 	} else {
-		linkObject.get(episode.canonicalKey).forEach(function(e) {
-			vars.k.map[e.canonicalKey] = true;
-			vars.k.map[episode.canonicalKey + "-" + e.canonicalKey] = true;
-		});
+		if ( linkObject.get(episode.canonicalKey) != undefined)
+			linkObject.get(episode.canonicalKey).forEach(function(e) {
+				vars.k.map[e.canonicalKey] = true;
+				vars.k.map[episode.canonicalKey + "-" + e.canonicalKey] = true;
+			});
 		
 		episodeConceptLinkJsonArray.forEach(function(link) {
 			if (vars.k.map[link.source.canonicalKey] && vars.k.map[link.target.canonicalKey])
 				vars.k.map[link.canonicalKey] = true;					
 		});
 	}
-	
+		
 	highLightElements();
 }
 
@@ -420,52 +540,112 @@ function highLightElements() {
 	var episodeGraphSVG = d3.select(vars.containerId + " svg g.episodes");
 	var linkGraphSVG 	= d3.select(vars.containerId + " svg g.links"); 	
 	
-	episodeGraphSVG.selectAll("rect")
-		.attr("fill", function(d) { return changeElementColor(d, "url(#light-box-gradient)", "url(#dark-box-gradient)", "url(#light-box-gradient)");});
+	episodeGraphSVG.selectAll("rect.rect-base")
+		.attr("class", function(d) { 
+			if ( vars.clickedNode != undefined ){
+				if ( vars.clickedNode.node.id == d.id)
+					return changeElementColor(d, "light-color", "clicked-color"); 
+			}
+			return "rect-base " + changeElementColor(d, "light-color", "dark-color"); });
+	
+	episodeGraphSVG.selectAll("rect.rect-filling")
+		.attr("fill", function(d) { 
+			if ( vars.clickedNode != undefined ){
+				if ( vars.clickedNode.node.id == d.id)
+					return changeElementColor(d, "url(#light-box-gradient)", "url(#clicked-box-gradient)"); 
+			}
+			return changeElementColor(d, "url(#light-box-gradient)", "url(#dark-box-gradient)"); });
+	
+	episodeGraphSVG.selectAll("text")
+		.style("font-weight", function(d) { return changeElementColor(d, "normal", "bold"); });
 	
 	linkGraphSVG.selectAll("path")
-		.attr("stroke", function(d) { return changeElementColor(d, "#aaa", vars.highLightColor, "#aaa"); })
-		.attr("stroke-width", function(d) { return changeElementColor(d, "1.5px", "2.5px", "1px"); })
-		.attr("opacity", function(d) { return changeElementColor(d, 0.4, 0.75, 0.3); })
+		.attr("stroke", function(d) { 
+			if ( vars.clickedNode != undefined ){
+				if ( vars.clickedNode.node.id == d.source.id || vars.clickedNode.node.id == d.target.id)
+					return changeElementColor(d, "#aaa", vars.clickedColor); 
+			}
+			return changeElementColor(d, "#aaa", vars.highLightColor); })
+		.attr("stroke-width", function(d) { return changeElementColor(d, "1.5px", "2.5px");})
+		.attr("opacity", function(d) { return changeElementColor(d, 0.4, 0.6); })
 		.sort(function(a, b) {
 				if (!vars.k.node) return 0;				
 				var aa = vars.k.map[a.canonicalKey] ? 1 : 0, 
 					 Z = vars.k.map[b.canonicalKey] ? 1 : 0;
 				return aa - Z;
 		});
-		
+	linkGraphSVG.selectAll("text")
+		.classed("hidden", function ( d ) { return changeElementColor(d, true, false); } )
+		.attr("transform", function ( d ){
+			var transform = "";
+			if (vars.k != undefined && vars.k.node != null && vars.k.node.type == "episode"){				
+				var e = changeElementColor(d, null, d.target);
+				var tr2 = [d.x2,d.y2];
+				var offset = -2.25 * d.target.xOffset;
+				
+				if (vars.clickedNode != undefined && vars.clickedNode.node.id == d.target.id){
+					var e = null;
+					var tr2 = [];
+					var offset = null;
+				}
+			}				
+			else{
+				var e = changeElementColor(d, null, d.source);
+				var tr2 = [d.x1,d.y1];
+				var offset = d.target.x < 180 ? 10 : -10;
+				
+				if (vars.clickedNode != undefined && vars.clickedNode.node.id == d.source.id){
+					var e = changeElementColor(d, null, d.target);
+					var tr2 = [d.x2,d.y2];
+					var offset = -2.25 * d.target.xOffset;
+				}
+			}
+			return transform = "translate("+ [offset, 0] +")rotate(" + (0) + ")translate(" + tr2 + ")";
+		});	
 	nodeGraphSVG.selectAll("circle")
 		.attr("fill", function(d) {
 			if (d === null) return "#000";
-			else return changeElementColor(d, "#666", vars.highLightColor, "#000"); //return changeElementColor(X, "#000", highLightColor, "#999");
+			else if ( vars.clickedNode != undefined ){
+					if ( vars.clickedNode.map[d.key] )
+						return changeElementColor(d, "#666", vars.clickedColor); 
+				 }
+			return changeElementColor(d, "#666", vars.highLightColor);
 		})
 		.attr("stroke", function(d) {
-			if (d === null)  return changeElementColor(d, null, vars.highLightColor, null);
+			if (d === null)  return changeElementColor(d, null, vars.highLightColor);
 			else return "#000";					
 		})
 		.attr("stroke-width", function(d) {
-			if (d === vars.L.node) return changeElementColor(d, null, 2.5, null);
+			if (d === vars.L.node) 
+				return changeElementColor(d, null, 2.5);
 			else return 1.5;
 		});
 	
 	nodeGraphSVG.selectAll("text.label")
 		.attr("fill", function(d) {
-			return (d === vars.L.node || d.isGroup) ? "#fff" : changeElementColor(d, "#000", vars.highLightColor, "#999");
+			return (d === vars.L.node || d.isGroup) ? "#fff" : vars.clickedNode != undefined ? (vars.clickedNode.map[d.key] ? changeElementColor(d, "#000", vars.clickedColor) : changeElementColor(d, "#000", vars.highLightColor)) : changeElementColor(d, "#000", vars.highLightColor);
 		});
 
 }
 
-function changeElementColor(X, aa, Z, Y) 
+function changeElementColor(X, initial, changed) 
 {
 	if ($.activeResearchers.variables.k.node === null) {
-		return aa;
+		if ( $.activeResearchers.variables.clickedNode == null ) 
+			return initial;	
+		else
+			return $.activeResearchers.variables.clickedNode.map[X.key] ? changed : initial;
 	}
-	return $.activeResearchers.variables.k.map[X.key] ? Z : aa;
+	if ( $.activeResearchers.variables.clickedNode == null ) 
+		return $.activeResearchers.variables.k.map[X.key] ? changed : initial;
+	else
+		return $.activeResearchers.variables.k.map[X.key] ||  $.activeResearchers.variables.clickedNode.map[X.key] ? changed : initial;
 }
-function createLightGradientColor(svg){
+
+function createGradientColor( svg, id, classColor1, classColor2 ){
 	var gradient = svg.append("defs")
 	  .append("linearGradient")
-	    .attr("id", "light-box-gradient")
+	    .attr("id", id)
 	    .attr("x1", "0%")
 	    .attr("y1", "0%")
 	    .attr("x2", "0%")
@@ -473,53 +653,22 @@ function createLightGradientColor(svg){
 
 
 	gradient.append("stop")
-		.attr("class", "light-gradient-stop-color-1")
+		.attr("class", classColor1)
 	    .attr("offset", "0%")
 	    .attr("stop-opacity", 1);
 
 	gradient.append("stop")
-		.attr("class", "light-gradient-stop-color-2")
+		.attr("class", classColor2)
 	    .attr("offset", "50%")
 	    .attr("stop-opacity", 1);
 	
 	gradient.append("stop")
-		.attr("class", "light-gradient-stop-color-2")
+		.attr("class", classColor2)
 		.attr("offset", "50%")
 		.attr("stop-opacity", 1);
 
 	gradient.append("stop")
-		.attr("class", "light-gradient-stop-color-1")
-		.attr("offset", "100%")
-		.attr("stop-opacity", 1);
-}
-
-function createDarkGradientColor(svg){
-	var gradient = svg.append("defs")
-	  .append("linearGradient")
-	    .attr("id", "dark-box-gradient")
-	    .attr("x1", "0%")
-	    .attr("y1", "0%")
-	    .attr("x2", "0%")
-	    .attr("y2", "100%");
-
-
-	gradient.append("stop")
-		.attr("class", "dark-gradient-stop-color-1")
-	    .attr("offset", "0%")
-	    .attr("stop-opacity", 1);
-
-	gradient.append("stop")
-		.attr("class", "dark-gradient-stop-color-2")
-	    .attr("offset", "50%")
-	    .attr("stop-opacity", 1);
-	
-	gradient.append("stop")
-		.attr("class", "dark-gradient-stop-color-2")
-		.attr("offset", "50%")
-		.attr("stop-opacity", 1);
-
-	gradient.append("stop")
-		.attr("class", "dark-gradient-stop-color-1")
+		.attr("class", classColor1)
 		.attr("offset", "100%")
 		.attr("stop-opacity", 1);
 }
