@@ -4,7 +4,7 @@
   font-size: 15px;
 }
 
-#widget-${wUniqueName} .box-body path {
+#widget-${wUniqueName} .box-body .links path {
   fill: none;
 }
 

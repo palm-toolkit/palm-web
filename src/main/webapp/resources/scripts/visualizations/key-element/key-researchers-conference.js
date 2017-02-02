@@ -39,7 +39,8 @@ $.activeResearchers.variables ={
 		k 	  : {},
 		line  : undefined,
 		diagonal : undefined,
-		publicationRequest : null
+		publicationRequest : null,
+		tooltipName	: "tooltip-key-researcher"
 };
 $.activeResearchers.init = function(widgetUniqueName, conferenceName, conferenceURI, currentURL, isUserLogged){
 	var vars = $.activeResearchers.variables;
@@ -231,7 +232,7 @@ $.activeResearchers.visualize.elements = function(mappedJsonObject, combinedJson
 };
 
 $.activeResearchers.visualize.interactions = {
-		mouseoverEpisode : function(episode, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
+		mouseoverEpisode : function(elem, episode, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
 			var linkObject = d3.map();							
 			mappedJsonObject.get("episodes").forEach(function(episodeJsonObject) {							
 				linkObject.set(episodeJsonObject.key, episodeJsonObject.links.map(function(link) {
@@ -245,15 +246,17 @@ $.activeResearchers.visualize.interactions = {
 				}) );
 			});
 			
-			mouseOnEpisode(episode, linkObject, episodeConceptLinkJsonArray);
+			mouseOnEpisode(elem, episode, linkObject, episodeConceptLinkJsonArray);
 		},
-		mouseleaveEpisode:  function(episode){
-			if ( !d3.select(this).classed("clicked") ){
+		mouseleaveEpisode:  function(elem, episode){
+			if ( !d3.select(elem).classed("clicked") ){
 				$.activeResearchers.variables.k = {
 						node : null,
 						map : {}
 				};
 			}
+			
+			d3.select( elem ).selectAll( "." + $.activeResearchers.variables.tooltipName ).remove();
 
 			highLightElements();
 		},
@@ -376,22 +379,21 @@ $.activeResearchers.visualize.elements.episodes = function(episodesData, mappedJ
 	var episodes 		= episodeGraphSVG.selectAll(".episode").data(episodesData, this.key);
 	var episode 		= episodes.enter().append("g")
 		.attr("class", "episode")
-		.on("mouseover", function(d){ $.activeResearchers.visualize.interactions.mouseoverEpisode(d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray); })
-		.on("mouseout", $.activeResearchers.visualize.interactions.mouseleaveEpisode)
+		.on("mouseover", function(d){ $.activeResearchers.visualize.interactions.mouseoverEpisode(this, d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray); })
+		.on("mouseout",  function(d){ $.activeResearchers.visualize.interactions.mouseleaveEpisode(this, d); })
 		.on("click", $.activeResearchers.visualize.interactions.click);
+	
+	episode.transition(transition)
+		.attr("transform", function(Z) { return "translate(" + [ Z.x, Z.y ] + ")"; });
+	
 	episode.append("rect")
 		.attr("class", "rect-base light-color")
-		.attr("x", vars.U / -2)
-		.attr("y", vars.K / -2)
 		.attr("rx", 2)
 		.attr("ry", 2)
 		.attr("width", vars.U)
 		.attr("height", vars.K)
 		.attr("fill", "transparent")
-		.attr("stroke-width", "0.5px")
-		.transition(transition)
-			.attr("x", function(Z) { return Z.x; })
-			.attr("y", function(Z) { return Z.y; });
+		.attr("stroke-width", "0.5px");
 	
 	/*TODO
 	 * range based on the h-index or the criteria used for ranking
@@ -402,30 +404,21 @@ $.activeResearchers.visualize.elements.episodes = function(episodesData, mappedJ
 	
 	episode.append("rect")
 		.classed("rect-filling", true)
-		.attr("x", vars.U / -2)
-		.attr("y", vars.K / -2)
 		.attr("rx", 2)
 		.attr("ry", 2)
 		.attr("width", function( d, i ){ return range(i)})
 		.attr("height", vars.K)
-		.attr("fill", "url(#light-box-gradient)")
-		.transition(transition)
-			.attr("x", function(Z) { return Z.x; })
-			.attr("y", function(Z) { return Z.y; });
+		.attr("fill", "url(#light-box-gradient)");
+
 	episode.append("text")
-		.style("text-anchor", "middle")
-		.attr("y", function(Z) { return vars.K / -2 + vars.o; })
-		.text(function(Z) { return Z.name; })
+		.attr("dx", "0.35em")
+		.attr("dy", "1.35em")
+		.text(function(Z) { return Z.name; });
+
+	episodes.exit().selectAll(".episode")
 		.transition(transition)
-			.attr("y", function(Z) { return Z.y + vars.o; });
+			.attr("transform", function(Z) { return "translate(" + [ vars.U / -2, vars.K / -2] + ")" ; });
 	
-	episodes.exit().selectAll("rect")
-		.transition(transition)
-			.attr("x", function(Z) { return vars.U / -2; })
-			.attr("y", function(Z) { return vars.K / -2; });
-	episodes.exit().selectAll("text")
-		.transition(transition)
-			.attr("y", function(Z) { return vars.K / -2 + vars.o; });
 	episodes.exit().transition().duration(vars.transitionDuration).remove();
 };
 
@@ -442,9 +435,9 @@ $.activeResearchers.visualize.elements.nodes = function(nodesData, mappedJsonObj
 			return "translate(" + Z.xOffset + ",0)rotate(" + (Z.x - 90) + ")translate(" + Z.y + ")";
 		})
 		.on("mouseover", function(d){ 
-			$.activeResearchers.visualize.interactions.mouseoverEpisode( d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
+			$.activeResearchers.visualize.interactions.mouseoverEpisode( this, d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
 		})
-		.on("mouseout", $.activeResearchers.visualize.interactions.mouseleaveEpisode);//.on("click", G);
+		.on("mouseout", function(d){ $.activeResearchers.visualize.interactions.mouseleaveEpisode(this, d); });//.on("click", G);
 	
 	var radiusRange = d3.scaleLinear()
 		.domain([1, d3.max(nodesData, function(n){ return n.count; })])
@@ -506,7 +499,7 @@ function getLowerCase(str) {
 	return str.toLowerCase().replace(/[ .,()]/g, "-");
 }
 
-function mouseOnEpisode(episode, linkObject, episodeConceptLinkJsonArray){
+function mouseOnEpisode(elem, episode, linkObject, episodeConceptLinkJsonArray){
 	var vars = $.activeResearchers.variables;
 	if (vars.k === episode) return
 
@@ -531,6 +524,16 @@ function mouseOnEpisode(episode, linkObject, episodeConceptLinkJsonArray){
 	}
 		
 	highLightElements();
+	
+	if (  episode.type != undefined && episode.type === "episode"){
+		/*add fictive data to episode till backend will provide the data*/
+		episode.author = { name : episode.name, id : episode.id};
+		episode.status  = "Proffesor";
+		episode.affiliation = "Univ. RWTH Aachen";
+		episode.photo = "http://nlp.stanford.edu/manning/images/Christopher_Manning_027_132x132.jpg";
+		/*------------*/
+		addTooltip( d3.select(elem), episode );
+	}
 }
 
 function highLightElements() {
@@ -628,6 +631,18 @@ function highLightElements() {
 
 }
 
+function addTooltip( elem, episode ){
+	var tooltipParam =  {
+		className 	: $.activeResearchers.variables.tooltipName,
+		width 		: 250,
+		height		: 80,
+		borderRadius: 5,
+		fontSize	: 12
+	}
+	var tooltip = new Tooltip( tooltipParam );
+	tooltip.buildTooltip( elem, episode );
+}
+
 function changeElementColor(X, initial, changed) 
 {
 	if ($.activeResearchers.variables.k.node === null) {
@@ -672,3 +687,153 @@ function createGradientColor( svg, id, classColor1, classColor2 ){
 		.attr("offset", "100%")
 		.attr("stop-opacity", 1);
 }
+
+function Tooltip( params ){
+	var className 	= params.className;
+	var width 		= params.width	  || 200;
+	var height		= params.height	  || 70;
+	var fontSize	= params.fontSize || 12;
+	var borderRadius= params.borderRadius || 5;
+	var imageRadius	= params.imageRadius  || 10;
+	var position    = params.position || "top";
+	var bkgroundColor = params.bkgroundColor || "#ebebeb";
+	var strokeColor = params.strokeColor || "#dadada";
+	
+	this.getClassName 	 = function(){ return className; };
+	this.getWidth 	 	 = function(){ return width; };
+	this.getHeight 		 = function(){ return height; };
+	this.getBorderRadius = function(){ return borderRadius; };
+	this.getFontSize 	 = function(){ return fontSize; };
+	this.getImageRadius  = function(){ return imageRadius; };
+	this.getPosition	 = function(){ return position; };
+	this.getBkgroundColor= function(){ return bkgroundColor; };
+	this.getStrokeColor	 = function(){ return strokeColor; };
+}
+
+Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
+		var borderRadius = this.getBorderRadius();
+		var height		 = this.getHeight();
+		var width		 = this.getWidth();
+		var imageRadius  = this.getImageRadius();
+		var fontSize	 = this.getFontSize();
+		var bkColor		 = this.getBkgroundColor();
+		var strokeColor  = this.getStrokeColor();
+		
+		var tooltipWidth  = width  - borderRadius;
+		var tooltipHeight = height - borderRadius;
+		var translate 	  = [0, ( height - borderRadius/2 ) / -2];
+		
+		
+		var gTooltip = gNode.append("g").attr("class", this.getClassName())
+		
+		switch( this.getPosition() ){
+			case "top"    : translate = translateTop(); break;
+			case "left"   : translate = translateLeft(); break;
+			case "right"  : translate = translateRight(); break;
+			case "bottom" : translate = translateBottom (); break;
+		}		
+		gTooltip.attr("transform", "translate(" + translate + ")");
+		
+		//stroke
+		tooltip_stroke();
+		
+		//text
+		var gContent = gTooltip.append("g").classed("tooltip-content", true);
+		tooltip_content( );
+		
+		return gTooltip;
+		
+		function tooltip_stroke( ){
+			gTooltip.append("path")
+				.attr("d", "M 0 0 H " + tooltipWidth + 
+					" A " + borderRadius + " " + borderRadius + " 0 0 1 " + width + " " + borderRadius/2 + " " +
+					" V " + tooltipHeight + 
+					" A " + borderRadius + " " + borderRadius + " 0 0 1 " + tooltipWidth + " " + (height - borderRadius/2) + " " +
+					" H 0 A " + tooltipHeight/2 + " " + tooltipHeight/2 + " 1 0 0 0 0   ")
+				.classed("tooltip-stroke", true)
+				.attr("fill", bkColor)
+				.attr("stroke", strokeColor);
+				
+		}
+
+		function tooltip_content( ){
+			var distanceLeft = tooltipHeight/2 + 2;
+			
+			if (dataObject.photo != null){
+				var imagePattern = createImagePattern(dataObject.author);
+				gContent.append("circle").classed("image", true)
+					.attr("r", imageRadius )
+					.style("fill", "url(#pattern_" + dataObject.author.id + ")" );
+			} else {
+				gContent.append('text').classed("missing-photo-icon", true)
+					.style('font-size', 1.5 * imageRadius + 'px' )
+					.text("\uf007"); 
+			}	
+			
+			gContent.append("text").classed("name", true)
+				.text( toTitleCase(dataObject.name) )
+				.attr("transform", "translate(" + distanceLeft + ", " + fontSize +")");
+			
+			var status 	= gContent.append("g").classed("status", true)
+				.attr("transform", "translate(" + distanceLeft + ", " +fontSize * 2 + ")");
+			status.append("text").classed("icon-briefcase font-small", true)
+				.style("font-family", "fontawesome")
+				.text('\uf0b1');
+			status.append("text").classed("status-name font-small", true)
+				.text(dataObject.status || "Not Available")
+				.attr("dx", "1.3em");
+			
+			var affiliation = gContent.append("g").classed("affiliation", true)
+				.attr("transform", "translate(" + distanceLeft + ", " + fontSize * 3 + ")");
+			affiliation.append("text").classed("icon-institution font-small", true)
+				.style("font-family", "fontawesome")
+				.text('\uf19c');
+			affiliation.append("text").classed("afiliation-name font-small", true)
+				.text(dataObject.affiliation || "Not available")
+				.attr("dx", "1.3em");
+			
+			var nrPublications = dataObject.nrPublications || "Not available";
+			var nrCitations	   = dataObject.nrCitations || "Not available";
+			gContent.append("text").classed("paper font-small", true)
+				.text("Publications: " + nrPublications + ", Cited By: " + nrCitations)
+				.attr("transform", "translate(" + distanceLeft + ", " + fontSize * 4 + ")");
+			
+			gContent.append("text").classed("hindex font-small", true)
+				.text("H-index: " + dataObject.hindex || "H-index: not available")
+				.attr("transform", "translate(" + distanceLeft + ", " + fontSize * 5 + ")");
+		}	
+		
+		function createImagePattern(author){
+			return gTooltip.append("defs")
+				.append("svg:pattern")
+					.attr("id", "pattern_" + author.id)
+					.attr("class", "author_avatar")
+					.attr("width", imageRadius * 2)
+					.attr("height", imageRadius * 2)
+				   .append("svg:image")
+				   	.attr("xlink:href", author.photo )
+				   	.attr("width", imageRadius * 2)
+				   	.attr("height", imageRadius * 2)
+				   	.attr("x", 0)
+				   	.attr("y", 0);
+		}
+		
+		function toTitleCase(str) {
+		    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+		}
+		
+		function translateTop(){
+			var tooltipWidth  = width  - borderRadius;
+			var tooltipHeight = height - borderRadius;
+			var x = gNode.node().getBBox().width > width ? -(gNode.node().getBBox().width - width )/ 2 : (gNode.node().getBBox().width - width )/ 2;
+			return [ x, - height ];
+		}
+		function translateLeft(){
+			var tooltipWidth  = width  - borderRadius;
+			var tooltipHeight = height - borderRadius;
+			return [0, ( height - borderRadius/2 ) / -2];
+		}
+		function translateRight(){}
+		function translateBottom(){}
+}
+
