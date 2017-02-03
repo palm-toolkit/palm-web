@@ -1,6 +1,6 @@
 <div id="boxbody-${wUniqueName}" class="box-body no-padding">
 	<div class="similar_researchers">
-		<div class="similarity-criteria">
+		<div class="filter-criteria similarity-criteria">
 			<div class="container">
   				<span class="title font-small"> Similarity Based On: </span>
   				<div class="dropdown">

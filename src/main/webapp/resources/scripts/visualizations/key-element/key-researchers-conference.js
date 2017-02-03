@@ -316,7 +316,8 @@ $.activeResearchers.visualize.interactions = {
 				
 				if (bboxGr.width > visSize.width)
 					scale = visSize.width/bboxGr.width;
-				
+				else
+					scale = 1;
 				 d3.select(".visualization-main svg>g").attr("transform", "scale(" + scale + ")");		
 			}
 			
