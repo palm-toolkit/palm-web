@@ -255,8 +255,7 @@ $.activeResearchers.visualize.interactions = {
 						map : {}
 				};
 			}
-			
-			d3.select( elem ).selectAll( "." + $.activeResearchers.variables.tooltipName ).remove();
+			d3.select( elem.nearestViewportElement ).selectAll( "." + $.activeResearchers.variables.tooltipName ).remove();
 
 			highLightElements();
 		},
@@ -298,8 +297,6 @@ $.activeResearchers.visualize.interactions = {
 				}
 			}
 			function resize(){		
-				//.attr("viewBox", -vars.width / 2 + " " + -vars.height / 2 + " " +  vars.width + " " +  vars.height)
-
 				var svg = d3.select(".visualization-main svg");
 				var bbox = svg.node().getBBox();
 				var vis = $( $.activeResearchers.variables.containerId + " .visualization-main" );
@@ -310,8 +307,6 @@ $.activeResearchers.visualize.interactions = {
 						y : -vis.height()/2  
 					};
 
-				
-				
 				svg.attr("viewBox", (visSize.x)+" "+(visSize.y)+" "+(visSize.width)+" "+(visSize.height));
 				svg.attr("width", (visSize.width));
 				svg.attr("height",(visSize.height));
@@ -322,9 +317,7 @@ $.activeResearchers.visualize.interactions = {
 				if (bboxGr.width > visSize.width)
 					scale = visSize.width/bboxGr.width;
 				
-				 d3.select(".visualization-main svg>g").attr("transform", "scale(" + scale + ")");
-				
-					
+				 d3.select(".visualization-main svg>g").attr("transform", "scale(" + scale + ")");		
 			}
 			
 			function getPublicationAuthor( author ){
@@ -686,154 +679,5 @@ function createGradientColor( svg, id, classColor1, classColor2 ){
 		.attr("class", classColor1)
 		.attr("offset", "100%")
 		.attr("stop-opacity", 1);
-}
-
-function Tooltip( params ){
-	var className 	= params.className;
-	var width 		= params.width	  || 200;
-	var height		= params.height	  || 70;
-	var fontSize	= params.fontSize || 12;
-	var borderRadius= params.borderRadius || 5;
-	var imageRadius	= params.imageRadius  || 10;
-	var position    = params.position || "top";
-	var bkgroundColor = params.bkgroundColor || "#ebebeb";
-	var strokeColor = params.strokeColor || "#dadada";
-	
-	this.getClassName 	 = function(){ return className; };
-	this.getWidth 	 	 = function(){ return width; };
-	this.getHeight 		 = function(){ return height; };
-	this.getBorderRadius = function(){ return borderRadius; };
-	this.getFontSize 	 = function(){ return fontSize; };
-	this.getImageRadius  = function(){ return imageRadius; };
-	this.getPosition	 = function(){ return position; };
-	this.getBkgroundColor= function(){ return bkgroundColor; };
-	this.getStrokeColor	 = function(){ return strokeColor; };
-}
-
-Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
-		var borderRadius = this.getBorderRadius();
-		var height		 = this.getHeight();
-		var width		 = this.getWidth();
-		var imageRadius  = this.getImageRadius();
-		var fontSize	 = this.getFontSize();
-		var bkColor		 = this.getBkgroundColor();
-		var strokeColor  = this.getStrokeColor();
-		
-		var tooltipWidth  = width  - borderRadius;
-		var tooltipHeight = height - borderRadius;
-		var translate 	  = [0, ( height - borderRadius/2 ) / -2];
-		
-		
-		var gTooltip = gNode.append("g").attr("class", this.getClassName())
-		
-		switch( this.getPosition() ){
-			case "top"    : translate = translateTop(); break;
-			case "left"   : translate = translateLeft(); break;
-			case "right"  : translate = translateRight(); break;
-			case "bottom" : translate = translateBottom (); break;
-		}		
-		gTooltip.attr("transform", "translate(" + translate + ")");
-		
-		//stroke
-		tooltip_stroke();
-		
-		//text
-		var gContent = gTooltip.append("g").classed("tooltip-content", true);
-		tooltip_content( );
-		
-		return gTooltip;
-		
-		function tooltip_stroke( ){
-			gTooltip.append("path")
-				.attr("d", "M 0 0 H " + tooltipWidth + 
-					" A " + borderRadius + " " + borderRadius + " 0 0 1 " + width + " " + borderRadius/2 + " " +
-					" V " + tooltipHeight + 
-					" A " + borderRadius + " " + borderRadius + " 0 0 1 " + tooltipWidth + " " + (height - borderRadius/2) + " " +
-					" H 0 A " + tooltipHeight/2 + " " + tooltipHeight/2 + " 1 0 0 0 0   ")
-				.classed("tooltip-stroke", true)
-				.attr("fill", bkColor)
-				.attr("stroke", strokeColor);
-				
-		}
-
-		function tooltip_content( ){
-			var distanceLeft = tooltipHeight/2 + 2;
-			
-			if (dataObject.photo != null){
-				var imagePattern = createImagePattern(dataObject.author);
-				gContent.append("circle").classed("image", true)
-					.attr("r", imageRadius )
-					.style("fill", "url(#pattern_" + dataObject.author.id + ")" );
-			} else {
-				gContent.append('text').classed("missing-photo-icon", true)
-					.style('font-size', 1.5 * imageRadius + 'px' )
-					.text("\uf007"); 
-			}	
-			
-			gContent.append("text").classed("name", true)
-				.text( toTitleCase(dataObject.name) )
-				.attr("transform", "translate(" + distanceLeft + ", " + fontSize +")");
-			
-			var status 	= gContent.append("g").classed("status", true)
-				.attr("transform", "translate(" + distanceLeft + ", " +fontSize * 2 + ")");
-			status.append("text").classed("icon-briefcase font-small", true)
-				.style("font-family", "fontawesome")
-				.text('\uf0b1');
-			status.append("text").classed("status-name font-small", true)
-				.text(dataObject.status || "Not Available")
-				.attr("dx", "1.3em");
-			
-			var affiliation = gContent.append("g").classed("affiliation", true)
-				.attr("transform", "translate(" + distanceLeft + ", " + fontSize * 3 + ")");
-			affiliation.append("text").classed("icon-institution font-small", true)
-				.style("font-family", "fontawesome")
-				.text('\uf19c');
-			affiliation.append("text").classed("afiliation-name font-small", true)
-				.text(dataObject.affiliation || "Not available")
-				.attr("dx", "1.3em");
-			
-			var nrPublications = dataObject.nrPublications || "Not available";
-			var nrCitations	   = dataObject.nrCitations || "Not available";
-			gContent.append("text").classed("paper font-small", true)
-				.text("Publications: " + nrPublications + ", Cited By: " + nrCitations)
-				.attr("transform", "translate(" + distanceLeft + ", " + fontSize * 4 + ")");
-			
-			gContent.append("text").classed("hindex font-small", true)
-				.text("H-index: " + dataObject.hindex || "H-index: not available")
-				.attr("transform", "translate(" + distanceLeft + ", " + fontSize * 5 + ")");
-		}	
-		
-		function createImagePattern(author){
-			return gTooltip.append("defs")
-				.append("svg:pattern")
-					.attr("id", "pattern_" + author.id)
-					.attr("class", "author_avatar")
-					.attr("width", imageRadius * 2)
-					.attr("height", imageRadius * 2)
-				   .append("svg:image")
-				   	.attr("xlink:href", author.photo )
-				   	.attr("width", imageRadius * 2)
-				   	.attr("height", imageRadius * 2)
-				   	.attr("x", 0)
-				   	.attr("y", 0);
-		}
-		
-		function toTitleCase(str) {
-		    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-		}
-		
-		function translateTop(){
-			var tooltipWidth  = width  - borderRadius;
-			var tooltipHeight = height - borderRadius;
-			var x = gNode.node().getBBox().width > width ? -(gNode.node().getBBox().width - width )/ 2 : (gNode.node().getBBox().width - width )/ 2;
-			return [ x, - height ];
-		}
-		function translateLeft(){
-			var tooltipWidth  = width  - borderRadius;
-			var tooltipHeight = height - borderRadius;
-			return [0, ( height - borderRadius/2 ) / -2];
-		}
-		function translateRight(){}
-		function translateBottom(){}
 }
 

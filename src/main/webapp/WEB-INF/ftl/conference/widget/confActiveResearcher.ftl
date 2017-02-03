@@ -62,8 +62,8 @@
 #widget-publications-${wUniqueName}>div{
     height: 100%;
 }
-
 </style>
+
 <div class="box-body no-padding container-fluid">
 		<div class="container-box filter-box key-researchers-criteria row">
 			<div class="filter col-md-4">
@@ -137,3 +137,5 @@ function getCurrentUser(){
 }
 	
 </script>
+
+<script src="<@spring.url '/resources/scripts/visualizations/tooltip.js' />" type="text/javascript"></script>
