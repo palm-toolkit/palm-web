@@ -9,10 +9,11 @@
  	<@content.leftSidebar>
 		<#include "widgetLayoutSidebar.ftl" />
  	</@content.leftSidebar>
- 	
- 	<@content.contentWrapper>
+
+	<@content.contentWrapper>
  		<section class="content">
-			<div id="row" class ="row">
+			<div class ="row">
+ 			<#include "widgetLayoutMainContent.ftl" />
 			</div>
 		</section>
  	</@content.contentWrapper>

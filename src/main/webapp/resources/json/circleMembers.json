@@ -1,0 +1,130 @@
+{  
+   "count":13,
+   "researchers":[  
+      {  
+         "id":"117ac45b-cff1-44f1-9e01-8f31278e1a6e",
+         "name":"Anna Lea Dyckhoff",
+         "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+         "citedBy":"277",
+         "publicationsNumber":10,
+         "detail":"Computer Supported Learning Group",
+         "isAdded":true
+      },
+      {  
+         "id":"25c4d2ec-363d-48e5-ac58-11ca0d9bf398",
+         "name":"Arham Muslim",
+         "photo":"http://www.cil.rwth-aachen.de/wp-content/uploads/Arham.png",
+         "status":"Researcher",
+         "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+         "citedBy":"37",
+         "publicationsNumber":5,
+         "isAdded":true
+      },
+      {  
+         "id":"654acebb-d6bb-42d0-a729-9e133b6f5fef",
+         "name":"Christoph Greven",
+         "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Christoph-231x300.jpg",
+         "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+         "citedBy":"16",
+         "publicationsNumber":11,
+         "isAdded":true
+      },
+      {  
+         "id":"898716a4-0ac0-4d56-bc02-8a0529344981",
+         "name":"Harald Jakobs",
+         "photo":"http://www.cil.rwth-aachen.de/wp-content/uploads/jakobs1.jpg",
+         "status":"Senior researcher",
+         "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+         "citedBy":"30",
+         "publicationsNumber":2,
+         "isAdded":true
+      },
+      {  
+         "id":"996771f8-6dfe-4ced-b659-352a80ef9f6e",
+         "name":"Hendrik Thüs",
+         "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Hendrik-231x300.jpg",
+         "status":"Researcher",
+         "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+         "citedBy":"189",
+         "publicationsNumber":25,
+         "isAdded":true
+      },
+      {  
+         "id":"f94396ca-f1c1-4fa5-9afa-6e0d9683f0b1",
+         "name":"Matthias Ehlenz",
+         "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Matthias-231x300.jpg",
+         "status":"researcher",
+         "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+         "publicationsNumber":0,
+         "isAdded":true
+      },
+      {  
+         "id":"98b4cd20-2dd1-444a-99da-906773a3408f",
+         "name":"Michaela Inden",
+         "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Michaela.jpg",
+         "status":"Researcher",
+         "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+         "publicationsNumber":0,
+         "isAdded":true
+      },
+      {  
+         "id":"c442983a-0099-4d6d-89b1-6cfc57fa6138",
+         "name":"Mohamed Amine Chatti",
+         "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Amine-231x300.jpg",
+         "status":"Senior Researcher",
+         "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+         "citedBy":"1631",
+         "publicationsNumber":78,
+         "detail":" Informatik V (Information Systems)",
+         "isAdded":true
+      },
+      {  
+         "id":"3d490b11-2164-4ccd-8604-ec5427f428b0",
+         "name":"Nadine Bergner",
+         "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Nadine-231x300.jpg",
+         "status":"Researcher",
+         "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+         "citedBy":"9",
+         "publicationsNumber":9,
+         "isAdded":true
+      },
+      {  
+         "id":"22b84273-7485-4c60-b6cf-97cd3ab95c23",
+         "name":"Patrick Stalljohann",
+         "status":"Researcher",
+         "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+         "citedBy":"27",
+         "publicationsNumber":11,
+         "isAdded":true
+      },
+      {  
+         "id":"73cda3b1-b2ef-4aa1-a802-2095aebf8901",
+         "name":"Ulrik Schroeder",
+         "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Prof_Schroeder-231x300.jpg",
+         "status":"Professor",
+         "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+         "citedBy":"972",
+         "publicationsNumber":124,
+         "isAdded":true
+      },
+      {  
+         "id":"7fa4cac1-f16f-4be1-8699-5f34a4fd857d",
+         "name":"Usman Wahid",
+         "photo":"http://www.cil.rwth-aachen.de/wp-content/uploads/Portrait_Usman.jpg",
+         "status":"researcher",
+         "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+         "citedBy":"13",
+         "publicationsNumber":3,
+         "isAdded":true
+      },
+      {  
+         "id":"1d866510-1d17-45e8-8eea-6afb79c9a15c",
+         "name":"Vlatko Lukarov",
+         "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Vlatko-231x300.jpg",
+         "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+         "citedBy":"38",
+         "publicationsNumber":5,
+         "isAdded":true
+      }
+   ]
+}
