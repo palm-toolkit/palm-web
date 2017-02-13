@@ -355,6 +355,7 @@ $.activeResearchers.visualize.interactions = {
 						
 					var mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
 					$.publicationList.init( response.status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged, vars.height - 10);
+					response.element = response.author;
 					$.publicationList.visualize( mainContainer, response);
 					
 					thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();

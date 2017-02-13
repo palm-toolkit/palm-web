@@ -1,0 +1,500 @@
+{  
+   "circle":{  
+      "id":"45179aa2-baa4-4fc0-91ea-c352915b9e70",
+      "name":"i9 RWTH Aachen"
+   },
+   "totalPublication":176,
+   "years":[  
+      "2016",
+      "2015",
+      "2014",
+      "2013",
+      "2012",
+      "2011",
+      "2010",
+      "2009",
+      "2008",
+      "2007",
+      "2006",
+      "2005",
+      "2004",
+      "2003",
+      "2002",
+      "2000",
+      "1999",
+      "1998",
+      "1996",
+      "1995",
+      "1994",
+      "1991",
+      "1989"
+   ],
+   "status":"ok",
+   "year":"all",
+   "maxresult":10,
+   "count":10,
+   "publications":[  
+      {  
+         "id":"4befbf0d-e1e8-47d9-b361-2ba88bb73b4a",
+         "title":"Wiki-LDA: A Mixed-Method Approach for Effective Interest Mining on Twitter Data",
+         "coauthor":[  
+            {  
+               "id":"d9e57e33-4492-479b-8798-8db30a8aa1cf",
+               "name":"Xiao Pu",
+               "isAdded":false
+            },
+            {  
+               "id":"c442983a-0099-4d6d-89b1-6cfc57fa6138",
+               "name":"Mohamed Amine Chatti",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Amine-231x300.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"73cda3b1-b2ef-4aa1-a802-2095aebf8901",
+               "name":"Ulrik Schroeder",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Prof_Schroeder-231x300.jpg",
+               "isAdded":true
+            }
+         ],
+         "date":"2016",
+         "language":"english",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"50206eea-86f6-4aca-97fb-ec06313916e0",
+            "name":"International Conference On Computer Supported Education",
+            "abbr":"CSEDU",
+            "isAdded":true,
+            "isGroupAdded":true
+         },
+         "issue":"EPFL-CONF-217479",
+         "contentExist":true
+      },
+      {  
+         "id":"bc5df116-3cb9-4c31-bb53-30c39d3f695f",
+         "title":"A rule-based indicator definition tool for personalized learning analytics.",
+         "coauthor":[  
+            {  
+               "id":"25c4d2ec-363d-48e5-ac58-11ca0d9bf398",
+               "name":"Arham Muslim",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://www.cil.rwth-aachen.de/wp-content/uploads/Arham.png",
+               "isAdded":true
+            },
+            {  
+               "id":"c442983a-0099-4d6d-89b1-6cfc57fa6138",
+               "name":"Mohamed Amine Chatti",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Amine-231x300.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"bfe61d0e-4a86-4981-9c68-507e80be5a90",
+               "name":"Tanmaya Mahapatra",
+               "isAdded":false
+            },
+            {  
+               "id":"73cda3b1-b2ef-4aa1-a802-2095aebf8901",
+               "name":"Ulrik Schroeder",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Prof_Schroeder-231x300.jpg",
+               "isAdded":true
+            }
+         ],
+         "date":"2016",
+         "language":"english",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"b35ed624-5f43-426f-858c-d26b6f44acc0",
+            "name":"International Conference On Learning Analytics And Knowledge",
+            "abbr":"LAK",
+            "isAdded":true,
+            "isGroupAdded":true
+         },
+         "publisher":"ACM",
+         "pages":"264 - 273",
+         "contentExist":true
+      },
+      {  
+         "id":"27f13ee6-f382-4c02-b470-67318c44c395",
+         "title":"IT EnGAGES!–Adaptierbare Gamification in einer Anfänger-Programmiervorlesung",
+         "coauthor":[  
+            {  
+               "id":"c63f5040-385b-4ce2-85a3-38a95885a9f2",
+               "name":"Dominik Hurtienne",
+               "isAdded":false
+            },
+            {  
+               "id":"73cda3b1-b2ef-4aa1-a802-2095aebf8901",
+               "name":"Ulrik Schroeder",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Prof_Schroeder-231x300.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"ed89ad9b-729d-4cf0-a201-eaddcbcfe58f",
+               "name":"Christian Spannagel",
+               "isAdded":false
+            }
+         ],
+         "date":"2015/9/22",
+         "language":"german",
+         "type":"JOURNAL",
+         "publisher":"Universitätsverlag Potsdam",
+         "volume":"9",
+         "contentExist":true
+      },
+      {  
+         "id":"6e9b44b0-e4a3-4150-bcc4-36f41c53f015",
+         "title":"Beispiel eines Schülerwettbewerbs zum Thema Projektmanagement und App-Programmierung",
+         "coauthor":[  
+            {  
+               "id":"3d490b11-2164-4ccd-8604-ec5427f428b0",
+               "name":"Nadine Bergner",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Nadine-231x300.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"c8b9b765-d486-4964-9392-5a87f2ea61c2",
+               "name":"Christian Taraschewski",
+               "isAdded":false
+            },
+            {  
+               "id":"73cda3b1-b2ef-4aa1-a802-2095aebf8901",
+               "name":"Ulrik Schroeder",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Prof_Schroeder-231x300.jpg",
+               "isAdded":true
+            }
+         ],
+         "date":"2015/9/22",
+         "language":"german",
+         "type":"JOURNAL",
+         "publisher":"Universitätsverlag Potsdam",
+         "volume":"9",
+         "contentExist":true
+      },
+      {  
+         "id":"28e4b8dc-e0f1-449d-b38f-8a8207c63959",
+         "title":"What Should I Read Next? A Personalized Visual Publication Recommender System.",
+         "coauthor":[  
+            {  
+               "id":"9ca6c792-74df-40d1-8108-e9fa756100e6",
+               "name":"Simon Bruns",
+               "isAdded":false
+            },
+            {  
+               "id":"714ced49-c7ec-4641-a573-e9aa36c64b92",
+               "name":"Andre Calero Valdez",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://www.comm.rwth-aachen.de/files/175_acalerovaldez.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"654acebb-d6bb-42d0-a729-9e133b6f5fef",
+               "name":"Christoph Greven",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Christoph-231x300.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"7cdb3d6f-b59d-49f7-b9b2-7f770a5ab9e6",
+               "name":"Martina Ziefle",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://www.comm.rwth-aachen.de/files/175_mziefle.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"73cda3b1-b2ef-4aa1-a802-2095aebf8901",
+               "name":"Ulrik Schroeder",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Prof_Schroeder-231x300.jpg",
+               "isAdded":true
+            }
+         ],
+         "date":"2015/8/2",
+         "language":"english",
+         "cited":2,
+         "citedUrl":"https://scholar.google.com/scholar?oi=bibs&hl=en&cites=1616373183123475942",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"03c42d7a-f688-4730-982f-050c56a737d7",
+            "name":"International Conference On Human-Computer Interaction",
+            "abbr":"HCI",
+            "isAdded":false,
+            "isGroupAdded":true
+         },
+         "publisher":"Springer International Publishing",
+         "pages":"89 - 100",
+         "contentExist":true
+      },
+      {  
+         "id":"763850dc-ca83-4c14-b4a5-5952607608ee",
+         "title":"What Do My Colleagues Know? Dealing with Cognitive Complexity in Organizations Through Visualizations.",
+         "coauthor":[  
+            {  
+               "id":"714ced49-c7ec-4641-a573-e9aa36c64b92",
+               "name":"Andre Calero Valdez",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://www.comm.rwth-aachen.de/files/175_acalerovaldez.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"9ca6c792-74df-40d1-8108-e9fa756100e6",
+               "name":"Simon Bruns",
+               "isAdded":false
+            },
+            {  
+               "id":"654acebb-d6bb-42d0-a729-9e133b6f5fef",
+               "name":"Christoph Greven",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Christoph-231x300.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"73cda3b1-b2ef-4aa1-a802-2095aebf8901",
+               "name":"Ulrik Schroeder",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Prof_Schroeder-231x300.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"7cdb3d6f-b59d-49f7-b9b2-7f770a5ab9e6",
+               "name":"Martina Ziefle",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://www.comm.rwth-aachen.de/files/175_mziefle.jpg",
+               "isAdded":true
+            }
+         ],
+         "date":"2015/8/2",
+         "language":"english",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"03c42d7a-f688-4730-982f-050c56a737d7",
+            "name":"International Conference On Human-Computer Interaction",
+            "abbr":"HCI",
+            "isAdded":false,
+            "isGroupAdded":true
+         },
+         "publisher":"Springer International Publishing",
+         "pages":"449 - 459",
+         "contentExist":true
+      },
+      {  
+         "id":"6434791f-9d2c-4eb0-9da5-1220a78539a7",
+         "title":"Seamless Integration of Knowledge Management and Professional Learning in PRiME.",
+         "coauthor":[  
+            {  
+               "id":"c442983a-0099-4d6d-89b1-6cfc57fa6138",
+               "name":"Mohamed Amine Chatti",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Amine-231x300.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"996771f8-6dfe-4ced-b659-352a80ef9f6e",
+               "name":"Hendrik Thüs",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Hendrik-231x300.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"654acebb-d6bb-42d0-a729-9e133b6f5fef",
+               "name":"Christoph Greven",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Christoph-231x300.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"73cda3b1-b2ef-4aa1-a802-2095aebf8901",
+               "name":"Ulrik Schroeder",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Prof_Schroeder-231x300.jpg",
+               "isAdded":true
+            }
+         ],
+         "date":"2015/5/23",
+         "language":"english",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"06e3cd68-96af-4e8a-8c73-25325b9eba9e",
+            "name":"International Conference On Computer Supported Education",
+            "abbr":"CSEDU",
+            "isAdded":true,
+            "isGroupAdded":true
+         },
+         "publisher":"Springer International Publishing",
+         "pages":"541 - 557",
+         "contentExist":true
+      },
+      {  
+         "id":"a58c1eff-30d1-4ed8-89f7-db60d640be39",
+         "title":"The Impact of Rubric-Based Peer Assessment on Feedback Quality in Blended MOOCs.",
+         "coauthor":[  
+            {  
+               "id":"50b8907c-b4a5-4c1b-93e2-59d3765e83de",
+               "name":"Ahmed Mohamed Fahmy Yousef",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://lufgi9.informatik.rwth-aachen.de/dl1157",
+               "isAdded":true
+            },
+            {  
+               "id":"7fa4cac1-f16f-4be1-8699-5f34a4fd857d",
+               "name":"Usman Wahid",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://www.cil.rwth-aachen.de/wp-content/uploads/Portrait_Usman.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"c442983a-0099-4d6d-89b1-6cfc57fa6138",
+               "name":"Mohamed Amine Chatti",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Amine-231x300.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"73cda3b1-b2ef-4aa1-a802-2095aebf8901",
+               "name":"Ulrik Schroeder",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Prof_Schroeder-231x300.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"0d0b16fc-b7ca-450c-b91e-0f8609776816",
+               "name":"Marold Wosnitza",
+               "isAdded":false
+            }
+         ],
+         "date":"2015/5/23",
+         "language":"english",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"06e3cd68-96af-4e8a-8c73-25325b9eba9e",
+            "name":"International Conference On Computer Supported Education",
+            "abbr":"CSEDU",
+            "isAdded":true,
+            "isGroupAdded":true
+         },
+         "publisher":"Springer International Publishing",
+         "pages":"462 - 485",
+         "contentExist":true
+      },
+      {  
+         "id":"1435ba84-96e0-48de-802f-aca92e6c0b68",
+         "title":"Computer Science Education in North-Rhine Westphalia, Germany - A Case Study.",
+         "coauthor":[  
+            {  
+               "id":"ed0f86a0-1b44-4d0c-8a98-fb0a1910906a",
+               "name":"Maria Knobelsdorf",
+               "isAdded":false
+            },
+            {  
+               "id":"4b4bdc08-2023-427c-b1d6-0f30692a87d9",
+               "name":"Johannes Magenheim",
+               "isAdded":false
+            },
+            {  
+               "id":"ec8f786b-6474-464c-8396-2e669426ed0f",
+               "name":"Torsten Brinda",
+               "isAdded":false
+            },
+            {  
+               "id":"2f0ff829-6be4-418f-a460-84cc5e771e04",
+               "name":"Dieter Engbring",
+               "isAdded":false
+            },
+            {  
+               "id":"7a89dd8e-30e7-4524-a62c-06515284f7f1",
+               "name":"Ludger Humbert",
+               "isAdded":false
+            },
+            {  
+               "id":"a815ec9e-93c5-4271-8939-94ba973a6a92",
+               "name":"Arno Pasternak",
+               "isAdded":false
+            },
+            {  
+               "id":"73cda3b1-b2ef-4aa1-a802-2095aebf8901",
+               "name":"Ulrik Schroeder",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Prof_Schroeder-231x300.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"08004fb1-a787-4801-b662-af8e82317c89",
+               "name":"Marco Thomas",
+               "isAdded":false
+            },
+            {  
+               "id":"7b5d64d9-cf53-43f7-b661-b423789b4697",
+               "name":"Jan Vahrenhold",
+               "isAdded":false
+            }
+         ],
+         "date":"2015/4/30",
+         "language":"english",
+         "cited":4,
+         "citedUrl":"https://scholar.google.com/scholar?oi=bibs&hl=en&cites=13289631733720549664",
+         "type":"JOURNAL",
+         "event":{  
+            "id":"2fa41f9a-93e6-4448-9f35-723c03060b76",
+            "name":"TOCE",
+            "isAdded":false,
+            "isGroupAdded":false
+         },
+         "publisher":"ACM",
+         "volume":"15",
+         "issue":"2",
+         "contentExist":true
+      },
+      {  
+         "id":"0aaaa75f-f427-4b02-bf92-db342aa9d7a2",
+         "title":"A usability evaluation of a blended MOOC environment: An experimental case study",
+         "coauthor":[  
+            {  
+               "id":"50b8907c-b4a5-4c1b-93e2-59d3765e83de",
+               "name":"Ahmed Mohamed Fahmy Yousef",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://lufgi9.informatik.rwth-aachen.de/dl1157",
+               "isAdded":true
+            },
+            {  
+               "id":"c442983a-0099-4d6d-89b1-6cfc57fa6138",
+               "name":"Mohamed Amine Chatti",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Amine-231x300.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"73cda3b1-b2ef-4aa1-a802-2095aebf8901",
+               "name":"Ulrik Schroeder",
+               "aff":"Rheinisch Westfalische Technische Hochschule Aachen",
+               "photo":"http://learntech.rwth-aachen.de/wp-content/uploads/2015/04/Prof_Schroeder-231x300.jpg",
+               "isAdded":true
+            },
+            {  
+               "id":"0d0b16fc-b7ca-450c-b91e-0f8609776816",
+               "name":"Marold Wosnitza",
+               "isAdded":false
+            }
+         ],
+         "date":"2015/4/15",
+         "language":"english",
+         "cited":5,
+         "citedUrl":"https://scholar.google.com/scholar?oi=bibs&hl=en&cites=6939266532608446249",
+         "type":"JOURNAL",
+         "event":{  
+            "id":"032eb947-b604-4b17-bf67-67f3e4e4c5a5",
+            "name":"The International Review Of Research In Open And Distributed Learning",
+            "abbr":" IRRODL",
+            "isAdded":true,
+            "isGroupAdded":true
+         },
+         "volume":"16",
+         "issue":"2",
+         "contentExist":true
+      }
+   ]
+}

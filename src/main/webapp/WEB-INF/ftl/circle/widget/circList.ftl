@@ -393,7 +393,7 @@
 		manageWidgetButton.attr("data-url", manageWidgetButton.attr("data-original-url" ) + "?circleId=" + circleId );
 		<#-- call circle widget first -->
 		$.get( "<@spring.url '/circle/widgetContent?id=' />" + circleId, function( html ){
-			$( "#row" ).html( html );
+			$( ".row" ).html( html );
 		
 			<#-- widget circle_interest_cloud and circle_interest_evolution can not run simultaneusly together,
 			therefore put it in order -->
@@ -433,5 +433,6 @@
 		});
 		
 	}
+	
 	
 </script>

@@ -457,6 +457,22 @@
       </div>
     </div>
     
+     <#-- Circle Activity Status -->
+    <div class="panel box box-primary">
+      <div class="box-header with-border">
+        <h4 class="box-title">
+          <a data-toggle="collapse" data-parent="#accordion4" href="#collapse4Seven" class="collapsed" aria-expanded="false">
+            Circles Activity Status ( /circle/activityStatus? )
+          </a>
+        </h4>
+      </div>
+      <div id="collapse4Seven" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+        <div class="box-body">
+        	<#include "../administration/api/apiCircleActivityStatus.ftl">
+        </div>
+      </div>
+    </div>
+    
   </div>
     
     <#-- Extraction APIs --> 

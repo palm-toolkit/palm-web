@@ -17,6 +17,9 @@ $.publicationList.init = function( status, widgetUniqueName, currentURL, isUserL
 	$("#widget-" + widgetUniqueName + " .visualization-details" ).height( height );
 	
 	var mainContainer = $("#publications-box-" + widgetUniqueName + " .box-content");
+	
+	mainContainer.css({"max-height":  + height + "px", "height":"100%"});
+	
 	mainContainer.html( "" );
 		
 	if( status != "ok"){
@@ -48,8 +51,8 @@ $.publicationList.visualize = function( mainContainer, data){
 $.publicationList.visualize.filter =  function( data ){
 	var filterContainer = $( '<div/>' ).addClass( "pull-left" )
 		.css({'width':'100%','margin':'0 10px 15px 0'});
-	filterContainer.append( $.publicationList.visualize.filter.search( { author : data.author, query : data.query } ) );
-	filterContainer.append( $.publicationList.visualize.filter.year( {author: data.author, totalPublication : data.totalPublication, years: data.years, query: data.query, count : data.count} ) );
+	filterContainer.append( $.publicationList.visualize.filter.search( { element : data.element, query : data.query } ) );
+	filterContainer.append( $.publicationList.visualize.filter.year( {element: data.element, totalPublication : data.totalPublication, years: data.years, query: data.query, count : data.count} ) );
 	filterContainer.append( $.publicationList.visualize.filter.keyword( data ) );
 
 	return filterContainer;
@@ -66,13 +69,13 @@ $.publicationList.visualize.filter.search = function( data ){
 						// find keyword if any 
 						var keywordText = filterSearch.find( "#publist-search" ).val();
 							
-						thisWidget.options.queryString = "?id=" + data.author.id + "&year=all&query=" + keywordText;			
+						thisWidget.options.queryString = "?id=" + data.element.id + "&year=all&query=" + keywordText;			
 						thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 						$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
 					}
 				});
 	
-	var buttonSearch = $( '<div/>' ).attr({'id':'publist-search-button-cont', 'class':'input-group-btn', 'title':'Will automatically search for all ' + data.author.name + '\'s publications'})
+	var buttonSearch = $( '<div/>' ).attr({'id':'publist-search-button-cont', 'class':'input-group-btn', 'title':'Will automatically search for all ' + data.element.name + '\'s publications'})
 				.append( $( '<button/>' ).attr({'id':'publist-search-button', 'class':'btn btn-sm btn-default'})
 				.append( $( '<i/>' ).attr({'class':'fa fa-search'}) ) );
 	buttonSearch.on( "click", function(){
@@ -80,7 +83,7 @@ $.publicationList.visualize.filter.search = function( data ){
 		// find keyword if any
 		var keywordText = filterSearch.find( "#publist-search" ).val();
 
-		thisWidget.options.queryString = "?id=" + data.author.id + "&year=all&query=" + keywordText;
+		thisWidget.options.queryString = "?id=" + data.element.id + "&year=all&query=" + keywordText;
 		// add overlay 
 		thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 		$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
@@ -98,15 +101,15 @@ $.publicationList.visualize.filter.search = function( data ){
 $.publicationList.visualize.filter.year = function ( data ){
 	var filterYear = $( '<div/>' ).attr({'class':'btn-group','data-toggle':'buttons'});
 	
-	filterYear.append( createYearContainer( "btn btn-default btn-xs", "year-all", "all", "?id=" + data.author.id + "&year=all", false, "all (" + data.totalPublication + ")") )
-			  .append( createYearContainer( "btn btn-default btn-xs", "maxresult-10", "maxresult10", "?id=" + data.author.id + "&maxresult=10", false, "recent (10)") );
+	filterYear.append( createYearContainer( "btn btn-default btn-xs", "year-all", "all", "?id=" + data.element.id + "&year=all", false, "all (" + data.totalPublication + ")") )
+			  .append( createYearContainer( "btn btn-default btn-xs", "maxresult-10", "maxresult10", "?id=" + data.element.id + "&maxresult=10", false, "recent (10)") );
 	
 	$.each( data.years, function( index, item ){
-		filterYear.append( createYearContainer( "btn btn-default btn-xs", "year-" + item, item, "?id=" + data.author.id + "&year=" + item, false, item) );
+		filterYear.append( createYearContainer( "btn btn-default btn-xs", "year-" + item, item, "?id=" + data.element.id + "&year=" + item, false, item) );
 	});
 	
 	if( typeof data.query !== "undefined" && data.query.trim().length > 0){
-		filterYear.append( createYearContainer( "btn btn-default btn-xs active", "year-query", data.query, "?id=" + data.author.id + "query=" + data.query, true, data.query + "(" + data.count + ")") );
+		filterYear.append( createYearContainer( "btn btn-default btn-xs active", "year-query", data.query, "?id=" + data.element.id + "query=" + data.query, true, data.query + "(" + data.count + ")") );
 	}
 	
 	var thisWidget = $.PALM.boxWidget.getByUniqueName( $.publicationList.variables.widgetUniqueName ); 		
@@ -180,8 +183,12 @@ $.publicationList.visualize.filter.keyword = function ( data ){
 	var filterKeyword = $( '<div/>' ).attr({'class':'btn-group','data-toggle':'buttons'})
 			.css({'display':'block'});
 	
+	if ( data.queryKeywords == undefined || data.queryKeywords.length == 0){
+		return ;
+	}
+	
 	$.each( data.queryKeywords, function( index, item ){
-		filterKeyword.append( createKeywordContainer( "btn btn-default btn-xs active", "keyword-" + item, item, "?id=" + data.author.id + "&keyword=" + item, true, item) );
+		filterKeyword.append( createKeywordContainer( "btn btn-default btn-xs active", "keyword-" + item, item, "?id=" + data.element.id + "&keyword=" + item, true, item) );
 	});
 	
 	// assign click functionality to year filter 

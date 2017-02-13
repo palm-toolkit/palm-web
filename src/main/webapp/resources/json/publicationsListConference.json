@@ -1,0 +1,3208 @@
+{  
+   "status":"ok",
+   "event":{  
+      "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+      "title":"EDM"
+   },
+   "publications":[  
+      {  
+         "id":"471b088a-1c0d-4465-ba1c-21c95ad4a2d6",
+         "title":"Proceedings of the 6th International Conference on Educational Data Mining, Memphis, Tennessee, USA, July 6-9, 2013.",
+         "coauthor":[  ],
+         "date":"2013-07-06",
+         "type":"EDITORSHIP",
+         "event":{  },
+         "series":"",
+         "publisher":"International Educational Data Mining Society",
+         "published":"2013",
+         "ISBN":"978-0-9839525-2-7",
+         "contentExist":false
+      },
+      {  
+         "id":"f97bfbb5-019e-4672-9e2a-72f47bcd8eeb",
+         "title":"Stealth Assessment in Games: Why, What, and How.",
+         "coauthor":[  
+            {  
+               "id":"08b70c7a-5ac0-433b-8c3a-59882441176e",
+               "name":"Valerie Shute",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Keynotes",
+         "pages":"1 - 0",
+         "contentExist":false
+      },
+      {  
+         "id":"0458bc40-5185-48d1-bdb0-e67aaf86f1ff",
+         "title":"Discovering the Structure of Mathematical Problem Solving.",
+         "coauthor":[  
+            {  
+               "id":"dd8f39c5-4559-455b-8e92-40dec2cf6828",
+               "name":"John R Anderson",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Keynotes",
+         "pages":"2 - 0",
+         "contentExist":false
+      },
+      {  
+         "id":"a308c46e-c4bf-4a0e-92a7-6d0d43ee9969",
+         "title":"EDM in a Complex and Changing World.",
+         "coauthor":[  
+            {  
+               "id":"64dad1fc-f076-44c8-88d3-3b4f70c6efa3",
+               "name":"Ryan Shaun Joazeiro De Baker",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Keynotes",
+         "pages":"3 - 0",
+         "contentExist":false
+      },
+      {  
+         "id":"0455fa49-1288-4078-a1ef-ba8de40ad2c9",
+         "title":"Limits to accuracy: how well can we do at student modeling?",
+         "coauthor":[  
+            {  
+               "id":"62babd0a-f44b-4706-a503-66ad76c0fc6a",
+               "name":"Joseph Beck",
+               "isAdded":false
+            },
+            {  
+               "id":"bfd340f6-75d5-43f8-8027-9b5e0471e16e",
+               "name":"Xiaolu Xiong",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"4 - 11",
+         "contentExist":false
+      },
+      {  
+         "id":"abf71835-6226-4f74-8014-a5f051270f6f",
+         "title":"Student Profiling from Tutoring System Log Data: When do Multiple Graphical Representations Matter?",
+         "coauthor":[  
+            {  
+               "id":"3c49acde-1017-4d97-a87f-6814c91dd2a5",
+               "name":"Ryan Carlson",
+               "isAdded":false
+            },
+            {  
+               "id":"ca404407-4789-41be-ab07-e65cf3e15aae",
+               "name":"Konstantin Genin",
+               "isAdded":false
+            },
+            {  
+               "id":"bf2a5d1d-3404-4eb7-822c-61993fd4077f",
+               "name":"Martina A Rau",
+               "isAdded":false
+            },
+            {  
+               "id":"755de84b-6d59-455d-8ac1-979b05b2dc53",
+               "name":"Richard Scheines",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"12 - 19",
+         "contentExist":false
+      },
+      {  
+         "id":"32c543e9-7694-45e6-8c13-a580e3ed8d80",
+         "title":"Unsupervised Classification of Student Dialogue Acts with Query-Likelihood Clustering.",
+         "coauthor":[  
+            {  
+               "id":"872e195e-69ff-42e4-9557-d70aa5693baa",
+               "name":"Aysu Ezen-can",
+               "isAdded":false
+            },
+            {  
+               "id":"871a7b61-55c1-4a21-9d72-3ca77f158cb3",
+               "name":"Kristy Elizabeth Boyer",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"20 - 27",
+         "contentExist":false
+      },
+      {  
+         "id":"2fd0a60b-e8da-4fba-b742-e8620dfcfea8",
+         "title":"A Spectral Learning Approach to Knowledge Tracing.",
+         "coauthor":[  
+            {  
+               "id":"7d43dca5-41cc-4ae4-bb17-8f49ddb06d6c",
+               "name":"Mohammad Hassan Falakmasir",
+               "isAdded":false
+            },
+            {  
+               "id":"24dfc52b-0da4-4ba4-9226-20c18717c3c4",
+               "name":"Zachary A Pardos",
+               "isAdded":false
+            },
+            {  
+               "id":"abb245ec-1678-4755-961b-c6e1831025ea",
+               "name":"Geoffrey J Gordon",
+               "isAdded":false
+            },
+            {  
+               "id":"6310e7bc-2cc2-4335-a79d-bd2b22c947d5",
+               "name":"Peter Brusilovsky",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"28 - 34",
+         "contentExist":false
+      },
+      {  
+         "id":"1172b073-d224-4530-85e6-24e4d45f7913",
+         "title":"Optimal and Worst-Case Performance of Mastery Learning Assessment with Bayesian Knowledge Tracing.",
+         "coauthor":[  
+            {  
+               "id":"6950aa8d-b767-4f4b-9420-7b7153a6ad4b",
+               "name":"Stephen E Fancsali",
+               "isAdded":false
+            },
+            {  
+               "id":"4ea3facf-7963-4116-9b39-17802e26c159",
+               "name":"Tristan Nixon",
+               "isAdded":false
+            },
+            {  
+               "id":"a8e6c405-d414-4ba9-a74f-82834e04fcc3",
+               "name":"Steven Ritter",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"35 - 42",
+         "contentExist":false
+      },
+      {  
+         "id":"1f4f0909-5d3b-4cc8-8276-f7a4335eafaa",
+         "title":"Automatically Recognizing Facial Expression: Predicting Engagement and Frustration.",
+         "coauthor":[  
+            {  
+               "id":"606c1c3a-ce2d-4cfd-944d-0606463bb802",
+               "name":"Joseph F Grafsgaard",
+               "isAdded":false
+            },
+            {  
+               "id":"0176e5e5-0969-40c6-9ecb-3a6a453c8222",
+               "name":"Joseph B Wiggins",
+               "isAdded":false
+            },
+            {  
+               "id":"871a7b61-55c1-4a21-9d72-3ca77f158cb3",
+               "name":"Kristy Elizabeth Boyer",
+               "isAdded":false
+            },
+            {  
+               "id":"859e63e2-5bb7-4194-95f6-e48df80cd5a2",
+               "name":"Eric N Wiebe",
+               "isAdded":false
+            },
+            {  
+               "id":"242038e2-12a4-412f-ba76-8a3d9d04d673",
+               "name":"James C Lester",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"43 - 50",
+         "contentExist":false
+      },
+      {  
+         "id":"57731077-5e5a-4446-8b59-219b4990bec5",
+         "title":"Investigating the Solution Space of an Open-Ended Educational Game Using Conceptual Feature Extraction.",
+         "coauthor":[  
+            {  
+               "id":"60046e7f-22e9-404d-a888-d38d52cbb192",
+               "name":"Erik Harpstead",
+               "isAdded":false
+            },
+            {  
+               "id":"59cb5f93-728b-4f4b-b877-66ce29cab6ac",
+               "name":"Christopher J Maclellan",
+               "isAdded":false
+            },
+            {  
+               "id":"3e73f18b-b831-4241-aba2-958640affaa1",
+               "name":"Kenneth R Koedinger",
+               "isAdded":false
+            },
+            {  
+               "id":"58b88c6b-4286-4f5f-9c1b-e85cf520fc6d",
+               "name":"Vincent Aleven",
+               "isAdded":false
+            },
+            {  
+               "id":"3622e609-0f5f-4038-a4e7-fb6601872385",
+               "name":"Steven P Dow",
+               "isAdded":false
+            },
+            {  
+               "id":"0fe07b46-b49d-4d79-82e6-d63bedc4739d",
+               "name":"Brad A Myers",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"51 - 58",
+         "contentExist":false
+      },
+      {  
+         "id":"d9cd7f12-cb06-469c-aafc-b03e48650655",
+         "title":"Extending the Assistance Model: Analyzing the Use of Assistance over Time.",
+         "coauthor":[  
+            {  
+               "id":"4a0d86c4-d721-4d0a-ae4f-020242ffb4ac",
+               "name":"William J Hawkins",
+               "isAdded":false
+            },
+            {  
+               "id":"0799975d-6e9f-4ca3-bfbe-70bceca37d39",
+               "name":"Neil T Heffernan",
+               "isAdded":false
+            },
+            {  
+               "id":"732d4166-f27a-4ff5-9285-0e4df361d850",
+               "name":"Yutao Wang",
+               "isAdded":false
+            },
+            {  
+               "id":"a2b776f3-8c72-4444-816b-e266c78c1957",
+               "name":"Ryan S Baker",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"59 - 66",
+         "contentExist":false
+      },
+      {  
+         "id":"82977705-4c30-4652-a7ca-cc01dfaa9c52",
+         "title":"Differential Pattern Mining of Students' Handwritten Coursework.",
+         "coauthor":[  
+            {  
+               "id":"0183c792-13ec-4c52-8d13-f60210f370e1",
+               "name":"James Herold",
+               "isAdded":false
+            },
+            {  
+               "id":"7878bddf-c978-40d0-8478-c915c9eff569",
+               "name":"Alex Zundel",
+               "isAdded":false
+            },
+            {  
+               "id":"c953d867-2886-4d8e-8373-bce82eef92f6",
+               "name":"Thomas F Stahovich",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"67 - 73",
+         "contentExist":false
+      },
+      {  
+         "id":"a68e6f0f-dc37-4b96-86af-5015484114a2",
+         "title":"Predicting Future Learning Better Using Quantitative Analysis of Moment-by-Moment Learning.",
+         "coauthor":[  
+            {  
+               "id":"d6ec41fd-c77d-4e63-a77e-926d57b115b8",
+               "name":"Arnon Hershkovitz",
+               "isAdded":false
+            },
+            {  
+               "id":"d171da2c-fbc4-4093-95fc-5a88660f50b1",
+               "name":"Ryan Shaun Baker",
+               "isAdded":false
+            },
+            {  
+               "id":"58260c0d-de83-4c9b-a2f3-52087ac9258f",
+               "name":"Sujith M Gowda",
+               "isAdded":false
+            },
+            {  
+               "id":"b69b3c6e-18da-4abd-85c3-250f1e92001f",
+               "name":"Albert T Corbett",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"74 - 81",
+         "contentExist":false
+      },
+      {  
+         "id":"33827981-6f4f-4b9e-ac3e-86a04dba1002",
+         "title":"InVis: An Interactive Visualization Tool for Exploring Interaction Networks.",
+         "coauthor":[  
+            {  
+               "id":"5c39feae-dca8-410f-8b0b-1f69833f9dc0",
+               "name":"Matthew W Johnson",
+               "isAdded":false
+            },
+            {  
+               "id":"8c0e6842-521f-4c32-9dc4-2b42c0ea6af9",
+               "name":"Michael Eagle",
+               "isAdded":false
+            },
+            {  
+               "id":"d099001e-449e-4f99-8d42-928c7e00e474",
+               "name":"Tiffany Barnes",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"82 - 89",
+         "contentExist":false
+      },
+      {  
+         "id":"aedf3132-54a7-43d4-add0-e8804854434a",
+         "title":"Tag-Aware Ordinal Sparse Factor Analysis for Learning and Content Analytics.",
+         "coauthor":[  
+            {  
+               "id":"6db43193-8df9-42e3-9f78-9c5b6aeee727",
+               "name":"Andrew S Lan",
+               "isAdded":false
+            },
+            {  
+               "id":"b23b4977-9298-441f-9da8-3f1eb7f55e50",
+               "name":"Christoph Studer",
+               "isAdded":false
+            },
+            {  
+               "id":"a304a244-8dd6-4857-89c3-0b42b38ea09c",
+               "name":"Andrew E Waters",
+               "isAdded":false
+            },
+            {  
+               "id":"d5ef561a-e93d-4c1f-8ca8-e39e5efc40bc",
+               "name":"Richard G Baraniuk",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"90 - 97",
+         "contentExist":false
+      },
+      {  
+         "id":"4e02276c-0208-4e53-8f4a-2f606d8c6206",
+         "title":"Discovering Student Models with a Clustering Algorithm Using Problem Content.",
+         "coauthor":[  
+            {  
+               "id":"077c5d10-847a-4a69-a38c-08f4fbe48230",
+               "name":"Nan Li",
+               "isAdded":false
+            },
+            {  
+               "id":"88ef0c0d-8055-426a-9158-cbdb9722fe54",
+               "name":"William W Cohen",
+               "isAdded":false
+            },
+            {  
+               "id":"3e73f18b-b831-4241-aba2-958640affaa1",
+               "name":"Kenneth R Koedinger",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"98 - 105",
+         "contentExist":false
+      },
+      {  
+         "id":"b6009637-64d5-410d-a955-ce3e3848f9a9",
+         "title":"Predicting Player Moves in an Educational Game: A Hybrid Approach.",
+         "coauthor":[  
+            {  
+               "id":"176c9dcb-7472-41bd-a833-58b900cc2fb6",
+               "name":"Yun-en Liu",
+               "isAdded":false
+            },
+            {  
+               "id":"fed5358e-af4f-4ea1-91bd-b216410ca8d5",
+               "name":"Travis Mandel",
+               "isAdded":false
+            },
+            {  
+               "id":"53e7fd4c-2275-4f04-a05a-724ca53291a5",
+               "name":"Eric Butler",
+               "isAdded":false
+            },
+            {  
+               "id":"40715d6e-ebac-46ce-9dc1-f83cc68c44a2",
+               "name":"Erik Andersen",
+               "isAdded":false
+            },
+            {  
+               "id":"1b04ba1a-5230-4b27-a8da-0c8238fd0e64",
+               "name":"Eleanor Orourke",
+               "isAdded":false
+            },
+            {  
+               "id":"5f325a6d-aca1-4028-8745-59a07b4c2d1b",
+               "name":"Emma Brunskill",
+               "isAdded":false
+            },
+            {  
+               "id":"6d454191-7b19-4f08-8c96-adb180277658",
+               "name":"Zoran Popovic",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"106 - 113",
+         "contentExist":false
+      },
+      {  
+         "id":"91c24e93-aba8-4158-aa59-e4afc0ed624f",
+         "title":"Sequences of Frustration and Confusion, and Learning.",
+         "coauthor":[  
+            {  
+               "id":"ea16429c-1479-4dde-8354-de2e39ae4425",
+               "name":"Zhongxiu Liu",
+               "isAdded":false
+            },
+            {  
+               "id":"a974311e-455e-4cdd-b7e0-5c208a478485",
+               "name":"Visit Pataranutaporn",
+               "isAdded":false
+            },
+            {  
+               "id":"2b71140c-ff77-4ec9-b1d1-c4632cd6b71e",
+               "name":"Jaclyn Ocumpaugh",
+               "isAdded":false
+            },
+            {  
+               "id":"d171da2c-fbc4-4093-95fc-5a88660f50b1",
+               "name":"Ryan Shaun Baker",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"114 - 120",
+         "contentExist":false
+      },
+      {  
+         "id":"dbbd518e-7077-4298-b39e-a5289ff457a4",
+         "title":"Data Mining in the Classroom: Discovering Groups' Strategies at a Multi-tabletop Environment.",
+         "coauthor":[  
+            {  
+               "id":"3e35a1e6-9ef1-4151-b5e0-806590504e52",
+               "name":"Roberto Martinez Maldonado",
+               "isAdded":false
+            },
+            {  
+               "id":"624c3cdd-b2ed-4a6c-9984-d3730f101d73",
+               "name":"Kalina Yacef",
+               "isAdded":false
+            },
+            {  
+               "id":"86bc5815-28f7-4dbf-b8ce-df39b1290976",
+               "name":"Judy Kay",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"121 - 128",
+         "contentExist":false
+      },
+      {  
+         "id":"5011c345-5431-4417-8436-07d4a81a513d",
+         "title":"Meta-Reasoning Algorithm for Improving Analysis of Student Interactions with Learning Objects using Supervised Learning.",
+         "coauthor":[  
+            {  
+               "id":"4b89e06a-f112-436c-aa9c-9f0c9d5b1702",
+               "name":"Lee Dee Miller",
+               "isAdded":false
+            },
+            {  
+               "id":"230cef3e-ab8b-42e1-bab2-5971b9b318bd",
+               "name":"Leen-kiat Soh",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"129 - 136",
+         "contentExist":false
+      },
+      {  
+         "id":"ecdfd102-eaff-494a-a4b9-5a528bb81735",
+         "title":"Adapting Bayesian Knowledge Tracing to a Massive Open Online Course in edX.",
+         "coauthor":[  
+            {  
+               "id":"24dfc52b-0da4-4ba4-9226-20c18717c3c4",
+               "name":"Zachary A Pardos",
+               "isAdded":false
+            },
+            {  
+               "id":"89342af4-f2aa-4dff-b298-ff22ab63f6ad",
+               "name":"Yoav Bergner",
+               "isAdded":false
+            },
+            {  
+               "id":"fb698279-e447-4134-acde-3a5819ba1df5",
+               "name":"Daniel T Seaton",
+               "isAdded":false
+            },
+            {  
+               "id":"6ffb0d10-9a8c-45b9-a419-19593df3f588",
+               "name":"David E Pritchard",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"137 - 144",
+         "contentExist":false
+      },
+      {  
+         "id":"15e77635-ce31-4d8c-999b-a0282ff18235",
+         "title":"Modeling and Optimizing Forgetting and Spacing Effects during Musical Interval Training.",
+         "coauthor":[  
+            {  
+               "id":"9cc06294-a181-497b-8a6a-63681343bf7f",
+               "name":"Philip I Pavlik",
+               "isAdded":false
+            },
+            {  
+               "id":"33cbf7f6-8e52-46ff-a364-3c06166e8e5c",
+               "name":"Henry Hua",
+               "isAdded":false
+            },
+            {  
+               "id":"3d40448c-a567-407a-a24b-49725563dc85",
+               "name":"Jamal Williams",
+               "isAdded":false
+            },
+            {  
+               "id":"7fed63e3-a3b4-417e-837e-80b648a5d8f9",
+               "name":"Gavin M Bidelman",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"145 - 152",
+         "contentExist":false
+      },
+      {  
+         "id":"75f5e369-5527-4e03-9356-6d23ad588e1d",
+         "title":"Tuned Models of Peer Assessment in MOOCs.",
+         "coauthor":[  
+            {  
+               "id":"780fb694-228d-4d92-95f8-63aa3248563f",
+               "name":"Chris Piech",
+               "isAdded":false
+            },
+            {  
+               "id":"aa57236a-8e61-4973-b1ad-dfabdf3c3861",
+               "name":"Jonathan Huang",
+               "isAdded":false
+            },
+            {  
+               "id":"38f5e71d-d296-44e3-b315-b51ce1294dba",
+               "name":"Zhenghao Chen",
+               "isAdded":false
+            },
+            {  
+               "id":"e7206731-562d-4b67-9400-86b838e78576",
+               "name":"Chuong B Do",
+               "isAdded":false
+            },
+            {  
+               "id":"f6787dfd-4eb3-44a3-a742-9468a6cb61e9",
+               "name":"Andrew Y Ng",
+               "aff":"Stanford University",
+               "isAdded":false
+            },
+            {  
+               "id":"f4979577-bffc-4d5d-bb47-347df3ac86d8",
+               "name":"Daphne Koller",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"153 - 160",
+         "contentExist":false
+      },
+      {  
+         "id":"46f507c2-df47-4a1b-9169-6ca499ce286f",
+         "title":"Does Representational Understanding Enhance Fluency - Or Vice Versa? Searching for Mediation Models.",
+         "coauthor":[  
+            {  
+               "id":"bf2a5d1d-3404-4eb7-822c-61993fd4077f",
+               "name":"Martina A Rau",
+               "isAdded":false
+            },
+            {  
+               "id":"755de84b-6d59-455d-8ac1-979b05b2dc53",
+               "name":"Richard Scheines",
+               "isAdded":false
+            },
+            {  
+               "id":"58b88c6b-4286-4f5f-9c1b-e85cf520fc6d",
+               "name":"Vincent Aleven",
+               "isAdded":false
+            },
+            {  
+               "id":"9f882018-b8e6-4094-9910-a5b90562d3d5",
+               "name":"Nikol Rummel",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"161 - 168",
+         "contentExist":false
+      },
+      {  
+         "id":"685e20ad-d3a3-48a2-99e7-72c6fb857d94",
+         "title":"Predicting Standardized Test Scores from Cognitive Tutor Interactions.",
+         "coauthor":[  
+            {  
+               "id":"a8e6c405-d414-4ba9-a74f-82834e04fcc3",
+               "name":"Steven Ritter",
+               "isAdded":false
+            },
+            {  
+               "id":"971e9257-eaf6-4cdf-9a56-bf00d6c57624",
+               "name":"Ambarish Joshi",
+               "isAdded":false
+            },
+            {  
+               "id":"6950aa8d-b767-4f4b-9420-7b7153a6ad4b",
+               "name":"Stephen E Fancsali",
+               "isAdded":false
+            },
+            {  
+               "id":"4ea3facf-7963-4116-9b39-17802e26c159",
+               "name":"Tristan Nixon",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"169 - 176",
+         "contentExist":false
+      },
+      {  
+         "id":"a03faa88-d61a-4f6d-af7b-3088b0ec4f9a",
+         "title":"Predicting College Enrollment from Student Interaction with an Intelligent Tutoring System in Middle School.",
+         "coauthor":[  
+            {  
+               "id":"28b266f5-57e7-4374-81e8-afae5c669ca1",
+               "name":"Maria Ofelia Clarissa Z San Pedro",
+               "isAdded":false
+            },
+            {  
+               "id":"d171da2c-fbc4-4093-95fc-5a88660f50b1",
+               "name":"Ryan Shaun Baker",
+               "isAdded":false
+            },
+            {  
+               "id":"341e0a43-ac15-40b7-b6ab-9c922e596154",
+               "name":"Alex J Bowers",
+               "isAdded":false
+            },
+            {  
+               "id":"0799975d-6e9f-4ca3-bfbe-70bceca37d39",
+               "name":"Neil T Heffernan",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"177 - 184",
+         "contentExist":false
+      },
+      {  
+         "id":"7d1789b7-76a4-4aaf-8295-b38c74b2ba88",
+         "title":"Incorporating Scaffolding and Tutor Context into Bayesian Knowledge Tracing to Predict Inquiry Skill Acquisition.",
+         "coauthor":[  
+            {  
+               "id":"10881b74-b3af-4b03-9371-52526a5228f1",
+               "name":"Michael Sao Pedro",
+               "isAdded":false
+            },
+            {  
+               "id":"d171da2c-fbc4-4093-95fc-5a88660f50b1",
+               "name":"Ryan Shaun Baker",
+               "isAdded":false
+            },
+            {  
+               "id":"9446d77f-cc58-47d2-8a62-6f6abc313607",
+               "name":"Janice D Gobert",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"185 - 192",
+         "contentExist":false
+      },
+      {  
+         "id":"13264f6d-2ef3-464c-bc75-8b76b363a7ee",
+         "title":"Applying three models of learning to individual student log data.",
+         "coauthor":[  
+            {  
+               "id":"52975420-3eed-4b9b-9520-f02729296472",
+               "name":"Brett Van De Sande",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"193 - 199",
+         "contentExist":false
+      },
+      {  
+         "id":"6da12cc2-e2b9-4f53-bb36-fa8ac4dacee7",
+         "title":"Evaluating Topic-Word Review Analysis for Understanding Student Peer Review Performance.",
+         "coauthor":[  
+            {  
+               "id":"5121e287-3aad-4dea-a4a3-bf298e8c45a2",
+               "name":"Wenting Xiong",
+               "isAdded":false
+            },
+            {  
+               "id":"296c5d7f-279e-40e1-82c2-357ed4a20402",
+               "name":"Diane J Litman",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"200 - 207",
+         "contentExist":false
+      },
+      {  
+         "id":"cd4b05ac-00e8-4a44-ae8b-bec38deadeef",
+         "title":"Mining Social Deliberation in Online Communication - If You Were Me and I Were You.",
+         "coauthor":[  
+            {  
+               "id":"7fc18d66-dc24-4ecd-abad-20af78e3c88d",
+               "name":"Xiaoxi Xu",
+               "isAdded":false
+            },
+            {  
+               "id":"694ddf97-d682-449c-9a71-b2573184a889",
+               "name":"T Murray",
+               "isAdded":false
+            },
+            {  
+               "id":"13db184c-3523-4f69-8c1f-2ae316061c5b",
+               "name":"Beverly Park Woolf",
+               "isAdded":false
+            },
+            {  
+               "id":"093bff93-c333-4e0e-9c7c-d3a1fe4cc8c3",
+               "name":"David A Smith",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Full Papers)",
+         "pages":"208 - 215",
+         "contentExist":false
+      },
+      {  
+         "id":"7be5bc85-3e51-496a-9e92-a9da5a17b0c4",
+         "title":"Paragraph Specific N-Gram Approaches to Automatically Assessing Essay Quality.",
+         "coauthor":[  
+            {  
+               "id":"b840a8c0-9f97-4c24-9a6a-daf0bc6fe10e",
+               "name":"Scott A Crossley",
+               "isAdded":false
+            },
+            {  
+               "id":"70562ed7-a6ff-42fe-bf7d-3767e61a007b",
+               "name":"Caleb Defore",
+               "isAdded":false
+            },
+            {  
+               "id":"eb08d46c-8ac5-4a51-8f1b-85e059362fb0",
+               "name":"Kris Kyle",
+               "isAdded":false
+            },
+            {  
+               "id":"350a217b-2ff8-46bc-9702-a97bf9eee63e",
+               "name":"Jianmin Dai",
+               "isAdded":false
+            },
+            {  
+               "id":"b38b82b4-e78b-4f7e-b61e-815dceb54f68",
+               "name":"Danielle S Mcnamara",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"216 - 219",
+         "contentExist":false
+      },
+      {  
+         "id":"76b791e5-37d8-44c3-b54a-b15e26097b7b",
+         "title":"Degeneracy in Student Modeling with Dynamic Bayesian Networks in Intelligent Edu-Games.",
+         "coauthor":[  
+            {  
+               "id":"39fe8bf6-a293-42bc-a092-e78edb4c884f",
+               "name":"Alireza Davoodi",
+               "isAdded":false
+            },
+            {  
+               "id":"4ced677d-79f7-4d3c-b35e-fc334cd28c78",
+               "name":"Cristina Conati",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"220 - 223",
+         "contentExist":false
+      },
+      {  
+         "id":"b54e8be4-e029-453e-9050-641205acf250",
+         "title":"Clustering and Visualizing Study State Sequences.",
+         "coauthor":[  
+            {  
+               "id":"57a85773-1be8-40cf-b21e-abf923b51665",
+               "name":"Michel Desmarais",
+               "isAdded":false
+            },
+            {  
+               "id":"c0ff3895-38c9-4d51-9abd-52d644bf3b55",
+               "name":"Francois Lemieux",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"224 - 227",
+         "contentExist":false
+      },
+      {  
+         "id":"1ff79c89-af2d-4eb8-8632-d6c0b5f3a34a",
+         "title":"Analyzing the Mental Health of Engineering Students using Classification and Regression.",
+         "coauthor":[  
+            {  
+               "id":"a5ee37f7-d306-4979-9229-549ef9c52d7f",
+               "name":"Melissa Deziel",
+               "isAdded":false
+            },
+            {  
+               "id":"dfdc3316-7b0f-4ca2-bbbd-58666111817c",
+               "name":"Dayo Olawo",
+               "isAdded":false
+            },
+            {  
+               "id":"cad2d3c1-532c-4058-b750-250155c0893b",
+               "name":"Lisa Truchon",
+               "isAdded":false
+            },
+            {  
+               "id":"248c6fde-43e6-461e-9a50-7dd59f564ed2",
+               "name":"Lukasz Golab",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"228 - 231",
+         "contentExist":false
+      },
+      {  
+         "id":"4b422f1b-6f3c-4f3a-90a7-d1484e13b0eb",
+         "title":"Hints: You Can't Have Just One.",
+         "coauthor":[  
+            {  
+               "id":"d7d2ab93-ca3c-4726-aa28-fcf4de71d084",
+               "name":"Ilya M Goldin",
+               "isAdded":false
+            },
+            {  
+               "id":"3e73f18b-b831-4241-aba2-958640affaa1",
+               "name":"Kenneth R Koedinger",
+               "isAdded":false
+            },
+            {  
+               "id":"58b88c6b-4286-4f5f-9c1b-e85cf520fc6d",
+               "name":"Vincent Aleven",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"232 - 235",
+         "contentExist":false
+      },
+      {  
+         "id":"080b3d00-cf56-47b0-85da-5d14f6c57270",
+         "title":"What and When do Students Learn? Fully Data-Driven Joint Estimation of Cognitive and Student Models.",
+         "coauthor":[  
+            {  
+               "id":"36335548-5272-4c0a-bfa4-b8d9fad8396c",
+               "name":"Jose P Gonzalez-brenes",
+               "isAdded":false
+            },
+            {  
+               "id":"c6058696-d939-45cd-950c-fb0e07d54e95",
+               "name":"Jack Mostow",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"236 - 239",
+         "contentExist":false
+      },
+      {  
+         "id":"4b611596-299b-447a-9e31-820da8a59140",
+         "title":"An Investigation of Psychometric Measures for Modelling Academic Performance in Tertiary Education.",
+         "coauthor":[  
+            {  
+               "id":"e5e01a40-f755-4740-a750-62a032617902",
+               "name":"Geraldine Gray",
+               "isAdded":false
+            },
+            {  
+               "id":"40647ed5-35d0-4530-abc9-ca63c9c64940",
+               "name":"Colm Mcguinness",
+               "isAdded":false
+            },
+            {  
+               "id":"8a03eec2-e809-4648-adf6-2038a0cc47de",
+               "name":"Philip Owende",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"240 - 243",
+         "contentExist":false
+      },
+      {  
+         "id":"81237b86-5fa4-44b8-b8e6-f8bcc8f6e02f",
+         "title":"Modeling Affect in Student-driven Learning Scenarios.",
+         "coauthor":[  
+            {  
+               "id":"baaeb72d-13c4-48fe-80bb-e7a14e8b2daf",
+               "name":"Paul Salvador Inventado",
+               "isAdded":false
+            },
+            {  
+               "id":"e6fe06f9-91f9-497e-939d-4745c5fe3dda",
+               "name":"Roberto S Legaspi",
+               "isAdded":false
+            },
+            {  
+               "id":"5ff86569-5856-4710-9fe5-41f0f5524b0d",
+               "name":"Rafael Cabredo",
+               "isAdded":false
+            },
+            {  
+               "id":"6ca709d4-ac83-4e1c-b482-257013235e61",
+               "name":"Masayuki Numao",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"244 - 247",
+         "contentExist":false
+      },
+      {  
+         "id":"e5e89df4-257e-4b53-85e0-1ad9a2c3c9c5",
+         "title":"An Algorithm for Reducing the Complexity of Interaction Networks.",
+         "coauthor":[  
+            {  
+               "id":"5c39feae-dca8-410f-8b0b-1f69833f9dc0",
+               "name":"Matthew W Johnson",
+               "isAdded":false
+            },
+            {  
+               "id":"8c0e6842-521f-4c32-9dc4-2b42c0ea6af9",
+               "name":"Michael Eagle",
+               "isAdded":false
+            },
+            {  
+               "id":"d4706d54-9856-4230-9317-bb635ca357bc",
+               "name":"John C Stamper",
+               "isAdded":false
+            },
+            {  
+               "id":"d099001e-449e-4f99-8d42-928c7e00e474",
+               "name":"Tiffany Barnes",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"248 - 251",
+         "contentExist":false
+      },
+      {  
+         "id":"f42e08db-fb02-4984-874d-42887baccdb0",
+         "title":"Mining Temporally-Interesting Learning Behavior Patterns.",
+         "coauthor":[  
+            {  
+               "id":"777c40ea-0f95-4c3a-9405-7f3fc8a24e3b",
+               "name":"John S Kinnebrew",
+               "isAdded":false
+            },
+            {  
+               "id":"0544dc3a-7155-4d9d-bde7-e506e21280fc",
+               "name":"Daniel L C Mack",
+               "isAdded":false
+            },
+            {  
+               "id":"9cde64f2-137e-456a-a824-19fb6c77ce5a",
+               "name":"Gautam Biswas",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"252 - 255",
+         "contentExist":false
+      },
+      {  
+         "id":"bbe12774-ad28-46ff-9041-74c1ee92f6b3",
+         "title":"Modeling Students' Learning and Variability of Performance in Problem Solving.",
+         "coauthor":[  
+            {  
+               "id":"23fd2ab1-219d-4577-aa49-478cd907458a",
+               "name":"Radek Pelanek",
+               "isAdded":false
+            },
+            {  
+               "id":"cef0ce35-c754-481f-898a-a8c6fc816442",
+               "name":"Petr Jarusek",
+               "isAdded":false
+            },
+            {  
+               "id":"70b1c0f1-5930-4974-897b-5814e6dff371",
+               "name":"Matej Klusacek",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"256 - 259",
+         "contentExist":false
+      },
+      {  
+         "id":"4f4d8a3d-2146-463f-8f63-0bb1957c8054",
+         "title":"Estimating Student Knowledge from Paired Interaction Data.",
+         "coauthor":[  
+            {  
+               "id":"02846b2e-6e19-431c-afcb-ae61adf29c5a",
+               "name":"Anna N Rafferty",
+               "isAdded":false
+            },
+            {  
+               "id":"afcbfc94-e720-4180-95dd-75f8f4bcc263",
+               "name":"Jodi L Davenport",
+               "isAdded":false
+            },
+            {  
+               "id":"5f325a6d-aca1-4028-8745-59a07b4c2d1b",
+               "name":"Emma Brunskill",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"260 - 263",
+         "contentExist":false
+      },
+      {  
+         "id":"a9fd75d3-a49c-48bb-80ff-c69d123f914c",
+         "title":"Using a Lexical Analysis of Student's Self-Explanation to Predict Course Performance.",
+         "coauthor":[  
+            {  
+               "id":"48aacb0c-c44a-4fe6-9de3-bb4e0e6b2950",
+               "name":"Nicholas Rhodes",
+               "isAdded":false
+            },
+            {  
+               "id":"462c31f7-0ae8-4e8d-9b15-00dca92c9980",
+               "name":"Matthew Ung",
+               "isAdded":false
+            },
+            {  
+               "id":"1da329c8-e736-4a01-b5df-276a84584535",
+               "name":"Alexander Zundel",
+               "isAdded":false
+            },
+            {  
+               "id":"0183c792-13ec-4c52-8d13-f60210f370e1",
+               "name":"James Herold",
+               "isAdded":false
+            },
+            {  
+               "id":"c953d867-2886-4d8e-8373-bce82eef92f6",
+               "name":"Thomas F Stahovich",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"264 - 267",
+         "contentExist":false
+      },
+      {  
+         "id":"25dc9e94-ac94-42bf-8eb0-cc28b538e10f",
+         "title":"A meta-learning approach for recommending a subset of white-box classification algorithms for Moodle datasets.",
+         "coauthor":[  
+            {  
+               "id":"a2d28f1a-5ad9-4af3-9481-e3515410e94c",
+               "name":"Cristobal Romero",
+               "isAdded":false
+            },
+            {  
+               "id":"6af64009-19c7-405d-bf9d-99cbbbc27b91",
+               "name":"Juan Luis Olmo",
+               "isAdded":false
+            },
+            {  
+               "id":"8a4f09a2-cc31-4818-aea9-0d74ddaaad93",
+               "name":"Sebastian Ventura",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"268 - 271",
+         "contentExist":false
+      },
+      {  
+         "id":"d3839fc6-9b18-46db-ac26-698fec0d4321",
+         "title":"Investigating the Effects of Off-Task Personalization on System Performance and Attitudes within a Game-Based Environment.",
+         "coauthor":[  
+            {  
+               "id":"c083d654-cf42-4edd-a2d4-5e2b77da3e6b",
+               "name":"Erica L Snow",
+               "isAdded":false
+            },
+            {  
+               "id":"75fc7e51-6727-4466-861c-0b93785d420f",
+               "name":"G Tanner Jackson",
+               "isAdded":false
+            },
+            {  
+               "id":"271698c8-9816-4fdf-b11f-478c24fdaa43",
+               "name":"Laura K Varner",
+               "isAdded":false
+            },
+            {  
+               "id":"b38b82b4-e78b-4f7e-b61e-815dceb54f68",
+               "name":"Danielle S Mcnamara",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"272 - 275",
+         "contentExist":false
+      },
+      {  
+         "id":"faa4c8ff-b5e7-4db4-9b1f-47540a14c65c",
+         "title":"Students' Walk through Tutoring: Using a Random Walk Analysis to Profile Students.",
+         "coauthor":[  
+            {  
+               "id":"c083d654-cf42-4edd-a2d4-5e2b77da3e6b",
+               "name":"Erica L Snow",
+               "isAdded":false
+            },
+            {  
+               "id":"4bd8eff8-a8c4-4548-9857-cc61efd89b6e",
+               "name":"Aaron D Likens",
+               "isAdded":false
+            },
+            {  
+               "id":"75fc7e51-6727-4466-861c-0b93785d420f",
+               "name":"G Tanner Jackson",
+               "isAdded":false
+            },
+            {  
+               "id":"b38b82b4-e78b-4f7e-b61e-815dceb54f68",
+               "name":"Danielle S Mcnamara",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"276 - 279",
+         "contentExist":false
+      },
+      {  
+         "id":"9c3b1504-63f2-4b08-b46c-7b029e49fd20",
+         "title":"From \"Events\" to \"Activities\": Creating Abstraction Techniques for Mining Students' Model-Based Inquiry Processes.",
+         "coauthor":[  
+            {  
+               "id":"0866f32b-3890-4831-8dfd-13109756b392",
+               "name":"Vilaythong Southavilay",
+               "isAdded":false
+            },
+            {  
+               "id":"c9f67962-7a82-47fd-9e15-c2e8a0992257",
+               "name":"Lina Markauskaite",
+               "isAdded":false
+            },
+            {  
+               "id":"46a71636-8abc-4b80-8c48-ad9f9c3cbd61",
+               "name":"Michael J Jacobson",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"280 - 283",
+         "contentExist":false
+      },
+      {  
+         "id":"635593ee-694c-4f26-8fbc-a4d7e3116b16",
+         "title":"A Comparison of Model Selection Metrics in DataShop.",
+         "coauthor":[  
+            {  
+               "id":"d4706d54-9856-4230-9317-bb635ca357bc",
+               "name":"John C Stamper",
+               "isAdded":false
+            },
+            {  
+               "id":"3e73f18b-b831-4241-aba2-958640affaa1",
+               "name":"Kenneth R Koedinger",
+               "isAdded":false
+            },
+            {  
+               "id":"60ce049b-019d-479e-92dd-b3f048dba093",
+               "name":"Elizabeth A Mclaughlin",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"284 - 287",
+         "contentExist":false
+      },
+      {  
+         "id":"4c021f33-abb9-41fa-a5f0-7a53cc07c6e5",
+         "title":"Measuring the moment of learning with an information-theoretic approach.",
+         "coauthor":[  
+            {  
+               "id":"52975420-3eed-4b9b-9520-f02729296472",
+               "name":"Brett Van De Sande",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"288 - 291",
+         "contentExist":false
+      },
+      {  
+         "id":"a48f7f05-725a-4b37-9d60-a8ac30e9f6e5",
+         "title":"Test-size Reduction for Concept Estimation.",
+         "coauthor":[  
+            {  
+               "id":"5803685e-f8c0-4bf7-a58d-88f972d3dcba",
+               "name":"Divyanshu Vats",
+               "isAdded":false
+            },
+            {  
+               "id":"b23b4977-9298-441f-9da8-3f1eb7f55e50",
+               "name":"Christoph Studer",
+               "isAdded":false
+            },
+            {  
+               "id":"6db43193-8df9-42e3-9f78-9c5b6aeee727",
+               "name":"Andrew S Lan",
+               "isAdded":false
+            },
+            {  
+               "id":"7e853ee6-23f6-4c3d-b7c1-8a29d2de3d74",
+               "name":"Lawrence Carin",
+               "isAdded":false
+            },
+            {  
+               "id":"d5ef561a-e93d-4c1f-8ca8-e39e5efc40bc",
+               "name":"Richard G Baraniuk",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"292 - 295",
+         "contentExist":false
+      },
+      {  
+         "id":"c26f84f5-217d-4000-afa0-584c028fb80e",
+         "title":"Reading into the Text: Investigating the Influence of Text Complexity on Cognitive Engagement.",
+         "coauthor":[  
+            {  
+               "id":"fc34d4e0-1d02-49ea-b0e2-52a5824bd550",
+               "name":"Benjamin Vega",
+               "isAdded":false
+            },
+            {  
+               "id":"5a311ce9-caaa-4370-8bf2-8b849b6dad4b",
+               "name":"Shi Feng",
+               "isAdded":false
+            },
+            {  
+               "id":"fa23dab7-182c-42f4-bac1-19217ab77a1e",
+               "name":"Blair Lehman",
+               "isAdded":false
+            },
+            {  
+               "id":"7a3c9d4b-b24c-4b74-8efc-27e83ed6d544",
+               "name":"Arthur C Graesser",
+               "isAdded":false
+            },
+            {  
+               "id":"0a900e39-dab9-485f-b4bd-0c457dc7779c",
+               "name":"Sidney K Dmello",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"296 - 299",
+         "contentExist":false
+      },
+      {  
+         "id":"b09c60d7-4a61-4a92-a53b-b2533923939d",
+         "title":"Using Students' Programming Behavior to Predict Success in an Introductory Mathematics Course.",
+         "coauthor":[  
+            {  
+               "id":"0e94a8fd-e450-482c-87ae-d767ecef13d8",
+               "name":"Arto Vihavainen",
+               "isAdded":false
+            },
+            {  
+               "id":"9695855c-9060-4763-8d5b-689819bf0d8b",
+               "name":"Matti Luukkainen",
+               "isAdded":false
+            },
+            {  
+               "id":"ae7ec33c-f7fb-4759-a7d1-ff57ac1613b7",
+               "name":"Jaakko Kurhila",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Short Papers)",
+         "pages":"300 - 303",
+         "contentExist":false
+      },
+      {  
+         "id":"dd8c015e-da54-4e5f-b41c-680d727a147f",
+         "title":"Do students really learn an equal amount independent of whether they get an item correct or wrong?",
+         "coauthor":[  
+            {  
+               "id":"91e01c03-fb81-47a6-a6af-f876b21873d6",
+               "name":"Seth Akonor Adjei",
+               "isAdded":false
+            },
+            {  
+               "id":"19f9b816-0683-47c0-a6e4-be72391e720f",
+               "name":"Seye Salehizadeh",
+               "isAdded":false
+            },
+            {  
+               "id":"732d4166-f27a-4ff5-9285-0e4df361d850",
+               "name":"Yutao Wang",
+               "isAdded":false
+            },
+            {  
+               "id":"0799975d-6e9f-4ca3-bfbe-70bceca37d39",
+               "name":"Neil T Heffernan",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"304 - 305",
+         "contentExist":false
+      },
+      {  
+         "id":"6e3c437b-8dfb-48d8-af58-16775e4824a5",
+         "title":"Analysis of students clustering results based on Moodle log data.",
+         "coauthor":[  
+            {  
+               "id":"5bad730b-e82f-44a4-823f-32c4849c15d5",
+               "name":"Angela Bovo",
+               "isAdded":false
+            },
+            {  
+               "id":"472f9698-0d07-456e-8327-6c620779e2de",
+               "name":"Stephane Sanchez",
+               "isAdded":false
+            },
+            {  
+               "id":"6ff79d2e-d9ba-488b-bf13-8121e2d7129a",
+               "name":"Olivier Heguy",
+               "isAdded":false
+            },
+            {  
+               "id":"f7857265-8e20-4d61-acdd-a38390b58624",
+               "name":"Yves Duthen",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"306 - 307",
+         "contentExist":false
+      },
+      {  
+         "id":"f1120af3-6eb9-4755-800e-324110b002f4",
+         "title":"Mining the Impact of Course Assignments on Student Performance.",
+         "coauthor":[  
+            {  
+               "id":"192c0edd-1754-4595-a4d4-05b0f5ac3fd2",
+               "name":"Ritu Chaturvedi",
+               "isAdded":false
+            },
+            {  
+               "id":"a89cf031-78d2-4d43-9628-14f1b92a9b54",
+               "name":"Christie I Ezeife",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"308 - 309",
+         "contentExist":false
+      },
+      {  
+         "id":"23eb8acc-6793-434a-bd75-8510c26a9399",
+         "title":"Mining User's Behaviors in Intelligent Educational Games: Prime Climb a Case Study.",
+         "coauthor":[  
+            {  
+               "id":"39fe8bf6-a293-42bc-a092-e78edb4c884f",
+               "name":"Alireza Davoodi",
+               "isAdded":false
+            },
+            {  
+               "id":"4e4aa697-0321-4017-860e-213e64f35810",
+               "name":"Samad Kardan",
+               "isAdded":false
+            },
+            {  
+               "id":"4ced677d-79f7-4d3c-b35e-fc334cd28c78",
+               "name":"Cristina Conati",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"310 - 311",
+         "contentExist":false
+      },
+      {  
+         "id":"34499f14-9fda-41ec-84b3-50e021d0fc2c",
+         "title":"Bringing student backgrounds online: MOOC user demographics, site usage, and online learning.",
+         "coauthor":[  
+            {  
+               "id":"344b03d4-18bc-4e24-85d4-3d0920cba374",
+               "name":"Jennifer Deboer",
+               "isAdded":false
+            },
+            {  
+               "id":"f454db77-d6e2-4fd5-aad1-26373c553e1c",
+               "name":"Glenda S Stump",
+               "isAdded":false
+            },
+            {  
+               "id":"fb698279-e447-4134-acde-3a5819ba1df5",
+               "name":"Daniel T Seaton",
+               "isAdded":false
+            },
+            {  
+               "id":"0cabf057-e597-477a-a0a9-0387950230d8",
+               "name":"Andrew D Ho",
+               "isAdded":false
+            },
+            {  
+               "id":"6ffb0d10-9a8c-45b9-a419-19593df3f588",
+               "name":"David E Pritchard",
+               "isAdded":false
+            },
+            {  
+               "id":"eeedd61b-a48d-4892-aad7-dd1db36f6cee",
+               "name":"Lori Breslow",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"312 - 313",
+         "contentExist":false
+      },
+      {  
+         "id":"16b9180b-7251-4a16-a994-c5d3926b423c",
+         "title":"Detecting Player Goals from Game Log Files.",
+         "coauthor":[  
+            {  
+               "id":"a2590095-0592-4811-ad2a-df43a626110a",
+               "name":"Kristen E Dicerbo",
+               "isAdded":false
+            },
+            {  
+               "id":"5877f6d9-1cba-47d3-b584-ceb8942a8ba6",
+               "name":"Khusro Kidwai",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"314 - 315",
+         "contentExist":false
+      },
+      {  
+         "id":"847f2a62-3d64-46ad-bb39-236c22489e85",
+         "title":"A prediction model that uses the sequence of attempts and hints to better predict knowledge: \"Better to attempt the problem first, rather than ask for a hint\".",
+         "coauthor":[  
+            {  
+               "id":"51de4fb9-b431-412c-85ef-2daee3a5a0fd",
+               "name":"Hien Duong",
+               "isAdded":false
+            },
+            {  
+               "id":"86db7cfd-0bb7-40e9-9b9e-a4c2b8c5e4a5",
+               "name":"Linglong Zhu",
+               "isAdded":false
+            },
+            {  
+               "id":"732d4166-f27a-4ff5-9285-0e4df361d850",
+               "name":"Yutao Wang",
+               "isAdded":false
+            },
+            {  
+               "id":"0799975d-6e9f-4ca3-bfbe-70bceca37d39",
+               "name":"Neil T Heffernan",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"316 - 317",
+         "contentExist":false
+      },
+      {  
+         "id":"078e0f98-3a25-49bc-a90b-17c71e7695d9",
+         "title":"Towards the development of a classification service for predicting students' performance.",
+         "coauthor":[  
+            {  
+               "id":"12f4cc88-2cf1-456e-81ec-52d4e40f0da6",
+               "name":"Diego Garcia-saiz",
+               "isAdded":false
+            },
+            {  
+               "id":"998af3c5-ac97-4ea2-bf39-13261631cb5d",
+               "name":"Marta E Zorrilla",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"318 - 319",
+         "contentExist":false
+      },
+      {  
+         "id":"88d90699-2f41-4e4f-8f7c-1a2faa631600",
+         "title":"Identifying and Visualizing the Similarities Between Course Content at a Learning Object, Module and Program Level.",
+         "coauthor":[  
+            {  
+               "id":"1d2bbe4a-d324-43b5-9f62-ee6c3202cf8d",
+               "name":"Kyle Goslin",
+               "isAdded":false
+            },
+            {  
+               "id":"d2ee7d6c-eaaa-43cc-9cff-582d7471871e",
+               "name":"Markus Hofmann",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"320 - 321",
+         "contentExist":false
+      },
+      {  
+         "id":"00c86371-6a28-4498-8e45-2c20b729d72c",
+         "title":"Using ITS Generated Data to Predict Standardized Test Scores.",
+         "coauthor":[  
+            {  
+               "id":"686a8f98-e222-4868-bb07-9419e5f9ecf3",
+               "name":"Kim M Kelly",
+               "isAdded":false
+            },
+            {  
+               "id":"e07fee06-cd1c-43d7-a280-0672c44e8fbf",
+               "name":"Ivon Arroyo",
+               "isAdded":false
+            },
+            {  
+               "id":"0799975d-6e9f-4ca3-bfbe-70bceca37d39",
+               "name":"Neil T Heffernan",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"322 - 323",
+         "contentExist":false
+      },
+      {  
+         "id":"efb5cb07-f661-4759-bb4b-6888dc7cd1a5",
+         "title":"Joint Topic Modeling and Factor Analysis of Textual Information and Graded Response Data.",
+         "coauthor":[  
+            {  
+               "id":"6db43193-8df9-42e3-9f78-9c5b6aeee727",
+               "name":"Andrew S Lan",
+               "isAdded":false
+            },
+            {  
+               "id":"b23b4977-9298-441f-9da8-3f1eb7f55e50",
+               "name":"Christoph Studer",
+               "isAdded":false
+            },
+            {  
+               "id":"a304a244-8dd6-4857-89c3-0b42b38ea09c",
+               "name":"Andrew E Waters",
+               "isAdded":false
+            },
+            {  
+               "id":"d5ef561a-e93d-4c1f-8ca8-e39e5efc40bc",
+               "name":"Richard G Baraniuk",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"324 - 325",
+         "contentExist":false
+      },
+      {  
+         "id":"da32128c-ac09-4182-afd4-5254e0ec26d4",
+         "title":"Component Model in Discourse Analysis.",
+         "coauthor":[  
+            {  
+               "id":"df29fc1e-7145-4647-829a-11acc435d46c",
+               "name":"Haiying Li",
+               "isAdded":false
+            },
+            {  
+               "id":"7a3c9d4b-b24c-4b74-8efc-27e83ed6d544",
+               "name":"Arthur C Graesser",
+               "isAdded":false
+            },
+            {  
+               "id":"a3ae92a6-81f7-41de-86fe-dd6864f18b8f",
+               "name":"Zhiqiang Cai",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"326 - 327",
+         "contentExist":false
+      },
+      {  
+         "id":"0a7ce222-2b14-462d-9696-6d0372c6540c",
+         "title":"Modeling student retention in an environment with delayed testing.",
+         "coauthor":[  
+            {  
+               "id":"3de27e2f-493e-488a-b09e-12f98d1879af",
+               "name":"Shoujing Li",
+               "isAdded":false
+            },
+            {  
+               "id":"bfd340f6-75d5-43f8-8027-9b5e0471e16e",
+               "name":"Xiaolu Xiong",
+               "isAdded":false
+            },
+            {  
+               "id":"62babd0a-f44b-4706-a503-66ad76c0fc6a",
+               "name":"Joseph Beck",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"328 - 329",
+         "contentExist":false
+      },
+      {  
+         "id":"302e4569-d3b6-47df-baff-9b8a489dde97",
+         "title":"Predicting Group Programming Project Performance using SVN Activity Traces.",
+         "coauthor":[  
+            {  
+               "id":"8ab124d0-179d-432a-b075-4b7a87d30571",
+               "name":"Sen Liu",
+               "isAdded":false
+            },
+            {  
+               "id":"cf9b3409-8b6a-49f8-95e5-ce73664b0b3a",
+               "name":"Jihie Kim",
+               "isAdded":false
+            },
+            {  
+               "id":"cb54ea94-9f84-47f0-b61f-836fcc29ba79",
+               "name":"Sofus A Macskassy",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"330 - 331",
+         "contentExist":false
+      },
+      {  
+         "id":"db59d71b-2e36-45fa-9cec-83b93fad389e",
+         "title":"Toward Predicting Test Score Gains With Online Behavior Data of Teachers.",
+         "coauthor":[  
+            {  
+               "id":"8a4b8dc5-1cde-4fe1-9252-e534fa84f3e3",
+               "name":"Keith E Maull",
+               "isAdded":false
+            },
+            {  
+               "id":"5360dce0-4bfe-4e74-a8f3-9bbefb86e765",
+               "name":"Tamara Sumner",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"332 - 333",
+         "contentExist":false
+      },
+      {  
+         "id":"7bb53d53-b122-4b2e-95f0-ab7ae0c71684",
+         "title":"Domain-Independent Proximity Measures in Intelligent Tutoring Systems.",
+         "coauthor":[  
+            {  
+               "id":"232140e3-5162-4ea1-9532-49e9774656ab",
+               "name":"Bassam Mokbel",
+               "isAdded":false
+            },
+            {  
+               "id":"7bc2cf3b-1c97-44b4-a989-77295e19d242",
+               "name":"Sebastian Gross",
+               "isAdded":false
+            },
+            {  
+               "id":"b960f1b4-9b78-465b-9365-3ab98d6693fe",
+               "name":"Benjamin Paaen",
+               "isAdded":false
+            },
+            {  
+               "id":"1a0334f6-68a3-4183-865e-1f274eadcf76",
+               "name":"Niels Pinkwart",
+               "isAdded":false
+            },
+            {  
+               "id":"c1158ee8-679f-44d1-9839-74f288b63246",
+               "name":"Barbara Hammer",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"334 - 335",
+         "contentExist":false
+      },
+      {  
+         "id":"00ed0cca-4f00-4179-94f8-6dbf23d18956",
+         "title":"Exploring Exploration: Inquiries into Exploration Behavior in Complex Problem Solving Assessment.",
+         "coauthor":[  
+            {  
+               "id":"6016a150-6f35-4f1c-806d-0139896c7efc",
+               "name":"Jonas C Muller",
+               "isAdded":false
+            },
+            {  
+               "id":"bda9c13e-4040-49bd-b4f3-c914c4f54408",
+               "name":"Andre Kretzschmar",
+               "isAdded":false
+            },
+            {  
+               "id":"7c356027-8aff-4098-ad0e-f87d2cd0c065",
+               "name":"Samuel Greiff",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"336 - 337",
+         "contentExist":false
+      },
+      {  
+         "id":"78fba590-7928-4902-b903-921a10af0026",
+         "title":"The Complex Dynamics of Aggregate Learning Curves.",
+         "coauthor":[  
+            {  
+               "id":"4ea3facf-7963-4116-9b39-17802e26c159",
+               "name":"Tristan Nixon",
+               "isAdded":false
+            },
+            {  
+               "id":"6950aa8d-b767-4f4b-9420-7b7153a6ad4b",
+               "name":"Stephen E Fancsali",
+               "isAdded":false
+            },
+            {  
+               "id":"a8e6c405-d414-4ba9-a74f-82834e04fcc3",
+               "name":"Steven Ritter",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"338 - 339",
+         "contentExist":false
+      },
+      {  
+         "id":"4e3b6b44-dd95-409b-9741-0f62a2289bd7",
+         "title":"Extracting Time-evolving Latent Skills from Examination Time Series.",
+         "coauthor":[  
+            {  
+               "id":"b405de9c-b0cb-41a6-9afc-3f9be4025422",
+               "name":"Shinichi Oeda",
+               "isAdded":false
+            },
+            {  
+               "id":"b097559a-ccde-4e9b-9196-ccd1197c2532",
+               "name":"Kenji Yamanishi",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"340 - 341",
+         "contentExist":false
+      },
+      {  
+         "id":"68cf95f6-1d8c-41a4-9fb3-e1f92b1bd48d",
+         "title":"Uncovering Class-Wide Patterns in Responses to True/False Questions.",
+         "coauthor":[  
+            {  
+               "id":"7285c1f6-bec3-44a1-b7fa-194fec0ceec3",
+               "name":"Andrew Pawl",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"342 - 343",
+         "contentExist":false
+      },
+      {  
+         "id":"8c0b4718-8766-48c2-ab1b-6006458d1278",
+         "title":"Causal Modeling to Understand the Relationship between Student Attitudes, Affect and Outcomes.",
+         "coauthor":[  
+            {  
+               "id":"c7ad86d0-2c85-4ae0-9424-69ec3754d2b4",
+               "name":"Dovan Rai",
+               "isAdded":false
+            },
+            {  
+               "id":"62babd0a-f44b-4706-a503-66ad76c0fc6a",
+               "name":"Joseph Beck",
+               "isAdded":false
+            },
+            {  
+               "id":"e07fee06-cd1c-43d7-a280-0672c44e8fbf",
+               "name":"Ivon Arroyo",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"344 - 345",
+         "contentExist":false
+      },
+      {  
+         "id":"90ff26bc-9e67-4d62-95b0-06049314b5ce",
+         "title":"Determining Review Coverage by Extracting Topic Sentences Using A Graph-based Clustering Approach.",
+         "coauthor":[  
+            {  
+               "id":"bd9eebd6-d557-4331-9dcc-327b6de5b167",
+               "name":"Lakshmi Ramachandran",
+               "isAdded":false
+            },
+            {  
+               "id":"18c4661d-ecd9-4855-b20d-98fd85dfcf2f",
+               "name":"Balaraman Ravindran",
+               "isAdded":false
+            },
+            {  
+               "id":"c65b7f96-9904-4db7-ab7f-b22c1e9a8943",
+               "name":"Edward F Gehringer",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"346 - 347",
+         "contentExist":false
+      },
+      {  
+         "id":"1c6bd54a-e80f-43b4-9425-c2ef6dc46f24",
+         "title":"Affective State Detection in Educational Systems through Mining Multimodal Data Sources.",
+         "coauthor":[  
+            {  
+               "id":"63df97cb-ba7d-4ed7-8314-2f6de3ca7247",
+               "name":"Sergio Salmeron-majadas",
+               "isAdded":false
+            },
+            {  
+               "id":"a6feb859-5a84-48a7-857d-55ebb4f0db87",
+               "name":"Olga C Santos",
+               "isAdded":false
+            },
+            {  
+               "id":"133dea74-499e-4455-8c25-4a1ab0306168",
+               "name":"Jesus Boticario",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"348 - 349",
+         "contentExist":false
+      },
+      {  
+         "id":"1e8cdbcb-5044-4a72-9e87-1b84ba3cf191",
+         "title":"Exploring the relationship between course structure and etext usage in blended and open online courses.",
+         "coauthor":[  
+            {  
+               "id":"fb698279-e447-4134-acde-3a5819ba1df5",
+               "name":"Daniel T Seaton",
+               "isAdded":false
+            },
+            {  
+               "id":"89342af4-f2aa-4dff-b298-ff22ab63f6ad",
+               "name":"Yoav Bergner",
+               "isAdded":false
+            },
+            {  
+               "id":"6ffb0d10-9a8c-45b9-a419-19593df3f588",
+               "name":"David E Pritchard",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"350 - 351",
+         "contentExist":false
+      },
+      {  
+         "id":"57152da2-0717-4cbd-9c33-c69bda7257a7",
+         "title":"Data preprocessing using a priori knowledge.",
+         "coauthor":[  
+            {  
+               "id":"34f59363-ba24-4ff3-be5f-50145848052b",
+               "name":"Jean Simon",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"352 - 353",
+         "contentExist":false
+      },
+      {  
+         "id":"3c4b21b4-cf18-4e91-8544-1d5fed62f70e",
+         "title":"Discovering the Relationship between Student Effort and Ability for Predicting the Performance of Technology-Assisted Learning in a Mathematics After-School Program.",
+         "coauthor":[  
+            {  
+               "id":"c32b7df3-280d-4731-a7ca-7c7805ae0206",
+               "name":"Jun Xie",
+               "isAdded":false
+            },
+            {  
+               "id":"da0e8805-921e-4d90-87f2-0e7089e21009",
+               "name":"Xudong Huang",
+               "isAdded":false
+            },
+            {  
+               "id":"33cbf7f6-8e52-46ff-a364-3c06166e8e5c",
+               "name":"Henry Hua",
+               "isAdded":false
+            },
+            {  
+               "id":"d426a2e1-2057-44d7-a430-f92a354d384b",
+               "name":"Jin Wang",
+               "isAdded":false
+            },
+            {  
+               "id":"044d116a-05e1-470d-93ff-b78152c8303e",
+               "name":"Quan Tang",
+               "isAdded":false
+            },
+            {  
+               "id":"9d0979ea-6c5b-472b-9c0e-50cff59b5eae",
+               "name":"Scotty D Craig",
+               "isAdded":false
+            },
+            {  
+               "id":"7a3c9d4b-b24c-4b74-8efc-27e83ed6d544",
+               "name":"Arthur C Graesser",
+               "isAdded":false
+            },
+            {  
+               "id":"07b9e173-3e61-4873-aff9-3d6cb8c1c796",
+               "name":"King-ip David Lin",
+               "isAdded":false
+            },
+            {  
+               "id":"86d95e8f-54fd-4da7-8be7-c18d7e3eb588",
+               "name":"Xiangen Hu",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"354 - 355",
+         "contentExist":false
+      },
+      {  
+         "id":"6873e4d7-11a4-4609-b4cb-69d9295f0398",
+         "title":"Using Item Response Theory to Refine Knowledge Tracing.",
+         "coauthor":[  
+            {  
+               "id":"e8d989f1-3431-4174-868b-7c7d18c6187e",
+               "name":"Yanbo Xu",
+               "isAdded":false
+            },
+            {  
+               "id":"c6058696-d939-45cd-950c-fb0e07d54e95",
+               "name":"Jack Mostow",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"356 - 357",
+         "contentExist":false
+      },
+      {  
+         "id":"6c49b45b-3319-4f3f-8b5c-7f3c30864b79",
+         "title":"Estimating the benefits of student model improvements on a substantive scale.",
+         "coauthor":[  
+            {  
+               "id":"2bac7850-f4df-481f-be46-dbc65e268350",
+               "name":"Michael Yudelson",
+               "isAdded":false
+            },
+            {  
+               "id":"3e73f18b-b831-4241-aba2-958640affaa1",
+               "name":"Kenneth R Koedinger",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"358 - 359",
+         "contentExist":false
+      },
+      {  
+         "id":"b5284515-4cd8-4919-ae03-d7c73c52da8d",
+         "title":"A Dynamic Group Composition Method to Refine Collaborative Learning Group Formation.",
+         "coauthor":[  
+            {  
+               "id":"50b7ed4f-5d9c-4de9-8ccd-8ce01898bb69",
+               "name":"Zhilin Zheng",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Regular Papers)",
+         "pages":"360 - 361",
+         "contentExist":false
+      },
+      {  
+         "id":"c0c5803a-6c98-43a6-8792-628b13564781",
+         "title":"Educational Data Mining: Illuminating Student Learning Pathways in an Online Fraction Game.",
+         "coauthor":[  
+            {  
+               "id":"b73be248-ecf8-4821-95d6-dce44a010f67",
+               "name":"Ani Aghababyan",
+               "isAdded":false
+            },
+            {  
+               "id":"40ecd048-a80e-4b3f-9acb-88d02f7495fd",
+               "name":"Taylor Martin",
+               "isAdded":false
+            },
+            {  
+               "id":"84cee617-d75b-4786-9318-548bcb25048a",
+               "name":"Nicole Forsgren Velasquez",
+               "isAdded":false
+            },
+            {  
+               "id":"4844e4b6-3700-4e18-8d9a-d54affe32deb",
+               "name":"Philip Janisiewicz",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Late Breaking Results Papers)",
+         "pages":"362 - 363",
+         "contentExist":false
+      },
+      {  
+         "id":"1c331ac0-9e17-4372-9d84-daa932256eaa",
+         "title":"Automatic Gaze-Based Detection of Mind Wandering during Reading.",
+         "coauthor":[  
+            {  
+               "id":"0a900e39-dab9-485f-b4bd-0c457dc7779c",
+               "name":"Sidney K Dmello",
+               "isAdded":false
+            },
+            {  
+               "id":"eddc3b9d-c639-4882-8bc4-f935bd9a2c87",
+               "name":"Jonathan Cobian",
+               "isAdded":false
+            },
+            {  
+               "id":"cdd87df4-a2d4-4582-a4e0-1e828a03e10f",
+               "name":"Matthew Hunter",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Late Breaking Results Papers)",
+         "pages":"364 - 365",
+         "contentExist":false
+      },
+      {  
+         "id":"13e5ceb1-8587-4ab5-a34c-09682893b8ae",
+         "title":"DARE: Deep Anaphora Resolution in Dialogue based Intelligent Tutoring Systems.",
+         "coauthor":[  
+            {  
+               "id":"7ac2b68b-12fe-408b-a1da-824dbfa69994",
+               "name":"Nobal B Niraula",
+               "isAdded":false
+            },
+            {  
+               "id":"e4c66271-90e8-4762-8751-5a776b9b16c0",
+               "name":"Vasile Rus",
+               "isAdded":false
+            },
+            {  
+               "id":"5db0a65a-699d-4612-a412-67aafad202ec",
+               "name":"Dan Stefanescu",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Late Breaking Results Papers)",
+         "pages":"366 - 367",
+         "contentExist":false
+      },
+      {  
+         "id":"29186e20-c4f1-4384-b7de-7a79fbaf4607",
+         "title":"Are You Committed? Investigating Interactions among Reading Commitment, Natural Language Input, and Students' Learning Outcomes.",
+         "coauthor":[  
+            {  
+               "id":"271698c8-9816-4fdf-b11f-478c24fdaa43",
+               "name":"Laura K Varner",
+               "isAdded":false
+            },
+            {  
+               "id":"75fc7e51-6727-4466-861c-0b93785d420f",
+               "name":"G Tanner Jackson",
+               "isAdded":false
+            },
+            {  
+               "id":"c083d654-cf42-4edd-a2d4-5e2b77da3e6b",
+               "name":"Erica L Snow",
+               "isAdded":false
+            },
+            {  
+               "id":"b38b82b4-e78b-4f7e-b61e-815dceb54f68",
+               "name":"Danielle S Mcnamara",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Late Breaking Results Papers)",
+         "pages":"368 - 369",
+         "contentExist":false
+      },
+      {  
+         "id":"e343cf68-d286-4d70-bfc2-82fd94b92acc",
+         "title":"Using Multi-level Models to Assess Data From an Intelligent Tutoring System.",
+         "coauthor":[  
+            {  
+               "id":"ffd7d7b1-ce07-4f48-9ca1-3d320bfe7d01",
+               "name":"Jennifer L Weston",
+               "isAdded":false
+            },
+            {  
+               "id":"b38b82b4-e78b-4f7e-b61e-815dceb54f68",
+               "name":"Danielle S Mcnamara",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Poster Presentations (Late Breaking Results Papers)",
+         "pages":"370 - 371",
+         "contentExist":false
+      },
+      {  
+         "id":"67380a3a-5723-4b3e-ba1d-1567ef78acb7",
+         "title":"Evaluation of Automatically Generated Hint Feedback.",
+         "coauthor":[  
+            {  
+               "id":"8c0e6842-521f-4c32-9dc4-2b42c0ea6af9",
+               "name":"Michael Eagle",
+               "isAdded":false
+            },
+            {  
+               "id":"d099001e-449e-4f99-8d42-928c7e00e474",
+               "name":"Tiffany Barnes",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Young Researchers Track)",
+         "pages":"372 - 374",
+         "contentExist":false
+      },
+      {  
+         "id":"10fad793-ec58-4e5e-bbf2-69bb270f846b",
+         "title":"Analysing Engineering Expertise of High School Students Using Eye Tracking and Multimodal Learning Analytics.",
+         "coauthor":[  
+            {  
+               "id":"52934342-bc4f-4f0e-8c7c-641a7edadcc3",
+               "name":"July Gomes",
+               "isAdded":false
+            },
+            {  
+               "id":"3ec60b17-718d-4f8b-aad5-00230c29faad",
+               "name":"Mohamed Yassine",
+               "isAdded":false
+            },
+            {  
+               "id":"a7f29a18-ef51-4d3c-8b6b-484fc4386e9f",
+               "name":"Marcelo Worsley",
+               "isAdded":false
+            },
+            {  
+               "id":"a5f25c07-62e1-4776-b5fb-ef370d563e41",
+               "name":"Paulo Blikstein",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Young Researchers Track)",
+         "pages":"375 - 377",
+         "contentExist":false
+      },
+      {  
+         "id":"8559ef55-3c4a-4c01-a51c-4d03b9ffa346",
+         "title":"Investigating the efficacy of algorithmic student modelling in predicting students at risk of failing in tertiary education.",
+         "coauthor":[  
+            {  
+               "id":"e5e01a40-f755-4740-a750-62a032617902",
+               "name":"Geraldine Gray",
+               "isAdded":false
+            },
+            {  
+               "id":"40647ed5-35d0-4530-abc9-ca63c9c64940",
+               "name":"Colm Mcguinness",
+               "isAdded":false
+            },
+            {  
+               "id":"8a03eec2-e809-4648-adf6-2038a0cc47de",
+               "name":"Philip Owende",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Young Researchers Track)",
+         "pages":"378 - 380",
+         "contentExist":false
+      },
+      {  
+         "id":"9359775b-bc55-4522-bc92-72de21bbc570",
+         "title":"BOTS: Harnessing Player Data and Player Effort to Create and Evaluate Levels in a Serious Game.",
+         "coauthor":[  
+            {  
+               "id":"e8d525f1-273b-437c-bad4-fc481899d10a",
+               "name":"Andrew Hicks",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Young Researchers Track)",
+         "pages":"381 - 383",
+         "contentExist":false
+      },
+      {  
+         "id":"c8157c62-c64b-49bb-8be8-0d40e6e36c0b",
+         "title":"Helping Students Manage Personalized Learning Scenarios.",
+         "coauthor":[  
+            {  
+               "id":"baaeb72d-13c4-48fe-80bb-e7a14e8b2daf",
+               "name":"Paul Salvador Inventado",
+               "isAdded":false
+            },
+            {  
+               "id":"e6fe06f9-91f9-497e-939d-4745c5fe3dda",
+               "name":"Roberto S Legaspi",
+               "isAdded":false
+            },
+            {  
+               "id":"6ca709d4-ac83-4e1c-b482-257013235e61",
+               "name":"Masayuki Numao",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Young Researchers Track)",
+         "pages":"384 - 386",
+         "contentExist":false
+      },
+      {  
+         "id":"a2df0c77-effc-49a9-9aee-14fc6871c894",
+         "title":"Determining Problem Selection for a Logic Proof Tutor.",
+         "coauthor":[  
+            {  
+               "id":"89c77675-2803-41d3-a405-27140dfa1651",
+               "name":"Behrooz Mostafavi",
+               "isAdded":false
+            },
+            {  
+               "id":"d099001e-449e-4f99-8d42-928c7e00e474",
+               "name":"Tiffany Barnes",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Oral Presentations (Young Researchers Track)",
+         "pages":"387 - 389",
+         "contentExist":false
+      },
+      {  
+         "id":"916f2721-600d-4d3d-97ee-c675bedd0731",
+         "title":"Demonstration of a Moodle student monitoring web application.",
+         "coauthor":[  
+            {  
+               "id":"5bad730b-e82f-44a4-823f-32c4849c15d5",
+               "name":"Angela Bovo",
+               "isAdded":false
+            },
+            {  
+               "id":"472f9698-0d07-456e-8327-6c620779e2de",
+               "name":"Stephane Sanchez",
+               "isAdded":false
+            },
+            {  
+               "id":"6ff79d2e-d9ba-488b-bf13-8121e2d7129a",
+               "name":"Olivier Heguy",
+               "isAdded":false
+            },
+            {  
+               "id":"f7857265-8e20-4d61-acdd-a38390b58624",
+               "name":"Yves Duthen",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Interactive Events/Demos",
+         "pages":"390 - 391",
+         "contentExist":false
+      },
+      {  
+         "id":"44a4c865-76b1-45a2-833c-6e32bbd975f0",
+         "title":"Students Activity Visualization Tool.",
+         "coauthor":[  
+            {  
+               "id":"6fa4f197-2930-4aaf-bd30-df5fec401c27",
+               "name":"Marius Stefan Chiritoiu",
+               "isAdded":false
+            },
+            {  
+               "id":"1f08b139-a9bd-4c3a-b406-8b337c68a62d",
+               "name":"Marian Cristian Mihaescu",
+               "isAdded":false
+            },
+            {  
+               "id":"38f4cbc7-7a07-4c1e-94e1-f2e8439f7b32",
+               "name":"Dumitru Dan Burdescu",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Interactive Events/Demos",
+         "pages":"392 - 393",
+         "contentExist":false
+      },
+      {  
+         "id":"360d9e4c-9635-4441-8a61-4e3a3850ced4",
+         "title":"FlexCCT: Software for Maximum Likelihood Cultural Consensus Theory.",
+         "coauthor":[  
+            {  
+               "id":"e1f9eae8-c61d-4bdf-8d18-2021ffb09706",
+               "name":"Stephen L France",
+               "isAdded":false
+            },
+            {  
+               "id":"e2906b3d-fab2-40d6-8bb4-b9824056078e",
+               "name":"Mahyar Vaghefi",
+               "isAdded":false
+            },
+            {  
+               "id":"709b9a8c-71f9-4a7e-8123-4a9f46ad30c5",
+               "name":"William H Batchelder",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Interactive Events/Demos",
+         "pages":"394 - 395",
+         "contentExist":false
+      },
+      {  
+         "id":"ea9b4e5f-ef57-46d2-81a7-5a51b414ffaa",
+         "title":"Visual Exploration of Interactions and Performance with LeMo.",
+         "coauthor":[  
+            {  
+               "id":"60f324c3-3fbb-4ccd-a480-22d55cae6b79",
+               "name":"Agathe Merceron",
+               "isAdded":false
+            },
+            {  
+               "id":"b1406a3b-744a-494d-9476-a818cee9e612",
+               "name":"Sebastian Schwarzrock",
+               "isAdded":false
+            },
+            {  
+               "id":"710de4a7-36c5-4938-9734-2cd56d7915b2",
+               "name":"Margarita Elkina",
+               "isAdded":false
+            },
+            {  
+               "id":"710737df-60f1-4488-986b-ce917fd46fde",
+               "name":"Andreas Pursian",
+               "isAdded":false
+            },
+            {  
+               "id":"134bd0c8-85c1-42b6-b3e1-7b6783bf3a76",
+               "name":"Liane Beuster",
+               "isAdded":false
+            },
+            {  
+               "id":"87223b56-f464-4b5d-8dcc-891ee54b4619",
+               "name":"Albrecht Fortenbacher",
+               "isAdded":false
+            },
+            {  
+               "id":"e9d0ac6e-37c8-45e9-bbd3-18824d86255f",
+               "name":"Leonard Kappe",
+               "isAdded":false
+            },
+            {  
+               "id":"ab630c82-2257-4f95-b7db-6287f5e4b613",
+               "name":"Boris Wenzlaff",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Interactive Events/Demos",
+         "pages":"396 - 397",
+         "contentExist":false
+      },
+      {  
+         "id":"63ec6905-332f-4ad3-9bee-288cb406ec30",
+         "title":"Project CASSI: A Social-Graph Based Tool for Classroom Behavior Analysis and Optimization.",
+         "coauthor":[  
+            {  
+               "id":"edf13d3a-4cff-4ca8-9f85-6b8abe730fff",
+               "name":"Robert Olson",
+               "isAdded":false
+            },
+            {  
+               "id":"f2750131-f56c-417a-851b-3ab87cc63ddf",
+               "name":"Zachary Daily",
+               "isAdded":false
+            },
+            {  
+               "id":"0de93a17-13b5-4cb9-ae89-498fee69ecf1",
+               "name":"John Malayny",
+               "isAdded":false
+            },
+            {  
+               "id":"4c23bcc0-a9ec-4724-9cea-73734dcfcd58",
+               "name":"Robert Szkutak",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Interactive Events/Demos",
+         "pages":"398 - 399",
+         "contentExist":false
+      },
+      {  
+         "id":"e06a9696-1f97-4c1a-9296-cb7f3a06b8d9",
+         "title":"A Moodle Block for Selecting, Visualizing and Mining Students' Usage Data.",
+         "coauthor":[  
+            {  
+               "id":"a2d28f1a-5ad9-4af3-9481-e3515410e94c",
+               "name":"Cristobal Romero",
+               "isAdded":false
+            },
+            {  
+               "id":"50fa7106-f1e1-4558-8872-e5c494f0a7b9",
+               "name":"Cristobal Castro",
+               "isAdded":false
+            },
+            {  
+               "id":"8a4f09a2-cc31-4818-aea9-0d74ddaaad93",
+               "name":"Sebastian Ventura",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Interactive Events/Demos",
+         "pages":"400 - 401",
+         "contentExist":false
+      },
+      {  
+         "id":"fdca500e-09f1-4e72-a9db-dfe1575e7976",
+         "title":"SEMILAR: A Semantic Similarity Toolkit for Assessing Students' Natural Language Inputs.",
+         "coauthor":[  
+            {  
+               "id":"e4c66271-90e8-4762-8751-5a776b9b16c0",
+               "name":"Vasile Rus",
+               "isAdded":false
+            },
+            {  
+               "id":"900c3da0-c22b-445b-b7f2-0aa66f082a98",
+               "name":"Rajendra Banjade",
+               "isAdded":false
+            },
+            {  
+               "id":"f551f30d-8bb3-46cc-b00b-e5e3e4a40315",
+               "name":"Mihai C Lintean",
+               "isAdded":false
+            },
+            {  
+               "id":"7ac2b68b-12fe-408b-a1da-824dbfa69994",
+               "name":"Nobal B Niraula",
+               "isAdded":false
+            },
+            {  
+               "id":"5db0a65a-699d-4612-a412-67aafad202ec",
+               "name":"Dan Stefanescu",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Interactive Events/Demos",
+         "pages":"402 - 403",
+         "contentExist":false
+      },
+      {  
+         "id":"1dc77f43-30b2-4ae1-bdcc-43b42843fcc7",
+         "title":"Gathering Emotional Data from Multiple Sources.",
+         "coauthor":[  
+            {  
+               "id":"63df97cb-ba7d-4ed7-8314-2f6de3ca7247",
+               "name":"Sergio Salmeron-majadas",
+               "isAdded":false
+            },
+            {  
+               "id":"a6feb859-5a84-48a7-857d-55ebb4f0db87",
+               "name":"Olga C Santos",
+               "isAdded":false
+            },
+            {  
+               "id":"133dea74-499e-4455-8c25-4a1ab0306168",
+               "name":"Jesus Boticario",
+               "isAdded":false
+            },
+            {  
+               "id":"68cacbf4-f05a-4ab2-8ff3-d2ee124a0e42",
+               "name":"Raul Cabestrero",
+               "isAdded":false
+            },
+            {  
+               "id":"2593c577-1856-4c44-a13e-c90dcb787184",
+               "name":"Pilar Quiros",
+               "isAdded":false
+            },
+            {  
+               "id":"22a24f46-08b2-484f-9250-401dd89b7fd6",
+               "name":"Mar Saneiro",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Interactive Events/Demos",
+         "pages":"404 - 405",
+         "contentExist":false
+      },
+      {  
+         "id":"bfe0fe31-c82b-44d7-86dc-ce39a3d8c143",
+         "title":"A Tool for Speech Act Classification Using Interactive Machine Learning.",
+         "coauthor":[  
+            {  
+               "id":"592d73c5-ae9d-4b31-adba-78103947cf84",
+               "name":"Borhan Samei",
+               "isAdded":false
+            },
+            {  
+               "id":"884f593e-67cc-4a83-8852-13a5e504066e",
+               "name":"Fazel Keshtkar",
+               "isAdded":false
+            },
+            {  
+               "id":"7a3c9d4b-b24c-4b74-8efc-27e83ed6d544",
+               "name":"Arthur C Graesser",
+               "isAdded":false
+            }
+         ],
+         "date":"2013-07-06",
+         "type":"CONFERENCE",
+         "event":{  
+            "id":"c76efb96-8a6b-489c-93b8-b74fb5aa845a",
+            "name":"Educational Data Mining"
+         },
+         "conference theme":"Interactive Events/Demos",
+         "pages":"406 - 407",
+         "contentExist":false
+      }
+   ]
+}

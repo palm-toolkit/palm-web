@@ -3,3 +3,39 @@
     stroke: rgba(0, 0, 0, 0.1);
     shape-rendering: crispEdges;
 }
+.x.axis path{
+	display: none;
+}
+
+svg g.dot.clicked circle{
+	fill: #ccc !important;
+}
+
+/* slider */
+
+#slider >* {
+	display  : inline-block;
+	position : absolute;
+}
+
+#slider .body{
+	top  : 35%;
+    left : 17%;
+}
+#slider .ui-slider {
+	height 		: .5em;
+	border 		: 1px solid #b1b1b1;
+} 
+
+#slider .ui-widget-header{
+	box-shadow: inset 0px 1px 4px 1px rgba(125, 125, 125, 0.75);
+}
+
+#slider .ui-slider-handle {
+	height		  : .9em;
+    width    	  : .9em;
+    border		  : #b1b1b1;
+    border-radius : .5em;
+    background    : #ddd url(../../images/visualizations/metal.jpg) 50% 50% repeat-x;
+    box-shadow    :  0px 1px 4px 1px rgba(35, 35, 35, 0.75);
+}
