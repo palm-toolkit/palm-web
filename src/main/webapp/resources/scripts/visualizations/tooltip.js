@@ -8,6 +8,7 @@ function Tooltip( params ){
 	var position    = params.position || "top";
 	var bkgroundColor = params.bkgroundColor || "rgba(255, 255, 255, 0.55)";
 	var strokeColor = params.strokeColor || "#dadada";
+	var withImage	= params.withImage == undefined ? true : params.withImage;
 	
 	this.getClassName 	 = function(){ return className; };
 	this.getWidth 	 	 = function(){ return width; };
@@ -18,6 +19,7 @@ function Tooltip( params ){
 	this.getPosition	 = function(){ return position; };
 	this.getBkgroundColor= function(){ return bkgroundColor; };
 	this.getStrokeColor	 = function(){ return strokeColor; };
+	this.getWithImage	 = function(){ return withImage; };
 }
 
 Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
@@ -28,6 +30,7 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 		var fontSize	 = this.getFontSize();
 		var bkColor		 = this.getBkgroundColor();
 		var strokeColor  = this.getStrokeColor();
+		var withImage    = this.getWithImage();
 		
 		var tooltipWidth  = width  - borderRadius;
 		var tooltipHeight = height - borderRadius;
@@ -41,18 +44,32 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			
 			//position Tooltip
 			switch( this.getPosition() ){
-				case "top"    : translate = translateTop(); break;
-				case "left"   : translate = translateLeft(); break;
-				case "right"  : translate = translateRight(); break;
-				case "bottom" : translate = translateBottom (); break;
+				case "top"    : translate = translateTop(); 
+								rotate = 0;
+								break;
+				case "left"   : translate = translateRight(); 
+								rotate 	  = translate[0] - tooltipWidth >= 0 ? 180 : 0;
+								translate[1] += translate[0] - tooltipWidth >= 0 ? tooltipHeight: 0;
+								break;
+				case "right"  : translate = translateRight(); 
+								rotate 	  = translate[0] + tooltipWidth <= svg.node().getBBox().width ? 0 : 180;
+								translate[0] += translate[0] + tooltipWidth <= svg.node().getBBox().width ? 0 : -5;
+								translate[1] += translate[0] + tooltipWidth <= svg.node().getBBox().width ? 0 : tooltipHeight;
+								break;
+				case "bottom" : translate = translateBottom ();
+								rotate = 0; 
+								break;
 			}		
-			gTooltip.attr("transform", "translate(" + translate + ")");
+			gTooltip.attr("transform", "translate(" + translate + ") rotate(" + rotate + ")" );
 		}
 	
 		//stroke
 		tooltip_stroke( gTooltip );		
 		//text
 		var gContent = gTooltip.append("g").classed("tooltip-content", true);
+		
+		if ( rotate != 0 )
+			gContent.attr("transform", "translate(" + [ tooltipWidth + tooltipHeight/2 + 5, tooltipHeight + 5] + ") rotate(" + rotate + ")" );
 		tooltip_content( );
 				
 		return gTooltip;
@@ -70,33 +87,33 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 				.style("filter", "url(#drop-shadow)")
 				.attr("fill", bkColor)
 				.attr("stroke", strokeColor);
-				
 		}
 
 		function tooltip_content( ){
+			var distanceLeft = tooltipHeight/2 + 5;	
 			//image
-			var image = gContent.append("g").classed("image-icon", true)
-						.attr("transform", "translate(" + [0, imageRadius + borderRadius ] + ")");
-			var circle = image.append("circle").classed("image", true)
+			if ( withImage ){
+				var image = gContent.append("g").classed("image-icon", true)
+					.attr("transform", "translate(" + [0, imageRadius + borderRadius ] + ")");
+				var circle = image.append("circle").classed("image", true)
 					.attr("r", imageRadius )
 					.attr("stroke", strokeColor)
 					.attr("fill", bkColor );
-						
-			if (dataObject.photo != null){
-				var imagePattern = createImagePattern();
+				
+				if (dataObject.photo != null){
+					var imagePattern = createImagePattern();
 					circle.style("fill", "url(#pattern_" + dataObject.author.id + ")" );
-			} else {
-				image.append('text').classed("image missing-photo-icon", true)
-					.attr("dy", ".35em")
-					.style('font-size', 1.5 * imageRadius + 'px' )
-					.style("font-family", "fontawesome")
-					.style("text-anchor", "middle")
-					.text("\uf007"); 
-			}	
-			
-			var imageDetails = gContent.select(".image").node().getBBox();
-			var distanceLeft = imageDetails.x + imageDetails.width + 5;
-			
+				} else {
+					image.append('text').classed("image missing-photo-icon", true)
+						.attr("dy", ".35em")
+						.style('font-size', 1.5 * imageRadius + 'px' )
+						.style("font-family", "fontawesome")
+						.style("text-anchor", "middle")
+						.text("\uf007"); 
+				}		
+				var imageDetails = gContent.select(".image").node().getBBox();
+			}
+		
 			//title
 			var title = gContent.append("g").classed("title content-text", true)
 				.attr("transform", "translate(" + distanceLeft + ", " + 0 +")");
@@ -122,8 +139,8 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			affiliation.selectAll(".afiliation-name").attr("dx", "1.3em");
 			
 			//nr publications & citations
-			var nrPublications = dataObject.nrPublications || "Not available";
-			var nrCitations	   = dataObject.nrCitations || "Not available";			
+			var nrPublications = dataObject.publicationsNumber || "Not available";
+			var nrCitations	   = dataObject.citedBy || "Not available";			
 			var publicationsAndCitations = gContent.append("g").classed("pubs content-text", true)
 				.attr("transform", "translate(" + distanceLeft + ", " + 0+ ")");
 			wrapText(publicationsAndCitations, "Publications: " + nrPublications + ", Cited By: " + nrCitations, (width - distanceLeft), "paper font-small");
@@ -141,17 +158,24 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			var bbox = gContent.node().parentNode.getBBox();
 			var x = distanceLeft;
 			var y = (bbox.height - gContent.node().getBBox().height)/2;
+			var prevH  = 0;
 			gContent.selectAll("g.content-text")
-				.attr("transform", function (d, i) {				
-					if (i > 0){
-						var prevSibling = gContent.node().childNodes[ i ];
-						if ( prevSibling != undefined){
-		
-							y += prevSibling.getBBox().height ;
-						}
+				.attr("transform", function (d, i) {	
+					var heightLine = d3.select(this).select("text").node().getBBox().height;
+					var heightElem = this.getBBox().height;
+					
+					if (i == 0){
+						y = heightLine;
+						prevH = heightLine == heightElem ? 0 : heightElem;
 					}else{
-							y += Math.abs(bbox.y) ;
-					}
+						
+						var heightLine = d3.select(this).select("text").node().getBBox().height;
+						var heightElem = this.getBBox().height;
+						
+						y += prevH == 0 ? heightLine : prevH;						
+						
+						prevH = heightLine == heightElem ? 0 : heightElem;
+					}	
 					return "translate(" + x + ", " + y +")"
 				});
 		}
@@ -193,12 +217,41 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 				return translateBottom();
 			return [ x, y ];
 		}
-		function translateLeft(){
+		
+		function translateRight(){
+			var $nodeParents   = $(gNode.node()).parents();
 			var tooltipWidth  = width  - borderRadius;
 			var tooltipHeight = height - borderRadius;
-			return [0, ( height - borderRadius/2 ) / -2];
+			var x = 10;
+			var y = (height - borderRadius/2 ) / -2;
+			
+			var newXY = addElementTranslation(x, y, gNode);
+	
+			var i = 0;
+			while ( i < $nodeParents.length && $nodeParents[i].tagName != "svg" ){
+				newXY = addElementTranslation(newXY[0], newXY[1], d3.select($nodeParents[i]));
+				i++;
+			}
+			x = newXY[0]; y= newXY[1];
+			
+			var svgWidth = d3.select( gNode.node().nearestViewportElement ).node().getBBox().width;
+			
+			return [ x, y ];
 		}
-		function translateRight(){}
+		
+		
+		function addElementTranslation( x, y, elem ){
+			var elemTranslate = d3.transform( elem.attr("transform") ).translate;
+			if ( elemTranslate != undefined && elemTranslate[0] != undefined ){
+				x += elemTranslate[0];
+				y += elemTranslate[1];
+			}
+			if ( elem.attr("x") != undefined ) x += elem.attr("x");
+			if ( elem.attr("y") != undefined ) y += elem.attr("y");
+			
+			return[x, y];
+		}
+		
 		function translateBottom(){
 			var tooltipWidth  = width  - borderRadius;
 			var tooltipHeight = height - borderRadius;

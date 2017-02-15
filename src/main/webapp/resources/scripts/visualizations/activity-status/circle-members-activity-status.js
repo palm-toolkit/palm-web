@@ -1,8 +1,8 @@
 $.activityStatus = {};
 $.activityStatus.variables = {
+		userColor	 : "#0073b7"
 };
-$.activityStatus.getData = function( url, container, callback){
-	console.log("getDAta");
+$.activityStatus.getData = function( url, container, user, callback){
 	var vars 		= $.activityStatus.variables;
 	var thisWidget  = $.PALM.boxWidget.getByUniqueName( container ); 
 	if ( thisWidget != undefined)
@@ -20,17 +20,19 @@ $.activityStatus.getData = function( url, container, callback){
 			return d;
 		});
 		
-		callback( url, container, visData );
+		callback( url, container, user, visData );
+		
+		$.PALM.boxWidget.getByUniqueName( container ).element.find(".overlay").remove();
 	});
 }
 
-$.activityStatus.init = function( url, container, data ){
-	var margin = {top: 20, right: 20, bottom: 30, left: 40},
+$.activityStatus.init = function( url, container, user, data ){
+	var margin = {top: 20, right: 20, bottom: 40, left: 40},
 		width  =  $("#widget-" + container + " .visualization-main" ).width() - margin.left - margin.right,
 		height = 500 - margin.top  - margin.bottom,
 		color  = d3.scale.category10();
 	
-	setVariables( url, container, margin, width, height, color);
+	setVariables( url, container, user, margin, width, height, color);
 	
 	$.activityStatus.visualise( data );
 	$.activityStatus.publications();
@@ -38,10 +40,6 @@ $.activityStatus.init = function( url, container, data ){
 
 $.activityStatus.visualise = function( data ){	
 	var vars = 	$.activityStatus.variables;
-	var lineMedian = d3.svg.line(),
-		lineHoriz  = d3.svg.line(),
-		lineVertic = d3.svg.line();
-
 	// setup x 
 	var xValue = function(d) { return d.publicationsNumber; }; // data -> value
 	var xScale = d3.scaleLog().range([0, vars.width]).base(2);
@@ -64,30 +62,38 @@ $.activityStatus.visualise = function( data ){
 		.attr("width", vars.width + vars.margin.left + vars.margin.right)
     	.attr("height", vars.height + vars.margin.top + vars.margin.bottom)
       .append("g")
-    	.attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
+    	.attr("transform", "translate(" + vars.margin.left + "," + vars.margin.bottom + ")");
 
 	// add the tooltip area to the webpage
-	var tooltip = d3.select("body").append("div")
-    	.attr("class", "tooltip")
-    	.style("opacity", 0);
+	var tooltip = new Tooltip({
+		className 	  : vars.tooltipClassName || "",
+		width 		  : 200,
+		height		  : 80,
+		bkgroundColor : "rgba(255, 255, 255, 0.75)",
+		strokeColor   : "white",
+		position  	  : "right", 
+		withImage	  : false
+	});
 
+	var user = {};
 	// change string (from CSV) into number format
 	data.forEach(function(d) {
 		d.publicationsNumber = +d.publicationsNumber;
 		d.citedBy = +d.citedBy;
+		
+		if (d.id == vars.userLoggedID)
+			user = d;
 	});
 
   // don't want dots overlapping axis, so add in buffer to data domain
-  xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]).nice();
-  yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]).nice();
+  xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+5]);
+  yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+5]);
 
   // x-axis
   svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + vars.height + ")")
-      .call(d3.axisBottom(xScale).tickSize(-vars.height).tickFormat(function (d) {
-          return xScale.tickFormat(4,d3.format(",d"))(d)
-      }))
+       .call(d3.axisBottom(xScale).tickSize(-vars.height) )
     .append("text")
       .attr("class", "label")
       .attr("x", vars.width)
@@ -99,9 +105,7 @@ $.activityStatus.visualise = function( data ){
   // y-axis
   svg.append("g")
       .attr("class", "y axis")
-      .call(d3.axisLeft(yScale).tickSize(-vars.width).tickFormat(function (d) {
-          return yScale.tickFormat(4,d3.format(",d"))(d)
-      }))
+      .call(d3.axisLeft(yScale).tickSize(-vars.width) )
     .append("text")
       .attr("class", "label")
       .attr("transform", "rotate(-90)")
@@ -111,27 +115,59 @@ $.activityStatus.visualise = function( data ){
       .style("text-anchor", "end")
       .text("Citations");
 
- // median line
-  svg.append("g")
-  	.attr("class", "median line");
-  	
+  //draw lines 
+  var addLineAndLabel = function(group, x1, y1, x2, y2, id, color, label){
+	  var line = group.append("path").attr("class", "line")
+	   .attr("id", id)
+	   .style("stroke", color) 
+	   .style("stroke-dasharray", 3) 
+	   .attr("d", "M" + x1 + " " + y1 + "L" + x2 + " " + y2);
+	  
+	  group.append("text").attr("class", "line-label")
+	  	.append("textPath")
+	  		.attr("xlink:href", "#" + id)
+	  		.attr("text-anchor", "start")
+	  		.attr("startOffset", "93%")	
+	  		.style("fill", color)
+	  		.text( label );
+	  
+	  return line;
+  };
+  
+  var lines = svg.append("g").attr("class", "lines");
+  addLineAndLabel(lines, 0, vars.height, vars.width, vars.height, "line-hAxis", "black" , "").style("stroke-dasharray", 0) ;
+  addLineAndLabel(lines, 0, 0, 0, vars.height, "line-vAxis", "black" , "").style("stroke-dasharray", 0) ; 
+  addLineAndLabel(lines, 0, vars.height, vars.width, 0, "line-median", "grey" , "Median").style("stroke-dasharray", 0) ;
+   
+  if ( !$.isEmptyObject( user ) ){
+	  addLineAndLabel(lines, xScale( xValue(user) ), 0, xScale( xValue(user) ), vars.height, "line-vertical", vars.userColor, "" );
+	  addLineAndLabel(lines, 0, yScale( yValue(user) ), vars.width, yScale( yValue(user) ), "line-horizontal", vars.userColor, "" );
+  }
+  
   // draw dots
   var dotsGroup = svg.append("g").attr("class", "dots");
   var dotGroup =  dotsGroup.selectAll(".dot").data(data)
   		.enter().append("g").attr("class", "dot")
   		.attr("transform", function (d) { return "translate(" + [ xScale(xValue(d)),  yScale(yValue(d))] + ")" })
-  		.on("mouseover",  $.activityStatus.interactions.mouseoverNode )
-  		.on("mouseout",   $.activityStatus.interactions.mouseleaveNode )
+  		.on("mouseenter", function( d ){ $.activityStatus.interactions.mouseoverNode( this, d, tooltip ); })
+  		.on("mouseleave",   $.activityStatus.interactions.mouseleaveNode )
   		.on("click",      $.activityStatus.interactions.clickNode);
-  dotGroup.append("circle")
+  
+  var circle = dotGroup.append("circle")
       .attr("class", "dot")
       .attr("r", 7)
       .attr("stroke", function(d) { return vars.color(cValue(d));})
       .attr("stroke-width", "2px")
-      .style("fill", "white")//function(d) { return color(cValue(d));}) 
-      ;
+      .attr("stroke-dasharray", function(d){
+    	  /** Make dasharray based on citationsTendency
+    	   * */
+    	  return 0;
+    	 // return d.citationsTendency > 0 ? 0 : 3;
+      })
+      .attr("fill", "white");
+ 
   dotGroup.append("text").attr("class", "author-name-label")
-  	.attr("dy", "-1em")
+  	.attr("dy", "-.75em")
   	.style("text-anchor", "middle")
   	.text( function (d){ 
   		var lastName  = d.name.substring(d.name.lastIndexOf(" "), d.name.length);
@@ -140,28 +176,50 @@ $.activityStatus.visualise = function( data ){
 		
 		return initials + "." + lastName;
   	});
+  
   // draw legend
-  var legend = svg.selectAll(".legend")
-      .data(vars.color.domain())
-    .enter().append("g")
-      .attr("class", "legend")
-      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-
-  // draw legend colored rectangles
-  legend.append("rect")
-      .attr("x", vars.width - 18)
-      .attr("width", 18)
-      .attr("height", 18)
-      .style("fill", vars.color);
-
-  // draw legend text
-  legend.append("text")
-      .attr("x", vars.width - 24)
-      .attr("y", 9)
-      .attr("dy", ".35em")
-      .style("text-anchor", "end")
-      .text(function(d) { return d.name;});
-   
+  var legend = d3.select( "#widget-" + vars.widgetUniqueName + " svg" ).append("g").attr("class", "legend");
+  
+  // draw legend circle explanation
+  var legendItems = [
+     { "label" : "Increase", "strokedashed" : 0 },
+     { "label" : "Decrease", "strokedashed" : 3}
+  ];
+		  
+  var gLegendItems = legend.append("g").attr("class", "legend-items");
+  
+  gLegendItems.append("text")
+  	.attr("dx", "-.75em")
+  	.attr("dy", "-1em")
+	.style('font-size', 14 + 'px' )
+	.style("font-family", "fontawesome")
+	.style("text-anchor", "start")
+	.text("Citations' Tendency: "+ "\uf05a")
+	.on("mouseover", $.activityStatus.interactions.mouseOverInfo )
+	.on("mouseleave", $.activityStatus.interactions.mouseLeaveInfo );
+ 
+  var gLegend = gLegendItems.selectAll(".legend-item-group")
+  	.data(legendItems)
+  	.enter().append("g").attr("class", "legend-item-group");
+  
+  gLegend.append("circle")
+  		.attr("r", 7)
+    	.attr("stroke", "grey")
+    	.attr("stroke-width", "2px")
+    	.attr("stroke-dasharray", function(d){ return d.strokedashed; })
+    	.style("fill", "white");
+  gLegend.append("text").attr("class", "label")
+    	.attr("dx", "1em")
+    	.attr("dy", ".35em")
+    	.style("text-anchor", "start")
+    	.text( function(d){ return d.label; } );  
+  gLegend.attr("transform", function (d, i){
+		var widthPrev = i == 0 ? 0 : i * ( d3.select(this.previousSibling).node().getBBox().width + 5);
+		return "translate(" + widthPrev + ",0)";
+	});
+  
+  legend.attr("transform", function (d) { return "translate(" + [vars.margin.left + 10, vars.margin.top+5] + ")" } );
+  
   arrangeLabels( svg );
 }
 
@@ -186,6 +244,8 @@ $.activityStatus.publications = function (year1, year2){
 			$.publicationList.visualize( $mainContainer, response );
 
 			$.activityStatus.filter( response );
+			
+			thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
 		}
 	});
 //	var url 		= vars.currentURL + "/circle/publicationList" + queryString;
@@ -199,13 +259,15 @@ $.activityStatus.publications = function (year1, year2){
 //	})
 }
 
-function setVariables( url, widgetUniqueName, margin, width, height, color){
+function setVariables( url, widgetUniqueName, user, margin, width, height, color){
 	$.activityStatus.variables.currentURL 		= url,
 	$.activityStatus.variables.widgetUniqueName = widgetUniqueName;
+	$.activityStatus.variables.userLoggedID 	= user,
 	$.activityStatus.variables.margin 			= margin ;
 	$.activityStatus.variables.width 			= width;
 	$.activityStatus.variables.height 			= height;
 	$.activityStatus.variables.color 			= color;
+	$.activityStatus.variables.tooltipClassName = "activity-status-tooltip";
 }
 
 $.activityStatus.filter = function( data ){
@@ -269,7 +331,7 @@ $.activityStatus.filter.time = function ( data, min, max ){
 				var $mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
 				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 					
-				$.activityStatus.getData(vars.currentURL, vars.widgetUniqueName, $.activityStatus.init);	
+				$.activityStatus.getData(vars.currentURL, vars.widgetUniqueName, vars.userLoggedID, $.activityStatus.init);	
 				thisWidget.element.find(".overlay").remove();
 			};
 			setTimeout( updateVis, 200);
@@ -364,23 +426,42 @@ $.activityStatus.interactions = {
 			}
 			
 		},
-		mouseoverNode : function( node ){
+		mouseoverNode : function( elem, node, tooltip  ){
+			d3.selection.prototype.moveToFront = function() {  
+			      return this.each(function(){
+			        this.parentNode.appendChild(this);
+			      });
+			};
 			var vars  = $.activityStatus.variables;
-			var $this = this;
+			var $this = elem;
 			var dotsGraphSVG = d3.selectAll("#widget-" + vars.widgetUniqueName + " svg g.dot");
 			
-			dotsGraphSVG.attr("opacity", 0.4);
-			
+			//bring to front
+			d3.select( $this ).moveToFront();
+			//highlight/hide
+			dotsGraphSVG.attr("opacity", 0.4);	
 			vars.hoveredNode = node;			
 			d3.select( $this ).classed("hovered", true)
 				.attr("opacity", 1)
 				.attr("transform", function ( d ){
-					if ( !d3.select( this ).classed("clicked") )
-						return d3.select( $this ).attr("transform") + " scale(1.3)";
-					else
-						return d3.select( $this ).attr("transform");
+					return d3.select( $this ).attr("transform") + " scale(4)";
 				});
 			
+			//add icon 
+			if (node.photo != null){
+				var imagePattern = createImagePattern( node, parseInt( d3.select(elem).select("circle").attr('r') ) );
+				d3.select(elem).select("circle").attr("fill", "url(#pattern_" + node.id + ")" );
+			} else {
+				d3.select(elem).append('text').classed("image missing-photo-icon author_avatar", true)
+					.attr("dy", ".35em")
+					.style('font-size', 1.5 * 7 + 'px' )
+					.style("font-family", "fontawesome")
+					.style("text-anchor", "middle")
+					.text("\uf007"); 
+			}		
+			
+			//add tooltip
+			tooltip.buildTooltip( d3.select($this), node );
 		},
 		mouseleaveNode : function( node ){
 			var vars  = $.activityStatus.variables;
@@ -390,14 +471,61 @@ $.activityStatus.interactions = {
 				.attr("opacity", 1)	
 				.attr("transform", function( d ){
 					var transform = d3.transform( d3.select( this ).attr("transform"));
-					if (  d3.select( this ).classed("clicked") )
-						return "translate(" + transform.translate + ") scale(" + transform.scale + ")";
-					else
 						return "translate(" + transform.translate + ")";
 				});
-			vars.hoveredNode = undefined;			
-	
+			vars.hoveredNode = undefined;
+			//remove icon
+			d3.select( "#widget-" + vars.widgetUniqueName + " svg" ).selectAll( ".author_avatar").remove();
+			//remove tooltip
+			d3.select( "#widget-" + vars.widgetUniqueName + " svg" ).selectAll( "." + vars.tooltipClassName ).remove();
+		},
+		mouseOverInfo : function( node ){
+			var $this = this;
+			var infoText = d3.select($this.parentNode).append("g").attr("class", "infoText");
+			var rect = infoText.append("rect");
+			var text = "Tendency Decrease: the number of citations in the first half time period is larger."+
+				" Tendency Increase: the number of citations in the second half time period is larger."
+			wrapText(infoText, text, 240, "info-text", 12 );
+			
+			var padding = 10;
+			createShadow( infoText ); 
+			rect.attr("width", infoText.node().getBBox().width + padding)
+				.attr("height", infoText.node().getBBox().height + padding)
+				.attr("x", -padding/2 + "px")
+				.attr("y", "-1em")
+				.attr("fill", "white")
+				.attr("opacity", 0.8)
+				.style("filter", "url(#drop-shadow)");
+			
+			infoText.attr("transform", "translate(" +[ $this.getBBox().width - padding/2 , -padding/2 ]+ ")")
+		},
+		mouseLeaveInfo : function( node ){
+			var $this = this;
+			d3.select($this.parentNode).select(".infoText").remove()
 		}
+}
+function wrapText( container, text, width, className, fontSize){
+	var lineHeight = fontSize;
+	var y = 0;
+	var words = text.split(" ").reverse();
+	var textArray = [];
+	var text = container.append("text").attr("class", className);
+	
+	while(word = words.pop()){
+		textArray.push(word);
+		text.text( textArray.join(" ") );
+		
+		if ( text.node().getBBox().width > width ){
+			y += lineHeight; 
+			var w = textArray.pop();
+			text.text( textArray.join(" ") );
+			
+			textArray = [w];
+			text = container.append("text").attr("class", className)
+					.attr("dy", y )
+					.text( textArray.join(" ") );
+		}				
+	}
 }
 
 function getPublicationAuthor( author ){
@@ -407,7 +535,7 @@ function getPublicationAuthor( author ){
 	var queryString = "?id=" + author.id + "&year=all&query=" + keywordText ;
 	thisWidget.options.queryString = queryString;
 	
-	thisWidget.element.find(".visualization-main").removeClass("col-md-12").addClass("col-md-8");
+	thisWidget.element.find(".visualization-main").removeClass("col-md-12 col-sm-12").addClass("col-md-8 col-sm-8");
 	thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
 	thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 	thisWidget.element.find( ".visualization-details" ).removeClass("hidden");
@@ -435,6 +563,60 @@ function getPublicationAuthor( author ){
 	});
 }
 
+function createImagePattern( dataObject, imageRadius ){
+	var svg = d3.select("#widget-" + $.activityStatus.variables.widgetUniqueName + " svg");
+	if ( svg.select("defs").node() == undefined)
+		var defs = svg.append("defs");
+	else
+		var defs = svg.select("defs");
+	return defs.append("svg:pattern")
+			.attr("id", "pattern_" + dataObject.id)
+			.attr("class", "author_avatar")
+			.attr("width", 1)
+			.attr("height", 1)
+		   .append("svg:image")
+		   	.attr("xlink:href", dataObject.photo )
+		   	.attr("width", imageRadius * 2)
+		   	.attr("height", imageRadius * 2)
+		   	.attr("x", 0)
+		   	.attr("y", 0);
+}
+
+function createShadow( element ){
+	var defs = element.append("defs");
+	var filter = defs.append("filter")
+	    .attr("id", "drop-shadow")
+	    .attr("height", "120%");
+	filter.append("feGaussianBlur")
+	    .attr("in", "SourceAlpha")
+	    .attr("stdDeviation", 3)
+	    .attr("result", "blur");
+
+	filter.append("feOffset")
+	    .attr("in", "blur")
+	    .attr("dx", 3)
+	    .attr("dy", 3)
+	    .attr("result", "offsetBlur");
+	
+	filter.append("feFlood")
+	  .attr("in", "offsetBlur")
+	  .attr("flood-color", "#666")
+	  .attr("flood-opacity", "1")
+	  .attr("result", "offsetColor");
+	
+	 filter.append("feComposite")
+        .attr("in", "offsetColor")
+        .attr("in2", "offsetBlur")
+        .attr("operator", "in")
+        .attr("result", "offsetBlur");
+	 
+	var feMerge = filter.append("feMerge");
+
+	feMerge.append("feMergeNode")
+	    .attr("in", "offsetBlur")
+	feMerge.append("feMergeNode")
+	    .attr("in", "SourceGraphic");
+}
 
 function highlightClickedNode( elem ){
 	var vars = $.activityStatus.variables;

@@ -1,16 +1,21 @@
-.axis line{
+.axis line,
+.axis path{
 	fill: none;
-    stroke: rgba(0, 0, 0, 0.1);
+    stroke: rgba(0, 0, 0, 0.14);
     shape-rendering: crispEdges;
 }
-.x.axis path{
-	display: none;
-}
 
-svg g.dot.clicked circle{
+svg g.dot.clicked:not(.hovered) circle{
 	fill: #ccc !important;
 }
 
+svg g.dot.hovered .author-name-label{
+	display: none;
+}
+
+svg g.dot.hovered circle{
+	stroke-width : 1px;
+}
 /* slider */
 
 #slider >* {
