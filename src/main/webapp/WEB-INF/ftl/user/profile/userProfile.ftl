@@ -1,3 +1,6 @@
+<@security.authorize access="isAuthenticated()">
+	<#assign user = securityService.getUser() >
+</@security.authorize>
 <div id="boxbody-${wUniqueName}" class="box-body">
 	  <form role="form" id="profileForm" action="<@spring.url '/user/profile' />" method="post">
 		<#if authorMap??><#-- if author not null -->

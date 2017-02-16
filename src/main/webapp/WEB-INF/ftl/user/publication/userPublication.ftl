@@ -25,7 +25,7 @@
 
 		<#-- set widget unique options -->
 		var options ={
-			source : "<@spring.url '/researcher/publicationList' />",
+			source : "<@spring.url '/user/publicationList' />",
 			queryString : "",
 			id: "",
 			onRefreshStart: function( widgetElem ){
