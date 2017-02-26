@@ -13,14 +13,24 @@
 					</button>
 				</div>
 			  	<div class="content-graph" style="height:550px !important;">
+			  		<table>
+			  		<tr><td>
+			  		<span style="text-align: center; overflow: hidden; display: block; font-weight: bold;">Collaborative author’s</span>
+			  		<div id="coauthor-list" style="max-height: 542px; overflow-x: auto; overflow-y: auto; margin: 8px;">
+    				</div>
+    				</td>
+    				<td>
+			  		<span style="text-align: center; overflow: hidden; display: block; font-weight: bold;">Publications</span>
+    				<div id="publication-list" style="max-height: 542px; overflow-x: auto; overflow-y: auto; margin: 8px;">
+    				</div>
+    				</td>
+    				<td>
+			  		<span style="text-align: center; overflow: hidden; display: block; font-weight: bold;">User interest's</span>
+    				<div id="interest-list" style="max-height: 542px; overflow-x: auto; overflow-y: auto; margin: 8px;">
+    				</div>
+    				</td></tr>
+    				</table>
 			    </div>
-			</td>
-			<td width="50px" style="text-align: center; background-color: #fafafa;">
-				<button type="button" onclick="togglePubTab()"  
-				class="btn btn-block btn-default box-filter-button btn-xs"
-				style="width:50px; height: 600px; float: right; margin-top: 0.5em;">
-						Details
-				</button>
 			</td>
 			<td id="pub_tab" width="20%" style="display: none; background-color: #fafafa;">
 				<div id="pub_details" class="Scrollable" style="float: right; width: 450px; max-height: 600px; 
@@ -67,24 +77,33 @@ $('.Scrollable').on('DOMMouseScroll mousewheel', function(ev) {
     }
 });
 
+	var uniquePidRecommendationCloud = $.PALM.utility.generateUniqueId();
 	var algorithmID = "interest";
-	function updateTestRecommendations(){
+	$( function(){
 		
 		<#-- unique options in each widget -->
 		var options ={
-			source : "<@spring.url '/user/recommendation?requestStep=4&creatorId=co_authors&query=' />",
+			source : "<@spring.url '/user/recommendation?requestStep=0&creatorId=publication&query=' />",
 			query: "",
 			queryString : algorithmID,
 			page:0,
 			maxresult:50,
+			onRefreshStart: function(  widgetElem  ){
+				<#-- show pop up progress log -->
+				$.PALM.popUpMessage.create( ("Extracting recommendations."), { uniquePidRecommendationCloud, popUpHeight:40, directlyRemove:true, polling:false});
+			},
 			onRefreshDone: function(  widgetElem , data ){
 
 							var targetContainer = $( widgetElem ).find( ".content-graph" );
 							var targetContainerFilter = $( widgetElem ).find( ".box-filter" );
 							var detailsContainer = document.getElementById( "pub_details" );
 
+							var authorList = $( "#coauthor-list" );
+							var pubList = $( "#publication-list" );
+							var intList = $( "#interest-list" );
+							
 							<#-- remove previous graph -->
-							targetContainer.html( "" );
+							//targetContainer.html( "" );
 							targetContainerFilter.show();
 							targetContainerFilter.find( ".box-filter-option" ).html( "" );
 							targetContainerFilter.find( ".box-filter-button" ).find( "span" ).html( "Recommendation Algorithm" );
@@ -135,28 +154,380 @@ function getRecommendationAlogrithm ( algo ) {
 	}
 	else {
 		algorithmID = algo;
-		$.PALM.popUpMessage.create( "Extracting recommendations", { uniqueId:uniquePidRecommendationCloud, popUpHeight:40, directlyRemove:false , polling:false});
+		$.PALM.popUpMessage.create( "Extracting recommendations", { uniqueId:uniquePidRecommendationCloud, popUpHeight:40, directlyRemove:true , polling:false});
 				
 		$.ajax({
 			type: "GET",
-			url : "<@spring.url '/user/recommendation?creatorId=publication&query=' />" + algo,
+			url : "<@spring.url '/user/recommendation?requestStep=0&creatorId=publication&query=' />" + algo + "'",
 			accepts: "application/json, text/javascript, */*; q=0.01",
 			success: function( cdata ){
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniquePidRecommendationCloud );
 				
-				if (cdata.pub_recommendation.count > 0) {
+				callRecommendationStep( 1 )
+				<#--if (cdata.pub_recommendation.count > 0) {
 					console.log("console recommendation:", cdata.pub_recommendation.count);
 					targetContainer.html( "" );
-					update(cdata.pub_recommendation);
-				}
+					//update(cdata.pub_recommendation);
+				}-->
 			}
 		});
 	}
 	algorithmProfileDropDown.selectpicker( 'refresh' );
 }
-							update(data.pub_recommendation);
+
+	function callRecommendationStep( stepNo ) {
+		<#-- show pop up progress log 
+		$.PALM.popUpMessage.create( ("Extracting recommendations for step No. " + (stepNo+1)), { uniqueId:uniquePidGerneraRecommendationCloud, popUpHeight:40, directlyRemove:false , polling:false});
+			-->
+		$.ajax({
+			type: "GET",
+			url : "<@spring.url '/user/recommendation?creatorId=publication&query=' />" + algorithmID + "&requestStep=" + stepNo,
+			accepts: "application/json, text/javascript, */*; q=0.01",
+			success: function( data ){
+			
+				<#-- remove  pop up progress log 
+				$.PALM.popUpMessage.remove( uniquePidGerneraRecommendationCloud );-->
+				
+				<#-- Activate next progress item 
+				$( "#interest_progress li" ).each(function(i) {
+					if ( i == stepNo )
+						$(this).addClass( "active" );
+					if ( i == stepNo && stepNo == 5 && previousStep == -1 )
+						$(this).addClass( "selected" );
+				} );
+				
+				$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) );-->
+				
+				<#-- call for next step, max 4 -->
+				if ( stepNo < 5 )
+					callRecommendationStep( stepNo + 1 );
+					
+				
+				<#-- update general graph 
+				updateGeneralGraph( data.pub_recommendation, stepNo );-->
+				
+				
+				if ( stepNo == 5 ) {
+					$.PALM.popUpMessage.remove( uniquePidRecommendationCloud );
+					listUpdate(data.pub_recommendation.nodes);
+					<#-- update graph if user hadn't selected any yet
+					previousStep = stepNo - 1;
+					updateLegendSelected( stepNo );
+					//nodes = stepsNodes[previousStep];
+					//edges = [];
+					updateGraphData( stepNo );
+					changeRange( 10, stepNo ); -->
+				}
+			}
+		});
+	}
+
+							//update(data.pub_recommendation);															//eumamus
+							callRecommendationStep( 1 );
+	function listUpdate(data) {
+		<#-- remove previous list -->
+		authorList.html( "" );
+		pubList.html( "" );
+		intList.html( "" );
+		
+		var authors = data.filter( function( item ){
+				return item.title == "Author";
+			} )
+			.sort( function(a, b) {
+			    return parseFloat(b.group) - parseFloat(a.group);
+			});
+		var publications = data.filter( function( item ){
+				return item.title == "Publication";
+			} )
+			.sort( function(a, b) {
+			    return parseFloat(b.group) - parseFloat(a.group);
+			})
+			.slice(0, 10);
+		var interests = data.filter( function( item ) {
+			return item.title == "Interest";
+		} )
+			.sort( function(a, b) {
+			    return parseFloat(b.group) - parseFloat(a.group);
+			})
+			.slice(0, 10);
+		
+		console.log("authorsItems: ", interests);
+		
+		$.each( authors, function( index, item){
+			addAuthorItem( item.id, item );
+		});
+		$.each( publications, function( index, item){
+			addPublicationItem( item.id );
+		});
+		$.each( interests, function( index, item){
+			addInterestItem( item );
+		});
+	}
+	
+	function addInterestItem( item ) {
+		var endString = item.details;
+		if ( endString.includes( "</br>" ) )
+			endString = endString.substring( 0, endString.indexOf( "</br>" ) );
+	
+		var intDiv = $( '<div/>' )
+			.css({ "border" : "1px solid green"})
+			.css({ "margin-top" : "10px" })
+			.attr({ 'id' : item.id });
+		var interestDetail =
+			$( '<div/>' )
+				.addClass( 'detail' )
+				.append(
+					$( '<div/>' )
+						.addClass( 'name capitalize' )
+						.html( endString )
+				);			
+		intDiv.append( interestDetail );	
+		intList.append( intDiv );
+	}
+	
+	function addPublicationItem( pubID ) {
+				var pubDiv = 
+									$( '<div/>' )
+										.css({ "border" : "1px solid green"})
+										.css({ "margin-top" : "3px" })
+										.attr({ 'id' : pubID });
+		$.ajax({
+			type: "GET",
+			url : "<@spring.url '/publication/detail?id=' />" + pubID,
+			accepts: "application/json, text/javascript, */*; q=0.01",
+			success: function( data ){
+										
+				<#-- title -->
+						var pubTitle = 
+							$('<dl/>')
+							.addClass( "palm_section" )
+							.append(
+								$('<dt/>')
+								.addClass( "palm_label" )
+								.html( "Title :" )
+							).append(
+								$('<dd/>')
+								.addClass( "palm_content" )
+								.html( "<a target='_blank' href='<@spring.url '/publication' />?id=" + data.publication.id + "&title=" + 
+								data.publication.title +"'>" + data.publication.title + "</a>" )
+							);
+		
+						<#-- authors -->
+						var pubCoauthor = 
+							$('<dl/>')
+							.addClass( "palm_pub_coauthor_blck" );
+		
+						var pubCoauthorHeader =
+							$('<dt/>')
+							.addClass( "palm_label" )
+							.html( "Authors :" );
+		
+						var pubCoauthorContainer = $( '<dd/>' )
+													.addClass( "author-list" );
+		
+						$.each( data.publication.coauthor, function( index, authorItem ){
+							var eachAuthor = $( '<span/>' );
 							
+							<#-- photo -->
+							var eachAuthorImage = null;
+							<#--if( typeof authorItem.photo !== 'undefined' ){
+								eachAuthorImage = $( '<img/>' )
+									.addClass( "timeline-author-img" )
+									.attr({ "width":"40px" , "src" : authorItem.photo , "alt" : authorItem.name });
+							} else {
+								eachAuthorImage = $( '<i/>' )
+									.addClass( "fa fa-user bg-aqua" )
+									.attr({ "title" : authorItem.name });
+							}
+							eachAuthor.append( eachAuthorImage );-->
+		
+							<#-- name -->
+							var eachAuthorName = $( '<a/>' )
+												.css({"padding" : "0 15px 0 5px"})
+												.html( authorItem.name );
+							
+							eachAuthorName.attr({ "href" : "<@spring.url '/researcher' />?id=" + authorItem.id + "&name=" + authorItem.name})
+											.attr({ "target" : "_blank" });
+							
+							eachAuthor.append( eachAuthorName );
+							
+							pubCoauthorContainer.append( eachAuthor );
+						});
+		
+						pubCoauthor
+							.append( pubCoauthorHeader )
+							.append( pubCoauthorContainer );
+		
+						pubDiv
+							.append( pubTitle )
+							.append( pubCoauthor );
+		
+						<#-- abstract 
+						if( typeof data.publication.abstract != 'undefined'){
+							var pubAbstract = 
+								$('<dl/>')
+								.addClass( "palm_section abstractSec" )
+								.append(
+									$('<dt/>')
+									.addClass( "palm_label" )
+									.html( "Abstract :" )
+								).append(
+									$('<dd/>')
+									.addClass( "palm_content" )
+									.html( data.publication.abstract )
+								);
+									
+						detailContainer
+							.append( pubAbstract );
+						}-->
+						
+						<#-- keywords 
+						if( typeof data.publication.keyword != 'undefined'){
+							var pubKeyword = 
+								$('<dl/>')
+								.addClass( "palm_section keywordSec" )
+								.append(
+									$('<dt/>')
+									.addClass( "palm_label" )
+									.html( "Keywords :" )
+								).append(
+									$('<dd/>')
+									.addClass( "palm_content" )
+									.html( data.publication.keyword )
+								);
+									
+						detailContainer
+							.append( pubKeyword );
+						}-->
+						
+						<#-- references -->
+						if( typeof data.publication.reference != 'undefined'){
+							var pubReference = 
+								$('<dl/>')
+								.addClass( "palm_section" )
+								.append(
+									$('<dt/>')
+									.addClass( "palm_label" )
+									.html( "Reference :" )
+								).append(
+									$('<dd/>')
+									.addClass( "palm_content" )
+									.html( data.publication.reference )
+								);
+									
+						pubDiv
+							.append( pubReference );
+							
+			}
+		}});
+						pubList.append( pubDiv );
+	}
+	
+	function addAuthorItem( authorID, item ) {
+				var researcherDiv = 
+									$( '<div/>' )
+										.addClass( 'author' )
+										.css({ "border" : "1px solid green"})
+										.css({ "margin-top" : "3px" })
+										.attr({ 'id' : item.id });
+		<#--$.ajax({
+			type: "GET",
+			url : "<@spring.url '/researcher/basicInformation?id=' />" + authorID,
+			accepts: "application/json, text/javascript, */*; q=0.01",
+			success: function( item ){-->
+		var endString = item.details;
+		if ( endString.includes( "</br>" ) )
+			endString = endString.substring( 0, endString.indexOf( "</br>" ) );
+											
+									var researcherNav =
+									$( '<div/>' )
+										.addClass( 'nav' );
+										
+									var researcherDetail =
+									$( '<div/>' )
+										.addClass( 'detail' )
+										.append(
+											$( '<div/>' )
+												.addClass( 'name capitalize' )
+												.html( endString )
+										);
+										
+									researcherDiv
+										.append(
+											researcherNav
+										).append(
+											researcherDetail
+										);
+										
+									if( !item.isAdded ){
+										researcherDetail.addClass( "text-gray" );
+									}
+									<#-- affiliation 
+									if( typeof item.author.affiliation != 'undefined')
+										researcherDetail.append(
+											$( '<div/>' )
+											.addClass( 'affiliation' )
+											.append( 
+												$( '<i/>' )
+												.addClass( 'fa fa-institution icon font-xs' )
+											).append( 
+												$( '<span/>' )
+												.addClass( 'info font-xs' )
+												.html( item.author.affiliation )
+											)
+										);
+										
+									if( typeof item.author.coautorTimes != 'undefined')
+										researcherDetail.append(
+											$( '<div/>' )
+											.addClass( 'affiliation' )
+											.css({ "clear" : "both"})
+											.append( 
+												$( '<i/>' )
+												.addClass( 'fa fa-share-alt icon font-xs' )
+											).append( 
+												$( '<span/>' )
+												.addClass( 'info font-xs' )
+												.html( item.author.coautorTimes + " times co-authorship" )
+											)
+										);-->
+										
+									<#--if( typeof item.author.photo != 'undefined'){
+										researcherNav
+											.append(
+											$( '<div/>' )
+												.addClass( 'photo round' )
+												.css({ 'font-size':'14px'})
+												.append(
+													$( '<img/>' )
+														.attr({ 'src' : item.author.photo })
+												)
+											);
+									} else {-->
+										researcherNav
+										.append(
+											$( '<div/>' )
+											.addClass( 'photo fa fa-user' )
+										);
+									//}
+									<#-- add clcik event -->
+									researcherDetail
+										.on( "click", function(){
+											if( item.author.isAdded ){
+												window.location = "<@spring.url '/researcher' />?id=" + item.id + "&name=" + item.name;
+											} else {
+												$.PALM.popUpIframe.create( "<@spring.url '/researcher/add' />?id=" + item.id + "&name=" + endString , {popUpHeight:"416px"}, "Add " + endString + " to PALM");
+											}
+										} );
+			<#--}
+		});-->
+				authorList
+					.append( 
+						researcherDiv
+					);
+	}
+	
 function update(pub_data) {
 							if( pub_data.count > 0 ){
 							
@@ -723,5 +1094,5 @@ function dragmove(d) {
 		});
 		
 		$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) , options );
-	};
+	});
 </script>

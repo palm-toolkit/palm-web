@@ -1,41 +1,87 @@
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <div id="boxbody-${wUniqueName}" class="box-body no-padding" style="background-color:#f2f2f2;">
-	<div width="100%" style="height: 60px; background-color: #fff;">
-		<span style="font-family: 'Times New Roman'; text-align: center; font-size: 40px; width: 47.5%; display:inline-block; height: 100%;">Why are we recommending?</span>
-		<span style="font-family: 'Times New Roman'; text-align: center; font-size: 40px; width: 51.5%; display:inline-block; border-left-style: solid; height: 100%;">What are we recommending?</span>
+	<div class="general-box-filter">
+		
+		<div class="panel panel-primary">
+		      	<div class="panel-heading" style="text-align: center; padding: 5px 5px;" onclick="toggleSearch()">
+		      		<i class="fa fa-search"></i>
+					<span>Recommendation Parameters</span>
+				</div>
+		      	<div class="panel-body" id="search_body">
+					<div class="dropdown">
+						<div style="margin:5px 0px 0 0;">
+							<span>Search:</span>
+						</div>
+						<div class="input-group" style="width: 100%;">
+							<div class="general-box-search-option input-group-btn"></div>
+							<span style="margin-left: 10px;">Max results: </span>
+							<input type="number" id="maxResults" name="maxResults" min="5" max="100" step="5" value="10" style="margin-right: 10px;">
+							<input type="text" id="searchItem" name="searchItem" class="form-control input-sm pull-left" style="width: initial;"
+							 placeholder="Search Interest item" value="<#if targetName??>${targetName!''}</#if>"/>
+							<button class="btn btn-sm btn-default" onclick="generateSearchItems()"><i class="fa fa-search"></i></button>
+							<div id="searchSpinner" class="fa fa-refresh fa-spin" style="margin-left: 8px; display: none;"></div>
+						</div>
+						<div id="searchedItems" class="dropdown-content" ></div>
+					</div>
+		      		<div class="general-box-filter-option" style="margin: 15px 10px 10px;"></div>
+				</div>
+		</div>
 	</div>
-    <div id="singleTreeTab" class="singleTree-box-filter" width="100%" style="display: none; height: 300px; background-color: #fff;">
-	
-	</div>
-    <div class="container">
-      	<ul class="progressbar" id="interest_progress">
-  		</ul>
+	<div class="panel panel-primary">
+		<div class="panel-heading" style="text-align: center; padding: 5px 5px;" onclick="toggleSteps()">
+			<span>Recommendation Steps</span>
+		</div>
+		<div class="panel-body" id="graph_recommender" style="margin: 8px; padding: 0px; display: none;">
+			<div class="line"></div>
+			<div class="line" style="left:14.5%"></div>
+			<div class="line" style="left:34%"></div>
+			<div class="line" style="left:66%"></div>
+			<div class="line" style="left:82%"></div>
+			
+			<div width="100%" style="height: 35px; background-color: #fff; border-bottom-style: ridge;">
+				<span style="font-family: 'Times New Roman'; color: #8f8e8e; text-align: center; font-size: 25px; width: 49.8%; display:inline-block; height: 100%;">Why is this recommended?</span>
+				<span style="font-family: 'Times New Roman'; color: #8f8e8e; text-align: center; font-size: 25px; width: 49.5%; display:inline-block; border-left-style: dashed; height: 100%;">What is recommended?</span>
+			</div>
+			<div>
+				<span style=" position: absolute; text-align: center; text-transform: uppercase; color: #8f8e8e; font-family: 'Times New Roman'; font-weight: bolder;">Steps:</span>
+			    <div class="container">
+			      	<ul class="progressbar" id="interest_progress">
+			  		</ul>
+			  	</div>
+		  	</div>
+		  	<div>
+			  	<div id="legendGraph" style="border-top-style: dashed; border-top-width: 2px; border-top-color: #aaaaaa;">
+				<span style=" position: absolute; text-align: center; text-transform: uppercase; color: #8f8e8e; margin-top: 10px; font-family: 'Times New Roman'; font-weight: bolder;">Legend:</span>
+			  	</div>
+		  	</div>
+		  	<div id="singleTreeTab" class="singleTree-box-filter" width="100%" style="height: 300px; background-color: #fff; border-top-style: dashed; border-top-width: 2px; border-top-color: #aaaaaa;">
+				<span width="100%" style="opacity: 0.75; text-align: center; font-size: 24px; background-color: white;">Show recommendation details of a selected node.</br>No item selected.</span>
+			</div>
+  		</div>
   	</div>
-  	<div id="legendGraph">
-  	</div>
+	<div class="panel panel-primary">
+		      	<div class="panel-heading" style="text-align: center; padding: 5px 5px;" onclick="$( this ).next().slideToggle( 'slow' )">
+		      		
+					<span>Recommendations</span>
+				</div>
+		      	<div class="panel-body" id="recommendation_body" style="margin: 5px 5px;">
 	<table width="100%" border="0">
 		<tr valign="top">
-			<td style="background-color:#fff;">
-				<table>
-					<tr><td>
-						<div class="algo-box-filter">
-							<div class="general-box-filter" style="display:none; margin: 10px 10px 50px;">
-								<div class="general-box-filter-option" ></div>
-								<div id="filter_item" style="margin:0px 10px 0px 0px;">
-								</div>
-								<div style="margin:15px 0px 0 0;">
-									<span>Filter:</span>
-									<select class="selectpicker btn-xs" style="max-width:210px"> </select>
-								</div>
+			<td id="filter_tab" width="15%" style="display: none; background-color: #fafafa;
+			 border-bottom: 1px solid #b3b3b3;  border-top: 1px solid #b3b3b3;  border-right: 1px solid #b3b3b3;">
+				<div style="float: left;  
+				padding: 8px; overflow-x: block;">
+							<div class="general-box-filter">
 								<div class="input-group" style="width: 100%;">
-							      <input type="text" id="rearchItem" name="rearchItem" class="form-control input-sm pull-right" placeholder="Search Interest item" value="">
-							      <div id="filter_search_button" class="input-group-btn">
-							        <button class="btn btn-sm btn-default" onclick="searchQuery()"><i class="fa fa-search"></i></button>
+							      <input type="text" id="filterItem" name="filterItem" class="form-control input-sm pull-right" autocomplete="on" placeholder="Filter item" value="">
+							      <div id="filter_item_button" class="input-group-btn">
+							        <button class="btn btn-sm btn-default" onclick="filterQuery()"><i class="fa fa-search"></i></button>
 							      </div>
 							    </div>
 								<div style="margin:15px 15px 0px 0px;">
-									<span>Publication:</span>
+									<span id="node_range_title">Publication:</span>
 									<div style="margin: 0px 10px 0px 0px;">
-								  		<input id="nodes_range" type="range" value="10" min="10" max="100" step="10" 
+								  		<input id="nodes_range" type="range"
 								  		oninput="changeRange(this.value)" onchange="changeRange(this.value)">
 								  		<output id="range_output">10</output>
 								  	</div>
@@ -43,39 +89,98 @@
 								</div>
 								</div>
 							</div>
-							<button class="btn btn-block btn-default algo-box-filter-button btn-xs" onclick="$( this ).prev().slideToggle( 'slow' )">
-								<i class="fa fa-filter pull-left"></i>
-								<span>Filtering techniques</span>
-							</button>
-						</div>
-					</td>
-					</tr>	
-				</table>
+				</div>
+			</td>
+			<td style="background-color:#fff;">
+				<button id="zoomInBtn"
+					style="margin-left: 8px; margin-top: 8px; z-index: 1; background-color: transparent; border-color: transparent; position: absolute;">
+						<i class="large material-icons" id="zoomInBtnIcn" style="font-size: 30px;">zoom_in</i>
+				</button>
+				
+				<button id="zoomOutBtn"
+				style="margin-left: 8px; margin-top: 48px; z-index: 1; background-color: transparent; border-color: transparent; position: absolute;">
+						<i class="large material-icons" id="zoomOutBtnIcn" style="font-size: 30px;">zoom_out</i>
+				</button>
+				
+				<button   
+					class="btn btn-block btn-default bo
+					x-filter-button btn-xs sliderBtn" id="filterBtn"
+					onclick="toggleFilterTab()">
+					<div>
+						<span class="textHidden">Filter's</span>
+						<i class="large material-icons" id="filterBtnIcn" id="filterBtnIcn" style="font-size: 60px; color: #3366ff">chevron_right</i>
+					</div>
+				</button>
 			  	<div class="general-content-graph" style="height:800px !important; background-color:#fff;">
 			    </div>
-			</td>
-			<td width="50px" style="text-align: center; background-color: #fafafa;">
-				<button type="button" onclick="toggleDetailsTab()"  
-				class="btn btn-block btn-default box-filter-button btn-xs"
-				style="width:50px; height: 800px; float: right; margin-top: 0.5em;">
-						Details
+			    <button type="button" id="detailBtn" onclick="toggleDetailsTab()"  
+				class="btn btn-block btn-default box-filter-button btn-xs sliderBtn"
+				style="width:50px; float: right; margin-top: -40%; position: relative; background-color: transparent; border-color: transparent;">
+					<div>
+						<i class="large material-icons" id="detailBtnIcn" style="font-size: 60px; color: #3366ff">chevron_left</i>
+						<span class="textHidden" style="float: right;">Detail's</span>
+					</div>
 				</button>
 			</td>
 			<td id="node_tab" width="20%" style="display: none; background-color: #fafafa;">
-				<div id="node_details" class="Scrollable" style="float: right; width: 450px; max-height: 600px; 
-				padding: 8px; overflow-x: block; overflow-y: scroll;">	
+				<div id="node_details" class="Scrollable" style="float: right; width: 450px; max-height: 800px; 
+				padding: 15px; border-bottom: 1px solid #b3b3b3;  border-top: 1px solid #b3b3b3;  border-left: 1px solid #b3b3b3;">	
 				</div>
 			</td>
     	</tr>
     </table>
+				</div>
+		</div>
+	<div id="msg_content">
+	</div>
 </div>
 
 <style>
-  .container {
-      width: 100%;
-      height: 100px;
-      margin: 40px auto 0px; 
-  }
+
+.sliderBtn {
+	width: 50px; 
+	float: left; 
+	margin-top: 27%; 
+	position: absolute; 
+	z-index: 1; 
+	background-color: transparent; 
+	border-color: transparent;
+}
+
+.textHidden {
+	display: none;
+    float: left;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 19px;
+    margin-top: 16px;
+}
+
+.sliderBtn:hover .textHidden {
+	display: table-cell;
+}
+
+.sliderBtn:focus {
+	background-color: transparent;
+}
+
+.line {
+	position: absolute;
+    border-left-style: ridge;
+    width: 5px;
+    height: 25.5vh;
+    top: 157px;
+    left: 50%;
+    border-left-color: #aaaaaa;
+    border-left-width: 2px;
+    -webkit-transition: all 0.85s;
+    transition: all 0.85s;
+}
+.container {
+	width: 100%;
+	height: 65px;
+    margin: 12px auto 0px; 
+}
 .progressbar {
   margin: 0;
   padding: 0;
@@ -222,19 +327,246 @@
   z-index: 1;
 }
 
+/* Dropdown choices */
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #3e8e41;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    position: absolute;
+    background-color: #f6f6f6;
+    min-width: 230px;
+    max-height: 150px;
+    overflow-y: scroll;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown a:hover {
+	background-color: #ddd;
+}
+
+.show {
+	display:block;
+}
+
+/* spinner css */
+.loader {
+  border: 16px solid #ccc;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 </style>
 <script>
 
+	(function() {
+  d3.layout.grid = function() {
+    var mode = "equal",
+        layout = _distributeEqually,
+        x = d3.scale.ordinal(),
+        y = d3.scale.ordinal(),
+        size = [1, 1],
+        actualSize = [0, 0],
+        nodeSize = false,
+        bands = false,
+        padding = [0, 0],
+        cols, rows;
+
+    function grid(nodes) {
+      return layout(nodes);
+    }
+
+    function _distributeEqually(nodes) {
+      var i = -1, 
+          n = nodes.length,
+          _cols = cols ? cols : 0,
+          _rows = rows ? rows : 0,
+          col, row;
+
+      if (_rows && !_cols) {
+        _cols = Math.ceil(n / _rows)
+      } else {
+        _cols || (_cols = Math.ceil(Math.sqrt(n)));
+        _rows || (_rows = Math.ceil(n / _cols));
+      }
+
+      if (nodeSize) {
+        x.domain(d3.range(_cols)).range(d3.range(0, (size[0] + padding[0]) * _cols, size[0] + padding[0]));
+        y.domain(d3.range(_rows)).range(d3.range(0, (size[1] + padding[1]) * _rows, size[1] + padding[1]));
+        actualSize[0] = bands ? x(_cols - 1) + size[0] : x(_cols - 1);
+        actualSize[1] = bands ? y(_rows - 1) + size[1] : y(_rows - 1);
+      } else if (bands) {
+        x.domain(d3.range(_cols)).rangeBands([0, size[0]], padding[0], 0);
+        y.domain(d3.range(_rows)).rangeBands([0, size[1]], padding[1], 0);
+        actualSize[0] = x.rangeBand();
+        actualSize[1] = y.rangeBand();
+      } else {
+        x.domain(d3.range(_cols)).rangePoints([0, size[0]]);
+        y.domain(d3.range(_rows)).rangePoints([0, size[1]]);
+        actualSize[0] = x(1);
+        actualSize[1] = y(1);
+      }
+
+      while (++i < n) {
+        col = i % _cols;
+        row = Math.floor(i / _cols);
+
+        nodes[i].x = x(col);
+        nodes[i].y = y(row);
+      }
+
+      return nodes;
+    }
+
+    grid.size = function(value) {
+      if (!arguments.length) return nodeSize ? actualSize : size;
+      actualSize = [0, 0];
+      nodeSize = (size = value) == null;
+      return grid;
+    }
+
+    grid.nodeSize = function(value) {
+      if (!arguments.length) return nodeSize ? size : actualSize;
+      actualSize = [0, 0];
+      nodeSize = (size = value) != null;
+      return grid;
+    }
+
+    grid.rows = function(value) {
+      if (!arguments.length) return rows;
+      rows = value;
+      return grid;
+    }
+
+    grid.cols = function(value) {
+      if (!arguments.length) return cols;
+      cols = value;
+      return grid;
+    }
+
+    grid.bands = function() {
+      bands = true;
+      return grid;
+    }
+
+    grid.points = function() {
+      bands = false;
+      return grid;
+    }
+
+    grid.padding = function(value) {
+      if (!arguments.length) return padding;
+      padding = value;
+      return grid;
+    }
+
+    return grid;
+  };
+})();
+	
+	
+	function toggleSteps() {
+		if ( $( "#search_body" ).css( 'display' ) == 'none' ) {
+			$( '.line' ).css( { "top": "157px" } );
+		} else {
+			$( '.line' ).css( { "top": "294px" } );
+		}
+	
+		$( "#graph_recommender" ).slideToggle( 'slow' );
+	}
+	function toggleSearch() {
+		if ( $( "#search_body" ).css('display') == 'none' ) {
+			$( '.line' ).css( { "top": "294px" } );
+		}
+		else {
+			$( '.line' ).css( { "top": "157px" } );
+		}
+		$( "#search_body" ).slideToggle( 'slow' );
+	}
+
 	function toggleDetailsTab() {
+		
+		if ( $( "#node_tab" ).css('display') == 'none' ) {
+			//$( "#detailBtn" ).css( "margin-top", "-45%" );
+			$( "#detailBtnIcn" ).html( "chevron_right" );
+		}
+		else {
+			//$( "#detailBtn" ).css( "margin-top", "-30%" );
+			$( "#detailBtnIcn" ).html( "chevron_left" );
+		}
+		
 		var tab = document.getElementById("node_tab");
-		$( tab ).slideToggle( 'fast' );
+		$( tab ).slideToggle( "fast" );
+	}
+	
+	function toggleSearchTab() {
+		if ( $( this ).css( 'display' ) == 'none' ) {
+			//$( '.line' ).css( { "height": "14.5%" } );
+			$( '.line' ).css( { "height": "27vh" } );
+		}
+		else {
+			//$( '.line' ).css( { "height": "14.5%" } );
+			$( '.line' ).css( { "height": "27vh" } );
+		}
+	}
+	
+	function toggleFilterTab() {
+		
+		if ( $( "#filter_tab" ).css('display') == 'none' ) {
+			$( "#filterBtnIcn" ).html( "chevron_left" );
+		}
+		else {
+			$( "#filterBtnIcn" ).html( "chevron_right" );
+		}
+		
+		var tab = document.getElementById("filter_tab");
+		$( tab ).slideToggle( 'slow' );
 	}
 	
 	function switchDetailsTab( shouldClose ) {
 		if ( shouldClose ) {
 			$( "#node_tab" ).slideUp( 'fast' );
+			$( "#detailBtn" ).css( "margin-top", "-30%" );
+			$( "#detailBtnIcn" ).html( "chevron_left" );
 		} else {
 			$( "#node_tab" ).slideDown( 'fast' );
+			$( "#detailBtn" ).css( "margin-top", "-45%" );
+			$( "#detailBtnIcn" ).html( "chevron_right" );
 		}
 	}
 	
@@ -242,40 +574,131 @@
 		//var tab = document.getElementById("singleTreeTab");
 		if ( shouldClose ) {
 			$( "#singleTreeTab" ).slideUp( 'fast' );
+			//$( '.line' ).css( { "height": "15.4%" } );
+			$( '.line' ).css( { "height": "25.5vh" } );
 		} else {
-			$( "#singleTreeTab" ).slideDown( 'fast' );
+			$( "#singleTreeTab" )
+				.slideDown( 'fast' )
+				.html("");
+			$( '.line' ).css( { "height": "67vh" } );
+			//$( '.line' ).css( { "height": "31.8%" } );
 		}
+		
+		if ( $( "#graph_recommender" ).css( 'display' ) == 'none' ) {
+			toggleSteps();
+		}
+	}
+
+	function switchSingleTreeTab() {
+		if ( $( "#singleTreeTab" ).css('display') == 'none' ) {
+			$( '.line' ).css( { "height": "67vh" } );
+			//$( '.line' ).css( { "height": "31.8%" } );
+		}
+		else {
+			//$( '.line' ).css( { "height": "15.4%" } );
+			$( '.line' ).css( { "height": "25.5vh" } );
+		}
+		
+		$( '#singleTreeTab' ).slideToggle( 'slow' );
+	}
+
+	function displayTopNodes( range, nodeType ) {
+		var pubNodes = nodes.filter( function(d){
+			return d.nodeType == nodeType;
+		} )
+		.sort( function( a, b ) {
+			if (a.group < b.group)
+		    	return -1;
+		  	if (a.group > b.group)
+		    	return 1;
+		  	return 0;
+		} );
+		
+		var top = pubNodes.slice(range, pubNodes.length);
+		
+		return top;
+	}
+
+	function stepDisplayNodes( stepNodes, range ) {
+		var topNodes = [];
+		for ( var i = 0; i < stepNodes.length; i++ ) {
+			otherNodes = displayTopNodes( range, stepNodes[i] );
+			topNodes = topNodes.concat(otherNodes);
+			range = 10;
+		}
+		return topNodes;
 	}
 
 	function changeRange( range ) {
 		$( "#range_output" ).html(range);
 		
-		var pubNodes = nodes.filter( function(d){
-			return d.nodeType == 4;
-		} );
+		var stepNo = selectedStep;
+		var stepNodes = [];
+				
+		//if ( stepNo < 4 )
+		//	return;
 		
-		var top = pubNodes.slice(range, pubNodes.length);
+		if ( generalAlgorithmID == "interest" ) {
+			if ( stepNo == 5 ) {
+				stepNodes = [3, 2, 1];
+			}
+			<#--else if ( stepNo == 4 || stepNo == 2 ) {
+				stepNodes = [2, 1];
+			}
+			else if ( stepNo == 3 ) {
+				stepNodes = [2];
+			}
+			else {
+				stepNodes = [3, 2, 1];
+			}-->
+		}
+		else {
+			if ( stepNo == 5 ) {
+				stepNodes = [3, 2, 1];
+			}
+			else if ( stepNo == 1 || stepNo == 2 || stepNo == 3 ) {
+				stepNodes = [1];
+			}
+			else if ( stepNo == 4 ) {
+				stepNodes = [1, 2];
+			}
+			else {
+				stepNodes = [3, 2, 1];
+			}
+		}
+		
+		if ( stepNo == 1 && generalAlgorithmID == "interest" ) {
+			if ( range > 3 ) {
+				range = 1;
+				$( "#nodes_range" )
+					.attr("step", 1)
+					.attr("min", 1) 
+					.attr("max", 3)
+					.attr("value", 1);
+			}
+			var displayNodes = nodes.filter( function(d){
+					return d.group <= (range-1);
+				} );
+		}
+		if ( stepNo == 2 && generalAlgorithmID == "c2d" ) {
+			return;
+		}
+		else {
+			var top = stepDisplayNodes( stepNodes, range );
+			var displayNodes = nodes.filter( function( el ) {
+			  return top.indexOf( el ) < 0;
+			} );
+		}
 		
 		
+		//var displayNodes = pubNodes.slice( 0, range );
 		
-		var topN = 0;
-		$( "#nodes_range" ).attr("max", pubNodes.length);
+		//$( "#nodes_range" ).attr("max", pubNodes.length);
 		
-		$.each( nodes, function(d, item){
-			$("#n_"+item.id).attr("opacity", 1 );
-		} );
+		//var svgGraph = d3.selectAll( ".general-content-graph" )
+		//	.selectAll("g.network");
 		
-		$.each( top, function(d, item){
-			$("#n_"+item.id).attr("opacity", 0 );
-			
-			link.style("opacity", function(o) {
-				return o.source.index == item.index || o.target.index == item.index ? 0 : 1;
-			})
-		} );
-		
-		
-		force.start();
-		//updateStepGrap( 5, pubNodes.slice(0,range), true );
+		updateStepGrap( stepNo, displayNodes, true );
 	}
 
 	<#-- generate unique id for progress log -->
@@ -283,13 +706,16 @@
 	var uniquePidGerneraGraphCloud = $.PALM.utility.generateUniqueId();
 	var uniquePidCode = $.PALM.utility.generateUniqueId();
 	
-	<#-- Selected algorithm selected in options -->
-	var generalAlgorithmID = "interest";
+	<#-- Selected algorithm selected in options--> 
+	var generalAlgorithmID = "interest",
+		filterItem = "author";
+	<#-->var generalAlgorithmID = "c3d interest";
 					
 	<#-- Global variables -->
 	var nodes = [];
 	var edges = [];
 	
+	var selectedStep = -1;
 	var nodesMap = {};
 	var stepsNodes = {};
 	var stepsEdges = {};
@@ -302,17 +728,96 @@
 		selectedItem;
 	const MAP_SIZE = "map_size";
 	nodesMap[MAP_SIZE] = 0;
+		
+	
+	<#-- Graph zoom functionality -->
+	var zoom = d3.behavior.zoom().scaleExtent([0.5, 1.5]).on("zoom", zoomed);
+	function zoomed() {
+	    d3.selectAll( ".general-content-graph" ).selectAll("g.network")
+	    	.attr("transform",
+		        "translate(" + zoom.translate() + ")" +
+		        "scale(" + zoom.scale() + ")"
+		    );
+	}
+	function interpolateZoom (translate, scale) {
+	    var self = this;
+	    return d3.transition().duration(350).tween("zoom", function () {
+	        var iTranslate = d3.interpolate(zoom.translate(), translate),
+	            iScale = d3.interpolate(zoom.scale(), scale);
+	        return function (t) {
+	            zoom
+	                .scale(iScale(t))
+	                .translate(iTranslate(t));
+	            zoomed();
+	        };
+	    });
+	}
+	function zoomClick() {
+	    var clicked = d3.event.target,
+	        direction = 1,
+	        factor = 0.2,
+	        target_zoom = 1,
+	        center = [width / 2, height / 2],
+	        extent = zoom.scaleExtent(),
+	        translate = zoom.translate(),
+	        translate0 = [],
+	        l = [],
+	        view = {x: translate[0], y: translate[1], k: zoom.scale()};
+	
+	    d3.event.preventDefault();
+	    direction = (this.id === 'zoomInBtn') ? 1 : -1;
+	    target_zoom = zoom.scale() * (1 + factor * direction);
+	
+	    if (target_zoom < extent[0] || target_zoom > extent[1]) { return false; }
+	
+	    translate0 = [(center[0] - view.x) / view.k, (center[1] - view.y) / view.k];
+	    view.k = target_zoom;
+	    l = [translate0[0] * view.k + view.x, translate0[1] * view.k + view.y];
+	
+	    view.x += center[0] - l[0];
+	    view.y += center[1] - l[1];
+	
+	    interpolateZoom([view.x, view.y], view.k);
+	}
+	
+	function translate() {
+		var clicked = d3.event.target,
+	        direction = 1,
+	        factor = 0.2,
+	        target_zoom = 1,
+	        center = [width / 2, height / 2],
+	        extent = zoom.scaleExtent(),
+	        translate = zoom.translate(),
+	        translate0 = [],
+	        l = [],
+	        view = {x: d3.event.dx, y: d3.event.dy, k: zoom.scale()};
+	
+	    //d3.event.preventDefault();
+	    direction = (this.id === 'zoomInBtn') ? 1 : -1;
+	    target_zoom = zoom.scale() * (1 + factor * direction);
+	
+	    //if (target_zoom < extent[0] || target_zoom > extent[1]) { return false; }
+	
+	    translate0 = [(center[0] - view.x) / view.k, (center[1] - view.y) / view.k];
+	    view.k = target_zoom;
+	    l = [translate0[0] * view.k + view.x, translate0[1] * view.k + view.y];
+	
+	    view.x += center[0] - l[0];
+	    view.y += center[1] - l[1];
+	
+	    interpolateZoom([view.x, view.y], view.k);
+	}
 	
 	$( function(){
 
 		<#-- Inserting progress items -->
 		$( "#interest_progress" )
 			.append( createProgressItem( "Active User", 0 ).addClass( "active" ) )
-			.append( createProgressItem( "3D Co-Author's", 1 ) )
+			.append( createProgressItem( "3D Co-Author's Graph", 1 ) )
 			.append( createProgressItem( "Interest Network", 2 ) )
-			.append( createProgressItem( "Top 10 Interests", 3 ) )
-			.append( createProgressItem( "Top 10 Authors", 4 ) )
-			.append( createProgressItem( "Recommended Publications", 5 ) ).show();
+			.append( createProgressItem( "Top N Interests Graph", 3 ) )
+			.append( createProgressItem( "Top N Authors Graph", 4 ) )
+			.append( createProgressItem( "Recommendations Graph", 5 ) ).show();
 		
 		function createProgressItem( itemName, stepNo ) {
 			var itemElem = $( "<li/>" )
@@ -325,8 +830,43 @@
 								setTimeout( function(){
 									$.PALM.popUpMessage.create( ("Simulating graph."), { uniquePidCode, popUpHeight:40, directlyRemove:true , polling:false});
 								}, 0 );
+								selectedStep = stepNo;
 								focus_node = null;
 							    updateGraphData( stepNo );
+							    var node_range_changed = true;
+								
+								if ( stepNo == 5 ) {
+									$( "#node_range_title" ).html( "Publication:" );
+								} else if ( stepNo == 4 ) {
+									if ( generalAlgorithmID == "interest" )
+										$( "#node_range_title" ).html( "Co-Author:" );
+									else
+										$( "#node_range_title" ).html( "Interest:" );
+								} else if ( stepNo == 2 || stepNo == 3 ) {
+									if ( generalAlgorithmID == "interest" )
+										$( "#node_range_title" ).html( "Interest:" );
+									else
+										$( "#node_range_title" ).html( "Author:" );
+								} else if ( stepNo == 1 ) {
+									$( "#node_range_title" ).html( "Co-Authors:" );
+									
+									if ( generalAlgorithmID == "interest" ) {
+										node_range_changed = false;
+										$( "#nodes_range" )
+											.attr("step", 1)
+											.attr("min", 1) 
+											.attr("max", 3)
+											.attr("value", 1);
+									}
+								}
+								
+								if (node_range_changed) {
+									$( "#nodes_range" )
+											.attr("step", 10)
+											.attr("min", 10) 
+											.attr("max", 100)
+											.attr("value", 10);
+								}
 								
 								<#-- remove  pop up progress log -->
 								$.PALM.popUpMessage.remove( uniquePidCode );
@@ -385,16 +925,50 @@
 					.on( "change", function(){ getFilterAlgorithm( $( this ).val() , filterProfile ) } );
 				var filterProfileContainer = $( "<div/>" )
 					.css( { "margin":"0 10px 0 0"} )
-					.append( $( "<span/>" ).html( "Filter by : " ) )
+					//.append( $( "<span/>" ).html( "Filter by : " ) )
 					.append( filterProfile );
-				$( "#filter_item" ).append( filterProfile );
+				$( widgetElem ).find( ".general-box-search-option" ).append( filterProfileContainer );
+				//$( "#search_item" ).append( filterProfile );
 				
 				getFilterAlgorithm("", filterProfile);
 				
 				<#-- remove  pop up progress log -->
 				$.PALM.popUpMessage.remove( uniquePidGerneraRecommendationCloud );
 				
+				<#-- adding dropdown scroller -->
+				$( '#searchedItems' )
+					.slimscroll({
+						height: "150px",
+						width: "240px",
+				        size: "6px",
+						allowPageScroll: true,
+			   			touchScrollStep: 50,
+			   			railVisible: true,
+			    		alwaysVisible: true
+				    });
+				$( '#searchedItems' ).parent()
+					.attr( { "id": "searchContent" } )
+					.css( {
+						overflow: "inherit",
+						position: "absolute",
+						"z-index": 2
+					} ).hide();
+				$( "#searchContent" ).blur( function(){
+					console.log("hide items");
+					$( "#searchSpinner" ).hide(); 
+				$( "#searchedItems" ).html(""); } );
 				
+				$( '#node_details' )
+					.slimscroll({
+						height: "800px",
+						width: "450px",
+				        size: "6px",
+						allowPageScroll: true,
+			   			touchScrollStep: 50,
+			   			railVisible: true,
+			    		alwaysVisible: false
+				    });
+								
 				<#-- graph items -->
 				width = GernralTarget.width();
 				height = GernralTarget.height();
@@ -418,14 +992,51 @@
 						//.attr("transform", "translate(" + (width/2) + "," + (height/2) + ")");
 				<#--generalGraph.append("g");
 				generalGraph.append("g").attr("class", "labels")
-      				.selectAll("g.label");-->
+      				.selectAll("g.label");
 				var zoom = d3.behavior.zoom()
 				    .scaleExtent([min_zoom, max_zoom])
 				    .on("zoom", function() {
 									generalGraph.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 									
-								})
-				svg.call(zoom);
+								})-->
+				var dragCallback = function(){
+				  //console.log(d3.event.dx, d3.event.dy);
+				  //generalGraph.attr("transform", "translate(" + d3.event.dx + "," + d3.event.dy + ")");
+				  //d3.event.sourceEvent.stopPropagation(); 
+				  //translate();
+				  var x = d3.event.dx,
+				  		y = d3.event.dy;
+				  d3.transition().duration(350).tween("transform", function () {
+				        var iTranslate = d3.interpolate(zoom.translate(), [x, y]);
+				        return function (t) {
+				        	console.log(iTranslate(t));
+				            zoom
+				                .translate(iTranslate(t));
+				            zoomed();
+				        };
+				    })
+				    .remove();
+				};
+				var dragBehavior = d3.behavior.drag()
+				                     .on("drag", function (d, i) {
+				            var 
+					        factor = 0.2,
+					        target_zoom = 1;
+	    					var target_zoom = zoom.scale() * (1 + factor);
+				            zoom
+				                .scale(zoom.scale())
+				                .translate([(d3.event.x - (width/2)), (d3.event.y - (height/2))]);
+				            zoomed();
+				            //zoom.translate([(d3.event.x - (width/2)), (d3.event.y - (height/2))]);
+				            //translate();
+				            //interpolateZoom([(d3.event.x - (width/2)), view.y], zoom.scale());
+							generalGraph
+				            	.attr('transform', 'translate(' + (d3.event.x - (width/2)) + ' ' + (d3.event.y - (height/2)) +')');
+
+                        });
+				svg.call(dragBehavior);
+				d3.select( '#zoomOutBtn' ).on( 'click', zoomClick );
+				d3.select( '#zoomInBtn' ).on( 'click', zoomClick );
 				
 				tipCirclePack = d3.tip()
 							      .attr('class', 'd3-tip')
@@ -434,13 +1045,25 @@
 				
 				createLegend();
 				
-				<#-- update general graph -->
-				updateGeneralGraph( data.pub_recommendation, 0 );
-			
-				$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) );	
+				if ( data.pub_recommendation.count > 0 )
+				{ 
+					$( '#searchItem' ).val( data.pub_recommendation.nodes[0].details );
+					
+					<#-- update general graph -->
+					updateGeneralGraph( data.pub_recommendation, 0 );
 				
-				<#-- call for next step -->
-				callRecommendationStep( 1 );
+					$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) );	
+					
+					<#-- call for next step -->
+					callRecommendationStep( 1 );
+				}
+				else 
+				{
+					$( "#search_body" ).slideToggle( "slow" );
+					$( "#recommendation_body" ).slideToggle( "slow" );					
+					
+					$.PALM.callout.generate( $( widgetElem ).find( "#msg_content" ), "warning", "No publications found. Please try to search for other authors or interest." , "" );
+				}
 			}
 		};
 		
@@ -455,6 +1078,190 @@
 		});
 		$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) , options );	
 	});
+	
+	function graphFilterAutoComplete( currentNodes ) {
+		$( '#filterItem' ).autocomplete( {
+			source: function( request, response ) {
+				var term = request.term;
+				var data = currentNodes.filter( function( n ){
+						return n.details.toLowerCase().indexOf(term) >= 0;
+					} )
+					.map( function( a ) {
+						var endString = a.details;
+						if ( endString.includes( "</br>" ) )
+							endString = endString.substring( 0, endString.indexOf( "</br>" ) ); 
+						return { label: endString, value: a }; 
+					} );
+				response( data );
+			},
+			select: function( event, ui ) {
+				console.log("search item: ", d3.select( "#n_" + ui.item.value.id ).selectAll( "path" ));
+				event.preventDefault();
+				$( '#filterItem' ).val( ui.item.label );
+				d3.select( "#n_" + ui.item.value.id ).selectAll( "path" ).on( "click" )( ui.item.value );
+			},
+		    focus: function( event, ui ) {
+		        event.preventDefault();
+		        $( '#filterItem' ).val( ui.item.label );
+		    }
+		} );
+	}
+	
+	function algorithmSearchAutoComplete(  ) {
+		$( '#searchItem' ).autocomplete( {
+			source: function( request, response ) {
+				var term = request.term;
+				var searchOption = $('#filter_profile :selected').text();
+				var max = $( '#maxResults' ).text();
+				<#-- call to get the autocomplete list -->
+				$.ajax( {
+					type: "GET",
+					url : "<@spring.url '/user/interest_recommendation' />",
+					data : { query: request.term, maxresult: maxResults, itemtype: searchOption },
+					success : function( data ) {
+						var selected = [];
+						
+						if ( data.count > 0 ) {
+							selected = data.interest_recommended;
+						} 
+						
+						response( selected );
+					},
+					error: function(er) {
+						console.log("error", er);
+						response( [] );
+					}
+				} );
+			},
+			select: function( event, ui ) {
+				event.preventDefault();
+				$( '#searchItem' ).val( ui.item.label );
+				currentRequest = $.ajax({
+					type: "GET",
+					url : "<@spring.url '/user/recommendation' />",
+					data : { requestStep: 0, creatorId: publication, query: generalAlgorithmID, selectedauthor: ui.item.value },
+					beforeSend : function()    {           
+				        
+				    },
+				    error:function(e){
+				      console.log("Error: ", e);
+				    },
+					success: function( cdata ){
+						<#-- remove  pop up progress log -->
+						$.PALM.popUpMessage.remove( uniquePidGerneraRecommendationCloud );
+						
+						<#-- update general graph -->
+						console.log("data: ", cdata);
+						updateGeneralGraph( cdata.pub_recommendation, 0 );
+					
+						$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) );	
+						
+						<#-- call for next step -->
+						callRecommendationStep( 1 );
+					}
+				});
+			},
+			focus: function( event, ui ) {
+		        event.preventDefault();
+		        $( '#searchItem' ).val( ui.item.label );
+		    }
+		} )
+		.autocomplete( 'disable' );
+	}
+	
+	function setActiveResearcher( rID ) {
+		
+		$( '#searchContent' )
+						.slideUp( 'show' );
+		$( '#searchedItems' ).html("");
+		
+		$( "#recommendation_body" ).slideDown( 'slow' );	
+		$( "#msg_content" ).html( "" );
+		
+		<#-- Deactivate all progress itemd -->
+		$( "#interest_progress li" ).each( function( i ) {
+			$( this ).removeClass( "active" );
+			$( this ).removeClass( "selected" );
+			if ( i == 0 )
+				$( this ).addClass( "active" );
+		} );
+		nodes = [],
+		edges = [],
+		nodesMap = {},
+		stepsNodes = {},
+		stepsEdges = {},
+		previousStep = -1;
+		
+		$.ajax({
+			type: "GET",
+			url : "<@spring.url '/user/recommendation' />",
+			data : { requestStep: 0, creatorId: "publication", query: generalAlgorithmID, selectedauthor: rID },
+			accepts: "application/json, text/javascript, */*; q=0.01",
+			beforeSend : function()    {           
+		
+			},
+			error:function(e){
+				console.log("Error: ", e);
+			},
+			success: function( cdata ){
+				<#-- remove  pop up progress log -->
+				$.PALM.popUpMessage.remove( uniquePidGerneraRecommendationCloud );
+				
+				<#-- update general graph -->
+				console.log("data: ", cdata);
+				updateGeneralGraph( cdata.pub_recommendation, 0 );
+					
+				$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) );	
+						
+				<#-- call for next step -->
+				callRecommendationStep( 1 );
+			}
+		});
+	}
+	
+	function generateSearchItems() {
+	
+		var term = $( '#searchItem' ).val();
+		var searchOption = $('#filter_profile :selected').text();
+		var max = parseInt( $( '#maxResults' ).val(), 10 );
+	
+		<#-- show spinner -->
+		$( '#searchSpinner' ).show();
+	
+			<#-- call to get the autocomplete list -->
+			$.ajax( {
+				type: "GET",
+				url : "<@spring.url '/user/interest_recommendation' />",
+				data : { query: term, maxresult: max, itemtype: filterItem },
+				success : function( data ) {
+					var selected = [];
+					<#-- show spinner -->
+					$( '#searchSpinner' ).hide();
+				
+					if ( data.count > 0 ) {
+						selected = data.interest_recommended;
+						
+						var content = $( '#searchedItems' );
+						for ( var i = 0; i < data.count; i++ ) {
+							var cItem = selected[ i ];
+							var item = 
+								$( '<a/>' )
+								.css( { "z-index" : 1 } )
+								.on( "click", function(){ setActiveResearcher( cItem["value"] ); } )
+								.html( cItem["label"] );
+							content.append( item );
+						} 
+						
+						$( '#searchContent' )
+							.slideDown( 'show' );
+					}
+				},
+				error: function(er) {
+					console.log("error", er);
+					response( [] );
+				}
+			} );
+	}
 	
 	function callRecommendationStep( stepNo ) {
 		<#-- show pop up progress log -->
@@ -490,11 +1297,10 @@
 				<#-- update graph if user hadn't selected any yet -->
 				if ( stepNo == 5 && previousStep == -1 ) {
 					previousStep = stepNo - 1;
+					selectedStep = stepNo;
 					updateLegendSelected( stepNo );
-					//nodes = stepsNodes[previousStep];
-					//edges = [];
 					updateGraphData( stepNo );
-					//changeRange(10);
+					changeRange( 10, stepNo );
 				}
 			}
 		});
@@ -549,8 +1355,15 @@
 					$(this).removeClass( "selected" );
 				} );
 				$( '#step' + index ).addClass( "selected" );
+				
+				
+				setTimeout(function() {
+					updateStepGrap( index, nodes, false );
 					
-				updateStepGrap( index, nodes, false );
+					<#-- implementing filter autocomplete functionality -->
+					graphFilterAutoComplete( nodes );
+					changeRange( 10, stepNub );
+				}, 0)
 				
 				<#-- starting next step after delay -->
 				setTimeout(function() {
@@ -601,11 +1414,11 @@
 					details: e.details,
 					step: e.stepNo,
 					orgId: e.id,
-					fixed: false,
-					x: (e.x !== 'undefined' && e.x !== 0) ? e.x : ((width / 2)+((index-e.group+e.size/2) * Math.cos(index-e.group+e.size/2))),
-					y: (e.y !== 'undefined' && e.y !== 0) ? e.y : ((height / 2)+((index-e.group+e.size/2) * Math.sin(index-e.group+e.size/2))),
-					cx: (e.x !== 'undefined' && e.x !== 0) ? e.x : ((width / 2)+((index-e.group+e.size/2) * Math.cos(index-e.group+e.size/2))),
-					cy: (e.y !== 'undefined' && e.y !== 0) ? e.y : ((height / 2)+((index-e.group+e.size/2) * Math.sin(index-e.group+e.size/2)))
+					fixed: false
+					//x: (e.x !== 'undefined' && e.x !== 0) ? e.x : ((width / 2)+((index-e.group+e.size/2) * Math.cos(index-e.group+e.size/2))),
+					//y: (e.y !== 'undefined' && e.y !== 0) ? e.y : ((height / 2)+((index-e.group+e.size/2) * Math.sin(index-e.group+e.size/2)))
+					//cx: (e.x !== 'undefined' && e.x !== 0) ? e.x : ((width / 2)+((index-e.group+e.size/2) * Math.cos(index-e.group+e.size/2))),
+					//cy: (e.y !== 'undefined' && e.y !== 0) ? e.y : ((height / 2)+((index-e.group+e.size/2) * Math.sin(index-e.group+e.size/2)))
 					//x: ((width / 2)+Math.cos(((Math.PI*2)/128.0)*nodesMap[e.id])*e.group*20),
 	  				//y: ((height / 2)+Math.sin(((Math.PI*2)/128.0)*nodesMap[e.id])*e.group*20)
 				});
@@ -712,49 +1525,59 @@
       			var topAuth = Math.max.apply(Math,nodeData.map(function(o){return (o.nodeType == 1) ? o.group : -1;}));
       			var topInt = Math.max.apply(Math,nodeData.map(function(o){return (o.nodeType == 2) ? o.group : -1;}));
       			
-				force = d3.layout.force()
-							.charge(-330)
-    						.linkDistance(40)
-    						.gravity(0.3)
-							.size([width,height])
-							//.links(edges)
-							.nodes(nodeData)
-							.on("tick", function(e) {  	
-								
-								if ( e.alpha <= 0.07 ) force.stop();								
-								//text.attr("cx", function(d) { return d.x; })
-								//	.attr("cy", function(d) { return d.y; })
-								//text.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-								
-								link.attr("x1", function(d) { return d.source.x; })
-									.attr("y1", function(d) { return d.source.y; })
-								    .attr("x2", function(d) { return d.target.x; })
-								    .attr("y2", function(d) { return d.target.y; });
-								var q = d3.geom.quadtree(nodes),
-								      i = 0,
-								      n = nodes.length;
-								
-								//while (++i < n) q.visit(collide(nodes[i]));
-								
-								genralNodes//.each(gravity(.2 * e.alpha))
-      										//.each(collide(.5))
-											.attr("cx", function(d) { return d.x; })
-											.attr("cy", function(d) { return d.y; });
-								genralNodes.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-								
-							});
+					force = d3.layout.force()
+								.charge(-930)
+	    						.linkDistance(100 * 100)
+	    						.gravity(0.3)
+								.size([width,height])
+								//.links(edges)
+								.nodes(nodeData);
+      			
+					// Resolves collisions between d and all other circles.
+					var  padding = 1.5, // separation between same-color nodes
+    					 clusterPadding = 6;
+					function collide(node) { 
+					    var nodeSize = node.getBBox().height+16;//You can remove/reduce this static value 16 to decrease the gap between nodes.
+					    var r = nodeSize / 2 + 16,
+					        nx1 = node.x - r,
+					        nx2 = node.x + r,
+					        ny1 = node.y - r,
+					        ny2 = node.y + r;
+					    return function(quad, x1, y1, x2, y2) {
+					        if (quad.point && (quad.point !== node)) {
+					            var x = node.x - quad.point.x,
+					                y = node.y - quad.point.y,
+					                l = Math.sqrt(x * x + y * y),
+					                r = nodeSize / 2 + quad.point.radius;
+					            if (l < r) {
+					                l = (l - r) / l * .5;
+					                node.x -= x *= l;
+					                node.y -= y *= l;
+					                quad.point.x += x;
+					                quad.point.y += y;
+					            }
+					        }
+					        return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+					    };
+					}
 					
 					//link.remove();
 					//genralNodes.remove();
 					genralNodes.remove();
 					//genralNodes.html("");
 					
+					var drag = force.drag()
+    					.on("dragstart", dragstart);
 					var node_drag = d3.behavior.drag()
 				        .on("dragstart", dragstart)
 				        .on("drag", dragmove)
 				        .on("dragend", dragend);
 				
+					function dblclick(d) {
+					  d3.select(this).classed("fixed", d.fixed = false);
+					}
 				    function dragstart(d, i) {
+				    	d3.select(this).classed("fixed", d.fixed = true);
 				        //force.stop() // stops the force auto positioning before you start dragging
 				    }
 				
@@ -763,16 +1586,20 @@
 				        d.py += d3.event.dy;
 				        d.x += d3.event.dx;
 				        d.y += d3.event.dy; 
-				        //tick(); // this is the key to make it work together with updating both px,py,x,y on d !
+				        force.tick(); // this is the key to make it work together with updating both px,py,x,y on d !
 				    }
 				
 				    function dragend(d, i) {
 				        d.fixed = true; // of course set the node to fixed so the force doesn't include the node in its auto positioning stuff
-				        //tick();
+				        force.tick();
 				        //force.resume();
 				    }
+				    
+				    var connectedEdges = edges.filter( function( item ) {
+					  return nodeData.indexOf( item.source ) >= 0 && nodeData.indexOf( item.target ) >= 0;
+					} );
 														
-					link = link.data( edges ); //force.links(), function(d) { return d.source + "-" + d.target; });
+					link = link.data( connectedEdges ); //force.links(), function(d) { return d.source + "-" + d.target; });
 					
 					link.enter().append("line")
 						.attr("class", "link").style( "stroke-width", nominal_stroke )
@@ -789,12 +1616,18 @@
 						return "<strong>" + (d.title) + " :  </strong> <span style='color:GhostWhite; text-transform: capitalize;'>" + (d.details) + "</span>";
 					});
 					
+					
+					var c10 = d3.scale.category10();
+					
+					console.log("scale 10: ", c10(0), " - ", c10(1), " - ", c10(2), " - ", c10(3), " - ", c10(4), " - ", c10(5), " - ", c10(6), " - ", c10(7), " - ", c10(8)
+					, " - ", c10(9), " - ", c10(10));
+					
 					var nodeGroup = genralNodes.enter()
 						.append("g")
-						.attr("class", "node");
+						.attr("class", "node")
+						.attr("id", function(d){return "n_" + d.id});
 					var circle = nodeGroup
-						.append("path").
-						attr("id", function(d){return "n_" + d.id})
+						.append("path")
 						.attr("d", d3.svg.symbol()
 							.size( 150 )
 							.type(function(d) { 
@@ -810,50 +1643,64 @@
 								else if ( d.nodeType == 3 )
 									return colorSpec(d.group/topPub);
 							} else {
-								return color(d.group);
+								console.log("item: ", d.group, " = ", c10(d.group));
+								return c10(d.group);
 							}
 							//else
 							//	return color(0);
-						}).on("click", function(e){
+						})
+						.on("click", function(e){
 							<#-- Toggle selected node highlight -->
 							if ( focus_node !== null && focus_node.id == e.id ) {
 								exit_highlight();
+					            toggleSingleTreeTab(true);
 								focus_node = null;
 							}
 							else {
 								focus_node = e;
 								set_highlight(e);
 								getNodeDetails( e );
-							}
-							
-							<#-- Toggle single node tree -->
-							if (selectedItem == e.id) {
-					            toggleSingleTreeTab(true);
-						        selectedItem = null;
-				            } else {
-				            	toggleSingleTreeTab(false);
-				            	selectedItem = e.id;
+								
+								
+								<#-- Toggle single node tree -->
+								toggleSingleTreeTab(false);
 				            	
 				            	var step = -1;
 				            	if ( e.nodeType == 3 )
 				            		step = 5;
 				            	if ( e.nodeType == 2 )
 				            	{
-				            		if ( e.step !== 2 )
-				            			step = 3;
-				            		else
-				            			step = 2;
+				            		if ( generalAlgorithmID == "interest" )
+				            		{
+					            		if ( e.step !== 2 )
+					            			step = 3;
+					            		else
+					            			step = 2;
+				            		} else {
+				            			step = 4;
+				            		}
 				            	}
 				            	else if ( e.nodeType == 1 )
 				            	{
-				            		if ( e.step !== 1 && e.step !== 2 )
-				            			step = 4;
-				            		else
-				            			step = 1;
+				            		if ( generalAlgorithmID == "interest" )
+				            		{
+					            		if ( e.step !== 1 && e.step !== 2 )
+					            			step = 4;
+					            		else
+					            			step = 1;
+				            		} else {
+				            			if ( e.step > 2 )
+				            				step = 3;
+				            			else if ( e.group == 0 )
+				            				step = 1;
+				            			else
+				            				step = 2;
+				            		}
 				            	}
 				            		
 								singleTreeGraph( step, e );
-				            }
+							}
+							
 				        })
 						.on('mouseover', function (d,i) {
 							generalGraph.style("cursor","pointer");
@@ -869,11 +1716,10 @@
 								.attr("r", selectedCircle.attr("size") );-->
 							
 						})
-						.call(node_drag)
 						<#--.on("mousedown", function(d) { d3.event.stopPropagation();
 							
 						})-->;
-					if ( stepNo !== 1 && stepNo !== 2 )	
+					//if ( stepNo !== 1 && stepNo !== 2 )	
 					var text = nodeGroup.append("text")
 							.attr('width', 40)
 							.attr("dx", 12)
@@ -949,6 +1795,72 @@
 					//console.log("nodes: ", nodes);
 					//if (shouldUpdate)
 					//force.start();
+					if ( stepNo > 2 ) {
+								force.on("tick", function(e) {  	
+									
+									if ( e.alpha <= 0.07 ) force.stop();								
+									//text.attr("cx", function(d) { return d.x + 6; })
+									//	.attr("cy", function(d) { return d.y + 4; })
+									//text.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+									
+									//while (++i < n) q.visit(collide(nodes[i]));
+									//	ky = e.alpha;
+									//genralNodes//.each(gravity(.2 * e.alpha))
+	      										//.each(collide(.8))
+									//			.attr("cx", function(d) { return d.x -= (d.x - (width/2) - (d.nodeType + 1) * 55) * 8 * ky; })
+									//			.attr("cy", function(d) { return d.y -= (d.y - (d.nodeType + 1) * 55) * 8 * ky; });
+									var k = 30 * e.alpha;
+									nodeData.forEach(function(o, i) {
+									    o.y += o.nodeType & 1 ? k : -k;
+									    o.x += o.nodeType & 2 ? k : -k;
+									  });
+									//var allNodes = d3.selectAll(".node");
+									//var q = d3.geom.quadtree(nodeGroup),
+								    //    i = 0,
+								    //    n = nodeGroup.length;
+								
+								    //while (++i < n) q.visit(collide(nodeGroup[i]));
+								
+								    //svg.selectAll(".node")
+								    //    .attr("transform", function(d) {
+								    //        return "translate(" + d.x + "," + d.y + ")"
+								    //    });
+									nodeGroup
+												//.each(function(d, i){console.log("data item: ", d); collide(d);})
+												.attr("cx", function(d){return d.x;})
+												.attr("cy", function(d){return d.y;});
+									//genralNodes
+									nodeGroup
+												.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+									
+									link.attr("x1", function(d) { return d.source.x; })
+										.attr("y1", function(d) { return d.source.y; })
+									    .attr("x2", function(d) { return d.target.x; })
+									    .attr("y2", function(d) { return d.target.y; });									
+								});
+					}
+					else {
+						force.on("tick", function(e) {  	
+									
+									if ( e.alpha <= 0.07 ) force.stop();								
+									//text.attr("cx", function(d) { return d.x; })
+									//	.attr("cy", function(d) { return d.y; })
+									//text.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+									
+									//while (++i < n) q.visit(collide(nodes[i]));
+									var ky = e.alpha;
+									genralNodes//.each(gravity(.2 * e.alpha))
+	      										//.each(collide(.8))
+												.attr("cx", function(d) { return d.x; })
+												.attr("cy", function(d) { return d.y; });
+									genralNodes.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+									
+									link.attr("x1", function(d) { return d.source.x; })
+										.attr("y1", function(d) { return d.source.y; })
+									    .attr("x2", function(d) { return d.target.x; })
+									    .attr("y2", function(d) { return d.target.y; });
+								});
+					}
 					
 					setTimeout( function() {
 						
@@ -957,9 +1869,7 @@
 						force.start();
 						if (newPols) {
 						for (var i = n * n; i > 0; --i) force.tick();
-						force.stop();
-						
-						}
+						force.stop();}
 						<#--;
 							        genralNodes.exit().transition()
 							        .duration(1300)
@@ -1002,10 +1912,13 @@
     				function set_highlight(d)
 					{
 						circle.style(towhite, function(o) {
-								return isConnected(d, o) || isConnected(o, d) ? highlight_color : color(d.group*5);
+								return isConnected(d, o) ? highlight_color : color(o.group);
 							})
 							.style("opacity", function(o) {
-								return isConnected(d, o) || isConnected(o, d) ? 1 : 0.25;
+								return isConnected(d, o) ? 1 : 0.25;
+							})
+							.style("stroke-width", function(o){
+								return (o.id == d.id) ? 3.0 : nominal_stroke;
 							});
 						link.style("stroke", function(o) {
 								return o.source.index == d.index || o.target.index == d.index ? highlight_color : default_link_color;
@@ -1020,8 +1933,9 @@
 						if ( text === "undefined" || text == null ) {
 						} else {
 							text.style("font-weight", function(o) {
-								return isConnected(d, o) ? "bold" : "normal";
-							});
+									return isConnected(d, o) ? "bold" : "normal";
+								})
+								.style("font", function(o){ return (o.id == d.id) ? "20px sans-serif" : ""; });
 						}
 					}
 					
@@ -1029,13 +1943,15 @@
 					function exit_highlight()
 					{
 						circle.style(towhite, "white")
-							.style("opacity", 1);
+							.style("opacity", 1)
+							.style("stroke-width", nominal_stroke);
 						link.style("stroke", function(o) {
 								return default_link_color
 							})
 							.style("stroke-width", nominal_stroke);
 						
 						text.style("font-weight", "normal")
+							.style("font", "")
 							.text(function(d) {
 									if(d.step == 0 || d.step == 3 || d.step == 4 || d.step == 5) { 
 										var endString = d.details;
@@ -1049,14 +1965,11 @@
 								});
 					}
 					
-					
-	}
 	<#-- Storing the connected nodes -->
 					var linkedByIndex = {};
 					$.each(edges, function( index, d ) {
 						linkedByIndex[d.source.id + "," + d.target.id] = true;
 					});
-					
 					function isConnected(a, b) {
 						return linkedByIndex[a.id + "," + b.id] || linkedByIndex[b.id + "," + a.id] || a.id == b.id;
 					}
@@ -1068,9 +1981,10 @@
 								return true;
 						}
 						return false;
-					}
+					}				
+	}
 	function searchQuery() {
-		var test = $( "#rearchItem" ).val();
+		var test = $( "#searchItem" ).val();
 
 			currentRequest = $.ajax({
 				type: "GET",
@@ -1087,7 +2001,7 @@
 					$.PALM.popUpMessage.remove( uniquePidGerneraRecommendationCloud );
 					
 					<#-- update general graph -->
-					console.log("data: ", cdata);
+
 					updateGeneralGraph( cdata.pub_recommendation, 0 );
 				
 					$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) );	
@@ -1098,22 +2012,32 @@
 			});
 	}
 	
+	function filterQuery() {
+		var query = $( "#filterItem" ).val();
+		console.log("filter value: ", query);
+		var d = nodes.filter(function(d){return d.details.indexOf(query) !== -1;});
+		var node = genralNodes.select("#n_"+d.id);
+								
+		console.log("test data: ", node);
+	}
+	
 	function getFilterAlgorithm( algo, filterProfile ) {
 		if ( algo == "" )
 		{
 			filterProfile.html( "" );
 			
 			filterProfile.append( $( '<option/>' )
+									.attr({ "value" : "author"  })
+									.html( "Author" ));
+			filterProfile.append( $( '<option/>' )
 									.attr({ "value" : "interest"  })
 									.html( "Interest term" )
 							);
-			filterProfile.append( $( '<option/>' )
-									.attr({ "value" : "author"  })
-									.html( "Author" ));
+			filterItem = "author";
 		} else {
-			$.PALM.popUpMessage.create( "Extracting query result,", { uniqueId:uniquePidGerneraRecommendationCloud, popUpHeight:40, directlyRemove:false , polling:false});
+			<#--$.PALM.popUpMessage.create( "Extracting query result,", { uniqueId:uniquePidGerneraRecommendationCloud, popUpHeight:40, directlyRemove:false , polling:false});
 			
-			var test = $( "#rearchItem" ).val();
+			var test = $( "#searchItem" ).val();
 
 			currentRequest = $.ajax({
 				type: "GET",
@@ -1128,19 +2052,25 @@
 			      console.log("Error: ", e);
 			    },
 				success: function( cdata ){
-					<#-- remove  pop up progress log -->
+					<#-- remove  pop up progress log 
 					$.PALM.popUpMessage.remove( uniquePidGerneraRecommendationCloud );
 					
-					<#-- update general graph -->
+					<#-- update general graph 
 					updateGeneralGraph( data.pub_recommendation, 0 );
 				
 					$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) );	
 					
-					<#-- call for next step -->
+					<#-- call for next step 
 					callRecommendationStep( 1 );
 				}
-			});
+			}); -->
+			filterItem = algo;
+			if ( algo == "author" )
+				$( '#searchItem' ).attr( "placeholder", "Search Author as active researcher" );
+			else
+				$( '#searchItem' ).attr( "placeholder", "Search Interest item" );
 		}
+		filterProfile.selectpicker( 'refresh' );
 	}
 	
 	var singleTreeRequest = null;
@@ -1155,19 +2085,51 @@
 									.html( "Interest Network" )
 								);
 			algorithmProfileDropDown.append( $( '<option/>' )
-									.attr({ "value" : "c3d"  })
-									.html( "3D Co-Author Network" )
-								);
-			algorithmProfileDropDown.append( $( '<option/>' )
 									.attr({ "value" : "c2d"  })
 									.html( "2D Co-Author Network" )
+								);
+			algorithmProfileDropDown.append( $( '<option/>' )
+									.attr({ "value" : "c3d"  })
+									.html( "3D Co-Author Network" )
 								);
 		}
 		else {
 			generalAlgorithmID = algo;
 			$.PALM.popUpMessage.create( "Extracting recommendations", { uniqueId:uniquePidGerneraRecommendationCloud, popUpHeight:40, directlyRemove:false , polling:false});
-						
-			currentRequest = $.ajax({
+			
+			$( "#legendGraph" ).children("div:first").remove();
+			
+			<#-- Deactivate all progress itemd -->
+			$( "#interest_progress li" ).each( function( i ) {
+				$( this ).removeClass( "active" );
+				$( this ).removeClass( "selected" );
+				if ( i == 0 )
+					$( this ).addClass( "active" );
+			} );
+				
+			createLegend();
+			generalGraph.html( "" );
+			
+			if ( algo == "interest" ){
+				$('#step1').html( "3D Co-Author's" );
+				$('#step2').html( "Interest Network" );
+				$('#step3').html( "Top N Interests" );
+				$('#step4').html( "Top N Authors" );				
+			}
+			else if ( algo == "c3d" ) {
+				$('#step1').html( "1D Co-Author's" );
+				$('#step2').html( "3D Co-Author's" );
+				$('#step3').html( "Top N Authors" );
+				$('#step4').html( "Top N Interests" );
+			}
+			else if ( algo == "c2d" ) {
+				$('#step1').html( "1D Co-Author's" );
+				$('#step2').html( "2D Co-Author's" );
+				$('#step3').html( "Top N Authors" );
+				$('#step4').html( "Top N Interests" );
+			}
+			
+			var currentRequest = $.ajax({
 				type: "GET",
 				url : "<@spring.url '/user/recommendation?requestStep=0&creatorId=publication&query=' />" + algo + "'",
 				accepts: "application/json, text/javascript, */*; q=0.01",
@@ -1183,8 +2145,16 @@
 					<#-- remove  pop up progress log -->
 					$.PALM.popUpMessage.remove( uniquePidGerneraRecommendationCloud );
 					
+					nodes = [],
+					edges = [],
+					nodesMap = {},
+					stepsNodes = {},
+					stepsEdges = {},
+					previousStep = -1,
+					selectedStep = -1;
+					
 					<#-- update general graph -->
-					updateGeneralGraph( data.pub_recommendation, 0 );
+					updateGeneralGraph( cdata.pub_recommendation, 0 );
 				
 					$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) );	
 					
@@ -1194,6 +2164,10 @@
 			});
 		}
 		algorithmProfileDropDown.selectpicker( 'refresh' );
+	}
+	
+	function getBB(selection) {
+		selection.each(function(d){d.bbox = this.getBBox();})
 	}
 	
 	var singleRequest = null;
@@ -1218,10 +2192,12 @@
 				var sTreeStepEdges = [];
 				var sTreeNodes = [];
 				var f_node = null;
-					
+				
+				var STEP = [14, 20, 16.3, 16, 16, 16.567];
+				
 				<#-- Constant values -->
 				var tWidth = $( "#singleTreeTab" ).width();
-				var tHeight = 300 - 10;
+				var tHeight = 300;
 				var stepWidth = ( ( 17.4 / 100 ) * tWidth );
 				var default_node_color = "#ccc";
 				var color = d3.scale.category10();
@@ -1286,25 +2262,63 @@
 				if ( data !== null && data.count > 0 ) {		
 										
 					<#-- Adding the current step nodes -->
-					var index = 0;
+					var index = 0,
+						oneD = 0, oneDPos = 1, oneDXPos = 0, 
+						twoD = 0, twoDPos = 1, twoDXPos = 0, 
+						threeD = 0, threeDPos = 1, threeDXPos = 0;
+					var oneDs = 0, twoDs = 0, threeDs = 0;
+					var intXInterval = 1, intYInterval = 1, 
+						intXIndex = 0, intYIndex = 0,
+						intXPos = 0, intYPos = 0;
+					var totalInterests = 0;
+					data.nodes.forEach(function(d){
+						if ( d.stepNo == 1 ) {
+							if ( d.group == 0 ) {
+								oneDs++;
+							}
+							else if ( d.group == 1 ) {
+								twoDs++;
+							}
+							else if ( d.group == 2 ) {
+								threeDs++;
+							}
+						}
+						else if ( d.stepNo == 2 ) {
+							totalInterests++;
+						}
+					});
+					
+					console.log("size: ", totalInterests);
+					if ( totalInterests < 25 && (25 - totalInterests) > 15 )
+					var nodeSize = 25 - totalInterests;
+					else if ( totalInterests < 50 && (50 - totalInterests) > 15 )
+					nodeSize = 50 - totalInterests;
+					else if ( totalInterests < 75 && (75 - totalInterests) > 15 )
+					nodeSize = 75 - totalInterests;
+					else if ( totalInterests < 100 && (100 - totalInterests) > 15 )
+					nodeSize = 100 - totalInterests;
+					else
+					nodeSize = 15;
 
 					var maxPub = Math.max.apply(Math,data.nodes.map(function(o){return (o.type == 3) ? o.group : -1;}));
 	      			var maxAuth = Math.max.apply(Math,data.nodes.map(function(o){return (o.type == 1) ? o.group : -1;}));
 	      			var maxInt = Math.max.apply(Math,data.nodes.map(function(o){return (o.type == 2) ? o.group : -1;}));
-	      			var PubList = [];
-	      			var AuthList = [];
-	      			var IntList = [];
+	      			var PubList = {};
+	      			var AuthList = {};
+	      			var IntList = {};
 	      			
 					data.nodes.forEach( function(e){
 						var xStep = e.stepNo * (tWidth/5);
 						
-						var orgId = e.id.split(":")[0];
+						stepWidth = ( ( STEP[e.stepNo] / 100 ) * tWidth );
+						var orgId = e.id.split(":")[0],
+							aditional = 0;
 						var x = stepWidth/2,
 							y = tHeight/2,
 							fix = false;
 						
 						if ( e.stepNo == 0 ) {
-							x = stepWidth/1.5;
+							x = stepWidth/1.4;
 							fix = true;
 						}
 						else if ( e.stepNo == sStep && orgId == stepId ){
@@ -1313,50 +2327,131 @@
 						}
 						else if ( e.stepNo == 5 ) {
 							var addition = 0;
-							console.log("Pub: ", PubList[e.id]);
-							if ( PubList[e.id] == null && PubList[e.id] == 'undefined' ){
-								PubList[e.id] = 1;
+							if ( PubList[e.group] == null || PubList[e.group] == 'undefined' ) {
+								//addition = stepWidth / 2;
+								PubList[e.group] = 1.0;
 							} else {
-								addition = PubList[e.id]*5;
-								PubList[e.id] = PubList[e.id]+1;
+								addition = -stepWidth / 2 * PubList[e.group];
+								aditional = PubList[e.group];
+								PubList[e.group] = PubList[e.group] + 1.0;
+								if ( PubList[e.group] >= 3 )
+									return;
 							}
-													
+																											
 							fix = true;
-							x = stepWidth/1.1+addition;
-							var tempY = e.group/maxPub*100;
-							y = tempY/100*tHeight;
-							
-							console.log("Pub: ", x, "  -  ", y);
+							x = stepWidth/1.1 + addition;
+							var tempY = e.group/maxPub;
+							y = (tHeight+14) - (tempY*tHeight);
 						}
 						else if ( e.stepNo == 4 ) {
 							var addition = 0;
-							console.log("interest: ", IntList[e.id]);
-							if ( IntList[e.id] == null || IntList[e.id] == 'undefined' ){
-								IntList[e.id] = 1;
+							if ( AuthList[e.group] == null || AuthList[e.group] == 'undefined' ) {
+								//addition = stepWidth / 2;
+								AuthList[e.group] = 1.0;
 							} else {
-								addition = IntList[e.id]*5;
-								IntList[e.id] = IntList[e.id]+1;
+								addition = -stepWidth / 2 * AuthList[e.group];
+								aditional = AuthList[e.group];
+								AuthList[e.group] = AuthList[e.group] + 1.0;
+								if ( AuthList[e.group] >= 3 )
+									return;
 							}
-							
+														
 							fix = true;
-							x = stepWidth/1.1;
-							var tempY = e.group/maxInt*100;
-							y = tempY/100*tHeight;
+							x = stepWidth/1.1 + addition;
+							var tempY =  ( generalAlgorithmID == "interest" ? e.group/maxAuth : e.group/maxInt );
+							y = (tHeight+14) - (tempY*tHeight);
 							
 						}
 						else if ( e.stepNo == 3 ) {
 							var addition = 0;
-							console.log("Auth: ", AuthList[e.id]);
-							if ( AuthList[e.id] == null && AuthList[e.id] == 'undefined' ){
-								AuthList[e.id] = 1;
+							if ( IntList[e.group] == null || IntList[e.group] == 'undefined' ) {
+								//addition = stepWidth / 2;
+								IntList[e.group] = 1.0;
 							} else {
-								addition = AuthList[e.id]*5;
-								AuthList[e.id] = AuthList[e.id]+1;
+								addition = -stepWidth / 2 * IntList[e.group];
+								aditional = IntList[e.group];
+								IntList[e.group] = IntList[e.group] + 1.0;
+								if ( IntList[e.group] >= 3 )
+									return;
 							}
+							
 							fix = true;
-							x = stepWidth/1.1;
-							var tempY = e.group/maxAuth*100;
-							y = tempY/100*tHeight;
+							x = stepWidth/1.1 + addition;
+							var tempY = ( generalAlgorithmID == "interest" ? e.group/maxInt : e.group/maxAuth );
+							y = (tHeight+14) - (tempY*tHeight);
+						}
+						else if ( e.stepNo == 2 ) {
+							<#-- calculating Y position -->
+							y = ( (tHeight) / 2 ) + ( intYPos * (nodeSize) );
+							
+							if ( y >= (tHeight-5) || y <= 5 ) {
+								intYPos = 0; intYIndex = 0; intYInterval = 1;
+								y = ( (tHeight) / 2 ) + ( intYPos * (nodeSize) ); 
+								
+								intXInterval = intXInterval * -1;
+								intXIndex++;
+								intXPos = ( intXPos + (intXIndex * intXInterval) );
+							}
+							
+							intYInterval = intYInterval * -1;
+							intYIndex++;
+							intYPos = ( intYPos + (intYIndex * intYInterval) );
+							
+							x = ( 50 / 100 * stepWidth ) + ( intXPos * nodeSize );
+							fix = true;
+						}
+						else if ( e.stepNo == 1 ) {
+							if ( e.group == 0 ) {
+								var maxCols = oneDs / 5;
+								if ( oneDs < 10 )
+									maxCols = 15;
+								x = 30 / 100 * stepWidth - (oneDXPos * 15);
+								y = ( tHeight / 2 ) + ( oneD * oneDPos * maxCols );
+								oneD++;
+								oneDPos = oneDPos * -1;
+								if ( y >= (tHeight-5) || y <= 5 ) {
+									y = ( tHeight / 2 );
+									x = 30 / 100 * stepWidth - 15;
+									oneD = 0; oneDPos = 1;
+									oneDXPos++;
+									oneDs--;
+								}
+								fix = true;
+							}
+							else if ( e.group == 1 ) {
+								var maxCols = 6 / twoDs * 100 + 5;
+								//if ( maxCols < 10 )
+								//	maxCols = 10;
+								x = 75 / 100 * stepWidth - (twoDXPos * 15);
+								y = ( tHeight / 2 ) + ( twoD * twoDPos * maxCols );
+								twoD++;
+								twoDPos = twoDPos * -1;
+								if ( y >= (tHeight-5) || y <= 5 ) {
+									y = ( tHeight / 2 );
+									x = 75 / 100 * stepWidth;
+									twoD = 0; twoDPos = 1;
+									twoDXPos++;
+									//twoDs--;
+								}
+								fix = true;
+							}
+							else {
+								var maxCols = threeDs / 2;
+								if ( threeDs < 10 )
+									maxCols = 15;
+								x = stepWidth/1.1 - (threeDXPos * 15);
+								y = ( tHeight / 2 ) + ( threeD * threeDPos * maxCols );
+								threeD++;
+								threeDPos = threeDPos * -1;
+								if ( y >= (tHeight-5) || y <= 5 ) {
+									y = ( tHeight / 2 );
+									x = stepWidth/1.1;
+									threeD = 0; threeDPos = 1;
+									threeDXPos++;
+									oneDs--;
+								}
+								fix = true;
+							}
 						}
 						
 						var sTreeN = {
@@ -1373,7 +2468,9 @@
 							wid: stepWidth,
 							fixed: fix,
 							x: x,
-							y: y
+							y: y,
+							cx: x,
+							cy: y
 						};
 						//if (index < 1000)
 						sTreeNodes.push(sTreeN);
@@ -1437,24 +2534,42 @@
 					
 				
 					var x = 0
-					var per = 13;	
+					var per = 14;	
 					for ( var i = 1; i <= 6; i++ ) {	
 						graph.append("g")
 							.attr("id", "rec" + (i-1))
 							.attr("transform", "translate(" + ( ( x / 100 ) * tWidth ) + "," + 0 + ")")
 							.append("rect")
-							.style("fill", "transparent")
+							.style("fill", ((i == sStep) ? "#aaaaaa" : "transparent" ))
+							.style("opacity", 0)
 							.attr("stroke", "black")
 							.attr("width", (per + '%'))
 							.attr("max-width", (per + '%'))
 							.attr("height", tHeight);
 						if ( i == 1 ) {
-							x = x + 13;
+							x = x + 14;
+							per = 20;
+						}
+						else if ( i == 2 ) {
+							x = x + 20;
+							per = 16.3;
+						}
+						else if ( i == 3 ) {
+							x = x + 16.3;
+							per = 16;
+						}
+						else if ( i == 4 ) {
+							x = x + 16;
+							per = 16;
+						}
+						else if ( i == 5 ) {
+							x = x + 16;
+							per = 16.567;
 						}
 						else {
-							var x = x + 17.4;
+							var x = x + 16.567;
+							per = 16.567;
 						}
-						per = 17.4;
 					}
 				
 					toolTip.html(function(d) {
@@ -1474,38 +2589,6 @@
 							.nodes(sTreeNodes)
 							.links(sTreeStepEdges)
 							.on("tick", function(e) {  	
-								
-								if ( e.alpha <= 0.07 ) force.stop();
-								
-								for ( var index = 0; index < graphSVGNodes.length; index++ ) {
-									//graphSVGNodes[index].attr("cx", function(d) { return d.x = Math.max((d.size/2), Math.min(stepWidth - (d.size/3), d.x)); })
-									//		.attr("cy", function(d) { return d.y = Math.max((d.size/2), Math.min(tHeight - (d.size/3), d.y)); });
-									graphSVGNodes[index]
-										.each(collide(.5))
-										.attr("cx", function(d){
-											d.x = Math.max((d.size/2), Math.min(stepWidth - (d.size/3), d.x));
-											if (d.x > stepWidth || d.x < 0) {
-								                moveHoriz *= -1;
-								            }
-								        
-								            return d.x += moveHoriz;
-										})
-										.attr("cy", function(d){
-											d.y = Math.max((d.size/2), Math.min(tHeight - (d.size/3), d.y));
-											if (d.y > tHeight || d.y < 0) {
-								                moveVert *= -1;
-								            }
-								        
-								            return d.y += moveVert;
-										});
-									graphSVGNodes[index].attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-								}
-								for ( var tIndex = 0; tIndex < graphSVGText.length; tIndex++ ) {
-									graphSVGText[tIndex].attr("cx", function(d){ return d.x; })
-										.attr("cy", function(d){ return d.y; });
-									graphSVGText[tIndex].attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-								}
-																
 								for ( var index = 0; index < graphSVGNodes.length; index++ ) {
 									graphSVGNodes[index][0].forEach( function(g){
 													
@@ -1593,8 +2676,7 @@
 					    });
 					  };
 					}
-					
-					
+  								
 					for ( var index = 0; index < Object.keys(sTreeStepNodes).length; index++ ) {
 					
 						var item = Object.keys(sTreeStepNodes)[index];
@@ -1606,6 +2688,7 @@
 												
 						var genralNodes = graph.select("#rec"+item).selectAll(".node");
 						var pX = parseFloat(graph.select("#rec"+item)[0][0].attributes[1].value.replace("translate(","").replace(",0)",""));
+						
 						var nodeGroup = genralNodes.data(sTreeStepNodes[item]).enter()
 							.append("g")
 							.attr("class", "node")
@@ -1619,6 +2702,13 @@
 							.type(function(d) { 
 								return d.type;
 							}))
+							.style("stroke-width", function(o){
+								return (o.id == (stepId + ":" + sStep)) ? 3.0 : nominal_stroke;
+							})
+							.style("stroke", function(o){ return (o.id == (stepId + ":" + sStep)) ? highlight_color : default_link_color; })
+							.attr("cx", function(d) { return d.x; })
+							.attr("cy", function(d) { return d.y; })
+							.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
 							.style(tocolor, function(d) {
 								if ( d.step == 3 || d.step == 4 || d.step == 5 ) {
 									if ( d.nodeType == 1 )
@@ -1628,7 +2718,16 @@
 									else if ( d.nodeType == 3 )
 										return colorSpec(d.group/topPub);
 								} else {
-									return color(d.group);
+									if ( d.group == 0 )
+										return "#1f77b4";
+									else if ( d.group == 1 )
+										return "#ff7f0e ";
+									else if ( d.group == 2 )
+										return "#2ca02c";
+									else if ( d.group == 4 )
+										return "#9467bd";
+									else
+										return color(d.group);
 								}
 							})
 							.on('mouseover', function (d,i) {
@@ -1670,57 +2769,77 @@
 									singleTreeGraph( stepNo, e );
 					            }-->
 					        });
-					    var text = nodeGroup.append("text")
-				            //.attr("dy",".35em")
-				            //.append("textPath")
-				            //.attr("xlink:href","#yyy")
-				            .style("text-anchor","end") 
-				            .attr("startOffset","100%")
-				            .attr("fixed", true)
-							.html(function(d) {
-								if(d.step == 0 || d.step == 3 || d.step == 4 || d.step == 5) { 
-										var endString = d.details;
-										if ( endString.includes( "</br>" ) )
-											endString = endString.substring( 0, endString.indexOf( "</br>" ) );
-										endString = (endString.length >= 30) ? endString.substring(0, 30) + "..." : endString;
-										return endString; 
-									}
-									else
-										return "";
-							 })
-							.style("opacity", function(e){
-								var step = -1;
-				            	if ( e.nodeType == 3 )
-				            		step = 5;
-				            	if ( e.nodeType == 2 )
-				            	{
-				            		if ( e.size !== 150 )
-				            			step = 3;
-				            		else
-				            			step = 2;
-				            	}
-				            	else if ( e.nodeType == 1 )
-				            	{
-				            		if ( e.size !== 150 )
-				            			step = 4;
-				            		else
-				            			step = 1;
-				            	}
-				            	
-				            	if ( step == 1 || step == 2 )
-				            		return 0;
+					    var nodeText = nodeGroup.append("g")
+							.style("display", function(e){
+								if ( e.step == 1 || e.step == 2 )
+				            		return "none";
 				            	else
-				            		return 1;
-							});
-						
+				            		return "block";
+							})
+							.attr("cx", function(d){ return d.x; })
+							.attr("cy", function(d){ return d.y; })
+							.attr("transform", function(d) { return "translate(" + (d.x-7) + "," + (d.y+5) + ")"; });
+					    var text = nodeText.append("text")
+				            .style("text-anchor","end") 
+				            .attr("startOffset","50%")
+				            .attr("fixed", true)
+				            .style("font", function(o){ return (o.id == (stepId + ":" + sStep)) ? "20px sans-serif" : ""; })
+							.html(function(d) {
+								//if(d.step == 0 || d.step == 3 || d.step == 4 || d.step == 5) { 
+									var endString = d.details;
+									if ( endString.includes( "</br>" ) )
+										endString = endString.substring( 0, endString.indexOf( "</br>" ) );
+									
+									<#-- Checking if node is Publication from Top N -->
+									var cuttof = 30;
+									if ( d.step == 5 ){
+										for ( var i = 0; i < Object.keys(PubList).length; i++ ) {
+											var keyGroup = Object.keys(PubList)[i];
+											if ( d.group == keyGroup && PubList[keyGroup] > 1 ) {
+												cuttof = cuttof / PubList[keyGroup];
+											}
+										}
+									}
+									<#-- Checking if node is Author from Top N -->
+									else if ( d.step == 4 ){
+										for ( var i = 0; i < Object.keys(AuthList).length; i++ ) {
+											var keyGroup = Object.keys(AuthList)[i];
+											if ( d.group == keyGroup && AuthList[keyGroup] > 1 ) {
+												cuttof = endString.length / AuthList[keyGroup];
+											}
+										}
+									}
+									<#-- Checking if node is Interest from Top N -->
+									else if ( d.step == 3 ){
+										for ( var i = 0; i < Object.keys(IntList).length; i++ ) {
+											var keyGroup = Object.keys(IntList)[i];
+											if ( d.group == keyGroup && IntList[keyGroup] > 1 ) {
+												cuttof = cuttof / IntList[keyGroup];
+											}
+										}
+									}
+																		
+									endString = (endString.length >= cuttof) ? endString.substring(0, cuttof) + "... " : (endString);
+									return endString; 
+								//}
+								//else
+								//	return "";
+							 })
+							.call(getBB);
+						nodeText.insert("rect","text")
+						    .attr("width", function(d){return d.bbox.width})
+						    .attr("height", function(d){return d.bbox.height})
+						    .style("fill", "white")
+						    .attr("transform", "scale(-1,-1)");
+						    
 				    	graphSVGNodes.push(circle);
-				    	graphSVGText.push(text);
+				    	graphSVGText.push(nodeText);
 				    }
 				   
 				   	setTimeout( function() {
 						var n = 2;
 						force.start();
-						for (var i = n * n; i > 0; --i) force.tick();
+						for (var i = n; i > 0; --i) force.tick();
 						force.stop();
 					}, 0 );
 								
@@ -1735,14 +2854,19 @@
 								return isConnected(d, o) || isConnected(o, d) ? 1 : 0.25;
 							});
 						} );
-						text.style("font-weight", function(o) {
-							return isConnected(d, o) ? "bold" : "normal";
-						});
+						$.each( graphSVGText, function( index, value ) {
+							value.style("font-weight", function(o) {
+								return isConnected(d, o) ? "bold" : "normal";
+							})
+							.style("display", function(o) {
+									return isConnected(d, o) || isConnected(o, d) ? "block" : "none";
+								});
+						} );
 						link.style("stroke", function(o) {
 								return o.source.index == d.index || o.target.index == d.index ? highlight_color : default_link_color;
 							})
 							.style( "stroke-width", function(o) {
-								return o.source.index == d.index || o.target.index == d.index ? 1.0 : nominal_stroke;
+								return o.source.index == d.index || o.target.index == d.index ? 1.0 : 0.0;
 							})
 							.sort( function( o, b ) {
 								return o.source.index == d.index || o.target.index == d.index ? 1 : 0;
@@ -1756,14 +2880,19 @@
 							value.style(towhite, "white")
 								.style("opacity", 1);
 						} );
-						
-						text.style("font-weight", "normal")
-							;
+						$.each( graphSVGText, function( index, value ) {
+							value.style("font-weight", "normal")
+							.style("display", function(d){
+								if (d.step == 1 || d.step == 2) return "none";
+								else	return "block";
+							});
+						} );
 						link.style("stroke", function(o) {
 								return default_link_color
 							})
 							.style("stroke-width", nominal_stroke)
-							.sort( 0 );
+							//.sort( 0 )
+							;
 					}
 					
 					<#-- Storing the connected nodes -->
@@ -1792,7 +2921,6 @@
 	
 	var detailsReq = null;
 	function getNodeDetails( selectedNode ) {
-		console.log("node details: ", selectedNode);
 		var detailContainer = $( "#node_details" );
 		detailContainer.html("");
 		
@@ -1804,10 +2932,15 @@
 					url : "<@spring.url '/researcher/basicInformation?id=' />" + selectedNode.orgId,
 					accepts: "application/json, text/javascript, */*; q=0.01",
 					beforeStart: function ( e ) {
+						detailContainer.append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 						if ( detailsReq !== null )
 							detailsReq.abort();
 					},
+					error: function() {
+						detailContainer.html("");
+					},
 					success: function( data ){
+						detailContainer.html("");
 						detailsReq = null;
 						var researcherDiv = 
 							$( '<div/>' )
@@ -1963,10 +3096,15 @@
 					url : "<@spring.url '/publication/detail?id=' />" + selectedNode.orgId,
 					accepts: "application/json, text/javascript, */*; q=0.01",
 					beforeStart: function ( e ) {
+						detailContainer.append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 						if ( detailsReq !== null )
 							detailsReq.abort();
 					},
+					error: function() {
+						detailContainer.html("");
+					},
 					success: function( data ){
+						detailContainer.html("");
 						detailsReq = null;
 						<#-- title -->
 						var pubTitle = 
@@ -2108,24 +3246,28 @@
 	
 	function createLegend() {
 
+				var lWidth = width+30;
+				
 				var legendSVG = d3.select( "#legendGraph" )
 		        	.style("height", 100)
 					.append("div")
-					.classed("svg-container", true).style({"height":"inherit"}).style({"padding-bottom":"0%"})
+					.classed("svg-container", true).style({"height":"inherit"}).style({"padding-bottom":"0%"}).style({"width":"100%"})
 					.append("svg:svg")
-					.attr("width", width)
+					.attr("width", lWidth)
 					.style("height", 100)
 					.style("top", 0)
 					.style("left", 0)
 					.style("position", "inherit")
-					.attr("preserveAspectRatio", "xMinYMin meet")
+					.attr("viewBox", "0 0 "+lWidth+" 100")
+					.attr("preserveAspectRatio", "xMaxYMax meet")
 					.classed("svg-content-responsive", true);
-					
+
 		        var legend = legendSVG
 					.append("g")
 					.classed("network", true)
-					.attr("width", width)
-					.style("height", 100);
+					.attr("width", lWidth)
+					.style("height", 100)
+					.attr("transform", "translate(" + 10 + "," + 0 +") rotate(180) scale(-1, -1)");
 				
 				
 				var legendtoolTip = d3.tip()
@@ -2134,14 +3276,16 @@
 				legendSVG.call(legendtoolTip);
 				
 				var legendGraph = legend.selectAll("g.network");
-				var legendStepWidth = ( 6 / 100 ) * width;
+				var legendStepWidth = 
+				( 6 / 100 ) * lWidth;
 				var x = 0
 				var per = 13;	
 				for ( var i = 1; i <= 6; i++ ) {	
 					legend.append("g")
 						.attr("id", "rec" + (i-1))
-						.attr("transform", "translate(" + ( ( x / 100 ) * width ) + "," + 0 + ")")
+						.attr("transform", "translate(" + ( ( x / 100 ) * lWidth ) + "," + 0 + ")")
 							.append("rect")
+							.style("opacity", 0)
 							.style("fill", "transparent")
 							.attr("stroke", "black")
 							.attr("width", (per + '%'))
@@ -2157,43 +3301,76 @@
 				
 				var color = d3.scale.category10();
 				var color_scale = d3.scale.linear().domain([0, 30]).range(["#84e184", "#1e7b1e"]);
-				var legendData = [{id:0, y:100/2, x:(legendStepWidth), type:d3.svg.symbolTypes[0], color:0, text:"Active Researcher"},
-								{id:1, y:100/2, x:(legendStepWidth*2.8), type:d3.svg.symbolTypes[1], color:0, text:"1D CoAuthor"},
-								{id:2, y:100/1.5, x:(legendStepWidth*3.5+20), type:d3.svg.symbolTypes[1], color:1, text:"2D CoAuthor"},
-								{id:3, y:100/3.5, x:(legendStepWidth*3.5+20), type:d3.svg.symbolTypes[1], color:1, text:"2D CoAuthor"},
-								{id:4, y:100/3.5, x:(legendStepWidth*4.5+20), type:d3.svg.symbolTypes[1], color:1, text:"2D CoAuthor"},
-								{id:5, y:100/1.5, x:(legendStepWidth*4.5+20), type:d3.svg.symbolTypes[1], color:2, text:"3D CoAuthor"},
-								{id:6, y:100/1.5, x:(legendStepWidth*6+20), type:d3.svg.symbolTypes[2], color:0, text:"Interest"},
-								{id:7, y:100/3, x:(legendStepWidth*6.5+20), type:d3.svg.symbolTypes[2], color:0, text:"Interest"},
-								{id:8, y:100/1.5, x:(legendStepWidth*7+20), type:d3.svg.symbolTypes[2], color:0, text:"Interest"},
-								{id:9, y:100/3, x:(legendStepWidth*9.5+20), type:d3.svg.symbolTypes[2], color:10, text:"Interest"},
-								{id:10, y:100/1.5, x:(legendStepWidth*10+20), type:d3.svg.symbolTypes[2], color:14, text:"Interest"},
-								{id:11, y:100/1.5, x:(legendStepWidth*12.5+20), type:d3.svg.symbolTypes[1], color:17, text:"Author"},
-								{id:12, y:100/2.5, x:(legendStepWidth*12+20), type:d3.svg.symbolTypes[1], color:20, text:"Author"},
-								{id:13, y:100/5, x:(legendStepWidth*12.5+20), type:d3.svg.symbolTypes[1], color:10, text:"Author"},
-								{id:14, y:100/5, x:(legendStepWidth*14.5+20), type:d3.svg.symbolTypes[3], color:10, text:"Publication"},
-								{id:15, y:100/3, x:(legendStepWidth*15.5+20), type:d3.svg.symbolTypes[2], color:10, text:"Interest"},
-								{id:16, y:100/1.5, x:(legendStepWidth*15+20), type:d3.svg.symbolTypes[2], color:14, text:"Interest"},
-								{id:17, y:100/5, x:(legendStepWidth*16.5+20), type:d3.svg.symbolTypes[3], color:16, text:"Publication"},
-								{id:18, y:100/1.5, x:(legendStepWidth*16.5+20), type:d3.svg.symbolTypes[3], color:10, text:"Publication"}];
-				var legendLink = [{source:0, target:1},{source:1, target:2},{source:1, target:3},{source:2, target:5},{source:3, target:4}
-				,{source:5, target:7},{source:5, target:6},{source:4, target:7},{source:6, target:8},{source:7, target:8},{source:6, target:7}
-				,{source:8, target:10},{source:7, target:9},{source:9, target:13},{source:10, target:11},{source:10, target:12},{source:13, target:14}
-				,{source:12, target:15},{source:11, target:16},{source:15, target:14},{source:15, target:17},{source:15, target:18},{source:16, target:18}];
 				
-				var link = legend.selectAll(".link");
+				if ( generalAlgorithmID == "interest" )
+				{
+					var legendData = [{id:0, y:100/2, x:(legendStepWidth/1.5), type:d3.svg.symbolTypes[0], color:0, text:"Active Researcher"},
+									{id:1, y:100/4, x:(legendStepWidth*3.3), type:d3.svg.symbolTypes[1], color:0, text:"1D CoAuthor"},
+									{id:2, y:100/2, x:(legendStepWidth*3.3), type:d3.svg.symbolTypes[1], color:1, text:"2D CoAuthor"},
+									{id:5, y:100/1.3, x:(legendStepWidth*3.3), type:d3.svg.symbolTypes[1], color:4, text:"3D CoAuthor"},
+									{id:7, y:100/2, x:(legendStepWidth*6.5), type:d3.svg.symbolTypes[2], color:0, text:"Interest"},
+									{id:9, y:100/2, x:(legendStepWidth*9.5), type:d3.svg.symbolTypes[2], color:10, text:"Interest"},
+									{id:12, y:100/2, x:(legendStepWidth*11.5+20), type:d3.svg.symbolTypes[1], color:20, text:"Author"},
+									{id:14, y:100/3.5, x:(legendStepWidth*14.0+10), type:d3.svg.symbolTypes[3], color:10, text:"Publication"},
+									{id:15, y:100/2, x:(legendStepWidth*14.0+10), type:d3.svg.symbolTypes[2], color:10, text:"Interest"}];
+					var legendLink = [{source:0, target:1},{source:1, target:2},{source:1, target:3},{source:2, target:5},{source:3, target:4}
+					,{source:5, target:7},{source:5, target:6},{source:4, target:7},{source:6, target:8},{source:7, target:8},{source:6, target:7}
+					,{source:8, target:10},{source:7, target:9},{source:9, target:13},{source:10, target:11},{source:10, target:12},{source:13, target:14}
+					,{source:12, target:15},{source:11, target:16},{source:15, target:14},{source:15, target:17},{source:15, target:18},{source:16, target:18}];
+				}
+				else if ( generalAlgorithmID == "c3d" ) {
+					var legendData = [{id:0, y:100/2, x:(legendStepWidth/1.5), type:d3.svg.symbolTypes[0], color:0, text:"Active Researcher"},
+									{id:2, y:100/1.5, x:(legendStepWidth*3.5+25), type:d3.svg.symbolTypes[1], color:0, text:"1D CoAuthor"},
+									{id:3, y:100/3.5, x:(legendStepWidth*3.5+25), type:d3.svg.symbolTypes[1], color:0, text:"1D CoAuthor"},
+									{id:4, y:100/3, x:(legendStepWidth*6+20), type:d3.svg.symbolTypes[1], color:1, text:"2D CoAuthor"},
+									{id:5, y:100/1.5, x:(legendStepWidth*6+20), type:d3.svg.symbolTypes[1], color:1, text:"2D CoAuthor"},
+									{id:6, y:100/1.5, x:(legendStepWidth*7.5), type:d3.svg.symbolTypes[1], color:4, text:"3D CoAuthor"},
+									{id:7, y:100/3, x:(legendStepWidth*7.5), type:d3.svg.symbolTypes[1], color:4, text:"3D CoAuthor"},
+									{id:8, y:100/1.5, x:(legendStepWidth*9), type:d3.svg.symbolTypes[1], color:15, text:"Author"},
+									{id:9, y:100/3, x:(legendStepWidth*9.5+20), type:d3.svg.symbolTypes[1], color:10, text:"Author"},
+									{id:10, y:100/1.5, x:(legendStepWidth*9.5+20), type:d3.svg.symbolTypes[1], color:14, text:"Author"},
+									{id:11, y:100/1.5, x:(legendStepWidth*12.0+20), type:d3.svg.symbolTypes[2], color:17, text:"Interest"},
+									{id:12, y:100/2.5, x:(legendStepWidth*11.5+20), type:d3.svg.symbolTypes[2], color:20, text:"Interest"},
+									{id:13, y:100/5, x:(legendStepWidth*12.5+20), type:d3.svg.symbolTypes[2], color:10, text:"Interest"},
+									{id:14, y:100/5, x:(legendStepWidth*14.0+10), type:d3.svg.symbolTypes[3], color:10, text:"Publication"},
+									{id:15, y:100/3, x:(legendStepWidth*15.0), type:d3.svg.symbolTypes[2], color:10, text:"Interest"},
+									{id:16, y:100/1.5, x:(legendStepWidth*14.5), type:d3.svg.symbolTypes[2], color:14, text:"Interest"},
+									{id:17, y:100/5, x:(legendStepWidth*16.0), type:d3.svg.symbolTypes[3], color:16, text:"Publication"},
+									{id:18, y:100/1.5, x:(legendStepWidth*16.0), type:d3.svg.symbolTypes[3], color:10, text:"Publication"}];
+					var legendLink = [{source:0, target:2},{source:0, target:3},{source:2, target:5},{source:3, target:4}
+					,{source:5, target:7},{source:5, target:6},{source:4, target:7},{source:6, target:8},{source:7, target:8},{source:6, target:7}
+					,{source:6, target:10},{source:7, target:9},{source:9, target:13},{source:10, target:11},{source:10, target:12},{source:13, target:14}
+					,{source:12, target:15},{source:11, target:16},{source:15, target:14},{source:15, target:17},{source:15, target:18},{source:16, target:18}];
+				} 
+				else {
+					var legendData = [{id:0, y:100/2, x:(legendStepWidth/1.5), type:d3.svg.symbolTypes[0], color:0, text:"Active Researcher"},
+									{id:2, y:100/2, x:(legendStepWidth*3.5+25), type:d3.svg.symbolTypes[1], color:0, text:"1D CoAuthor"},
+									{id:4, y:100/2, x:(legendStepWidth*6+35), type:d3.svg.symbolTypes[1], color:1, text:"2D CoAuthor"},
+									{id:8, y:100/2, x:(legendStepWidth*9+15), type:d3.svg.symbolTypes[1], color:15, text:"Author"},
+									{id:11, y:100/2, x:(legendStepWidth*12.0+20), type:d3.svg.symbolTypes[2], color:17, text:"Interest"},
+									{id:14, y:100/2, x:(legendStepWidth*14.0+25), type:d3.svg.symbolTypes[3], color:10, text:"Publication"}];
+					var legendLink = [{source:0, target:2},{source:0, target:3},{source:2, target:5},{source:3, target:4}
+					,{source:5, target:7},{source:5, target:6},{source:4, target:7},{source:6, target:8},{source:7, target:8},{source:6, target:7}
+					,{source:6, target:10},{source:7, target:9},{source:9, target:13},{source:10, target:11},{source:10, target:12},{source:13, target:14}
+					,{source:12, target:15},{source:11, target:16},{source:15, target:14},{source:15, target:17},{source:15, target:18},{source:16, target:18}];
+				}
+				var c10 = d3.scale.category10();
+				
+				console.log("scale 10: ", c10(0), " - ", c10(1), " - ", c10(2), " - ", c10(3), " - ", c10(4), " - ", c10(5), " - ", c10(6), " - ", c10(7), " - ", c10(8)
+				, " - ", c10(9), " - ", c10(10));
+				<#--var link = legend.selectAll(".link");
 					link = link.data( legendLink )
 	      			link.enter().append("line")
 						.attr("class", "link").style( "stroke-width", 2 ).style("stroke", "#BBBBBB")
 						.attr('x1', function(d) { return legendData.filter( function(n){return n.id == d.source;} )[0].x; })
 				        .attr('y1', function(d) { return legendData.filter( function(n){return n.id == d.source;} )[0].y; })
 				        .attr('x2', function(d) { return legendData.filter( function(n){return n.id == d.target;} )[0].x; })
-				        .attr('y2', function(d) { return legendData.filter( function(n){return n.id == d.target;} )[0].y; });
+				        .attr('y2', function(d) { return legendData.filter( function(n){return n.id == d.target;} )[0].y; });-->
 					
 				var legendGroup = legendGraph.data(legendData).enter()
 						.append("g")
 						.attr("class", "node")
-						.attr('transform', function(d){return 'translate(' + d.x + ',' + d.y + ')'});
+						.style('transform', function(d){return 'translate(' + d.x + 'px, ' + d.y + 'px)'});
 				var legendNodes = legendGroup
 						.append("path")
 						.attr("id","circle" + i)
@@ -2203,11 +3380,14 @@
 								return d.type;
 							}))
 						.style("fill", function(d) {
-							if ( d.color > 2 )
+							if ( d.color > 5 )
 								return color_scale(d.color);
-							else
-								return color(d.color);
+							else{
+								console.log("item: ", d.color, " = ", c10(d.color));
+								return c10(d.color);
+							}
 						})
+						.style("opacity", 0.65)
 						.on('mouseover', function (d,i) {
 							generalGraph.style("cursor","pointer");
 							legendtoolTip.show(d);
@@ -2216,15 +3396,26 @@
 						.on('mouseout', function (d,i) {
 							legendtoolTip.hide(d)
 						});
-				var legendNodes = legendGroup.append("text")
-				            .attr("dy","1.5em")
-				            //.attr("dx", 12)
+				var legendTGroup = legendGroup.append("g");
+				
+				var legendNodes = legendTGroup.append("text")
+				            .attr("dx", 12)
+				            .attr("dy","0.2em")
 				            //.append("textPath")
 				            //.attr("xlink:href","#yyy")
-				            .attr("text-anchor", "middle")
-							.html(function(d) { return d.text });
+				            //.attr("dy","1.5em")
+				            //.attr("text-anchor", "middle")
+				            .style("opacity", 0.65)
+							.html(function(d) { return d.text })
+							.call(getBB);
+				<#-- legendTGroup.insert("rect","text")
+						    .attr("width", function(d){return d.bbox.width})
+						    .attr("height", function(d){return d.bbox.height})
+						    .style("fill", "white")
+				            .attr("text-anchor", "middle");-->
 							
 				legendtoolTip.html(function(d) {
+						console.log("items: ", d);
 						if ( d.id == 0 ) {	
 							return "<span style='color:GhostWhite; width:150px; display:inline-block;'>Active Researcher (:You) or high profiled researcher for given filter.</span>";
 						}

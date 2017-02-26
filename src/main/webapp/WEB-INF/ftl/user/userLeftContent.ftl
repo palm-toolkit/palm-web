@@ -67,11 +67,19 @@
       </a>
     </li>
     
-    <#-- Bookmark recommendation publication -->
+    <#-- Bookmark recommendation system 1 -->
+	<li class="treeview" data-link="recommendation">
+      <a href="<@spring.url '/user/book/recommendation_system_1' />">
+        <i class="fa fa-file-text-o"></i>
+        <span>Recommendation System 1</span>
+      </a>
+    </li>
+    
+    <#-- Bookmark recommendation system : My Recommendations-->
 	<li class="treeview" data-link="recommendation">
       <a href="<@spring.url '/user/book/recommendation' />">
         <i class="fa fa-file-text-o"></i>
-        <span>My Recommendations</span>
+        <span>Recommendation System 2</span>
       </a>
     </li>
     
