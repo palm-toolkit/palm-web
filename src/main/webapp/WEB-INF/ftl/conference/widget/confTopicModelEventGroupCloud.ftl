@@ -13,17 +13,17 @@
 
 		<#-- set widget unique options -->
 		var options ={
-			source : "<@spring.url '/researcher/topicCompositionUniCloud' />",
+			source : "<@spring.url '/venue/topicCompositionEventGroupUniCloud' />",
 			queryString : "",
 			id: "",
 			onRefreshStart: function( widgetElem ){
 				<#-- show pop up progress log -->
-				$.PALM.popUpMessage.create( "Extracting author topic composition", { uniqueId:uniquePidInterestCloud, popUpHeight:40, directlyRemove:false , polling:false});
+				$.PALM.popUpMessage.create( "Extracting event topic composition", { uniqueId:uniquePidInterestCloud, popUpHeight:40, directlyRemove:false , polling:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){
 			
 				<#-- check for interest evolution widget -->
-				var topicModelEvolutionWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_topicmodel_evolution' ); 
+				var topicModelEvolutionWidget = $.PALM.boxWidget.getByUniqueName( 'eventgroup_topicmodel_unigram' ); 
 				if( typeof topicModelEvolutionWidget !== "undefined" && !topicModelEvolutionWidget.executed){
 					$.PALM.boxWidget.refresh( topicModelEvolutionWidget.element , topicModelEvolutionWidget.options );
 				}
@@ -81,7 +81,7 @@ for (var i = 0; i < termvalue.length; i++){
 }-->
 
 	<#-- sort lagrgerst to smallest -->
-	uniqueWords.sort( compareTermWord );
+	<#-- uniqueWords.sort( compareTermWord );-->
 
 	<#-- cut to maximum 50 
 	if( uniqueWords.length > 20 )
@@ -123,17 +123,17 @@ function visualizeTextCloud( words ){
   .font("Impact")
   .fontSize(function(d) {
 		var fontsize = d.size;
-		if( fontsize < 50 )
+		if( fontsize < 200 )
 			fontsize = 10;
-		else if( fontsize < 70 && fontsize >= 50 )
+		else if( fontsize < 500 && fontsize >= 200 )
 			fontsize = 12;
-		else if( fontsize < 100 && fontsize >= 70 )
+		else if( fontsize < 750 && fontsize >= 500 )
 			fontsize = 14;
-		else if( fontsize < 130 && fontsize >= 100 )
+		else if( fontsize < 1000 && fontsize >= 750 )
 			fontsize = 16;	
-		else if( fontsize < 160 && fontsize >= 130 )
+		else if( fontsize < 3000 && fontsize >= 1000 )
 			fontsize = 18;
-		else if( fontsize < 180 && fontsize >= 160 )
+		else if( fontsize < 7000 && fontsize >= 3000 )
 			fontsize = 20;
 		else 
 			fontsize = 22;
@@ -171,10 +171,10 @@ function visualizeTextCloud( words ){
       })
       .text(function(d) { return d.text; })
       .on("click", function (d, i){
-         	var publicationTimeLineWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_publication' ); 
+         	var publicationTimeLineWidget = $.PALM.boxWidget.getByUniqueName( 'event_publication' ); 
 			
 			if( typeof publicationTimeLineWidget !== "undefined" ){
-				publicationTimeLineWidget.options.queryString = "?id=" + data.author.id + "&year=all&query=" + d.text;
+				publicationTimeLineWidget.options.queryString = "?id=" + data.event.id + "&year=all&query=" + d.text;
 				<#-- add overlay -->
 				publicationTimeLineWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 				$.PALM.boxWidget.refresh( publicationTimeLineWidget.element , publicationTimeLineWidget.options );

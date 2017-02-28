@@ -13,12 +13,12 @@
 
 		<#-- set widget unique options -->
 		var options ={
-			source : "<@spring.url '/researcher/topicCompositionUniCloud' />",
+			source : "<@spring.url '/venue/topicCompositionNCloud' />",
 			queryString : "",
 			id: "",
 			onRefreshStart: function( widgetElem ){
 				<#-- show pop up progress log -->
-				$.PALM.popUpMessage.create( "Extracting author topic composition", { uniqueId:uniquePidInterestCloud, popUpHeight:40, directlyRemove:false , polling:false});
+				$.PALM.popUpMessage.create( "Extracting eventr topic composition", { uniqueId:uniquePidInterestCloud, popUpHeight:40, directlyRemove:false , polling:false});
 						},
 			onRefreshDone: function(  widgetElem , data ){
 			
@@ -123,20 +123,20 @@ function visualizeTextCloud( words ){
   .font("Impact")
   .fontSize(function(d) {
 		var fontsize = d.size;
-		if( fontsize < 50 )
+		if( fontsize < 30 )
 			fontsize = 10;
-		else if( fontsize < 70 && fontsize >= 50 )
+		else if( fontsize < 70 && fontsize >= 30 )
 			fontsize = 12;
-		else if( fontsize < 100 && fontsize >= 70 )
+		else if( fontsize < 150 && fontsize >= 70 )
 			fontsize = 14;
-		else if( fontsize < 130 && fontsize >= 100 )
+		else if( fontsize < 250 && fontsize >= 150 )
 			fontsize = 16;	
-		else if( fontsize < 160 && fontsize >= 130 )
+		else if( fontsize < 400 && fontsize >= 250 )
 			fontsize = 18;
-		else if( fontsize < 180 && fontsize >= 160 )
-			fontsize = 20;
-		else 
+		else if( fontsize < 700 && fontsize >= 400 )
 			fontsize = 22;
+		else 
+			fontsize = 24;
 		return fontsize;
 	})
   .on("end", draw)
@@ -174,7 +174,7 @@ function visualizeTextCloud( words ){
          	var publicationTimeLineWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_publication' ); 
 			
 			if( typeof publicationTimeLineWidget !== "undefined" ){
-				publicationTimeLineWidget.options.queryString = "?id=" + data.author.id + "&year=all&query=" + d.text;
+				publicationTimeLineWidget.options.queryString = "?id=" + data.eventr.id + "&year=all&query=" + d.text;
 				<#-- add overlay -->
 				publicationTimeLineWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 				$.PALM.boxWidget.refresh( publicationTimeLineWidget.element , publicationTimeLineWidget.options );
