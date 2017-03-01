@@ -1,9 +1,12 @@
 <@security.authorize access="isAuthenticated()">
 	<#assign currentUser = securityService.getUser() >
+	<#if currentUser.author??>
+		<#assign author = currentUser.author.id >
+	</#if>
 </@security.authorize>
 <div id="boxbody${wUniqueName}" class="box-body no-padding container-fluid">
 		<div class="container-box filter-box activity-status-criteria row">
-			<div class="filter col-md-4 col-sm-8">
+			<div class="filter col-md-5 col-sm-10">
   				<span class="title font-small col-md-3  col-sm-3"> Published : </span>
   				<div id="slider" class="col-md-9 col-sm-9">
     				
@@ -33,15 +36,41 @@
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50
 		  });
-	          
+	    
 		var url = "<@spring.url '' />";
 		var id  = "${wUniqueName}";
-		var currentUser = <#if currentUser??>"${currentUser.author.id}"<#else>{}</#if> ;
-		$.activityStatus.getData( url, id, currentUser , $.activityStatus.init);
+		var currentUser = <#if author??>"${author}"<#else>{}</#if> ;
+					
+	<#--	$.activityStatus.getData( url, id, currentUser , $.activityStatus.init);-->
 	<#--	$.activityStatus.readDataFromJSON( url, id );-->
 		<#-- unique options in each widget -->
-		var options ={};
 		
+		var options ={
+			source : "<@spring.url '/circle/researcherList' />",
+			queryString : "",
+			id: "",
+			onRefreshStart: function( widgetElem ){
+				
+			},
+			onRefreshDone: function(  widgetElem , response ){
+				var mainContainer = $("#widget-${wUniqueName} .visualization-main");
+				mainContainer.html( "" );
+				
+				console.log(response);
+				if( typeof response === 'undefined' || response.status != "ok" || typeof response.researchers === 'undefined'){
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Members !", "The circle does not have any member on PALM database" );
+					return false;
+				}
+				
+				var visData = response.researchers.filter( function (d, i){
+					
+					if (d.citedBy != undefined && d.citedBy > 0 && d.publicationsNumber != undefined && d.publicationsNumber > 0 	)
+						return d;
+				});
+				
+				$.activityStatus.init ( url, id, currentUser, visData );
+			}
+			};
 		<#-- register the widget -->
 		$.PALM.options.registeredWidget.push({
 			"type":"${wType}",

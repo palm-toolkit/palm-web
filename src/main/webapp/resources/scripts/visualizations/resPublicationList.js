@@ -104,9 +104,11 @@ $.publicationList.visualize.filter.year = function ( data ){
 	filterYear.append( createYearContainer( "btn btn-default btn-xs", "year-all", "all", "?id=" + data.element.id + "&year=all", false, "all (" + data.totalPublication + ")") )
 			  .append( createYearContainer( "btn btn-default btn-xs", "maxresult-10", "maxresult10", "?id=" + data.element.id + "&maxresult=10", false, "recent (10)") );
 	
-	$.each( data.years, function( index, item ){
-		filterYear.append( createYearContainer( "btn btn-default btn-xs", "year-" + item, item, "?id=" + data.element.id + "&year=" + item, false, item) );
-	});
+	if ( data.years != null){
+		$.each( data.years, function( index, item ){
+			filterYear.append( createYearContainer( "btn btn-default btn-xs", "year-" + item, item, "?id=" + data.element.id + "&year=" + item, false, item) );
+		});
+	}
 	
 	if( typeof data.query !== "undefined" && data.query.trim().length > 0){
 		filterYear.append( createYearContainer( "btn btn-default btn-xs active", "year-query", data.query, "?id=" + data.element.id + "query=" + data.query, true, data.query + "(" + data.count + ")") );

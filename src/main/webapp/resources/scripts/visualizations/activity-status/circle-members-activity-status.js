@@ -3,33 +3,39 @@ $.activityStatus.variables = {
 		userColor	 : "#0073b7"
 };
 $.activityStatus.getData = function( url, container, user, callback){
-	var vars 		= $.activityStatus.variables;
-	var thisWidget  = $.PALM.boxWidget.getByUniqueName( container ); 
-	if ( thisWidget != undefined)
+	var vars 		  = $.activityStatus.variables;
+	var thisWidget    = $.PALM.boxWidget.getByUniqueName( container ); 
+	var mainContainer = $("#widget-" + container + " .visualization-main");
+	
+	if ( thisWidget != undefined){
 		var queryString = thisWidget.options.queryString;
 	
-	if ( vars.year1 != undefined &&  vars.year2 != undefined &&  vars.year1.length != 0 &&  vars.year2.length != 0)
-		queryString = thisWidget.options.queryString + "?yearMin=" + vars.year1 + "&yearMax=" + vars.year2;
-	
-	var urlData = thisWidget == undefined ? url + "/resources/json/circleMembers.json" : url + "/resources/json/circleMembers2.json";
-	d3.json( urlData, function(error, data) {
-		if ( error ) return;
-		var visData = data.researchers.filter( function (d, i){
+		if ( vars.year1 != undefined &&  vars.year2 != undefined &&  vars.year1.length != 0 &&  vars.year2.length != 0)
+			queryString = thisWidget.options.queryString + "?yearMin=" + vars.year1 + "&yearMax=" + vars.year2;
+	}
+	var urlData = vars.currentURL + "/circle/researcherList" + queryString;
+	$.get(url, function( response ){
+		if( typeof response === 'undefined' || response.status != "ok" || typeof response.researchers === 'undefined'){
+			$.PALM.callout.generate( mainContainer , "warning", "Empty Members !", "The circle does not have any memeber on PALM database" );
+			return false;
+		}
+				
+		var visData = response.researchers.filter( function (d, i){
 			if (d.citedBy != undefined && d.citedBy > 0 &&
 				d.publicationsNumber != undefined && d.publicationsNumber > 0 	)
 			return d;
 		});
-		
-		callback( url, container, user, visData );
-		
-		$.PALM.boxWidget.getByUniqueName( container ).element.find(".overlay").remove();
+			
+		callback( url, container, user, visData );					
 	});
+	
+	$.PALM.boxWidget.getByUniqueName( container ).element.find(".overlay").remove();	
 }
 
 $.activityStatus.init = function( url, container, user, data ){
 	var margin = {top: 20, right: 20, bottom: 40, left: 40},
 		width  =  $("#widget-" + container + " .visualization-main" ).width() - margin.left - margin.right,
-		height = 500 - margin.top  - margin.bottom,
+		height =  600,
 		color  = d3.scale.category10();
 	
 	setVariables( url, container, user, margin, width, height, color);
@@ -232,9 +238,25 @@ $.activityStatus.publications = function (year1, year2){
 		yearFilter  = true;
 	
 	var queryString = !yearFilter ? thisWidget.options.queryString : thisWidget.options.queryString + "?yearMin=" + year1 + "&yearMax=" + year2;
-		
-	var url			=  vars.currentURL + "/resources/json/publicationsListCircle.json"
-	d3.json( url, function(error, response) {
+	
+//	var url			=  vars.currentURL + "/resources/json/publicationsListCircle.json"
+//	d3.json( url, function(error, response) {
+//		$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( "" );
+//		var $mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
+//		$.publicationList.init( response.status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged, vars.height - 10);
+//		
+//		if( response.status == "ok"){
+//			response.element = response.circle;
+//			$.publicationList.visualize( $mainContainer, response );
+//
+//			$.activityStatus.filter( response );
+//			
+//			thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
+//		}
+//	});
+	
+	var url 		= vars.currentURL + "/circle/publicationList" + queryString;
+	$.get( url, function (response){
 		$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( "" );
 		var $mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
 		$.publicationList.init( response.status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged, vars.height - 10);
@@ -247,16 +269,8 @@ $.activityStatus.publications = function (year1, year2){
 			
 			thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
 		}
-	});
-//	var url 		= vars.currentURL + "/circle/publicationList" + queryString;
-//
-//	$.get( url, function (response){
-//		$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( "" );
-//		
-//		var $mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
-//		$.publicationList.init( response.status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged, vars.height - 10);
-//	
-//	})
+	
+	})
 }
 
 function setVariables( url, widgetUniqueName, user, margin, width, height, color){
