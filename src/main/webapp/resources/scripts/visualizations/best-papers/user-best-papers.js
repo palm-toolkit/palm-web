@@ -4,7 +4,8 @@ $.bestPapers.variables = {
 		pubColor: "blue",
 		authColor: "red",
 		minRadius: 10,
-		maxRadius: 50
+		maxRadius: 50,
+		authRadius: 20
 };
 $.bestPapers.init = function( url, wUniqueName, userLoggedID, data, height){
 	var $mainContainer = $("#widget-" + wUniqueName + " .visualization-main");
@@ -92,6 +93,7 @@ $.bestPapers.visualise = function( data ){
 	var radScale   = d3.scaleLinear()
 		.domain([d3.min(data.nodes, citValue), d3.max(data.nodes, citValue)])
 		.range([vars.minRadius, vars.maxRadius]);
+	var totalRadius = 0;
 	
 	var $mainContainer = $("#widget-" + vars.wUniqueName + " .visualization-main");
 	var svg 	   = d3.select("#widget-" + vars.wUniqueName + " .visualization-main" ).append("svg");
@@ -102,26 +104,33 @@ $.bestPapers.visualise = function( data ){
     	.force("charge", d3.forceManyBody())
     	.force("center", d3.forceCenter(vars.width / 2, vars.height / 2));
    
-	
-    svg.attr("width",  vars.width)
-	   .attr("height", vars.height);
-	
-	layer.attr("transform", "translate(" + [vars.margin.left, vars.margin.top] + ")");
-	
-	var link = svg.append("g")
+	var zoom = d3.zoom()
+		.scaleExtent([0.7, 1.4])
+		.on("zoom", zoomed);
+
+    svg
+    	.attr("viewBox", "0 0 " +vars.width + " " + vars.height)
+    	.attr("preserveAspectRatio", "xMinYMin meet")
+    	.attr("width",  vars.width)
+	    .attr("height", vars.height)
+	    .call(zoom);
+
+	var link = layer.append("g")
     	.attr("class", "links")
     	.selectAll("line")
     	.data(data.links)
     	.enter().append("line")
     		.attr("stroke", "black");
 
-	 var positionNodes = function( elements, constantDistance ){
+	 var positionNodes = function( elements, distanceConstant ){
 			var x = 0; var dist = 0;
 			elements.attr("transform", function(d, i){ 
 			    	x = dist;
-			    	x += i == 0 ? d.r : constantDistance + d.r;
+			    	x += i == 0 ? d.r : distanceConstant + d.r;
 			    	dist = x + d.r;
-					return "translate(" + x + ",0)";
+			    	
+			    	y = distanceConstant <= 0 && i % 2 != 0 ?  d.r *2 : 0;  			    	
+					return "translate(" + x + "," + y + ")";
 			});
 	};
 	 
@@ -129,10 +138,10 @@ $.bestPapers.visualise = function( data ){
 		return data.nodes.filter( function(d){ return d.group == group;} );
 	};
 	
-	var nodes = svg.append("g").attr("class", "nodes-layer");
+	var nodes = layer.append("g").attr("class", "nodes-layer");
 	
 	//layer publications
-	var nodesPubl = nodes.append("g").attr("class", "nodes nodesPubl").attr("transform", "translate(" + (vars.margin.left + vars.maxRadius)+ ",200)")
+	var nodesPubl = nodes.append("g").attr("class", "nodes nodesPubl")
 		.selectAll(".node")
 		.data( nodesByGroup(1) )
     	.enter().append("g").attr("class", "node");
@@ -140,6 +149,7 @@ $.bestPapers.visualise = function( data ){
 	nodesPubl.append("circle")
     		.attr("r", function(d){  
     			d.r = radScale(d.citedBy);
+    			totalRadius += d.r * 2;
     			return d.r;
     		})
     		.attr("fill", function(d){  return vars.pubColor; })
@@ -147,19 +157,31 @@ $.bestPapers.visualise = function( data ){
     				.on("start", dragstarted)
     				.on("drag", dragged)
     				.on("end", dragended));
-	nodesPubl.each( function(d){ wrapText( d3.select(this), d.name , 2 * d.r + vars.padding, "publ-name", 12);} );
-	d3.selectAll(".publ-name").attr("text-anchor","middle")
-	positionNodes( nodesPubl, 20 );
+	var nodesPublText = nodesPubl.append("g").attr("class", "publ-name");
+	
+	var distanceConstant  = (vars.width - totalRadius ) / nodesPubl.nodes().length	
+	nodesPubl.each( function(d){	
+		var availableWidth = 2 * d.r + distanceConstant;
+		wrapText( d3.select(this).select("g.publ-name"), d.name , availableWidth, "name", 12);} 
+	);
+	
+	d3.select(".nodesPubl").attr("transform", "translate(" + distanceConstant/2 + ",200)")
+
+	nodesPublText.attr("transform", function(d){ 
+		var height = this.getBBox().height;
+		return "translate(0," + -(d.r + height) + ")" } );
+
+	positionNodes( nodesPubl, distanceConstant );
    
-    //layer authors   		
-	var nodesAuth = nodes.append("g").attr("class", "nodes nodesAuth").attr("transform", "translate(" + (vars.margin.left + vars.minRadius) + ",350)")
+    //layer authors   	
+	var nodesAuth = nodes.append("g").attr("class", "nodes nodesAuth").attr("transform", "translate(" + 0 + ",350)")
 		.selectAll(".node")
 		.data( nodesByGroup(2) )
     	.enter().append("g").attr("class", "node");
 	
 	nodesAuth.append("circle")
     		.attr("r", function(d){  
-    			d.r = vars.minRadius;
+    			d.r = vars.authRadius;
     			return d.r;
     		})
     		.attr("fill", function(d){  return vars.authColor; })
@@ -168,18 +190,26 @@ $.bestPapers.visualise = function( data ){
     				.on("drag", dragged)
     				.on("end", dragended));
 	
-	nodesAuth.append("text")
-    		.attr("text-anchor", "bottom")
-    		.text(function(d){ return d.name; });
+	var distanceConstant = (vars.width - (nodesAuth.nodes().length * vars.authRadius * 2)) / nodesAuth.nodes().length; 	
+	var nodesAuthText = nodesAuth.append("g").attr("class", "auth-name").attr("transform", function (d, i) {
+		var y = distanceConstant <= 0 && i % 2 != 0 ?  d.r * 2 : -d.r * 2;  			  
+		return "translate(0," + y + ")";
+	});
 	
-	positionNodes( nodesAuth, 20 );
+	nodesAuth.each( function(d){ 
+		var availableWidth = 2 * d.r + distanceConstant;
+		wrapText( d3.select(this).select("g.auth-name"), abbrAuthorName( d.name ) , availableWidth, "name", 12);} 
+	);
+	
+	d3.selectAll(".name").attr("text-anchor","middle");
+		
+	positionNodes( nodesAuth, distanceConstant );
 	
 	var ticked = function() {
      
 		nodesPubl.attr("transform", function(d){ 
 			return "translate(" + d.x + ",0)";
 		});
-		//nodesAuth.attr("transform", "translate(0,100)");
         
         link
         .attr("x1", function(d) { return d.source.x; })
@@ -211,6 +241,18 @@ $.bestPapers.visualise = function( data ){
         d.fx = null;
         d.fy = null;
     } 
+    
+    function zoomed() {
+    	layer.attr("transform", 'translate(' + d3.event.transform.x + ',' + d3.event.transform.y + ') scale(' + d3.event.transform.k + ')');
+    }
+}
+
+function abbrAuthorName( name ){
+	var lastName  = name.substring(name.lastIndexOf(" "), name.length);
+	var firstName = name.substring(0, name.lastIndexOf(" "));
+	var initials  = (name.match(/\b(\w)/g)).join(". ");
+	
+	return lastName.trim() ;
 }
 
 function wrapText( container, text, width, className, fontSize){
@@ -227,6 +269,15 @@ function wrapText( container, text, width, className, fontSize){
 		if ( text.node().getBBox().width > width ){
 			y += lineHeight; 
 			var w = textArray.pop();
+			
+			if ( textArray.length == 0 ){
+				var ind = splitWord( container, w, width );
+				var first = ind == w.length? w.substr(0, ind ) : w.substr(0, ind) + "-";
+				textArray.push( first);
+				
+				w = w.substr( ind, w.length );
+			}
+			
 			text.text( textArray.join(" ") );
 			
 			textArray = [w];
@@ -235,4 +286,22 @@ function wrapText( container, text, width, className, fontSize){
 					.text( textArray.join(" ") );
 		}				
 	}
+}
+
+function splitWord( container, word, width ){
+	var letters = word.split("").reverse();
+	var wordArray = [];
+	var text  = container.append("text");
+	
+	while(letter = letters.pop()){
+		wordArray.push( letter );
+		text.text( wordArray.join("") );
+		
+		if ( text.node().getBBox().width > width ){
+			text.remove();
+			return wordArray.length - 1;
+		}		
+	}
+	
+	return wordArray.length;
 }
