@@ -62,7 +62,7 @@
 				
 		<#-- set widget unique options -->
 		var options ={
-			source : "<@spring.url '/user/publicationList' />",
+			source : "<@spring.url '/researcher/publicationTopList' />",
 			queryString : "",
 			id: "",
 			onRefreshStart: function( widgetElem ){
@@ -70,13 +70,14 @@
 			onRefreshDone: function(  widgetElem , data ){
 				var wUniqueName   = "${wUniqueName}"; 
 				var url 		  = "<@spring.url ''/>";
-				var processedData = $.bestPapers.init( url, wUniqueName, data, height);
+				var userLoggedId  = <#if currentUser.author??>"${currentUser.author.id}"<#else>""</#if>; 
+				var processedData = $.bestPapers.init( url, wUniqueName,userLoggedId, data, height);
 				
 				<#-- remove overlay -->
 				$container.find(".overlay").remove();
 				
 				if ( processedData != false )
-					 $.bestPapers.visualise( data );
+					 $.bestPapers.visualise( processedData );
 				else
 					return false;
 			}
