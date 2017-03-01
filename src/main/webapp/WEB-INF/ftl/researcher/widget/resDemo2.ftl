@@ -2,80 +2,132 @@
   	<div class="coauthor-list">
     </div>
     
-    <div id="chart2" style="width:1200px;height:450px">
+    <div id="chart" style="width:1000px;height:400px">
     <svg>
     </svg>
     </div>
 </div>
 
 <script>
-	$( function(){
-	   var data =  [
-      {
-        "label": "learning_analytics enhanced_learning personal_learning_environment higher_education learning_process knowledge_management",
-        "value" : 0.6851063966751099
-      } ,
-      {
-        "label": "social_software learning_content learner_models ubiquitous_technologies cultural_heritage_management rapid_development social_software_applications increasing_focus collaborative_learning ",
-        "value" : 0.15329280495643616
-      } ,
-      {
-        "label": "learning_suggests learning_analytics_toolkit recommend_learning_entities learning_sequence learning_mashups",
-        "value" : 0.04883485287427902
-      } ,
-      {
-        "label": "long_learning desired_state technology_enhanced_professional_learning professional_learning knowledge_society workplace_learning gap_analysis",
-        "value" : 0.03485308960080147
-      } ,
-      {
-        "label": "organizational_knowledge_management social_software professional_learning learning_management_strategies prolearn_network observed_interaction_processes seci_process_framework",
-        "value" : 0.024012157693505287
-      } ,
-      {
-        "label": "mobile_learning driven_freeform online_content paper_notes central_topic research_opportunities deliver_significant_benefits",
-        "value" : 0.02097264491021633
-      } ,
-      {
-        "label": "computer_science middleware_environment_developed isis_platform processes_sensor_data_streams retrieved_information relevance_feedback_tools information_visualization visual_searching",
-        "value" : 0.017831813544034958
-      } ,
-      {
-        "label": "learning_scenarios domain_knowledge automatic_assessment learning_tools learning_systematically training_wheels_interfaces technology_expertise",
-        "value" : 0.010638297535479069
-      } ,
-      {
-        "label": "knowledge_work key_challenge increase_business_performance competency_development organization_intended oriented_learning learning_management",
-        "value" : 0.003748733550310135
-      } ,
-      {
-        "label": "digital_libraries strategic_support digital_libraries_assesses dl_evaluation logging_schema comparative_digital_library_evaluation shared_information experimental_framework heterogeneous_digital_libraries",
-        "value" : 0.000679027079977095 
-      } ,
-      {
-        "label": "information_retrieval enhanced_information_retrieval network_analysis enhance_retrieval_processes bibliometric_techniques social_networking_sites statistical_modelling",
-        "value" : 0.0001131712042493746 
-      } ,
-];
+	$ ( function() {
+		  var t1 = [],
+		      t2 = [],
+		      t3 = [],
+		      t4 = [],
+		      t5 = [];
+		 
+		    t1.push({x: 2005, y: 0.459});
+		    t1.push({x: 2006, y: 0.15613383054733276});
+		    t1.push({x: 2007, y: 0.17970401048660278});
+		    t1.push({x: 2008, y: 0.0984455943107605});
+		    t1.push({x: 2009, y: 0.06666667014360428});
+		    t1.push({x: 2010, y: 0.10569106042385101});
+		    t1.push({x: 2011, y: 0.05528846010565758});
+		    t1.push({x: 2012, y: 0.13787639141082764});
+		    t1.push({x: 2013, y: 0.35483869910240173});
+		    t1.push({x: 2014, y: 0.15052509307861328});
+		    t1.push({x: 2015, y: 0.15052509307861328});
+		    
+		    t2.push({x: 2005, y: 0.16091954708099365});
+		    t2.push({x: 2006, y: 0.048327136784791946});
+		    t2.push({x: 2007, y: 0.05919661745429039});
+		    t2.push({x: 2008, y: 0.07253886014223099});
+		    t2.push({x: 2009, y: 0.04814814776182175});
+		    t2.push({x: 2010, y: 0.06707317382097244});
+		    t2.push({x: 2011, y: 0.08653846383094788});
+		    t2.push({x: 2012, y: 0.16640253365039825});
+		    t2.push({x: 2013, y: 0.17419354617595673});
+		    t2.push({x: 2014, y: 0.5624270439147949});
+		    t2.push({x: 2015, y: 0.47983309626579285});
+            
+		    t3.push({x: 2005, y: 0.14942528307437897});
+		    t3.push({x: 2006, y: 0.15613383054733276});
+		    t3.push({x: 2007, y: 0.49894291162490845});
+		    t3.push({x: 2008, y: 0.32642486691474915});
+		    t3.push({x: 2009, y: 0.15925925970077515});
+		    t3.push({x: 2010, y: 0.22560974955558777});
+		    t3.push({x: 2011, y: 0.07211538404226303});
+		    t3.push({x: 2012, y: 0.21711568534374237});
+		    t3.push({x: 2013, y: 0.12903225421905518});
+		    t3.push({x: 2014, y: 0.1855309158563614});
+		    t3.push({x: 2015, y: 0.14325451850891113});
+		     
+		    t4.push({x: 2005, y: 0.1149425283074379 });
+		    t4.push({x: 2006, y: 0.460966557264328});
+		    t4.push({x: 2007, y: 0.15433403849601746});
+		    t4.push({x: 2008, y: 0.1347150206565857});
+		    t4.push({x: 2009, y: 0.42222222685813904});
+		    t4.push({x: 2010, y: 0.396341472864151});
+		    t4.push({x: 2011, y: 0.3197115361690521});
+		    t4.push({x: 2012, y: 0.3645007908344269});
+		    t4.push({x: 2013, y: 0.22580644488334656});
+		    t4.push({x: 2014, y: 0.08984830975532532});
+		    t4.push({x: 2015, y: 0.19749651849269867});
+		    
+		    t5.push({x: 2005, y: 0.1149425283074379});
+		    t5.push({x: 2006, y: 0.17843866348266602});
+		    t5.push({x: 2007, y: 0.10782241076231003});
+		    t5.push({x: 2008, y: 0.3678756356239319});
+		    t5.push({x: 2009, y: 0.3037036955356598});
+		    t5.push({x: 2010, y: 0.20528455078601837});
+		    t5.push({x: 2011, y: 0.4663461446762085});
+		    t5.push({x: 2012, y: 0.11410459876060486});
+		    t5.push({x: 2013, y: 0.11612903326749802});
+		    t5.push({x: 2014, y: 0.011668611317873001});
+		    t5.push({x: 2015, y: 0.02920723147690296});
+		    
+		  var data =  [
+		    {
+		      values: t1,
+		      key: 'technology learner provide based enhanced ',
+		      color: '#ff7f0e'
+		    },
+		    {
+		      values: t2,
+		      key: 'moocs tel support learners context ',
+		      color: '#77ff33'
+		    },
+		    {
+		      values: t3,
+		      key: 'learning social web la km',
+		      color: '#8800cc'
+		    },
+		    {
+		      values: t4,
+		      key: 'learning knowledge paper personal mobile ',
+		      color: '#0080c1'
+		    },
+		    {
+		      values: t5,
+		      key: 'driven ple explore framework community',
+		      color: '#00f892'
+		    },
+		  ];
+
 		nv.addGraph(function() {
-  		var chart2 = nv.models.pieChart()
-	      .x(function(d) { return d.label })
-	      .y(function(d) { return d.value })
-	      .showLabels(true)     //Display pie labels
-	      .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-	      .labelType("percent") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
-	      .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
-	      .donutRatio(0.35)     //Configure how big you want the donut hole size to be.
-	      .showLegend(true)
-	     //	 .tooltipContent()
-	      ;
-		    d3.select("#chart2 svg")
-		        .datum(data)
-		        .transition().duration(350)
-		        .call(chart2);
-  		return chart2; 
-  		});
-  		
-  		
-	});
-	
+		  var chart = nv.models.lineChart()
+		    .useInteractiveGuideline(true)
+		    ;
+		
+		  chart.xAxis
+		    .axisLabel('Years')
+		    .tickFormat(d3.format(',r'))
+		    ;
+		
+		  chart.yAxis
+		    .axisLabel('Topic Evolution')
+		    .tickFormat(d3.format('.02f'))
+		    ;
+		
+		  d3.select('#chart svg')
+		    .datum(data)
+		    .transition().duration(500)
+		    .call(chart)
+		    ;
+		
+		  nv.utils.windowResize(chart.update);
+		
+		  return chart;
+		});
+});
 </script>

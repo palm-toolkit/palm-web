@@ -13,7 +13,7 @@
 
 		<#-- set widget unique options -->
 		var options ={
-			source : "<@spring.url '/researcher/topicCompositionUniCloud' />",
+			source : "<@spring.url '/circle/topicCompositionUniCloud' />",
 			queryString : "",
 			id: "",
 			onRefreshStart: function( widgetElem ){
@@ -23,7 +23,7 @@
 			onRefreshDone: function(  widgetElem , data ){
 			
 				<#-- check for interest evolution widget -->
-				var topicModelEvolutionWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_topicmodel_evolution' ); 
+				var topicModelEvolutionWidget = $.PALM.boxWidget.getByUniqueName( 'circle_topicmodel_evolution' ); 
 				if( typeof topicModelEvolutionWidget !== "undefined" && !topicModelEvolutionWidget.executed){
 					$.PALM.boxWidget.refresh( topicModelEvolutionWidget.element , topicModelEvolutionWidget.options );
 				}
@@ -171,7 +171,7 @@ function visualizeTextCloud( words ){
       })
       .text(function(d) { return d.text; })
       .on("click", function (d, i){
-         	var publicationTimeLineWidget = $.PALM.boxWidget.getByUniqueName( 'researcher_publication' ); 
+         	var publicationTimeLineWidget = $.PALM.boxWidget.getByUniqueName( 'circle_publication' ); 
 			
 			if( typeof publicationTimeLineWidget !== "undefined" ){
 				publicationTimeLineWidget.options.queryString = "?id=" + data.author.id + "&year=all&query=" + d.text;
