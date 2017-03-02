@@ -108,43 +108,79 @@ $.bestPapers.visualise = function( data ){
 		.scaleExtent([0.7, 1.4])
 		.on("zoom", zoomed);
 
-    svg
-    	.attr("viewBox", "0 0 " +vars.width + " " + vars.height)
-    	.attr("preserveAspectRatio", "xMinYMin meet")
-    	.attr("width",  vars.width)
-	    .attr("height", vars.height)
+	var nodesByGroup = function( group ){ return data.nodes.filter( function(d){ return d.group == group;} ); };
+	
+	var positionNodes = function(){
+		 	var nodes = d3.selectAll(".node");
+		 	var publDistanceConstant = (vars.width - totalRadius ) / nodesPubl.nodes().length;
+		 	var authDistanceConstant = (vars.width - (nodesAuth.nodes().length * vars.authRadius * 2)) / nodesAuth.nodes().length;
+		 		 	
+		 	var publDist = 0;
+		 	var authDist = 0;
+		 	
+		 	nodes.attr("transform", function(d, i){ 
+			    	x = d.group == 1 ? publDist : authDist;
+			    	x += i == 0 ? d.r : d.group == 1 ? publDistanceConstant + d.r : ( authDistanceConstant <= 0 && i % 2 != 0 ? authDistanceConstant + d.r/2 : authDistanceConstant + d.r)  ;
+			    	
+			    	if ( d.group == 1 ){
+			    		publDist = x + d.r;
+			    		y = publDistanceConstant <= 0 && i % 2 != 0 ?  d.r * 2 : 0;  
+			    	}
+			    	else{
+			    		authDist = x + d.r;
+			    		y = authDistanceConstant <= 0 && i % 2 != 0 ?  d.r * 2 : 0;  
+			    	}
+			    				    	
+			    	d.x = x;
+			    	d.y = y;
+					return "translate(" + d.x + "," + d.y + ")";
+			});	
+		 	
+		 	d3.select(".nodesPubl").attr("transform", "translate(" + publDistanceConstant/2 + ", 200)");
+		 	d3.select(".nodesAuth").attr("transform", "translate(" + (authDistanceConstant < 0 ? vars.authRadius : 0) + ", 350)");
+	};
+	
+	var positionLinks = function() {
+		var publLayerTranslate = d3.transform( d3.select(".nodesPubl").attr("transform") ).translate;
+		var authLayerTranslate = d3.transform( d3.select(".nodesAuth").attr("transform") ).translate;
+		
+		link.attr("d", function( d ){
+			var xSource = d.source.group ==  1 ? d.source.x + publLayerTranslate[0] : d.source.x + authLayerTranslate[0];
+			var ySource = d.source.group ==  1 ? d.source.y + publLayerTranslate[1] : d.source.y + authLayerTranslate[1];
+			var xTarget = d.target.group ==  1 ? d.target.x + publLayerTranslate[0] : d.target.x + authLayerTranslate[0];
+			var yTarget = d.target.group ==  1 ? d.target.y + publLayerTranslate[1] : d.target.y + authLayerTranslate[1];
+			
+		    return "M" + xSource + "," + ySource + "C" + (xSource + xTarget)/2 + "," + ySource + " " + (xSource + xTarget)/2 + "," + yTarget + " " + xTarget + "," + yTarget;
+		});
+    }  
+	
+	svg
+  		.attr("viewBox", "0 0 " +vars.width + " " + vars.height)
+  		.attr("preserveAspectRatio", "xMinYMin meet")
+  		.attr("width",  vars.width)
+  		.attr("height", vars.height)
 	    .call(zoom);
 
+	var linkWidth = vars.authRadius/8 < 1 ? 1 : vars.authRadius/8 ;
 	var link = layer.append("g")
-    	.attr("class", "links")
-    	.selectAll("line")
-    	.data(data.links)
-    	.enter().append("line")
-    		.attr("stroke", "black");
+  		.attr("class", "links")
+  		.selectAll(".link")
+  		.data(data.links)
+  		.enter().append("path")
+  			.attr("stroke", "black").attr("stroke-width", linkWidth ).attr("stroke-opacity", 0.1).attr("stroke-linecap", "round")
+  			.attr("fill", "none")
+  			.attr("class", function(d){ return "link" + d.source.name + "-" +d.target.name});
 
-	 var positionNodes = function( elements, distanceConstant ){
-			var x = 0; var dist = 0;
-			elements.attr("transform", function(d, i){ 
-			    	x = dist;
-			    	x += i == 0 ? d.r : distanceConstant + d.r;
-			    	dist = x + d.r;
-			    	
-			    	y = distanceConstant <= 0 && i % 2 != 0 ?  d.r *2 : 0;  			    	
-					return "translate(" + x + "," + y + ")";
-			});
-	};
-	 
-	var nodesByGroup = function( group ){
-		return data.nodes.filter( function(d){ return d.group == group;} );
-	};
-	
-	var nodes = layer.append("g").attr("class", "nodes-layer");
+	var nodesLayer = layer.append("g").attr("class", "nodes-layer");
 	
 	//layer publications
-	var nodesPubl = nodes.append("g").attr("class", "nodes nodesPubl")
+	var nodesPubl = nodesLayer.append("g").attr("class", "nodes nodesPubl")
 		.selectAll(".node")
 		.data( nodesByGroup(1) )
-    	.enter().append("g").attr("class", "node");
+    	.enter().append("g")
+    		.attr("class", "node")
+    		.on("mouseover", mouseover)
+    		.on("mouseout", mouseout);
 	
 	nodesPubl.append("circle")
     		.attr("r", function(d){  
@@ -152,11 +188,8 @@ $.bestPapers.visualise = function( data ){
     			totalRadius += d.r * 2;
     			return d.r;
     		})
-    		.attr("fill", function(d){  return vars.pubColor; })
-    		.call(d3.drag()
-    				.on("start", dragstarted)
-    				.on("drag", dragged)
-    				.on("end", dragended));
+    		.attr("fill", function(d){  return vars.pubColor; }).attr("fill-opacity", 0.6)
+    		.attr("stroke", function(d){  return vars.pubColor; }).attr("stroke-width", 1);
 	var nodesPublText = nodesPubl.append("g").attr("class", "publ-name");
 	
 	var distanceConstant  = (vars.width - totalRadius ) / nodesPubl.nodes().length	
@@ -164,35 +197,31 @@ $.bestPapers.visualise = function( data ){
 		var availableWidth = 2 * d.r + distanceConstant;
 		wrapText( d3.select(this).select("g.publ-name"), d.name , availableWidth, "name", 12);} 
 	);
-	
-	d3.select(".nodesPubl").attr("transform", "translate(" + distanceConstant/2 + ",200)")
 
 	nodesPublText.attr("transform", function(d){ 
 		var height = this.getBBox().height;
 		return "translate(0," + -(d.r + height) + ")" } );
-
-	positionNodes( nodesPubl, distanceConstant );
-   
+  
     //layer authors   	
-	var nodesAuth = nodes.append("g").attr("class", "nodes nodesAuth").attr("transform", "translate(" + 0 + ",350)")
+	var nodesAuth = nodesLayer.append("g").attr("class", "nodes nodesAuth")
 		.selectAll(".node")
 		.data( nodesByGroup(2) )
-    	.enter().append("g").attr("class", "node");
+    	.enter().append("g")
+    		.attr("class", "node")
+    		.on("mouseover", mouseover)
+    		.on("mouseout", mouseout);
 	
 	nodesAuth.append("circle")
     		.attr("r", function(d){  
     			d.r = vars.authRadius;
     			return d.r;
     		})
-    		.attr("fill", function(d){  return vars.authColor; })
-    		.call(d3.drag()
-    				.on("start", dragstarted)
-    				.on("drag", dragged)
-    				.on("end", dragended));
+    		.attr("fill", function(d){  return vars.authColor; }).attr("fill-opacity", 0.6)
+    		.attr("stroke", function(d){  return vars.authColor; }).attr("stroke-width", 1);
 	
 	var distanceConstant = (vars.width - (nodesAuth.nodes().length * vars.authRadius * 2)) / nodesAuth.nodes().length; 	
 	var nodesAuthText = nodesAuth.append("g").attr("class", "auth-name").attr("transform", function (d, i) {
-		var y = distanceConstant <= 0 && i % 2 != 0 ?  d.r * 2 : -d.r * 2;  			  
+		var y = distanceConstant <= 0 && i % 2 == 0 ?  -d.r * 2 : d.r * 2;  			  
 		return "translate(0," + y + ")";
 	});
 	
@@ -203,47 +232,55 @@ $.bestPapers.visualise = function( data ){
 	
 	d3.selectAll(".name").attr("text-anchor","middle");
 		
-	positionNodes( nodesAuth, distanceConstant );
-	
-	var ticked = function() {
-     
-		nodesPubl.attr("transform", function(d){ 
-			return "translate(" + d.x + ",0)";
-		});
-        
-        link
-        .attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
-    }  
-    
-    simulation
-        .nodes(data.nodes);
-//        .on("tick", ticked);
+	positionNodes();
+	positionLinks();
+	   
+    simulation.nodes(data.nodes);
 
     simulation.force("link")
         .links(data.links);    
     
-    function dragstarted(d) {
-        if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-        d.fx = d.x;
-        d.fy = d.y;
-    }
-    
-    function dragged(d) {
-        d.fx = d3.event.x;
-        d.fy = d3.event.y;
-    }
-    
-    function dragended(d) {
-        if (!d3.event.active) simulation.alphaTarget(0);
-        d.fx = null;
-        d.fy = null;
-    } 
+    var linkedById = {};
+    link.each(function(d) { 
+    	linkedById[d.source.id + "," + d.target.id] = 1;
+    });
     
     function zoomed() {
     	layer.attr("transform", 'translate(' + d3.event.transform.x + ',' + d3.event.transform.y + ') scale(' + d3.event.transform.k + ')');
+    }
+    
+    function mouseover(d) {	
+    	d3.select(this).selectAll("text").transition().duration(750)
+	  		.style("font-weight", "bold");
+    	
+    	d3.selectAll(".node").selectAll("circle").transition().duration(750)
+    	  	.attr("fill-opacity", function(l){ return neighbors(d, l) || neighbors(l, d) || d === l ? 0.8 : 0.3 })
+    		.attr("r", 			  function(l){ return neighbors(d, l) || neighbors(l, d) || d === l ? l.r + 4 : l.r; })
+    		.attr("stroke-width", function(l){ return neighbors(d, l) || neighbors(l, d) || d === l ? 2 : 1; });
+    	
+    	link.transition().duration(750)
+    		.attr("stroke", 		function(l) { return  ( d === l.source || d ===  l.target ) ? (d.group === 1 ? vars.pubColor : vars.authColor) : "black"; })
+    		.attr('stroke-width', 	function(l) { return  ( d === l.source || d ===  l.target ) ? ( linkWidth == 1 ? 2 : vars.authRadius/4) : linkWidth; })
+    		.attr("stroke-opacity", function(l) { return  ( d === l.source || d ===  l.target ) ? 0.6 : 0.1; });
+    }
+
+    function mouseout() {
+    	d3.select(this).selectAll("text").transition().duration(750)
+  			.style("font-weight", "normal");
+	
+    	d3.selectAll(".node").selectAll("circle").transition().duration(750)
+	  		.attr("fill-opacity",  0.6)
+	  		.attr("stroke-width", 1)
+    		.attr("r", function( d ){ return d.r; });
+    	
+    	link.transition().duration(750)
+    		.attr("stroke", "black" )
+			.attr('stroke-width', linkWidth )
+			.attr("stroke-opacity", 0.1 );
+    }
+    
+    function neighbors(a, b){
+    	return linkedById[a.id + "," + b.id];
     }
 }
 
