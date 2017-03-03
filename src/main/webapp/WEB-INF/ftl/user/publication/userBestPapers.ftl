@@ -4,27 +4,27 @@
 <div id="boxbody${wUniqueName}" class="box-body">
 	<div class="box-content">
 		<div class="container-box filter-box activity-status-criteria row">
-			<div class="filter col-lg-4 col-md-5 col-sm-8">
+			<div class="filter basedOn col-lg-4 col-md-5 col-sm-8">
   				<span class="title font-small col-md-4  col-sm-4"> Based on : </span>
   				<div class="dropdown col-md-8 col-sm-8">
-    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Number of publications <span class="caret"></span> </button>
+    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Number of citations <span class="caret"></span> </button>
     				<ul class="dropdown-menu">
-      					<li><a href="#">Resercher's H-index</a></li>
-      					<li><a href="#">Publications' Citations</a></li>
+      					<li><a href="#" data-value="hindex">Resercher's H-index</a></li>
+      					<li class="selected" data-value="cited"><a href="#">Publications' Citations</a></li>
     				</ul>
   				</div>
 			</div>
-			<div class="filter col-lg-4 col-md-5 col-sm-8">
+			<div class="filter orderedBy col-lg-4 col-md-5 col-sm-8">
   				<span class="title font-small col-md-4  col-sm-4"> Ordered by: </span>
   				<div class="dropdown col-md-8 col-sm-8">
-    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Number of publications <span class="caret"></span> </button>
+    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Number of citationss <span class="caret"></span> </button>
     				<ul class="dropdown-menu">
-      					<li><a href="#">Resercher's H-index</a></li>
-      					<li><a href="#">Publications' Citations</a></li>
+      					<li data-value="year"><a href="#" >Year of publication</a></li>
+      					<li class="selected" data-value="cited"><a href="#">Publications' Citations</a></li>
     				</ul>
   				</div>
 			</div>
-			<div class="filter col-lg-4 col-md-5 col-sm-8">
+			<div class="filter top col-lg-4 col-md-5 col-sm-8">
   				<span class="title font-small col-md-4  col-sm-4"> Top : </span>
   				<div id="slider" class="col-md-8 col-sm-8">  				
     				<div class="body col-md-8 col-sm-8"></div>
@@ -104,5 +104,13 @@
 			$("#boxbody${wUniqueName} .box-content").html( "No publication found. Please link yourself to a researcher on PALM" );
 		</#if>
 
+		$("#widget-${wUniqueName}" + " .orderedBy .dropdown-menu li").on("click", function(){
+			if ( !$(this).hasClass("selected") ){
+				$(this).parent().children("li").removeClass("selected");
+				$(this).addClass("selected");
+				$(this).parents(".dropdown").children("button").html( $(this).text() + " <span class='caret'></span>" );
+				$.bestPapers.filterBy( $(this).data("value") );
+			}
+		});
 	});<#-- end document ready -->
 </script>
