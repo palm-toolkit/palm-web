@@ -7,30 +7,36 @@
 			<div class="filter basedOn col-lg-4 col-md-5 col-sm-8">
   				<span class="title font-small col-md-4  col-sm-4"> Based on : </span>
   				<div class="dropdown col-md-8 col-sm-8">
-    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Number of citations <span class="caret"></span> </button>
+    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Publications' Citations<span class="caret"></span> </button>
     				<ul class="dropdown-menu">
-      					<li><a href="#" data-value="hindex">Resercher's H-index</a></li>
-      					<li class="selected" data-value="cited"><a href="#">Publications' Citations</a></li>
+    					<li class="selected" data-value="cited"><a href="#">Publications' Citations</a></li>
+      					<li><a href="#" data-value="venue">Publication's Venue Rank</a></li>  					
     				</ul>
   				</div>
 			</div>
 			<div class="filter orderedBy col-lg-4 col-md-5 col-sm-8">
   				<span class="title font-small col-md-4  col-sm-4"> Ordered by: </span>
   				<div class="dropdown col-md-8 col-sm-8">
-    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Number of citationss <span class="caret"></span> </button>
+    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Publications' Citations <span class="caret"></span> </button>
     				<ul class="dropdown-menu">
-      					<li data-value="year"><a href="#" >Year of publication</a></li>
       					<li class="selected" data-value="cited"><a href="#">Publications' Citations</a></li>
+      					<li data-value="year"><a href="#" >Year of publication</a></li>
     				</ul>
   				</div>
 			</div>
 			<div class="filter top col-lg-4 col-md-5 col-sm-8">
   				<span class="title font-small col-md-4  col-sm-4"> Top : </span>
-  				<div id="slider" class="col-md-8 col-sm-8">  				
-    				<div class="body col-md-8 col-sm-8"></div>
-    				<div class="min"></div>
-    				<div class="max"></div>
-  				</div>
+  				 <div class="btn-group" data-toggle="">
+                	<label class="radio-inline">
+                    	<input type="radio" id="top5" name="top" value="5" /> 5
+                	</label> 
+                	<label class="radio-inline active">
+                    	<input type="radio" id="top10" name="top" checked="checked" value="10" /> 10
+               	 	</label> 
+                	<label class="radio-inline">
+                    	<input type="radio" id="q158" name="top" value="15" /> 15
+                	</label> 
+            </div>
 			</div>
 		</div>
 		<div class="container-box visualization-box row">
@@ -47,14 +53,14 @@
 	$( function(){
 		var height = 630;
 		<#-- add slimscroll to widget body -->
-		$("#boxbody${wUniqueName} .box-content").slimscroll({
+		<#-- $("#boxbody${wUniqueName} .box-content").slimscroll({
 			height: height + "px",
 	        size: "6px",
 			allowPageScroll: true,
    			touchScrollStep: 50,
    			railVisible: true,
     		alwaysVisible: true
-	    });
+	    }); -->
 
 		<#-- add overlay -->
 		var $container = $( "#widget-${wUniqueName}" );
@@ -103,14 +109,24 @@
 		<#else>
 			$("#boxbody${wUniqueName} .box-content").html( "No publication found. Please link yourself to a researcher on PALM" );
 		</#if>
-
+		
+		<#-- order publications -->
 		$("#widget-${wUniqueName}" + " .orderedBy .dropdown-menu li").on("click", function(){
 			if ( !$(this).hasClass("selected") ){
 				$(this).parent().children("li").removeClass("selected");
 				$(this).addClass("selected");
 				$(this).parents(".dropdown").children("button").html( $(this).text() + " <span class='caret'></span>" );
-				$.bestPapers.filterBy( $(this).data("value") );
+				$.bestPapers.orderBy( $(this).data("value") );
 			}
 		});
+		
+		<#-- filter publications -->
+		$("#widget-${wUniqueName}" + " .top input[name=top]").on("click", function(){
+			console.log("click");	
+			
+			$.bestPapers.filterBy.top( $(this).val() );
+			
+		});
+			
 	});<#-- end document ready -->
 </script>
