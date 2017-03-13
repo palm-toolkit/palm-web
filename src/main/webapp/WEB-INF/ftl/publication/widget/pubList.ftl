@@ -64,7 +64,7 @@
 
 <script>
 	$( function(){
-		<#-- set target author id -->
+		<#-- set target pub id -->
 		<#if targetId??>
 			var targetId = "${targetId!''}";
 		<#else>
@@ -364,6 +364,7 @@
 										if( targetId == itemPublication.id ){
 											if( $.PALM.selected.record( "publication", itemPublication.id, pubDetail.parent() )){
 												<#-- push history -->
+												
 												//history.pushState( null, "Publication " + itemPublication.title, "<@spring.url '/publication' />?id=" + itemPublication.id + "&title=" + itemPublication.title);
 												getPublicationDetails( itemPublication.id );
 												<#-- add related publication header if necessary -->

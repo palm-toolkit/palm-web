@@ -101,6 +101,7 @@
 <script src="<@spring.url '/resources/scripts/visualizations/resPublicationList.js' />" type="text/javascript"></script>
 <script src="<@spring.url '/resources/scripts/visualizations/activity-status/circle-members-activity-status.js' />" type="text/javascript"></script>
 <script src="<@spring.url '/resources/scripts/visualizations/best-papers/user-best-papers.js' />" type="text/javascript"></script>
+<script src="<@spring.url '/resources/scripts/visualizations/publication-rank/publication-rank.js' />" type="text/javascript"></script>
 
 <#-- END VISUALIZATIONS IMPORTS -->
 
