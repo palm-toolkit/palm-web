@@ -40,7 +40,10 @@
 			</div>
 		</div>
 		<div class="container-box visualization-box row">
-			<div class="visualization-main col-md-12  col-sm-12"></div>
+			<div class="visualization-main col-md-8  col-sm-8"></div>
+			<div class="visualization-details col-md-4  col-sm-4">
+				<div class="list-publications"></div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -75,7 +78,7 @@
 		<#-- set widget unique options -->
 
 		var options ={
-			source : "<@spring.url '/publication/basicInformation' />",
+			source : "<@spring.url '/publication/basicInformationAndTopics' />",
 			
 			query: "",
 			onRefreshStart: function( widgetElem ){
@@ -85,22 +88,18 @@
 				var url 		  = "<@spring.url ''/>";
 				var userLoggedId  = <#if currentUser.author??>"${currentUser.author.id}"<#else>""</#if>; 
 
-				var query  = "?id=" + data.publication.event.id;
-				var confPublURL = "<@spring.url '/venue/publicationList' />" + query;
+				var query  = "?id=" + data.basicinfo.publication.event.id + "&maxresult=" + 15;
+				var confPublURL = "<@spring.url '/venue/publicationTopList' />" + query;
 				
 				var conferencePublications = $.get(confPublURL, function(response){
 					console.log("response"); console.log(response);
-					$.publRank.visualization.draw( url, userLoggedId, wUniqueName, response, height);
+					$.publRank.visualization.draw( url, userLoggedId, wUniqueName, response, data, height);
 				})
 				
 				<#-- remove overlay -->
 				$container.find(".overlay").remove();
-				
-			
 			}
 		};
-		
-		
 		
 		<#-- register the widget -->
 		$.PALM.options.registeredWidget.push({

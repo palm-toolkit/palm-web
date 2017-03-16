@@ -1,6 +1,6 @@
 $.publRank = {};
 $.publRank.variables =  {
-		margin : {top: 20, right: 20, bottom: 40, left: 40},
+		margin : {top: 40, right: 20, bottom: 40, left: 40},
 		padding: 10
 };
 $.publRank.data =  function( data ){
@@ -10,34 +10,43 @@ $.publRank.data =  function( data ){
 };
 $.publRank.visualization = {
 	data 	: function( data ){
-				var dataset = [];  
+				var vars 	= $.publRank.variables,		
+					dataset = [],
+					myPaper = vars.publication.basicinfo.publication; 
+					myPaper.topics = vars.publication.topics.topics;
 				data.publications.map(function( d ){
-					d.cited = d.cited == null || d.cited == 0 ?  Math.floor((Math.random() * 1000 ) + 1): d.cited;
-					dataset.push(d);					
+					d.cited = d.cited == null || d.cited == 0 ? Math.floor((Math.random() * 1000 ) + 0) : d.cited;
+					if ( d.id !== myPaper.id)
+						dataset.push(d);	
 				});	
-				return dataset;
+				return dataset.sort( function(a, b){ return b.cited - a.cited}).concat( myPaper );
 	},
-	setVars : function( url, user, widgetUniqueName, height ){
+	setVars : function( url, user, widgetUniqueName, height, publication ){
 		var vars = $.publRank.variables;
 		
 		vars.url 			  = url;
 		vars.user 			  = user;
 		vars.widgetUniqueName = widgetUniqueName;
 		vars.height 	      = height;
+		vars.publication	  = publication;
 		vars.mainContainer    = $("#widget-" + widgetUniqueName + " .visualization-main");
+		vars.detailsContainer    = $("#widget-" + widgetUniqueName + " .visualization-details");
 		vars.thisWidget 	  = $.PALM.boxWidget.getByUniqueName( widgetUniqueName );	
 		vars.width  	  	  = vars.mainContainer.width() - vars.margin.left - vars.margin.right;
+		vars.width			  = vars.width > 800 ? 800 : vars.width; 
 	},
-	draw : function(url, user, widgetUniqueName, data, height){
+	draw : function(url, user, widgetUniqueName, data, publication, height){
 		if( data.status === "ok" && typeof data.publications !== 'undefined'){
 	
-			this.setVars(url, user, widgetUniqueName, height);
+			this.setVars(url, user, widgetUniqueName, height, publication);
 			
 			var vars = $.publRank.variables;
 			vars.thisWidget.element.find(".overlay").remove();			
 			vars.mainContainer.html( "" );
 		
-			this.base( this.data( data ) );
+			var dataset = this.data( data ) 
+			this.base( dataset );
+			this.list( dataset );
 
 		}else{
 			$.PALM.callout.generate( $mainContainer , "warning", "Empty Publications !", "Sorry, you don't have any publication." );
@@ -45,98 +54,129 @@ $.publRank.visualization = {
 		}
 	},
 	base	 : function( dataset ){
-		var vars 	= $.publRank.variables;
-		var colors  = d3.scale.category10();
-
-		var svg  	= d3.select("#widget-" + vars.widgetUniqueName + " .visualization-main" ).append("svg")
-			.attr("width",  vars.width)
-			.attr("height", vars.height);
+		var vars   = $.publRank.variables;
+		var colors = [
+		          "#ffce44", "#3c4158", "#686a70", "#72675c", "#d6d0c9", 
+		          "#c6684c", "#cc9b1c", "#10816a", "#7f93ac", "#8bdeb9", 
+		          "#f28571", "#c25277", "#135589", "#e9c77b", "#c4d4e0", 
+		          "#FF7E5F", "#765285", "#351C4D", "#709FB0", "#726A95",
+		          "#351F39", "#613A43", "#849974", "#36384C", "#726968",
+		          "#6CBF84", "#EFAA52", "#AB3E16", "#b32868", "#D1A827" ];
 		
+		var svg   = d3.select("#widget-" + vars.widgetUniqueName + " .visualization-main" ).append("svg")
+			.attr("width",  vars.width)
+			.attr("height", vars.height);	
 		
 		//Set up scales
-		var nrPubl = dataset.length;
 		var citation = function(d){ return d.cited; };
-		var title = function(d){ return d.title; };
-		var xScale = d3.scaleBand().rangeRound([0, vars.width]).padding(0.1)
-			.domain(dataset.map( title ));
+		var index    = function(d, i){ return i+1; };
+		
+		var xScale = d3.scaleBand()
+			.rangeRound([0, vars.width]).padding(0.1)
+			.domain(dataset.map( index ));
 
 		var yScale = d3.scaleLinear()
+			.domain([d3.max(dataset, citation), d3.min(dataset, citation)])
+			.range([vars.height - vars.margin.bottom - vars.margin.top, 100]);
+
+		var yAxisScale = d3.scaleLinear()
 			.domain([d3.min(dataset, citation), d3.max(dataset, citation)])
 			.range([vars.height - vars.margin.bottom - vars.margin.top, 0]);
 
-		var fillingScale = d3.scaleLinear()
-			.domain([0,	1])
-		.range([vars.height-vars.margin.bottom-vars.margin.top,0]);
+		var terms = vars.publication.topics.topics[0].termvalues.map(function( d){ return d.term; });
+		var colorScale = d3.scaleOrdinal()
+			.domain( terms )
+			.range( colors );
 
-		var color_hash = {
-			    0 : ["Invite","#1f77b4"],
-				1 : ["Accept","#2ca02c"],
-				2 : ["Decline","#ff7f0e"]
-
-		};
-		var groups = svg.selectAll("g")
+		vars.colorScale = colorScale;
+		
+		var bars = svg.selectAll("g")
 			.data(dataset)
-			.enter()
-			.append("g")
-			.attr("class","rgroups")
-			.attr("transform","translate("+ vars.margin.left + "," + - vars.margin.bottom +")")
-			.style("fill", function(d, i) {
-				return color_hash[0];
-			});
+			.enter().append("g")
+				.attr("class", "bar")
+				.on("mouseenter", this.interactions.mouseoverBar)
+				.on("mouseleave", this.interactions.mouseleaveBar);
+		
+		bars.append("rect")
+			.attr("fill", "white")
+			.attr("stroke", "black")
+			.attr("stroke-opacity", "0.5")
+			.attr("width", xScale.bandwidth())
+			.attr("height", function( d ){ d.height = yScale(d.cited); return d.height; });
+
+		bars.append("text").attr("class", "bar-label")
+			.style("font-size", "14px")
+			.attr("fill", "black")
+			.attr("opacity", "0.7")
+			.text(function( d ){ return d.cited; })
+			.attr("dy", "-.35em")
+			.attr("dx", function () { return (xScale.bandwidth() - this.getComputedTextLength()) / 2; } ) ;
+		
+		bars.transition().duration(function(d,i){ return 100 * i; }).ease(d3.easeCubic)
+	    	.attr("transform", function( d, i ) {
+	    		return "translate(" + [ xScale( i+1 ) + vars.margin.left, -yScale(d.cited) + vars.height - vars.margin.bottom] + ")";
+	    	});
+
+		var groups = bars.append("g")
+			.attr("class","rgroups");
 		
 		// Add a rect for each data value
 		var rects = groups.selectAll("rect")
-			.data(function(d) { return d.coauthor; })
-			.enter()
-			.append("rect")
-			.attr("width", 2)
-			.style("fill-opacity",1e-6);
-
-
-		rects.transition()
-		     .duration(function(d,i){
-		    	 return 500 * i;
-		     })
-		     .ease(d3.easeElastic)
-		    .attr("x", function( d, i ) {
-				return xScale( d3.select(this.parentElement).datum().title );
+			.data( function(d) { 
+				if ( d.topics.length != 0 ){
+					d.topics.total = d3.sum(d.topics[0].termvalues, function(d){ return d.value;});
+					return d.topics[0].termvalues.reverse().slice(0,10);
+				}
+				return []; 
 			})
-			.attr("y", function(d,i) {
-				return vars.height - fillingScale(i/d3.select(this.parentElement).datum().coauthor.length);
-			})
+			.enter().append("rect")
+				.attr("height", 0)
+				.attr("width", xScale.bandwidth())
+				.style("fill-opacity",1e-6);
+		
+		var position = 0;
+		
+		rects.transition().duration(function(d,i){ return 100 * i; }).ease(d3.easeCubic)
 			.attr("height", function(d,i) {
-				return -fillingScale(i/d3.select(this.parentElement).datum().coauthor.length) + (vars.height - vars.margin.top - vars.margin.bottom);
+				var height = d3.select(this.parentElement).datum().height * d.value / d3.select(this.parentElement).datum().topics.total;
+				return height;
 			})
-			.attr("width", xScale.bandwidth())
+			.attr("y", function(d,i) { 
+				var currPosition = position;
+				var val =  d3.select(this.parentElement).datum().height * d.value / d3.select(this.parentElement).datum().topics.total;
+				
+				position = i == 0 ? val : position + val;
+				return i == 0 ? 0 : currPosition;})
 			.style("fill-opacity",1)
-			.style("fill", function( d, i ){ return colors(i); });
+			.style("fill", function( d, i ){ return colorScale( d.term ) != undefined ? colorScale( d.term ) : "white"; });
 
-			svg.append("g")
-				.attr("class","x axis")
-				.attr("transform","translate(40," + (vars.height - vars.margin.bottom) + ")")
-				.call(d3.axisBottom( xScale ));
+		// x y axis
+		svg.append("g")
+			.attr("class","x axis")
+			.attr("transform","translate(" + vars.margin.left + "," + (vars.height - vars.margin.bottom) + ")")
+			.call(d3.axisBottom( xScale ));
 
-
-			svg.append("g")
-				.attr("class","y axis")
-				.attr("transform","translate(" + vars.margin.left + "," + vars.margin.top + ")")
-				.call( d3.axisLeft( yScale ) );
-			
-			svg.append("text")
+		svg.append("g")
+			.attr("class","y axis")
+			.attr("transform","translate(" + vars.margin.left + "," + vars.margin.top + ")")
+			.call( d3.axisLeft( yAxisScale ) );
+		
+		//labels
+		svg.append("text")
 			.attr("transform","rotate(-90)")
 			.attr("y", 0 - 3.5)
 			.attr("x", 0-(vars.height/2))
 			.attr("dy","1em")
 			.text("Number of Citations");
 
-			svg.append("text")
+		svg.append("text")
 			.attr("class","xtext")
 		  	.attr("x",vars.width/2 - vars.margin.left)
 		  	.attr("y",vars.height - 5)
 		  	.attr("text-anchor","middle")
 		  	.text("Publications");
 
-			svg.append("text")
+		svg.append("text")
 			.attr("class","title")
         	.attr("x", (vars.width / 2))             
         	.attr("y", 20)
@@ -145,111 +185,20 @@ $.publRank.visualization = {
         	.style("text-decoration", "underline")  
         	.text("Top Publications in " + dataset[0].type + " " + dataset[0].event.name);
 
+		//citation axis
+		var myPaperHeight = dataset[ dataset.length-1 ].height;
+		svg.append("line")
+			.attr("class","citation axis")
+			.attr("x1", vars.margin.left )
+			.attr("y1", vars.height - vars.margin.bottom - myPaperHeight )
+			.attr("x2", vars.width + vars.margin.left - xScale.bandwidth())
+			.attr("y2",  vars.height - vars.margin.bottom - myPaperHeight )
+			.attr("stroke","black")
+			.style("stroke-dasharray", ("3, 3"));
+
 
 	},
 	elements : function(){
-		var stack = d3.layout.stack();
-
-		d3.data("mperday.data",function(data){
-			dataset = data;
-
-			//Data, stacked
-			stack(dataset);
-
-			var color_hash = {
-				    0 : ["Invite","#1f77b4"],
-					1 : ["Accept","#2ca02c"],
-					2 : ["Decline","#ff7f0e"]
-
-			};
-
-
-			//Set up scales
-			var xScale = d3.time.scale()
-				.domain([new Date(dataset[0][0].time),d3.time.day.offset(new Date(dataset[0][dataset[0].length-1].time),8)])
-				.rangeRound([0, w-padding.left-padding.right]);
-
-			var yScale = d3.scale.linear()
-				.domain([0,				
-					d3.max(dataset, function(d) {
-						return d3.max(d, function(d) {
-							return d.y0 + d.y;
-						});
-					})
-				])
-				.range([h-padding.bottom-padding.top,0]);
-
-			var xAxis = d3.svg.axis()
-						   .scale(xScale)
-						   .orient("bottom")
-						   .ticks(d3.time.days,1);
-
-			var yAxis = d3.svg.axis()
-						   .scale(yScale)
-						   .orient("left")
-						   .ticks(10);
-
-
-
-			//Easy colors accessible via a 10-step ordinal scale
-			var colors = d3.scale.category10();
-
-			//Create SVG element
-			var svg = d3.select("#mbars")
-						.append("svg")
-						.attr("width", w)
-						.attr("height", h);
-
-			// Add a group for each row of data
-			var groups = svg.selectAll("g")
-				.data(dataset)
-				.enter()
-				.append("g")
-				.attr("class","rgroups")
-				.attr("transform","translate("+ padding.left + "," + (h - padding.bottom) +")")
-				.style("fill", function(d, i) {
-					return color_hash[dataset.indexOf(d)][1];
-				});
-
-			// Add a rect for each data value
-			var rects = groups.selectAll("rect")
-				.data(function(d) { return d; })
-				.enter()
-				.append("rect")
-				.attr("width", 2)
-				.style("fill-opacity",1e-6);
-
-
-			rects.transition()
-			     .duration(function(d,i){
-			    	 return 500 * i;
-			     })
-			     .ease("linear")
-			    .attr("x", function(d) {
-					return xScale(new Date(d.time));
-				})
-				.attr("y", function(d) {
-					return -(- yScale(d.y0) - yScale(d.y) + (h - padding.top - padding.bottom)*2);
-				})
-				.attr("height", function(d) {
-					return -yScale(d.y) + (h - padding.top - padding.bottom);
-				})
-				.attr("width", 15)
-				.style("fill-opacity",1);
-
-				svg.append("g")
-					.attr("class","x axis")
-					.attr("transform","translate(40," + (h - padding.bottom) + ")")
-					.call(xAxis);
-
-
-				svg.append("g")
-					.attr("class","y axis")
-					.attr("transform","translate(" + padding.left + "," + padding.top + ")")
-					.call(yAxis);
-
-				// adding legend
-
 				var legend = svg.append("g")
 								.attr("class","legend")
 								.attr("x", w - padding.right - 65)
@@ -415,9 +364,194 @@ $.publRank.visualization = {
 				        .text("Number of messages per hour on " + date + ".");
 					});			
 				});
+	},
+	list : function( dataset ){
+		var vars = $.publRank.variables;
+		var svg =  d3.select("#widget-" + vars.widgetUniqueName + " .visualization-details .list-publications" ).append("svg")
+			.attr("width",  vars.detailsContainer.width() - vars.margin.left - vars.margin.right)
+			.attr("height", vars.height);	
+		var list = svg.append("g")
+			.attr("class","list-publ")
+			.attr("transform", "translate(" + [vars.margin.left, vars.margin.top * 1.5] + ")")
+			.attr("height", 100)
+			.attr("width",100);
+	
+		list.append("text")
+			.attr("class", "title")
+			.attr("dy", "-.7em")
+			.text("Publications:");
+		
+		var posY = 0;
+		list.selectAll("g").data(dataset)
+			.enter()
+			.append('g')
+			.on("mouseover", this.interactions.mouseoverList)
+			.on("mouseleave", this.interactions.mouseleaveList)
+			.each(function(d,i){
+				var g = d3.select(this).attr("id", "list-item-" +d.id);
+				var prev = d3.select(this.previousElementSibling),
+				prev_nrKids = i != 0 ? prev.selectAll(".title-publ").nodes().length : 1;
+	  	
+				posY	= i == 0 ? 20 : posY + (prev_nrKids * 16);
+				g.append("text")
+					.attr("y", posY)
+					.attr("width", 10)
+					.attr("height",10)
+					.style("text-anchor", "end")
+					.text( i+1 + ".");
 
+				var width = vars.detailsContainer.width() - vars.margin.left - 10;
+				wrapText( g, d.title, width, "title-publ", 14)
+	  	
+				g.selectAll(".title-publ")
+					.attr("x", 5)
+					.attr("y",  posY)
+			});
+	},
+	topics : function( elem, d){
+		var vars    = $.publRank.variables;
+		
+		var list = d3.select(elem).append("g")
+			.attr("class","list-topics")
+			.attr("transform", "translate(" + [-vars.margin.left*2, -120] + ")");
 
-		});
+		list.append("text")
+			.attr("class", "title")
+			.style("text-anchor", "end")
+			.text("Topics:");
+		
+		var topics =  vars.publication.topics.topics[0].termvalues.reverse().slice(0,10);
 
+		list.selectAll("g").data( topics )
+			.enter()
+			.append('g')
+			.each(function(d,i){
+				var g = d3.select(this).attr("id", "list-item");
+				var prev = d3.select(this.previousElementSibling),
+				prev_nrKids = i != 0 ? prev.selectAll(".name-topic").nodes().length : 1;
+	  	
+				var posY = i*25 + 10;
+				g.append("rect")
+					.attr("y", posY)
+					.attr("width", 10)
+					.attr("height",10)
+					.attr("fill", function( dt ){ return vars.colorScale( dt.term ); })
+					.style("text-anchor", "end");
+
+				g.append("text")
+					.attr("y", posY + 10)
+					.style("text-anchor", "end")
+					.style("font-weight", "bold")
+					.attr("dx", "-.35em")
+					.text( function( dt ){ return dt.term; });
+				
+				g.append("text")
+					.attr("y", posY + 10)
+					.style("text-anchor", "start")
+					.style("font-weight", "bold")
+					.attr("x", 10)
+					.attr("dx", ".35em")
+					.text( function( dt ){ return dt.value; });
+			});
+	
+		var links = list.append("g")
+	  		.attr("class", "links")
+	  		.selectAll(".link")
+	  		.data( topics )
+	  		.enter().append("path")
+  				.attr("stroke", function(dt) { return vars.colorScale( dt.term ); })
+  				.attr("stroke-width", 2 )
+  				.attr("opacity", 0.5)
+  				.attr("fill", "none")
+  				.attr("class", "link" )
+  				.attr("transform", "translate(" + [vars.margin.left*2, 120] + ")")
+  				.attr("d", function( dl, i ){
+					var xSource = -vars.margin.left*2;
+					var ySource = i*25 + 10 - (120) + 5;
+					var xTarget = parseInt ( d3.select( d3.select(elem).selectAll(".rgroups rect").nodes()[i] ).attr("x") ) || 5;
+					var yTarget = parseInt ( d3.select( d3.select(elem).selectAll(".rgroups rect").nodes()[i] ).attr("y") ) + 5;
+					return "M" + xSource + "," + ySource + "C" + (xSource + xTarget)/2 + "," + ySource + " " + (xSource + xTarget)/2 + "," + yTarget + " " + xTarget + "," + yTarget;
+  				});
+		},
+	interactions : {
+		mouseoverBar : function(d){
+			d3.selectAll(".bar").attr("opacity", 0.3);
+			
+			d3.select(this).attr("opacity", 1);
+			d3.select(this).select("rect").attr("stroke-width", "3px");
+			d3.select(this).select("text").style("font-weight", "bold");
+
+			if ( d.id == $.publRank.variables.publication.basicinfo.publication.id ){
+				$.publRank.visualization.topics( this, d);
+			}
+			
+			d3.select("#list-item-" + d.id).selectAll("text").style("font-weight", "bold");
+		},
+		mouseleaveBar: function(d){
+			d3.selectAll(".bar").attr("opacity", 1);
+			
+			d3.select(this).select("rect").attr("stroke-width", "1px");
+			d3.select(this).select("text").style("font-weight", "normal");
+			
+			d3.select("#list-item-" + d.id).selectAll("text").style("font-weight", "normal");
+			
+			d3.select(".list-topics").remove();
+		},
+		mouseoverList: function(d){
+			d3.select(this).selectAll("text").style("font-weight", "bold");
+			
+			d3.selectAll(".bar").each(function( e ){
+				var g = d3.select(this);
+				if ( d.id == e.id ){
+					g.selectAll("text").style("font-weight", "bold");
+					g.select("rect").attr("stroke-width", "3px");
+				}else
+					g.attr("opacity", 0.3);
+			})
+		},
+		mouseleaveList: function(d){
+			d3.select(this).selectAll("text").style("font-weight", "normal");
+			
+			d3.selectAll(".bar").each(function( e ){
+				var g = d3.select(this);
+				g.selectAll("text").style("font-weight", "normal");
+				g.select("rect").attr("stroke-width", "1px");	
+				
+				g.attr("opacity", 1);
+			})
+		}
 	}
 };
+
+function wrapText( container, text, width, className, fontSize){
+	var lineHeight = fontSize;
+	var y = 0;
+	var words = text.split(" ").reverse();
+	var textArray = [];
+	var text = container.append("text").attr("class", className);
+	
+	while(word = words.pop()){
+		textArray.push(word);
+		text.text( textArray.join(" ") );
+		
+		if ( text.node().getBBox().width > width ){
+			y += lineHeight; 
+			var w = textArray.pop();
+			
+			if ( textArray.length == 0 ){
+				var ind = splitWord( container, w, width );
+				var first = ind == w.length? w.substr(0, ind ) : w.substr(0, ind) + "-";
+				textArray.push( first);
+				
+				w = w.substr( ind, w.length );
+			}
+			
+			text.text( textArray.join(" ") );
+			
+			textArray = [w];
+			text = container.append("text").attr("class", className)
+					.attr("dy", y )
+					.text( textArray.join(" ") );
+		}				
+	}
+}
