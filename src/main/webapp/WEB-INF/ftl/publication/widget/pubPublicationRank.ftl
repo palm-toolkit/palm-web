@@ -42,7 +42,8 @@
 		<div class="container-box visualization-box row">
 			<div class="visualization-main col-md-8  col-sm-8"></div>
 			<div class="visualization-details col-md-4  col-sm-4">
-				<div class="list-publications"></div>
+				<#--<div class="list-publications" style="display:none"></div> -->
+				<div class="basicinfo"></div>
 			</div>
 		</div>
 	</div>
@@ -71,6 +72,15 @@
     		alwaysVisible: true
 	    }); -->
 
+		<#-- add scroll for papers' list -->
+		<#-- $("#boxbody${wUniqueName} .visualization-details .list-publications").slimscroll({
+			height: height/2 + "px",
+	        size: "6px",
+			allowPageScroll: true,
+   			touchScrollStep: 50,
+   			railVisible: true,
+    		alwaysVisible: true
+	    }); -->
 		<#-- add overlay -->
 		var $container = $( "#widget-${wUniqueName}" );
 		$container.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );

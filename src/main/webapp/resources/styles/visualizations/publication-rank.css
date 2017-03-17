@@ -1,0 +1,5 @@
+#widget-publication_rank .visualization-main .bar.clicked rect{
+	fill: grey;
+    fill-opacity: 0.1;
+    stroke-width: 2px;
+}

@@ -3,6 +3,7 @@
 @import url("similar-researchers-style.css");
 @import url("key-researchers-style.css");
 @import url("circle-activity-status.css");
+@import url("publication-rank.css");
 
 .box-body .font-small{
 	font-size : 85% !important;
