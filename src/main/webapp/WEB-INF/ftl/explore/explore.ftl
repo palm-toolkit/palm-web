@@ -1,9 +1,7 @@
  <@layout.global>
  	 	
  	<@content.header>
-
 		<#include "headerPageVA.ftl" />
-		
  	</@content.header>
  	
  	<@content.leftSidebar>
@@ -11,9 +9,9 @@
  	</@content.leftSidebar>
  	
  	<@content.contentWrapper>
-          <section class="content">
+    	<section class="content">
 			<div class ="row">
- 				<#include "widgetLayoutMainContent.ftl" />
+				<#include "widgetLayoutMainContent.ftl" />
 			</div>
 		</section>
  	</@content.contentWrapper>

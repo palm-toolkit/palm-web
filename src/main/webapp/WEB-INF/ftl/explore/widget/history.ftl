@@ -7,40 +7,39 @@
 </div>
 
 <script>
-	$( function(){
-		
+	$( function()
+	{
 		var targetDiv = document.getElementById("widget-explore_history").getElementsByClassName("box")[0];
 		targetDiv.className += ' collapsed-box'
 		var iElements = targetDiv.getElementsByTagName("i");
+
 		for(var i=0;i<iElements.length;i++)
 		{
 			if(iElements[i].className == "fa fa-minus")
 			iElements[i].className = "fa fa-plus"
-			
 		}
 		
-			<#-- add slim scroll -->
-	      $(".history-list").slimscroll({
-				height: "100%",
-		        size: "5px",
-	        	allowPageScroll: true,
-	   			touchScrollStep: 50
-		  });
+		<#-- add slim scroll -->
+	    $(".history-list").slimscroll({
+			height: "100%",
+	        size: "5px",
+        	allowPageScroll: true,
+   			touchScrollStep: 50
+		});
+	
 		<#-- generate unique id for progress log -->
 		var uniquePidTopicWidget = $.PALM.utility.generateUniqueId();
-		var options ={
+		var options = {
 			source : "<@spring.url '/explore/filter' />",
 			query: "",
 			queryString : "",
 			page:0,
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
-				
 			},
-			onRefreshDone: function(  widgetElem , data ){
-			
-			var targetContainer = $(".history-list" );
-			
+			onRefreshDone: function(  widgetElem , data )
+			{
+				var targetContainer = $(".history-list" );
 				targetContainer.html("");
 				//localStorage.clear();
 				
@@ -55,54 +54,51 @@
 						sortedJson[keys.length - k + 1] = json[k];
 					}
 					
-					$.each( sortedJson, function( index, item){
-						var historyDiv = 
-						$( '<div/>' )
-							.addClass( 'explore' )
-							.attr({ 'id' : "" });
+					$.each( sortedJson, function( index, item)
+					{
+						var historyDiv = $( '<div/>' )
+											.addClass( 'explore' )
+											.attr({ 'id' : "" });
 							
-						var historyNav =
-						$( '<div/>' )
-							.addClass( 'nav' );
+						var historyNav = $( '<div/>' )
+											.addClass( 'nav' );
 						
 						var historyNamesList = $( '<div/>' )
-						.addClass( 'name' )
+												.addClass( 'name' )
+												
 						for(var v = 0; v < item.names.length; v++)
 						{
 							historyNamesList.append(
-											$('<div/>')
-											.append( 
-													$( '<i/>' )
-													.addClass( 'fa fa-angle-right icon font-xs' )
-													.append('&nbsp;')
-												)
-											.append(
-												$( '<span/>' )
-													.html( item.names[v] )
-											)	
-										)	
+														$('<div/>')
+														.append(
+																$( '<i/>' )
+																.addClass( 'fa fa-angle-right icon font-xs' )
+																.append('&nbsp;')
+															)
+														.append(
+															$( '<span/>' )
+																.html( item.names[v] )
+														)	
+													)	
 						} 
-									
 							
-						var historyDetail =
-						$( '<div/>' )
-							.addClass( 'detail' )
-							.append(
-								$('<div/>')
-								.addClass( 'text-gray' )
-								.html( item.time )	
-							)	
-							.append(
-								historyNamesList
-							);	
+						var historyDetail = $( '<div/>' )
+												.addClass( 'detail' )
+												.append(
+													$('<div/>')
+													.addClass( 'text-gray' )
+													.html( item.time )	
+												)	
+												.append(
+													historyNamesList
+												);	
 							
 						historyDiv
-							.append(
-								historyNav
-							).append(
-								historyDetail
-							);
-						
+								.append(
+									historyNav
+								).append(
+									historyDetail
+								);
 						
 						historyDiv
 							.on("mouseover", blue);
@@ -111,19 +107,18 @@
 							
 						<#-- add click event -->
 						historyDiv
-							.on( "click", function(){
-									$( this ).parent().context.style.color="black";
-									console.log(item.ids)
-									var id = item.ids
-									var type = item.type
-									var replace = "true" 
-									var queryString = "?id="+id+"&type="+type+"&replace="+replace;
-									console.log(queryString)
-									<#-- update search widget -->
-									searchWidget = $.PALM.boxWidget.getByUniqueName( 'explore_search' );
-									searchWidget.options.queryString = queryString;
-									$.PALM.boxWidget.refresh( searchWidget.element , searchWidget.options );
-							} );
+							.on( "click", function()
+							{
+								$( this ).parent().context.style.color="black";
+								var id = item.ids
+								var type = item.type
+								var replace = "true" 
+								var queryString = "?id="+id+"&type="+type+"&replace="+replace;
+								<#-- update search widget -->
+								searchWidget = $.PALM.boxWidget.getByUniqueName( 'explore_search' );
+								searchWidget.options.queryString = queryString;
+								$.PALM.boxWidget.refresh( searchWidget.element , searchWidget.options );
+							});
 							
 						targetContainer
 							.append( 
@@ -137,11 +132,11 @@
 		};	
 		
 		function blue(){
-				$( this ).parent().context.style.color="blue";
+				$( this ).parent().context.style.color = "blue";
 		}
 		
 		function black(){
-				$( this ).parent().context.style.color="black";
+				$( this ).parent().context.style.color = "black";
 		}
 		
 		<#--// register the widget-->

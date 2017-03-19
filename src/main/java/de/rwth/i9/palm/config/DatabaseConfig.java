@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import de.rwth.i9.palm.model.Author;
 import de.rwth.i9.palm.model.AuthorAlias;
 import de.rwth.i9.palm.model.AuthorInterest;
+import de.rwth.i9.palm.model.AuthorInterestFlat;
 import de.rwth.i9.palm.model.AuthorInterestProfile;
 import de.rwth.i9.palm.model.AuthorTopicModeling;
 import de.rwth.i9.palm.model.AuthorTopicModelingProfile;
@@ -34,8 +35,12 @@ import de.rwth.i9.palm.model.CircleWidget;
 import de.rwth.i9.palm.model.Config;
 import de.rwth.i9.palm.model.ConfigProperty;
 import de.rwth.i9.palm.model.Country;
+import de.rwth.i9.palm.model.DataMiningAuthor;
+import de.rwth.i9.palm.model.DataMiningEventGroup;
+import de.rwth.i9.palm.model.DataMiningPublication;
 import de.rwth.i9.palm.model.Event;
 import de.rwth.i9.palm.model.EventGroup;
+import de.rwth.i9.palm.model.EventGroupInterestFlat;
 import de.rwth.i9.palm.model.EventInterest;
 import de.rwth.i9.palm.model.EventInterestProfile;
 import de.rwth.i9.palm.model.ExtractionService;
@@ -55,6 +60,7 @@ import de.rwth.i9.palm.model.PublicationFile;
 import de.rwth.i9.palm.model.PublicationHistory;
 import de.rwth.i9.palm.model.PublicationSource;
 import de.rwth.i9.palm.model.PublicationTopic;
+import de.rwth.i9.palm.model.PublicationTopicFlat;
 import de.rwth.i9.palm.model.Role;
 import de.rwth.i9.palm.model.Source;
 import de.rwth.i9.palm.model.SourceProperty;
@@ -209,7 +215,9 @@ public class DatabaseConfig
 				UserRequest.class,
 				UserWidget.class,
 				Widget.class,
-				WeightingAlgorithm.class
+				WeightingAlgorithm.class,
+				AuthorInterestFlat.class, EventGroupInterestFlat.class, PublicationTopicFlat.class, 
+				DataMiningAuthor.class, DataMiningEventGroup.class, DataMiningPublication.class,
 		} );
 		return sessionFactoryBean;
 	}

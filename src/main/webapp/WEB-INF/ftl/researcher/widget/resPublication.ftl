@@ -34,7 +34,8 @@
 				var mainContainer = $("#widget-${wUniqueName} .box-content");
 				<#--remove everything -->
 				mainContainer.html( "" );
-				
+				console.log("publications")
+				console.log(data)
 				<#-- check for error  -->
 				if( data.status != "ok"){
 					<#--alert( "error on publication list" );-->
