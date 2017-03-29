@@ -1,9 +1,10 @@
-function createCoauthorsGraph(containerID, data) {
+function createCoauthorsGraph(containerID, data, chartHeight) {
 	console.log(data);
 
 	$.COAUTHOR.graph.options.width = $(containerID).width();
-	$.COAUTHOR.graph.options.height = $(containerID).height();
+	$.COAUTHOR.graph.options.height = chartHeight;
 	
+	$.COAUTHOR.graph.options.containerID = containerID;
 	$.COAUTHOR.graph.create(containerID, data);
 }
 
@@ -43,7 +44,7 @@ $.COAUTHOR.graph.graphData = function (data){
 	});
 	
 	graphCoauthors.links = linksArray;
-	graphCoauthors.nodes = sortCoauthorsByAffiliationAndImportance_decreasing(data);
+	graphCoauthors.nodes = sortCoauthorsByAffiliationAndImportance_decreasing(data, "hindex");
 	
 	var dataGraph = new Object();
 		dataGraph.coauthors = graphCoauthors;
@@ -68,7 +69,7 @@ $.COAUTHOR.graph.graphData = function (data){
 	
 	return dataGraph;
 	
-	function sortCoauthorsByAffiliationAndImportance_decreasing(data){
+	function sortCoauthorsByAffiliationAndImportance_decreasing( data, criterion ){
 		var sameUniversity = []; var nationalUniversity = []; var internationalUniversity = []; var unaffiliated = [];
 		var authorAffiliation = data.author.affiliation;
 		data.author.institutionAffiliation = "same";
@@ -92,17 +93,17 @@ $.COAUTHOR.graph.graphData = function (data){
 				unaffiliated.push( coauthor );	
 		});
 		
-		var sortByCoauthTimes_desc = function(a, b){ //decreasing order
-			if (a.coauthorTimes > b.coauthorTimes) return -1;
+		var sortBy_desc = function(a, b){ //decreasing order
+			if (a[criterion] > b[criterion]) return -1;
 			else
-				if (a.coauthorTimes < b.coauthorTimes) return 1;
+				if (a[criterion] < b[criterion]) return 1;
 				else
 					return 0;
 		};
 		
-		sameUniversity 			= sameUniversity.sort(sortByCoauthTimes_desc);
-		nationalUniversity 	    = nationalUniversity.sort(sortByCoauthTimes_desc);
-		internationalUniversity = internationalUniversity.sort(sortByCoauthTimes_desc);
+		sameUniversity 			= sameUniversity.sort(sortBy_desc);
+		nationalUniversity 	    = nationalUniversity.sort(sortBy_desc);
+		internationalUniversity = internationalUniversity.sort(sortBy_desc);
 		
 		var coauthorsNodes = [];
 		
@@ -119,6 +120,9 @@ $.COAUTHOR.graph.graphData = function (data){
 $.COAUTHOR.graph.nodes = function (graphData, nodesContainer, mode, distance){
 	var graphOptions = this.options;
 	
+	var coauthRadiusScale = d3.scaleLinear()
+		.domain( [d3.min( graphData.nodes, function( d ){ return d.hindex; } ), d3.max( graphData.nodes, function( d ){ console.log(d.name + " = " + d.hindex); return d.hindex; } ) ] )
+		.range( [5, 30] )
 	var node = nodesContainer
 		.selectAll("circle")
 		.data(graphData.nodes)
@@ -127,10 +131,7 @@ $.COAUTHOR.graph.nodes = function (graphData, nodesContainer, mode, distance){
 			.attr("id", function(d){ return d.id; });
 	node.append("circle")
 		.attr("r", function(d){
-			if (d.coauthorTimes != null)
-				d.radius = 10 + d.coauthorTimes;
-			else
-				d.radius = 10;
+			d.radius = d.hindex != null ? coauthRadiusScale( d.hindex ) : 5;
 			return d.radius;
 		})
 		.attr("fill", "transparent");
@@ -167,9 +168,9 @@ $.COAUTHOR.graph.nodes = function (graphData, nodesContainer, mode, distance){
 			if ( mode === "coauthor" ){
 				var lastName  = d.name.substring(d.name.lastIndexOf(" "), d.name.length);
 				var firstName = d.name.substring(0, d.name.lastIndexOf(" "));
-				var initials  = (firstName.match(/\b(\w)/g)).join(". ");
+				var initials  = firstName == "" ? "" : (firstName.match(/\b(\w)/g)).join(". ");
 				
-				return initials + "." + lastName;
+				return initials == "" ? lastName : initials + "." + lastName;
 			}	
 			else	
 				return d.term;
@@ -316,7 +317,7 @@ $.COAUTHOR.graph.create = function(containerID, data) {
 	var nodesContainer = coauthorsLayer.append("g")
 		.attr("class", "nodes");
 	
-	var distanceToCenter = 6 * coauthorsData.nodes.length;
+	var distanceToCenter = coauthorsData.nodes.length < 10 ? 5 * coauthorsData.nodes.length + 50: 5 * coauthorsData.nodes.length ;
 	this.nodes(coauthorsData, nodesContainer, "coauthor", distanceToCenter);
 	this.links(coauthorsData, linksContainer);	
 	
@@ -331,15 +332,14 @@ $.COAUTHOR.graph.create = function(containerID, data) {
 	var nodesContainer   = topicsLayer.append("g")
 		.attr("class", "nodes");
 	
-	if (coauthorsData.nodes.length > topicsData.nodes.length)
-		distanceToCenter += 5 * coauthorsData.nodes.length;
-	else
-		distanceToCenter += 5 * topicsData.nodes.length;
-	
+	var authorLayerSize = d3.select(containerID + " .gCoauthors").node().getBBox();
+	var distancePadding = 20;
+	distanceToCenter = authorLayerSize.width > authorLayerSize.height ? authorLayerSize.width / 2 + distancePadding: authorLayerSize.height / 2 + distancePadding;
+		
 	this.nodes(topicsData, nodesContainer, "topic", distanceToCenter);
 	
 	//-------------- legend
-	this.legend(containerID);
+	this.legend(containerID.substr(0, containerID.length - ".visualization-main".length) + "visualization-details");
 	
 	function zoomed() {
 		gGraph.attr("transform", d3.event.transform);
@@ -361,11 +361,11 @@ $.COAUTHOR.graph.legend = function (containerID){
 	var graphOptions = this.options;
 	var legendContainer  = $("<div/>").addClass("divLegend");
 	
-	legendContainer.append($("<span/>").addClass("title-legend title").text("Legend"));
+	legendContainer.append($("<span/>").addClass("title-legend").text("Legend"));
 	legendContainer.append(function(){
 			var ul = $("<ul/>").addClass("listElemLegend");
 	
-			var liCoauthorImportance  = createLegendElement("<div/>", "divCoauthorImportance", "Coauthor Importance", ["High", "", "", "", "Low"], {"icon":"fa fa-user", "repetition" : 5});
+			var liCoauthorImportance  = createLegendElement("<div/>", "divCoauthorImportance", "Coauthor H-index", ["High", "", "", "", "Low"], {"icon":"fa fa-user", "repetition" : 5});
 			var liTopicImportance     = createLegendElement("<div/>", "divTopicImportance", "Topic Importance", ["High", "", "", "", "Low"],{"icon":"fa fa-square", "repetition" : 5});
 			var liNrCollaborations    = createLegendElement("<div/>", "divNrCollaborations", "Number Collaborations", [">50", "", "", "", "<10"], {"icon":"line-nrCollaborations", "repetition" : 5});
 			var liCoauthorAffiliation = createLegendElement("<div/>", "divCoauthorAffiliation", "Coauthor Affiliation", ["Same University", "National University", "International University"], {"icon":"fa fa-user", "repetition" : 3});
@@ -387,8 +387,8 @@ $.COAUTHOR.graph.legend = function (containerID){
 	function createLegendElement(elementHTML, id, title, labels, measurementUnit){
 		var liElem = $("<li/>");
 		var elementLegend  = $(elementHTML).attr("id", id);
-			elementLegend.append($("<span/>").addClass("title-label title").text(title));
-			elementLegend.append($("<div/>").addClass("measurement")
+			elementLegend.append($("<span/>").addClass("title-label title small").text(title));
+			elementLegend.append($("<div/>").addClass("measurement small")
 				.append(function(){
 					var divMeasurementLabels = $("<div/>").addClass("measurement-labels");
 					if (labels != undefined)
@@ -410,7 +410,7 @@ $.COAUTHOR.graph.legend = function (containerID){
 	}
 	
 	function styleCoauthorImportanceLegend(containerID){
-		var initialFontSize = 40;
+		var initialFontSize = 30;
 		var children = $(containerID).children();
 		for (var i  = 0; i < children.length; i++){
 			$(children[i]).css("fontSize", (initialFontSize - 5*i) + "px");
@@ -425,10 +425,10 @@ $.COAUTHOR.graph.legend = function (containerID){
 		}
 	}
 	function styleNrCollaborationsLegend(containerID){
-		var initialBorderTopSize = 14;
+		var initialBorderTopSize = 9;
 		var children = $(containerID).children();
 		for (var i  = 0; i < children.length; i++){
-			$(children[i]).css("border-bottom-width", (initialBorderTopSize - 3*i) + "px");
+			$(children[i]).css("border-bottom-width", (initialBorderTopSize - 2*i) + "px");
 		}
 	}
 	function styleCoauthorAffiliationLegend(containerID){
@@ -451,40 +451,43 @@ $.COAUTHOR.graph.interactions = {
 				} 
 	},
 	nodeMouseLeave : function(){
-				d3.selectAll(".coauthor-list .node").classed("disabled", false);
-				d3.selectAll(".coauthor-list .link").classed("disabled", false);
+				var containerID = $.COAUTHOR.graph.options.containerID;
+				d3.selectAll( containerID + " .node").classed("disabled", false);
+				d3.selectAll( containerID + " .link").classed("disabled", false);
 	}
 };
 	
 function highlightNodeCoauthor(nodeDOM, nodeObject){
-		d3.selectAll(".coauthor-list .gCoauthors .node").classed("disabled", function(n){
+		var containerID = $.COAUTHOR.graph.options.containerID;
+		d3.selectAll( containerID + " .gCoauthors .node").classed("disabled", function(n){
 			return ( neighbouring( nodeObject, n ) == true) ? false : true;
 		});				
 		d3.select(nodeDOM).classed("disabled", false);
 	
-		d3.selectAll(".coauthor-list .gCoauthors .link").classed("disabled", function(link) {
+		d3.selectAll( containerID + " .gCoauthors .link").classed("disabled", function(link) {
 			return (link.source === nodeObject || link.target === nodeObject) ? false : true;
 		});
 }
 
 function highlightCoauthorTopics(nodeDOM, nodeObject){
+	var containerID = $.COAUTHOR.graph.options.containerID;
 	if( nodeObject.commonInterests != undefined ){
 		if ( nodeObject.commonInterests.length != 0 ){
-			d3.selectAll(".coauthor-list .gTopics g.node").classed("disabled", function(n){
+			d3.selectAll( containerID + " .gTopics g.node").classed("disabled", function(n){
 				var found =  $.grep(nodeObject.commonInterests, function(topic){ return topic.id == n.id; });
 				if (found.length != 0)
 					return false;
 				return true;
 			});
 		}else
-			d3.selectAll(".coauthor-list .gTopics .node").classed("disabled", true);
+			d3.selectAll( containerID + " .gTopics .node").classed("disabled", true);
 	}else
-		d3.selectAll(".coauthor-list .gTopics .node").classed("disabled", false);
+		d3.selectAll( containerID + " .gTopics .node").classed("disabled", false);
 }
 
 function neighbouring(a, b){
 	var linkedByIndex = {};
-	d3.selectAll(".coauthor-list .link").nodes().forEach( function(link){
+	d3.selectAll( $.COAUTHOR.graph.options.containerID + " .link").nodes().forEach( function(link){
 		linkedByIndex[d3.select(link).datum().source.index + "," + d3.select(link).datum().target.index] = 1;
 	});
 	
@@ -492,14 +495,15 @@ function neighbouring(a, b){
 }
 
 function highlightNodeTopic(nodeDOM, nodeObject){
-	d3.selectAll(".coauthor-list .gTopics .node").classed("disabled", true);				
+	d3.selectAll( $.COAUTHOR.graph.options.containerID + " .gTopics .node").classed("disabled", true);				
 	d3.select(nodeDOM).classed("disabled", false);
 
 }
 
 function highlightTopicCoauthors(nodeDOM, nodeObject){
 	var topicCoauthors = [];
-	d3.selectAll(".coauthor-list .gCoauthors .node").classed("disabled", function(author, i){
+	var containerID = $.COAUTHOR.graph.options.containerID;
+	d3.selectAll( containerID + " .gCoauthors .node").classed("disabled", function(author, i){
 		if (author.commonInterests != undefined){
 			var found = $.grep(author.commonInterests, function(commonTopic){return commonTopic.id == nodeObject.id});
 			if (found.length != 0){
@@ -511,7 +515,7 @@ function highlightTopicCoauthors(nodeDOM, nodeObject){
 	});				
 	d3.select(nodeDOM).classed("disabled", false);
 	
-	d3.selectAll(".coauthor-list .gCoauthors .link").classed("disabled", function(link) {		
+	d3.selectAll( containerID + " .gCoauthors .link").classed("disabled", function(link) {		
 		var found = $.grep(topicCoauthors, function(author){return link.source === author || link.target === author});
 		return found.length > 0 ? false : true;
 	});
