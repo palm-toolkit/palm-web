@@ -62,8 +62,8 @@
 			"type":"${wType}",
 			"group": "${wGroup}",
 			"source": "${wSource}",
-			"selector": "#publications-box-${wUniqueName}",
-			"element": $( "#publications-box-${wUniqueName}" ),
+			"selector": "#widget-publications-box-${wUniqueName}",
+			"element": $( "#widget-publications-box-${wUniqueName}" ),
 			"options": options
 		});
 	});<#-- end document ready -->

@@ -38,7 +38,7 @@
 		</div>
 		<div class="container-box visualization-box row">
 			<div class="visualization-main col-md-8  col-sm-8"></div>
-			<div class="visualization-details col-md-4"></div>
+			<div class="visualization-details col-md-4"> <#include "/resPublication.ftl"> </div>
 		</div>
 	</div>
 </div>
@@ -57,6 +57,7 @@ $(function(){
 	});-->
 	<#-- generate unique id for progress log -->
 		var uniquePidCoauthors = $.PALM.utility.generateUniqueId();	
+		
 	<#-- unique options in each widget -->
 		var options ={
 			source : "<@spring.url '/researcher/coAuthorList' />",

@@ -14,6 +14,9 @@ $.COAUTHOR.graph = {};
 $.COAUTHOR.graph.options = {
 	width : 0,
 	height : 0,
+	margin : {
+		left : 20, right : 20, top : 20, bottom : 20
+	},
 	color : d3.scaleOrdinal(d3.schemeCategory20),
 	coauthorIconColor : {"same" : "#BB11A2", "national" : "#10E5BD" , "international" : "#DBFB65"},
 	coauthorLinkColor: "#CCB5CB",
@@ -121,7 +124,7 @@ $.COAUTHOR.graph.nodes = function (graphData, nodesContainer, mode, distance){
 	var graphOptions = this.options;
 	
 	var coauthRadiusScale = d3.scaleLinear()
-		.domain( [d3.min( graphData.nodes, function( d ){ return d.hindex; } ), d3.max( graphData.nodes, function( d ){ console.log(d.name + " = " + d.hindex); return d.hindex; } ) ] )
+		.domain( [d3.min( graphData.nodes, function( d ){ return d.hindex; } ), d3.max( graphData.nodes, function( d ){ return d.hindex; } ) ] )
 		.range( [5, 30] )
 	var node = nodesContainer
 		.selectAll("circle")
@@ -180,7 +183,8 @@ $.COAUTHOR.graph.nodes = function (graphData, nodesContainer, mode, distance){
 	this.nodes.textPosition(text);
 	
 	node.on("mouseover", this.interactions.nodeMouseOver )
-		.on("mouseleave", this.interactions.nodeMouseLeave );
+		.on("mouseleave", this.interactions.nodeMouseLeave )
+		.on("click", this.interactions.nodeClicked );
 }
 
 $.COAUTHOR.graph.nodes.textPosition = function(text, mode){
@@ -301,7 +305,7 @@ $.COAUTHOR.graph.create = function(containerID, data) {
 	var graphData     = this.graphData(data);
 	var coauthorsData = graphData.coauthors;
 	
-	var svg = d3.select(containerID).append("svg").attr("width", graphOptions.width).attr("height", graphOptions.height);
+	var svg = d3.select(containerID).append("svg").attr("width", graphOptions.width).attr("height", graphOptions.height - graphOptions.margin.bottom - graphOptions.margin.top);
 	var gGraph = svg.append("g").attr("class", "gGraph");
 	svg.call(d3.zoom().scaleExtent([1/2, 8])
 			.on("zoom", zoomed));
@@ -367,7 +371,7 @@ $.COAUTHOR.graph.legend = function (containerID){
 	
 			var liCoauthorImportance  = createLegendElement("<div/>", "divCoauthorImportance", "Coauthor H-index", ["High", "", "", "", "Low"], {"icon":"fa fa-user", "repetition" : 5});
 			var liTopicImportance     = createLegendElement("<div/>", "divTopicImportance", "Topic Importance", ["High", "", "", "", "Low"],{"icon":"fa fa-square", "repetition" : 5});
-			var liNrCollaborations    = createLegendElement("<div/>", "divNrCollaborations", "Number Collaborations", [">50", "", "", "", "<10"], {"icon":"line-nrCollaborations", "repetition" : 5});
+			var liNrCollaborations    = createLegendElement("<div/>", "divNrCollaborations", "Collaborations", [">50", "", "", "", "<10"], {"icon":"line-nrCollaborations", "repetition" : 5});
 			var liCoauthorAffiliation = createLegendElement("<div/>", "divCoauthorAffiliation", "Coauthor Affiliation", ["Same University", "National University", "International University"], {"icon":"fa fa-user", "repetition" : 3});
 			
 			ul.append(liCoauthorImportance);
@@ -377,7 +381,7 @@ $.COAUTHOR.graph.legend = function (containerID){
 			
 			return ul;
 		});
-	$(containerID).append(legendContainer);
+	$(containerID).prepend(legendContainer);
 	
 	styleCoauthorImportanceLegend("#divCoauthorImportance"   + " .measurement-units");
 	styleTopicImportanceLegend("#divTopicImportance"         + " .measurement-units");
@@ -434,9 +438,11 @@ $.COAUTHOR.graph.legend = function (containerID){
 	function styleCoauthorAffiliationLegend(containerID){
 		var initialBorderTopSize = 17;
 		var children = $(containerID).children();
-		for (var i  = 0; i < children.length; i++){
-			$(children[i]).css("color", graphOptions.coauthorIconColor[i]);
-		}
+
+		$(children[0]).css("color", graphOptions.coauthorIconColor["same"]);
+		$(children[1]).css("color", graphOptions.coauthorIconColor["national"]);
+		$(children[2]).css("color", graphOptions.coauthorIconColor["international"]);
+		
 	}
 }
 
@@ -454,9 +460,34 @@ $.COAUTHOR.graph.interactions = {
 				var containerID = $.COAUTHOR.graph.options.containerID;
 				d3.selectAll( containerID + " .node").classed("disabled", false);
 				d3.selectAll( containerID + " .link").classed("disabled", false);
+	},
+	nodeClicked : function( node ){
+		var mainContainerID = $.COAUTHOR.graph.options.containerID;
+		var containerID 	= mainContainerID.substr( 0, mainContainerID.length - " .visualization-main".length - 1 ).split("-")[1];
+		var detailsContainerID 	= containerID + ".visualization-details" ;
+		
+		var containerFullHeight = $.COAUTHOR.graph.options.height - $.COAUTHOR.graph.options.margin.bottom - $.COAUTHOR.graph.options.margin.top;
+		var legendHeight =$( "#widget-" +  containerID + " .divLegend").height();
+		
+		$.publicationList.init( "ok",  containerID, null, null, containerFullHeight - legendHeight - $.COAUTHOR.graph.options.margin.bottom - $.COAUTHOR.graph.options.margin.top);
+		var data = {}; 
+			data.element = node;
+			data.publications = node.commonPublications.sort( function( a, b){ return a.year - b.year; } );
+			data.totalPublication = node.commonPublications.length;
+		
+		var $mainContainer = $("#publications-box-" + containerID + " .box-content");
+		$mainContainer.html("");
+		if ( !$mainContainer.hasClass("small") ) $mainContainer.addClass("small");
+		
+		$("#publications-box-" + containerID + " .box-header .author_name").html( "with S"  + node.name );
+		$("#publications-box-" + containerID + " .box-header .box-title-container").removeClass("box-title-container");
+		
+		$.publicationList.visualize( $mainContainer, data);
+		
+		$("#publications-box-" + containerID + " .pull-left").css("display", "none");
 	}
 };
-	
+
 function highlightNodeCoauthor(nodeDOM, nodeObject){
 		var containerID = $.COAUTHOR.graph.options.containerID;
 		d3.selectAll( containerID + " .gCoauthors .node").classed("disabled", function(n){
