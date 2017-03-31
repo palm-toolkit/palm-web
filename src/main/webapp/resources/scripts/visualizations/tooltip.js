@@ -9,6 +9,7 @@ function Tooltip( params ){
 	var bkgroundColor = params.bkgroundColor || "rgba(255, 255, 255, 0.55)";
 	var strokeColor = params.strokeColor || "#dadada";
 	var withImage	= params.withImage == undefined ? true : params.withImage;
+	var container	= params.container == undefined ? null : params.container;
 	
 	this.getClassName 	 = function(){ return className; };
 	this.getWidth 	 	 = function(){ return width; };
@@ -20,6 +21,7 @@ function Tooltip( params ){
 	this.getBkgroundColor= function(){ return bkgroundColor; };
 	this.getStrokeColor	 = function(){ return strokeColor; };
 	this.getWithImage	 = function(){ return withImage; };
+	this.getContainer	 = function(){ return container; };
 }
 
 Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
@@ -31,13 +33,14 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 		var bkColor		 = this.getBkgroundColor();
 		var strokeColor  = this.getStrokeColor();
 		var withImage    = this.getWithImage();
+		var container    = this.getContainer();
 		
 		var tooltipWidth  = width  - borderRadius;
 		var tooltipHeight = height - borderRadius;
 		var translate 	  = [0, ( height - borderRadius/2 ) / -2];
 		
+		var svg = container == null ? d3.select( gNode.node().nearestViewportElement ) : container;
 		
-		var svg = d3.select( gNode.node().nearestViewportElement );
 		if (svg != null){
 			//add tooltip
 			var gTooltip = svg.append("g").attr("class", "myTooltip " + this.getClassName());
@@ -117,7 +120,9 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			//title
 			var title = gContent.append("g").classed("title content-text", true)
 				.attr("transform", "translate(" + distanceLeft + ", " + 0 +")");
-			wrapText(title, toTitleCase(dataObject.name), (width - distanceLeft), "title-name");	
+
+			var authorName = shortcutName( toTitleCase(dataObject.name) );
+			wrapText(title, authorName, (width - distanceLeft), "title-name");	
 			title.selectAll(".title-name");
 			
 			//status
@@ -196,6 +201,16 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 		
 		function toTitleCase(str) {
 		    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+		}
+		function shortcutName(str){
+			var chunks = str.split(" ");
+			var name = chunks[0];
+			if ( chunks.length > 2){
+				for (var i = 1; i < chunks.length - 1; i++){
+					name += " " + chunks[i].charAt(0) + ".";
+				}
+			}
+			return name + " " +chunks[ chunks.length - 1 ];
 		}
 		
 		function translateTop(){

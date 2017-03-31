@@ -32,6 +32,7 @@
 </div>
 
 <script>
+ 	var getAuthorDetailsRequest = null;
 	$( function(){
 		<#-- set target author id -->
 		<#if targetId??>
@@ -54,7 +55,7 @@
 		  });
 		  
 		  var widgetHeader = $("#widget-${wUniqueName} h3");
-		  
+		  	 
 		  <#if targetName??>
 		  	widgetHeader
 		  	.html( "<i class='fa fa-arrow-left'></i>&nbsp;&nbsp;All researchers" )
@@ -445,8 +446,12 @@
 		<#-- show pop up progress log -->
 		var uniquePid = $.PALM.utility.generateUniqueId();
 		$.PALM.popUpMessage.create( "Collecting author publications...", { uniqueId:uniquePid, popUpHeight:100, directlyRemove:false , polling:true, pollingUrl:"<@spring.url '/log/process?pid=' />" + uniquePid} );
-		<#-- check and fetch publication from academic network if necessary -->
-		$.getJSON( "<@spring.url '/researcher/fetch?id=' />" + authorId + "&pid=" + uniquePid + "&force=false", function( data ){
+		
+		if ( getAuthorDetailsRequest != null)
+			getAuthorDetailsRequest.abort();
+		
+		<#-- check and fetch publication from academic network if necessary -->	
+		getAuthorDetailsRequest = $.getJSON( "<@spring.url '/researcher/fetch?id=' />" + authorId + "&pid=" + uniquePid + "&force=false", function( data ){
 			<#-- remove  pop up progress log -->
 			$.PALM.popUpMessage.remove( uniquePid );
 			
@@ -497,8 +502,8 @@
 			} else{
 				refreshAllWidget( authorId );
 			}
-
-		
+			
+			getAuthorDetailsRequest = null;
 		}).fail(function() {
    	 		$.PALM.popUpMessage.remove( uniquePid );
   		}).always(function() {
