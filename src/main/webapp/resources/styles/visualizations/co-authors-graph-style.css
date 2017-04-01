@@ -2,9 +2,13 @@
 	font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-#boxbody-researcher_coauthor_affiliation .coauthor-name, 
+#boxbody-researcher_coauthor_affiliation .coauthor-name{
+	 font-size : 11px; 
+	 text-transform: capitalize;
+}
+
 #boxbody-researcher_coauthor_affiliation .link-value{
-	fill		: #5A0E56;
+	fill		: #4e5467;
 	font-weight	: bold;
 }
 #boxbody-researcher_coauthor_affiliation .link-value{
@@ -23,10 +27,16 @@
 #boxbody-researcher_coauthor_affiliation g.node.hovered .coauthor-icon{
     font-size : 40px ! important; 
 }
+#boxbody-researcher_coauthor_affiliation g.node.hovered .coauthor,
+#boxbody-researcher_coauthor_affiliation g.node.clicked .coauthor{
+	font-weight : bold;
+}
+
 
 #boxbody-researcher_coauthor_affiliation g.node:hover {
-    cursor: pointer;
+    cursor		: pointer;
 }
+
 
 #boxbody-researcher_coauthor_affiliation .myTooltip .tooltip-content .title-name{
 	font-size : 12px;
