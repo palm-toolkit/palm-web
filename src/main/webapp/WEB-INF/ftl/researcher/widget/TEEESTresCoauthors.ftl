@@ -101,7 +101,7 @@
 											)
 										);
 										
-									if( typeof item.coautorTimes != 'undefined')
+									if( typeof item.coauthorTimes != 'undefined')
 										researcherDetail.append(
 											$( '<div/>' )
 											.addClass( 'affiliation' )
@@ -112,7 +112,7 @@
 											).append( 
 												$( '<span/>' )
 												.addClass( 'info font-xs' )
-												.html( item.coautorTimes + " times co-authorship" )
+												.html( item.coauthorTimes + " times co-authorship" )
 											)
 										);
 										

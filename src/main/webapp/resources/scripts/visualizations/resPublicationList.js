@@ -428,7 +428,7 @@ function createTimelineTime( item ){
 function createTimelineHeader( item ){
 	var cleanTitle = item.title.replace(/[^\w\s]/gi, ''); //clean non alpha numeric from title
 	return $( '<h3/>' ).addClass( "timeline-header" )
-			.append( "<strong><a href="+  + "/publication?id=" + item.id + "&title=" + cleanTitle + ">" + item.title + "</a></strong>" );
+			.append( "<strong><a href='" + $.publicationList.variables.currentURL + "/publication?id=" + item.id + "&title=" + cleanTitle + "'>" + item.title + "</a></strong>" );
 
 }
 

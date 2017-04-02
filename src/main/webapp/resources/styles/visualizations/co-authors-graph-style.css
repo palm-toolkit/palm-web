@@ -27,9 +27,10 @@
 #boxbody-researcher_coauthor_affiliation g.node.hovered .coauthor-icon{
     font-size : 40px ! important; 
 }
-#boxbody-researcher_coauthor_affiliation g.node.hovered .coauthor,
-#boxbody-researcher_coauthor_affiliation g.node.clicked .coauthor{
+
+#boxbody-researcher_coauthor_affiliation g.node.clicked>text{
 	font-weight : bold;
+	text-decoration	: underline;
 }
 
 
@@ -42,7 +43,8 @@
 	font-size : 12px;
 }
 /*----------------LIST-----------------*/
-#widget-publications-researcher_coauthor_affiliation .author-name{
+#widget-publications-researcher_coauthor_affiliation .author-name,
+#widget-publications-researcher_coauthor_affiliation .author_name{
 	text-transform: capitalize;
 }
 

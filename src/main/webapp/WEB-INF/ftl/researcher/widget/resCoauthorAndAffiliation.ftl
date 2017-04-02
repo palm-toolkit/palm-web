@@ -14,15 +14,15 @@
 			<div class="filter orderedBy col-lg-5 col-md-5 col-sm-8">
   				<span class="title font-small col-md-4  col-sm-4"> Order by: </span>
   				<div class="dropdown col-md-8 col-sm-8">
-    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">CoAuthor H-index<span class="caret"></span> </button>
+    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Number of collaborations<span class="caret"></span> </button>
     				<ul class="dropdown-menu">
-      					<li class="selected disabled" data-value="hindex"><a href="#">Co-author H-index</a></li>
-      					<li data-value="coauthorTimes"><a href="#" >Number of collaborations</a></li>
+      					<li data-value="hindex"><a href="#">Co-author H-index</a></li>
+      					<li class="selected disabled" data-value="coauthorTimes"><a href="#" >Number of collaborations</a></li>
     				</ul>
   				</div>
 			</div>
 			<div class="filter showInterests col-lg-3 col-md-5 col-sm-8">
-  				<span class="title font-small col-md-9  col-sm-9">Show Interests :</span>
+  				<span class="title font-small col-md-9  col-sm-9">Show Topics :</span>
   				 <div class="btn-group" data-toggle="">               	
                     <input type="checkbox" id="showInterests" name="showInterests" checked="checked" /> 
             </div>
@@ -76,8 +76,8 @@ $(function(){
 						$( "body .tooltip" ).remove(); 
 
 					<#-- build the researcher graph -->
-
-						createCoauthorsGraph("#boxbody-${wUniqueName} .visualization-main ", data, chartHeight);
+						var url = "<@spring.url '' />";
+						createCoauthorsGraph("#boxbody-${wUniqueName} .visualization-main ", data, chartHeight, url);
 						
 				}
 				else{

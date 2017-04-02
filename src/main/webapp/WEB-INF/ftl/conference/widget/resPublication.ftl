@@ -5,7 +5,7 @@
 	<div id="publications-box-${wUniqueName}" class="box">
 		<div class="box-header"> 
 			<div class="box-title-container">
-          		<h3 class="box-title">Publications: <span class="author_name"></span> </h3>
+          		<h3 class="box-title">Publications <span class="author_name"></span> </h3>
         	</div>
 		</div>
 		<div class="box-content">
