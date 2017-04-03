@@ -42,7 +42,7 @@ $.activeResearchers.variables ={
 		publicationRequest : null,
 		tooltipName	: "tooltip-key-researcher"
 };
-$.activeResearchers.init = function(widgetUniqueName, conferenceName, conferenceURI, currentURL, isUserLogged){
+$.activeResearchers.init = function(widgetUniqueName, conferenceName, currentURL, isUserLogged){
 	var vars = $.activeResearchers.variables;
 	vars.containerId 	  = "#widget-" + widgetUniqueName;	
 	vars.width  		  = $(vars.containerId + " .visualization-main" ).width();
