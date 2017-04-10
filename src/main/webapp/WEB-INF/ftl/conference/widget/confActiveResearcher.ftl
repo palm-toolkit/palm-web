@@ -38,11 +38,7 @@ $( function(){
 	
 	var options ={
 			source : "<@spring.url '/venue/topResearchers' />",
-			queryString : "",
-			id: "",
-			query: "",
-			queryString : "",
-			page:0,
+			maxresult: 30,
 			onRefreshStart: function( widgetElem ){
 				<#-- show pop up progress log -->
 				$.PALM.popUpMessage.create( "loading key researchers list", {uniqueId: uniquePidKeyResearchers, popUpHeight:40, directlyRemove:false , polling:false});
@@ -51,18 +47,14 @@ $( function(){
 				<#-- remove previous list -->
 				var targetContainer = $( widgetElem ).find( ".visualization-main" );
 				targetContainer.html( "" );
-					
-				console.log("receivedData");	
-				console.log(data);
-					
-				if( data.count == 0 ){
+						
+				if( data.status != "ok" ){
 					$.PALM.callout.generate( targetContainer , "warning", "Empty Key Researchers!", "The conference does not have any researchers assigned on PALM (insufficient data)" );
 					return false;
 				}
 							
-				if( data.count > 0 ){
-					$.activeResearchers.init("${wUniqueName}", data.conference.name , "<@spring.url '' />", getCurrentUser() );
-					$.activeResearchers.data( data );
+				if( data.participants.length > 0 ){
+					$.activeResearchers.init("${wUniqueName}", data , "<@spring.url '' />", getCurrentUser() );					
 				}else
 					$.PALM.popUpMessage.remove( uniquePidKeyResearchers );
 			}

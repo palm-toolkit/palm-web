@@ -42,7 +42,7 @@ $.activeResearchers.variables ={
 		publicationRequest : null,
 		tooltipName	: "tooltip-key-researcher"
 };
-$.activeResearchers.init = function(widgetUniqueName, conferenceName, currentURL, isUserLogged){
+$.activeResearchers.init = function(widgetUniqueName, eventData, currentURL, isUserLogged){
 	var vars = $.activeResearchers.variables;
 	vars.containerId 	  = "#widget-" + widgetUniqueName;	
 	vars.width  		  = $(vars.containerId + " .visualization-main" ).width();
@@ -89,40 +89,70 @@ $.activeResearchers.init = function(widgetUniqueName, conferenceName, currentURL
 	createGradientColor(graphSVG, "light-box-gradient", "light-gradient-stop-color-1", "light-gradient-stop-color-2");
 	createGradientColor(graphSVG, "dark-box-gradient",  "dark-gradient-stop-color-1",  "dark-gradient-stop-color-2");
 	createGradientColor(graphSVG, "clicked-box-gradient", "clicked-gradient-stop-color-1",  "clicked-gradient-stop-color-2");
+	
+	this.data( eventData );
+	
 };
-$.activeResearchers.data = function( url ){
-	d3.json(url, function(error, originJsonObject) {
-		if (originJsonObject != undefined && originJsonObject.episodes != undefined)
-			originJsonObject.episodes = originJsonObject.episodes.slice(0, 20);
-		var mappedJsonObject      = d3.map(originJsonObject);		
-		var mergedJsonObjectArray = d3.merge(mappedJsonObject.values());
-		var combinedJsonObject 	  = {};
-			
-			
-		mergedJsonObjectArray.forEach(function(thisJsonObject) {	
-			thisJsonObject.key = getLowerCase(thisJsonObject.name);
-			thisJsonObject.canonicalKey = thisJsonObject.key;
-			combinedJsonObject[thisJsonObject.key] = thisJsonObject;								
-		});
-			
-		linkObject = d3.map();				
-		mappedJsonObject.get("episodes").forEach(function(episodeJsonObject) {
-			// remove bad links
-			episodeJsonObject.links = episodeJsonObject.links.filter(function(ab) {
-				return typeof combinedJsonObject[getLowerCase(ab)] !== "undefined" && ab.indexOf("r-") !== 0;
+$.activeResearchers.data = function( eventData ){
+	var data = {}; 
+	data.episodes = [];
+	data.themes = [];
+	data.perspectives = [];
+	eventData.participants.forEach( function( participant, i ){
+		participant.type  = "episode";
+		participant.links = [];
+		participant.publications.forEach( function( publication, j ){
+			publication.topics.forEach( function( topic, q ){
+				participant.links = participant.links.concat( d3.map(topic.termvalues).keys() );
 			});
-		});
+			
+			participant.links.forEach( function( link, l ){
+				var perspective = {};
+				perspective.name = link;
+				perspective.type = "perspective";
+				
+				var positionPerspective = data.perspectives.map( function( x ){ return x.name; }).indexOf( link );
+				
+				if ( positionPerspective >= 0 ) 
+					perspective.count = data.perspectives[ positionPerspective ].count + 1;
+				else
+					perspective.count = 1;
+				data.perspectives.push( perspective );
+			} );
+			
+		} );
+		data.episodes.push( participant );
+	} );
+	console.log(data);
+	
+	var mappedJsonObject      = d3.map(data);		
+	var mergedJsonObjectArray = d3.merge(mappedJsonObject.values());
+	var combinedJsonObject 	  = {};
 		
-		console.log("mappedJsonObject");
-		console.log(mappedJsonObject);
-		console.log("mergedJsonObjectArray");
-		console.log(mergedJsonObjectArray);
-		console.log("combinedJsonObject");
-		console.log(combinedJsonObject);
 		
-		var episodeConceptLinkJsonArray = prepareData(mappedJsonObject, combinedJsonObject);
-		$.activeResearchers.visualize(mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);	
+	mergedJsonObjectArray.forEach(function(thisJsonObject) {	
+		thisJsonObject.key = getLowerCase(thisJsonObject.name);
+		thisJsonObject.canonicalKey = thisJsonObject.key;
+		combinedJsonObject[thisJsonObject.key] = thisJsonObject;								
 	});
+		
+	linkObject = d3.map();				
+	mappedJsonObject.get("episodes").forEach(function(episodeJsonObject) {
+		// remove bad links
+		episodeJsonObject.links = episodeJsonObject.links.filter(function(ab) {
+			return typeof combinedJsonObject[getLowerCase(ab)] !== "undefined" && ab.indexOf("r-") !== 0;
+		});
+	});
+	
+	console.log("mappedJsonObject");
+	console.log(mappedJsonObject);
+	console.log("mergedJsonObjectArray");
+	console.log(mergedJsonObjectArray);
+	console.log("combinedJsonObject");
+	console.log(combinedJsonObject);
+	
+	var episodeConceptLinkJsonArray = prepareData(mappedJsonObject, combinedJsonObject);
+	$.activeResearchers.visualize(mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);	
 	
 	function prepareData(mappedJsonObject, combinedJsonObject){
 		var vars = $.activeResearchers.variables;
@@ -142,7 +172,7 @@ $.activeResearchers.data = function( url ){
 		// initial degree determines the initial configuration, it's a global variable
 		var startDegree = 180 + vars.initialDegree, 
 			endDegree   = 360 - vars.initialDegree, 
-			rotateDegree= (endDegree - startDegree) / (mappedJsonObject.get("themes").length - 1);
+			rotateDegree= (endDegree - startDegree) / 1;//(mappedJsonObject.get("themes").length - 1);
 		
 		mappedJsonObject.get("themes").forEach(function(jsonRecord, index) {
 			jsonRecord.x = endDegree - index * rotateDegree;
@@ -190,6 +220,42 @@ $.activeResearchers.data = function( url ){
 		
 		return episodeConceptLinkJsonArray;
 	}
+}
+$.activeResearchers.data2 = function( url ){
+	d3.json(url, function(error, originJsonObject) {
+		if (originJsonObject != undefined && originJsonObject.episodes != undefined)
+			originJsonObject.episodes = originJsonObject.episodes.slice(0, 20);
+		var mappedJsonObject      = d3.map(originJsonObject);		
+		var mergedJsonObjectArray = d3.merge(mappedJsonObject.values());
+		var combinedJsonObject 	  = {};
+			
+			
+		mergedJsonObjectArray.forEach(function(thisJsonObject) {	
+			thisJsonObject.key = getLowerCase(thisJsonObject.name);
+			thisJsonObject.canonicalKey = thisJsonObject.key;
+			combinedJsonObject[thisJsonObject.key] = thisJsonObject;								
+		});
+			
+		linkObject = d3.map();				
+		mappedJsonObject.get("episodes").forEach(function(episodeJsonObject) {
+			// remove bad links
+			episodeJsonObject.links = episodeJsonObject.links.filter(function(ab) {
+				return typeof combinedJsonObject[getLowerCase(ab)] !== "undefined" && ab.indexOf("r-") !== 0;
+			});
+		});
+		
+		console.log("mappedJsonObject");
+		console.log(mappedJsonObject);
+		console.log("mergedJsonObjectArray");
+		console.log(mergedJsonObjectArray);
+		console.log("combinedJsonObject");
+		console.log(combinedJsonObject);
+		
+		var episodeConceptLinkJsonArray = prepareData(mappedJsonObject, combinedJsonObject);
+		$.activeResearchers.visualize(mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);	
+	});
+	
+	
 };
 
 $.activeResearchers.visualize = function( mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray ){
@@ -200,7 +266,9 @@ $.activeResearchers.visualize = function( mappedJsonObject, combinedJsonObject, 
 $.activeResearchers.visualize.links = function(episodeConceptLinkJsonArray){
 	var vars = $.activeResearchers.variables;
 	var linkGraphSVG = d3.select(vars.containerId + " svg g.links");
-	var group = linkGraphSVG.selectAll("g").data(episodeConceptLinkJsonArray, this.key).enter().append("g").attr("class", "link");
+	
+	var keys  = episodeConceptLinkJsonArray.map( function( d ){ return d.key; });
+	var group = linkGraphSVG.selectAll("g").data( episodeConceptLinkJsonArray ).enter().append("g").attr("class", "link");
 	var paths = group	
 		.append("path")
 		.attr("d", function(Z) {
@@ -371,8 +439,8 @@ $.activeResearchers.visualize.elements.episodes = function(episodesData, mappedJ
 	var transition 		= d3.transition().duration(vars.transitionDuration).ease(d3.easeElastic);
 	var episodeGraphSVG = d3.select(vars.containerId + " svg g.episodes"); 	
 	
-	var episodes 		= episodeGraphSVG.selectAll(".episode").data(episodesData, this.key);
-	var episode 		= episodes.enter().append("g")
+	var keys 			= episodesData.map( function( d ){ return d.key; });
+	var episode 		= episodeGraphSVG.selectAll(".episode").data( episodesData ).enter().append("g")
 		.attr("class", "episode")
 		.on("mouseover", function(d){ $.activeResearchers.visualize.interactions.mouseoverEpisode(this, d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray); })
 		.on("mouseout",  function(d){ $.activeResearchers.visualize.interactions.mouseleaveEpisode(this, d); })
@@ -410,11 +478,11 @@ $.activeResearchers.visualize.elements.episodes = function(episodesData, mappedJ
 		.attr("dy", "1.35em")
 		.text(function(Z) { return Z.name; });
 
-	episodes.exit().selectAll(".episode")
+	episode.exit()
 		.transition(transition)
 			.attr("transform", function(Z) { return "translate(" + [ vars.U / -2, vars.K / -2] + ")" ; });
 	
-	episodes.exit().transition().duration(vars.transitionDuration).remove();
+	episode.exit().transition().duration(vars.transitionDuration).remove();
 };
 
 $.activeResearchers.visualize.elements.nodes = function(nodesData, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
@@ -422,7 +490,8 @@ $.activeResearchers.visualize.elements.nodes = function(nodesData, mappedJsonObj
 	var transition 	 = d3.transition().duration(vars.transitionDuration).ease(d3.easeElastic);
 	var nodeGraphSVG = d3.select(vars.containerId + " svg g.nodes"); 	
 	
-	var nodes = nodeGraphSVG.selectAll(".node").data(nodesData, this.key);
+	var keys = nodesData.map( function( d ){ return d.key; });
+	var nodes = nodeGraphSVG.selectAll(".node").data( nodesData );
 	var node  = nodes.enter().append("g")
 		.attr("class", "node")
 		.attr("transform", function(n) {
