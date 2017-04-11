@@ -10,6 +10,11 @@
 	}
 }
 
+#widget-conference_active_researcher  .visualization-details{
+	position : absolute;
+	right	 : 0;
+}
+
 #widget-conference_active_researcher .box-title-container{
 	width : 80%;
 }
@@ -82,4 +87,26 @@
 }
 #widget-publications-conference_active_researcher>div{
     height: 100%;
+}
+
+/*----------------LIST-----------------*/
+#widget-publications-conference_active_researcher .author-name,
+#widget-publications-conference_active_researcher .author_name{
+	text-transform: capitalize;
+}
+
+#widget-publications-conference_active_researcher .box-title,
+#widget-publications-conference_active_researcher .timeline-header
+{
+	font-size: 12px;
+}
+#widget-publications-conference_active_researcher .timeline:before{
+	left : 13px;
+}
+#widget-publications-conference_active_researcher .timeline>li>.fa{
+	left : 0;
+}
+#widget-publications-conference_active_researcher .timeline>li>.timeline-item{
+	margin-right : 0;
+	margin-left	 : 35px;
 }

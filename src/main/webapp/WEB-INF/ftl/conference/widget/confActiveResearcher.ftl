@@ -1,12 +1,12 @@
 <div class="box-body no-padding container-fluid">
 		<div class="container-box filter-box key-researchers-criteria row">
-			<div class="filter col-md-4">
+			<div class="filter basedOn col-md-4">
   				<span class="title font-small col-md-3"> Based On: </span>
   				<div class="dropdown col-md-9">
     				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Number of publications <span class="caret"></span> </button>
     				<ul class="dropdown-menu">
-      					<li><a href="#">Resercher's H-index</a></li>
-      					<li><a href="#">Publications' Citations</a></li>
+      					<li data-value="hindex" ><a href="#" >Resercher's H-index</a></li>
+      					<li data-value="nrPublications"><a href="#">Publications' Citations</a></li>
     				</ul>
   				</div>
 			</div>
@@ -38,7 +38,6 @@ $( function(){
 	
 	var options ={
 			source : "<@spring.url '/venue/topResearchers' />",
-			maxresult: 30,
 			onRefreshStart: function( widgetElem ){
 				<#-- show pop up progress log -->
 				$.PALM.popUpMessage.create( "loading key researchers list", {uniqueId: uniquePidKeyResearchers, popUpHeight:40, directlyRemove:false , polling:false});
@@ -64,6 +63,18 @@ $( function(){
 		} -->
 	};
 
+	<#-- order coauthors by-->
+	$("#widget-${wUniqueName}" + " .basedOn .dropdown-menu li").on("click", function(){
+		if ( !$(this).hasClass("selected") ){
+			var $groupBySelected = $("#widget-${wUniqueName}" + " .groupedBy .dropdown-menu li.selected");
+			
+			$(this).parent().children("li").removeClass("selected disabled");
+			$(this).addClass("selected disabled");
+			$(this).parents(".dropdown").children("button").html( $(this).text() + " <span class='caret'></span>" );
+			$.activeResearchers.visualize.basedOn( $(this).data("value") );
+		}
+	});
+		 
 	<#-- register the widget -->
 	$.PALM.options.registeredWidget.push({
 		"type":"${wType}",

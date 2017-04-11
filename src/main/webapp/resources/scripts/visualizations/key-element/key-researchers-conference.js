@@ -90,14 +90,15 @@ $.activeResearchers.init = function(widgetUniqueName, eventData, currentURL, isU
 	createGradientColor(graphSVG, "dark-box-gradient",  "dark-gradient-stop-color-1",  "dark-gradient-stop-color-2");
 	createGradientColor(graphSVG, "clicked-box-gradient", "clicked-gradient-stop-color-1",  "clicked-gradient-stop-color-2");
 	
-	this.data( eventData );
-	
+	var processedData = this.data( eventData );
+	this.visualize( processedData.mappedJsonObject, processedData.combinedJsonObject, processedData.episodeConceptLinkJsonArray);		
 };
+
 $.activeResearchers.data = function( eventData ){
 	var data = {}; 
 	data.episodes = [];
-	data.themes = [];
-	data.perspectives = [];
+	data.lefts = [];
+	data.rights = [];
 	eventData.participants.forEach( function( participant, i ){
 		participant.type  = "episode";
 		participant.links = [];
@@ -107,22 +108,27 @@ $.activeResearchers.data = function( eventData ){
 			});
 			
 			participant.links.forEach( function( link, l ){
-				var perspective = {};
-				perspective.name = link;
-				perspective.type = "perspective";
+				var topicNode = {};
+				topicNode.name = link;
+				topicNode.type = "right";
 				
-				var positionPerspective = data.perspectives.map( function( x ){ return x.name; }).indexOf( link );
+				var positionTopicNode = data.rights.map( function( x ){ return x.name; }).indexOf( link );
 				
-				if ( positionPerspective >= 0 ) 
-					perspective.count = data.perspectives[ positionPerspective ].count + 1;
-				else
-					perspective.count = 1;
-				data.perspectives.push( perspective );
+				if ( positionTopicNode >= 0 )
+					topicNode.count = data.rights[ positionTopicNode ].count + 1;				
+				else{
+					topicNode.count = 1;				
+					data.rights.push( topicNode );
+				}
 			} );
 			
 		} );
 		data.episodes.push( participant );
 	} );
+	var importTopics = data.rights.slice(0, 50);
+	data.rights = importTopics.slice( 0, importTopics.length/2 ); 
+	data.lefts  = importTopics.slice( importTopics.length/2, importTopics.length ).map( function( d ){ d.type="left"; return d; });
+	
 	console.log(data);
 	
 	var mappedJsonObject      = d3.map(data);		
@@ -152,7 +158,8 @@ $.activeResearchers.data = function( eventData ){
 	console.log(combinedJsonObject);
 	
 	var episodeConceptLinkJsonArray = prepareData(mappedJsonObject, combinedJsonObject);
-	$.activeResearchers.visualize(mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);	
+	
+	return { mappedJsonObject : mappedJsonObject, combinedJsonObject : combinedJsonObject, episodeConceptLinkJsonArray : episodeConceptLinkJsonArray };
 	
 	function prepareData(mappedJsonObject, combinedJsonObject){
 		var vars = $.activeResearchers.variables;
@@ -172,9 +179,9 @@ $.activeResearchers.data = function( eventData ){
 		// initial degree determines the initial configuration, it's a global variable
 		var startDegree = 180 + vars.initialDegree, 
 			endDegree   = 360 - vars.initialDegree, 
-			rotateDegree= (endDegree - startDegree) / 1;//(mappedJsonObject.get("themes").length - 1);
+			rotateDegree= (endDegree - startDegree) / (mappedJsonObject.get("lefts").length - 1);
 		
-		mappedJsonObject.get("themes").forEach(function(jsonRecord, index) {
+		mappedJsonObject.get("lefts").forEach(function(jsonRecord, index) {
 			jsonRecord.x = endDegree - index * rotateDegree;
 			jsonRecord.y = vars.h / 2 - vars.R;
 			jsonRecord.xOffset = -vars.S;
@@ -183,9 +190,9 @@ $.activeResearchers.data = function( eventData ){
 			
 		startDegree = vars.initialDegree;
 		endDegree   = 180 - vars.initialDegree;
-		rotateDegree= (endDegree - startDegree) / (mappedJsonObject.get("perspectives").length - 1);
+		rotateDegree= (endDegree - startDegree) / (mappedJsonObject.get("rights").length - 1);
 		
-		mappedJsonObject.get("perspectives").forEach(function(jsonRecord, index) {
+		mappedJsonObject.get("rights").forEach(function(jsonRecord, index) {
 			jsonRecord.x = index * rotateDegree + startDegree;
 			jsonRecord.y = vars.h / 2 - vars.R;
 			jsonRecord.xOffset = vars.S;
@@ -210,7 +217,7 @@ $.activeResearchers.data = function( eventData ){
 					target : linkJsonObject,
 					key : aa,
 					canonicalKey : aa,
-					x1 : jsonEpisodeObject.x + (linkJsonObject.type === "theme" ? 0: vars.U),
+					x1 : jsonEpisodeObject.x + (linkJsonObject.type === "left" ? 0: vars.U),
 					y1 : jsonEpisodeObject.y + vars.K / 2,
 					x2 : Math.cos(Y) * X + linkJsonObject.xOffset,
 					y2 : Math.sin(Y) * X
@@ -267,7 +274,6 @@ $.activeResearchers.visualize.links = function(episodeConceptLinkJsonArray){
 	var vars = $.activeResearchers.variables;
 	var linkGraphSVG = d3.select(vars.containerId + " svg g.links");
 	
-	var keys  = episodeConceptLinkJsonArray.map( function( d ){ return d.key; });
 	var group = linkGraphSVG.selectAll("g").data( episodeConceptLinkJsonArray ).enter().append("g").attr("class", "link");
 	var paths = group	
 		.append("path")
@@ -296,8 +302,36 @@ $.activeResearchers.visualize.links = function(episodeConceptLinkJsonArray){
 
 $.activeResearchers.visualize.elements = function(mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
 	this.elements.episodes(mappedJsonObject.get("episodes"), mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
-	this.elements.nodes(d3.merge([mappedJsonObject.get("themes"), mappedJsonObject.get("perspectives")]), mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
+	this.elements.nodes(d3.merge([mappedJsonObject.get("lefts"), mappedJsonObject.get("rights")]), mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
 };
+
+$.activeResearchers.visualize.basedOn = function( basedOn ){
+	var vars 	   		= $.activeResearchers.variables;
+	var svg		   	   	= d3.select(vars.containerId + " svg" );	
+	var linkGraphSVG 	= svg.select("g.links"); 
+	var episodeGraphSVG = svg.select("g.episodes");
+	var nodeGraphSVG 	= svg.select("g.nodes");	
+	
+	alert("a:" + basedOn);
+	//remove existing data 
+	linkGraphSVG.html("");
+	episodeGraphSVG.html("");
+	nodeGraphSVG.html("");
+	
+	var selected = $.PALM.selected;
+	$.get( vars.currentURL + "/venue/topResearchers?id=" + selected.event +"&orderBy=" + basedOn, function( response ){
+		if( response.status != "ok" ){
+			$.PALM.callout.generate( targetContainer , "warning", "Empty Key Researchers!", "The conference does not have any researchers assigned on PALM (insufficient data)" );
+			return false;
+		}
+		vars.L = {};
+		vars.k = {};
+		vars.clickedNode = null;
+		var processedData = $.activeResearchers.data( response );
+		$.activeResearchers.visualize( processedData.mappedJsonObject, processedData.combinedJsonObject, processedData.episodeConceptLinkJsonArray);	
+
+	} );
+}
 
 $.activeResearchers.visualize.interactions = {
 		mouseoverEpisode : function(elem, episode, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
@@ -356,7 +390,10 @@ $.activeResearchers.visualize.interactions = {
 			function removeHighlightClickedNode( ){
 				d3.selectAll("g.episode").classed("clicked", false);	
 				vars.clickedNode = undefined;
-				thisWidget.element.find( ".visualization-details" ).addClass("hidden");
+				thisWidget.element.find( ".visualization-details" ).hide(600, function(){
+					thisWidget.element.find( ".visualization-details" ).addClass("hidden");
+				});
+				
 				thisWidget.element.find(".visualization-main").removeClass("col-md-8").addClass("col-md-12");
 				
 				if ( vars.publicationRequest != null ){
@@ -392,14 +429,15 @@ $.activeResearchers.visualize.interactions = {
 			function getPublicationAuthor( author ){
 				var vars 		= $.activeResearchers.variables;
 				var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
-				var keywordText = thisWidget.element.find("#publist-search").val() || "";
-				var queryString = "?id=" + episode.id + "&year=all&query=" + keywordText + "&queryKeywords=" + episode.links;
+				var queryString = "?id=" + episode.id + "&year=all&queryKeywords=" + episode.links;
 				thisWidget.options.queryString = queryString;
 				
-				thisWidget.element.find(".visualization-main").removeClass("col-md-12").addClass("col-md-8");
+				//thisWidget.element.find(".visualization-main").removeClass("col-md-12").addClass("col-md-8");
 				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
 				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
-				thisWidget.element.find( ".visualization-details" ).removeClass("hidden");
+				
+				thisWidget.element.find( ".visualization-details" ).removeClass( "hidden" );
+				thisWidget.element.find( ".visualization-details" ).show( 600 );
 
 				if ( vars.publicationRequest != null){
 					vars.publicationRequest.abort();
@@ -407,7 +445,6 @@ $.activeResearchers.visualize.interactions = {
 				vars.publicationRequest = $.get( vars.currentURL + "/researcher/publicationList" + queryString , function( response ){ 
 					// this has to be data that is returned by server 
 					response.queryKeywords = episode.links;
-					response.query = keywordText;
 					for (var i = 0 ; i < response.publications.length; i++){
 						if ( i % 2 == 0 && i % 3 == 0)
 							response.publications[i].keyword = [ episode.links[0] ];
@@ -428,6 +465,11 @@ $.activeResearchers.visualize.interactions = {
 					
 					thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
 						
+					$("#publications-box-" + vars.widgetUniqueName + " .box-header .box-title-container").removeClass("box-title-container");	
+					$("#publications-box-" + vars.widgetUniqueName + " .pull-left").css("display", "none");
+					$("#publications-box-" + vars.widgetUniqueName + " .timeline .time-label").css("display", "none");
+					if ( !$("#publications-box-" + vars.widgetUniqueName + " .box-content").hasClass( "small" ) )
+						$("#publications-box-" + vars.widgetUniqueName + " .box-content").addClass( "small" );
 					vars.publicationRequest = null;
 				});
 			}
@@ -592,9 +634,7 @@ function mouseOnEpisode(elem, episode, linkObject, episodeConceptLinkJsonArray){
 	if (  episode.type != undefined && episode.type === "episode"){
 		/*add fictive data to episode till backend will provide the data*/
 		episode.author = { name : episode.name, id : episode.id};
-		episode.status  = "Proffesor";
-		episode.affiliation = "Univ. RWTH Aachen";
-		episode.photo = "http://nlp.stanford.edu/manning/images/Christopher_Manning_027_132x132.jpg";
+		episode.affiliation = episode.aff != null ? episode.aff.institution : "";
 		/*------------*/
 		addTooltip( d3.select(elem), episode );
 	}
@@ -705,6 +745,8 @@ function addTooltip( elem, episode ){
 	}
 	var tooltip = new Tooltip( tooltipParam );
 	tooltip.buildTooltip( elem, episode );
+	
+	
 }
 
 function changeElementColor(X, initial, changed) 

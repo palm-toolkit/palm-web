@@ -131,7 +131,7 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			status.append("text").classed("icon-briefcase font-small", true)
 				.style("font-family", "fontawesome")
 				.text('\uf0b1');
-			wrapText(status, dataObject.status || "Not Available", (width - distanceLeft), "status-name font-small");	
+			wrapText(status, dataObject.status || "none", (width - distanceLeft), "status-name font-small");	
 			status.selectAll(".status-name").attr("dx", "1.3em");
 			
 			//affiliation
@@ -140,18 +140,18 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			affiliation.append("text").classed("icon-institution font-small", true)
 				.style("font-family", "fontawesome")
 				.text('\uf19c');
-			wrapText(affiliation, dataObject.affiliation || "Not available", (width - distanceLeft), "afiliation-name font-small");	
+			wrapText(affiliation, dataObject.affiliation || "none", (width - distanceLeft), "afiliation-name font-small");	
 			affiliation.selectAll(".afiliation-name").attr("dx", "1.3em");
 			
 			//nr publications & citations
-			var nrPublications = dataObject.publicationsNumber || "Not available";
-			var nrCitations	   = dataObject.citedBy || "Not available";			
+			var nrPublications = dataObject.publicationsNumber || "none";
+			var nrCitations	   = dataObject.citedBy || " - ";			
 			var publicationsAndCitations = gContent.append("g").classed("pubs content-text", true)
 				.attr("transform", "translate(" + distanceLeft + ", " + 0+ ")");
 			wrapText(publicationsAndCitations, "Publications: " + nrPublications + ", Cited By: " + nrCitations, (width - distanceLeft), "paper font-small");
 					
 			//h-index
-			var hindexString = dataObject.hindex || "Not available";
+			var hindexString = dataObject.hindex || "none";
 			var hindex = gContent.append("g").classed("hindex content-text", true)
 				.attr("transform", "translate(" + distanceLeft + ", " + 0 + ")");;
 			wrapText(hindex, "H-index: " + hindexString, (width - distanceLeft), "hindex font-small");				
