@@ -265,7 +265,7 @@ $.COAUTHOR.graph.nodes = function (graphData, nodesContainer, mode, distance){
 		.range( [4, 15] );
 
 	var node = nodesContainer
-		.selectAll("circle")
+		.selectAll(".node." + mode)
 		.data(graphData.nodes)
 		.enter().append("g")
 			.attr("class", "node " + mode)

@@ -23,18 +23,32 @@ $.activeResearchers.variables ={
 		width : 1100,
 		height: 600,
 		h	  : 600,
-		U	  : 200,
-		K 	  : 22, 
+		episodeWidth  : 200,
+		episodeHeight : 9, 
 		S 	  : 20,
 		s 	  : 8,
 		R 	  : 90,
 		initialDegree : 30, 
 		o 	  : 15, 
 		t 	  : 10, 
-		transitionDuration : 1000, 
-		easeType : "elastic", 
-		highLightColor : "#0073b7", //"#f39c12",
-		clickedColor : "#f39c12",
+		transitionDuration  : 1000, 
+		easeType 			: "elastic", 
+		highLightColor 		: "rgb(74, 74, 74)", //"#0073b7", //"#f39c12",
+		clickedColor 		: "#0073b7", //"rgb(13, 40, 185)",//"#f39c12",
+		color : {
+			episode : {
+				name	: "#0073b7",
+				value	: "#4a4a4a"
+			},
+			node 	: {
+				circle 		  : "#e0e0e0",
+				circle_stroke : "#6f6f6f",
+				name		  : "#4a4a4a"
+			},
+			link	: {
+				line_stroke	  : "rgb(222, 222, 222)"
+			}
+		},
 		L	  : {},
 		k 	  : {},
 		line  : undefined,
@@ -75,12 +89,10 @@ $.activeResearchers.init = function(widgetUniqueName, eventData, currentURL, isU
 	var graphSVG = d3.select(vars.containerId +" .box-body .visualization-main" ).append("svg")
 		.attr("width",  vars.width)
 		.attr("height", vars.height)
-		.attr("viewBox", -vars.width / 2 + " " + -vars.height / 2 + " " +  vars.width + " " +  vars.height)
+		.attr("viewBox", -vars.width / 2 + " " + ( -vars.height / 2 - 20 ) + " " +  vars.width + " " +  vars.height)
 		.attr("preserveAspectRatio", "xMinYMin")
 		.append("g");
-		//	.attr("transform", "translate(" + vars.width / 2 + "," + vars.height / 2 + ")");
-	
-	
+
 	var linkGraphSVG 	= graphSVG.append("g").attr("class", "links"); 
 	var episodeGraphSVG = graphSVG.append("g").attr("class", "episodes");
 	var nodeGraphSVG 	= graphSVG.append("g").attr("class", "nodes");	
@@ -173,7 +185,7 @@ $.activeResearchers.data = function( eventData ){
 		var y = Math.floor(mappedJsonObject.get("episodes").length * i / 2);
 		
 		mappedJsonObject.get("episodes").forEach(function(jsonRecord, index) {
-			jsonRecord.x = vars.U / -2;
+			jsonRecord.x = vars.episodeWidth / -2;
 			jsonRecord.y = index * i - y;						
 		});
 		// initial degree determines the initial configuration, it's a global variable
@@ -217,8 +229,8 @@ $.activeResearchers.data = function( eventData ){
 					target : linkJsonObject,
 					key : aa,
 					canonicalKey : aa,
-					x1 : jsonEpisodeObject.x + (linkJsonObject.type === "left" ? 0: vars.U),
-					y1 : jsonEpisodeObject.y + vars.K / 2,
+					x1 : jsonEpisodeObject.x + (linkJsonObject.type === "left" ? 0: vars.episodeWidth),
+					y1 : jsonEpisodeObject.y + vars.episodeHeight / 2,
 					x2 : Math.cos(Y) * X + linkJsonObject.xOffset,
 					y2 : Math.sin(Y) * X
 				});
@@ -228,42 +240,6 @@ $.activeResearchers.data = function( eventData ){
 		return episodeConceptLinkJsonArray;
 	}
 }
-$.activeResearchers.data2 = function( url ){
-	d3.json(url, function(error, originJsonObject) {
-		if (originJsonObject != undefined && originJsonObject.episodes != undefined)
-			originJsonObject.episodes = originJsonObject.episodes.slice(0, 20);
-		var mappedJsonObject      = d3.map(originJsonObject);		
-		var mergedJsonObjectArray = d3.merge(mappedJsonObject.values());
-		var combinedJsonObject 	  = {};
-			
-			
-		mergedJsonObjectArray.forEach(function(thisJsonObject) {	
-			thisJsonObject.key = getLowerCase(thisJsonObject.name);
-			thisJsonObject.canonicalKey = thisJsonObject.key;
-			combinedJsonObject[thisJsonObject.key] = thisJsonObject;								
-		});
-			
-		linkObject = d3.map();				
-		mappedJsonObject.get("episodes").forEach(function(episodeJsonObject) {
-			// remove bad links
-			episodeJsonObject.links = episodeJsonObject.links.filter(function(ab) {
-				return typeof combinedJsonObject[getLowerCase(ab)] !== "undefined" && ab.indexOf("r-") !== 0;
-			});
-		});
-		
-		console.log("mappedJsonObject");
-		console.log(mappedJsonObject);
-		console.log("mergedJsonObjectArray");
-		console.log(mergedJsonObjectArray);
-		console.log("combinedJsonObject");
-		console.log(combinedJsonObject);
-		
-		var episodeConceptLinkJsonArray = prepareData(mappedJsonObject, combinedJsonObject);
-		$.activeResearchers.visualize(mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);	
-	});
-	
-	
-};
 
 $.activeResearchers.visualize = function( mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray ){
 	this.visualize.links(episodeConceptLinkJsonArray);
@@ -291,18 +267,168 @@ $.activeResearchers.visualize.links = function(episodeConceptLinkJsonArray){
 			.attr("d", function(X) { return vars.line([[X.x1, X.y1], [X.target.xOffset * vars.s, 0],[X.x2, X.y2]]); });	
 	
 	group.append("text")
-		.attr("class", "link-text hidden")
-		.attr("fill", "#000")
+		.attr("class", "link-text")
+		.attr("fill", vars.highLightColor)
 		.attr("dx", function (d){ return d.target.x < 180 ?  "-0.35em" : "0.35em";})
 		.attr("dy", "0.35em")
 		.style("font-weight", "bold")
-		.attr("text-anchor", function (d){ return d.target.x < 180 ? "start" : "end"; })
-		.text(function( d, i ) { return i + "publ."});				
+		.attr("text-anchor", function (d){ return d.target.x < 180 ? "start" : "end"; });				
 }
 
 $.activeResearchers.visualize.elements = function(mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
 	this.elements.episodes(mappedJsonObject.get("episodes"), mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
 	this.elements.nodes(d3.merge([mappedJsonObject.get("lefts"), mappedJsonObject.get("rights")]), mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
+};
+
+$.activeResearchers.visualize.elements.episodes = function(episodesData, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
+	var vars 			= $.activeResearchers.variables;
+	var basedOn			= $("#widget-" + vars.widgetUniqueName + " .basedOn .dropdown-menu li.selected").data("value");
+	var transition 		= d3.transition().duration(vars.transitionDuration).ease(d3.easeElastic);
+	var episodeGraphSVG = d3.select(vars.containerId + " svg g.episodes"); 	
+	
+	var keys 			= episodesData.map( function( d ){ return d.key; });
+	var episode 		= episodeGraphSVG.selectAll(".episode").data( episodesData ).enter().append("g")
+		.attr("class", "episode")
+		.on("mouseover", function(d){ $.activeResearchers.visualize.interactions.mouseoverEpisode(this, d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray); })
+		.on("mouseout",  function(d){ $.activeResearchers.visualize.interactions.mouseleaveEpisode(this, d); })
+		.on("click", $.activeResearchers.visualize.interactions.click);
+	
+	episode.transition(transition)
+		.attr("transform", function(Z) { return "translate(" + [ Z.x, Z.y ] + ")"; });
+	
+	var heightBar = 9;
+	
+	episode.append("rect")
+		.attr("class", "rect-base light-color")
+		.attr("rx", 2)
+		.attr("ry", 2)
+		.attr("width", vars.episodeWidth)
+		.attr("height", vars.episodeHeight )
+		.attr("fill", "transparent")
+		.attr("stroke-width", "0.5px");
+	
+	var criterion = "publicationsNumber";
+	if ( basedOn == "hindex" )
+		criterion = "hindex";
+	else
+		if ( basedOn == "nrCitations" )
+			criterion = "publicationsCitations";
+	
+	var range = d3.scaleLinear()
+		.range([0, vars.episodeWidth]);
+	
+	range.domain([0, d3.max( episodesData, function( d ){ return d[criterion]; })]);
+	
+	episode.append("rect")
+		.classed("rect-filling", true)
+		.attr("rx", 2)
+		.attr("ry", 2)		
+		.attr("width", function( d, i ){ return range( d[criterion] ); })
+		.attr("height", vars.episodeHeight )
+		.attr("fill", "url(#light-box-gradient)");
+	
+	episode.append("text")
+		.attr("class", "basedOn_value" )
+		.attr("x", function( d, i ){ return range( d[criterion] )} ) 
+		.attr("dx", ".15em")
+		.attr("dy", ".75em")
+		.attr("text-anchor", "start" )
+		.attr("fill", vars.color.episode.value )
+		.attr("fill-opacity", 0.6 )
+		.text( function( d ){ return d[criterion];	} );
+
+	episode.append("text")
+		.attr("class", "researcher_name" )
+		.attr("dx", ".35em")
+		.attr("dy", "-.35em")
+		.attr("fill", vars.color.episode.name )
+		.text( function( d ) { return d.name; } );
+
+	episode.exit()
+		.transition(transition)
+			.attr("transform", function(Z) { return "translate(" + [ vars.episodeWidth / -2, vars.episodeHeight / -2] + ")" ; });
+	
+	episode.exit().transition().duration(vars.transitionDuration).remove();
+};
+
+$.activeResearchers.visualize.elements.nodes = function(nodesData, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
+	var vars 		 = $.activeResearchers.variables;
+	var transition 	 = d3.transition().duration(vars.transitionDuration).ease(d3.easeElastic);
+	var nodeGraphSVG = d3.select(vars.containerId + " svg g.nodes"); 	
+	
+	var keys = nodesData.map( function( d ){ return d.key; });
+	var nodes = nodeGraphSVG.selectAll(".node").data( nodesData );
+	var node  = nodes.enter().append("g")
+		.attr("class", "node")
+		.attr("transform", function(n) {
+			var Z = n.parent ? n.parent : { xOffset : 0, x : 0, y : 0 };
+			return "translate(" + Z.xOffset + ",0)rotate(" + (Z.x - 90) + ")translate(" + Z.y + ")";
+		})
+		.on("mouseover", function(d){ 
+			$.activeResearchers.visualize.interactions.mouseoverEpisode( this, d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
+		})
+		.on("mouseout", function(d){ $.activeResearchers.visualize.interactions.mouseleaveEpisode(this, d); });//.on("click", G);
+	
+	var radiusRange = d3.scaleLinear()
+		.domain([1, d3.max(nodesData, function(n){ return n.count; })])
+		.range([1, 15]);
+	
+	var circle = node.append("circle").attr("r", 1)
+		.attr( "fill", vars.color.node.circle )
+		.attr("stroke", vars.color.node.circle_stroke)
+		.attr("stroke-width", "1.5px");
+	
+	var labelStroke = node.append("text")
+		.attr("class", "label-stroke")
+		.attr("stroke", vars.color.node.circle_stroke)
+		.attr("stroke-width", 4);	
+	
+	var label = node.append("text")
+		.attr("class", "label")
+		.attr("font-size", 0);
+	
+	node.transition(transition)
+		.attr("transform", function(n) {
+			if (n === vars.L.node) return null;
+			var translate = (n.isGroup) ? n.y + (7 + n.count) : n.y;
+		return "translate(" + n.xOffset + ",0)rotate(" + (n.x - 90) + ")translate(" + translate + ")";
+	});
+
+	circle
+		.attr("r", function(n) {
+			if (n == vars.L.node) return 100;
+			else 
+				if (n.isGroup) 
+					return 4 + radiusRange( n.count );
+				else 
+					return 4.5;
+		});
+	label
+		.attr("dy", ".3em")
+		.attr("font-size", function(n) {
+			if (n.depth === 0) 
+				return 20;
+			else 
+				return 15;
+		})
+		.text(function(n) { return n.name; })
+		.attr("text-anchor", function(n) {
+			if (n === vars.L.node || n.isGroup) 
+				return "middle";
+						
+			return n.x < 180 ? "start" : "end";
+		})
+		.attr("transform", function(n) {
+			if (n === vars.L.node) return null;
+			else 
+				if (n.isGroup) 
+					return n.x > 180 ? "rotate(180)" : null;					
+			return n.x < 180 ? "translate(" + vars.t + ")" : "rotate(180)translate(-" + vars.t + ")";
+		});
+	labelStroke
+		.attr("display", function(t) { return t.depth === 1 ? "block" : "none"; });
+	
+	nodes.exit().transition().duration(vars.transitionDuration).remove();
 };
 
 $.activeResearchers.visualize.basedOn = function( basedOn ){
@@ -312,7 +438,6 @@ $.activeResearchers.visualize.basedOn = function( basedOn ){
 	var episodeGraphSVG = svg.select("g.episodes");
 	var nodeGraphSVG 	= svg.select("g.nodes");	
 	
-	alert("a:" + basedOn);
 	//remove existing data 
 	linkGraphSVG.html("");
 	episodeGraphSVG.html("");
@@ -476,131 +601,7 @@ $.activeResearchers.visualize.interactions = {
 		}
 }
 
-$.activeResearchers.visualize.elements.episodes = function(episodesData, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
-	var vars 			= $.activeResearchers.variables;
-	var transition 		= d3.transition().duration(vars.transitionDuration).ease(d3.easeElastic);
-	var episodeGraphSVG = d3.select(vars.containerId + " svg g.episodes"); 	
-	
-	var keys 			= episodesData.map( function( d ){ return d.key; });
-	var episode 		= episodeGraphSVG.selectAll(".episode").data( episodesData ).enter().append("g")
-		.attr("class", "episode")
-		.on("mouseover", function(d){ $.activeResearchers.visualize.interactions.mouseoverEpisode(this, d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray); })
-		.on("mouseout",  function(d){ $.activeResearchers.visualize.interactions.mouseleaveEpisode(this, d); })
-		.on("click", $.activeResearchers.visualize.interactions.click);
-	
-	episode.transition(transition)
-		.attr("transform", function(Z) { return "translate(" + [ Z.x, Z.y ] + ")"; });
-	
-	episode.append("rect")
-		.attr("class", "rect-base light-color")
-		.attr("rx", 2)
-		.attr("ry", 2)
-		.attr("width", vars.U)
-		.attr("height", vars.K)
-		.attr("fill", "transparent")
-		.attr("stroke-width", "0.5px");
-	
-	/*TODO
-	 * range based on the h-index or the criteria used for ranking
-	 */
-	var range = d3.scaleLinear()
-		.domain([episodesData.length, 0])
-		.range([vars.U/4, vars.U]);
-	
-	episode.append("rect")
-		.classed("rect-filling", true)
-		.attr("rx", 2)
-		.attr("ry", 2)
-		.attr("width", function( d, i ){ return range(i)})
-		.attr("height", vars.K)
-		.attr("fill", "url(#light-box-gradient)");
 
-	episode.append("text")
-		.attr("dx", "0.35em")
-		.attr("dy", "1.35em")
-		.text(function(Z) { return Z.name; });
-
-	episode.exit()
-		.transition(transition)
-			.attr("transform", function(Z) { return "translate(" + [ vars.U / -2, vars.K / -2] + ")" ; });
-	
-	episode.exit().transition().duration(vars.transitionDuration).remove();
-};
-
-$.activeResearchers.visualize.elements.nodes = function(nodesData, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
-	var vars 		 = $.activeResearchers.variables;
-	var transition 	 = d3.transition().duration(vars.transitionDuration).ease(d3.easeElastic);
-	var nodeGraphSVG = d3.select(vars.containerId + " svg g.nodes"); 	
-	
-	var keys = nodesData.map( function( d ){ return d.key; });
-	var nodes = nodeGraphSVG.selectAll(".node").data( nodesData );
-	var node  = nodes.enter().append("g")
-		.attr("class", "node")
-		.attr("transform", function(n) {
-			var Z = n.parent ? n.parent : { xOffset : 0, x : 0, y : 0 };
-			return "translate(" + Z.xOffset + ",0)rotate(" + (Z.x - 90) + ")translate(" + Z.y + ")";
-		})
-		.on("mouseover", function(d){ 
-			$.activeResearchers.visualize.interactions.mouseoverEpisode( this, d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
-		})
-		.on("mouseout", function(d){ $.activeResearchers.visualize.interactions.mouseleaveEpisode(this, d); });//.on("click", G);
-	
-	var radiusRange = d3.scaleLinear()
-		.domain([1, d3.max(nodesData, function(n){ return n.count; })])
-		.range([1, 15]);
-	
-	var circle = node.append("circle").attr("r", 1);
-	var labelStroke = node.append("text")
-		.attr("class", "label-stroke")
-		.attr("stroke", "#fff")
-		.attr("stroke-width", 4);	
-	var label = node.append("text")
-		.attr("class", "label")
-		.attr("font-size", 0);
-	
-	node.transition(transition)
-		.attr("transform", function(n) {
-			if (n === vars.L.node) return null;
-			var translate = (n.isGroup) ? n.y + (7 + n.count) : n.y;
-		return "translate(" + n.xOffset + ",0)rotate(" + (n.x - 90) + ")translate(" + translate + ")";
-	});
-
-	circle
-		.attr("r", function(n) {
-			if (n == vars.L.node) return 100;
-			else 
-				if (n.isGroup) 
-					return 4 + radiusRange( n.count );
-				else 
-					return 4.5;
-		});
-	label
-		.attr("dy", ".3em")
-		.attr("font-size", function(n) {
-			if (n.depth === 0) 
-				return 20;
-			else 
-				return 15;
-		})
-		.text(function(n) { return n.name; })
-		.attr("text-anchor", function(n) {
-			if (n === vars.L.node || n.isGroup) 
-				return "middle";
-						
-			return n.x < 180 ? "start" : "end";
-		})
-		.attr("transform", function(n) {
-			if (n === vars.L.node) return null;
-			else 
-				if (n.isGroup) 
-					return n.x > 180 ? "rotate(180)" : null;					
-			return n.x < 180 ? "translate(" + vars.t + ")" : "rotate(180)translate(-" + vars.t + ")";
-		});
-	labelStroke
-		.attr("display", function(t) { return t.depth === 1 ? "block" : "none"; });
-	
-	nodes.exit().transition().duration(vars.transitionDuration).remove();
-};
 function getLowerCase(str) {
 	return str.toLowerCase().replace(/[ .,()]/g, "-");
 }
@@ -663,26 +664,49 @@ function highLightElements() {
 			}
 			return changeElementColor(d, "url(#light-box-gradient)", "url(#dark-box-gradient)"); });
 	
-	episodeGraphSVG.selectAll("text")
+	episodeGraphSVG.selectAll("text.researcher_name")
 		.style("font-weight", function(d) { return changeElementColor(d, "normal", "bold"); });
+	episodeGraphSVG.selectAll("text.basedOn_value")
+		.attr("fill-opacity", function(d) { return changeElementColor(d, 0.6, 1); });
+	
+	d3.selection.prototype.moveToFront = function() {
+		  return this.each(function(){
+		    this.parentNode.appendChild(this);
+		  });
+	};
 	
 	linkGraphSVG.selectAll("path")
-		.attr("stroke", function(d) { 
+		.style("stroke", function(d) { 
 			if ( vars.clickedNode != undefined ){
 				if ( vars.clickedNode.node.id == d.source.id || vars.clickedNode.node.id == d.target.id)
-					return changeElementColor(d, "#aaa", vars.clickedColor); 
+					return changeElementColor(d, vars.color.link.line_stroke, vars.clickedColor); 
 			}
-			return changeElementColor(d, "#aaa", vars.highLightColor); })
-		.attr("stroke-width", function(d) { return changeElementColor(d, "1.5px", "2.5px");})
-		.attr("opacity", function(d) { return changeElementColor(d, 0.4, 0.6); })
+			return changeElementColor(d, vars.color.link.line_stroke, vars.highLightColor); })
+		.style("stroke-width", function(d) { return changeElementColor(d, "1.5px", "1.5px");})
+		.style("stroke-opacity", function(d) { return changeElementColor(d, 0.5, 0.3);})
 		.sort(function(a, b) {
 				if (!vars.k.node) return 0;				
 				var aa = vars.k.map[a.canonicalKey] ? 1 : 0, 
 					 Z = vars.k.map[b.canonicalKey] ? 1 : 0;
 				return aa - Z;
-		});
+		})
+		.each( function( d ){
+			if ( vars.clickedNode != undefined ){
+				if ( vars.clickedNode.node.id == d.source.id || vars.clickedNode.node.id == d.target.id)
+					return changeElementColor(d, null, d3.select(this).moveToFront() );
+			}	
+		}) ;
 	linkGraphSVG.selectAll("text")
 		.classed("hidden", function ( d ) { return changeElementColor(d, true, false); } )
+		.text( function(d) {
+			var isMouseOver = changeElementColor(d, false, true);
+			if ( vars.clickedNode != undefined )
+				if ( vars.clickedNode.node.id == d.source.id || vars.clickedNode.node.id == d.target.id)
+					return null;
+			if ( isMouseOver ){
+				return getReseracherPublicationsOnTopic( d, d3.select( this.parentNode ) ) + ".publ";
+			}
+		})
 		.attr("transform", function ( d ){
 			var transform = "";
 			if (vars.k != undefined && vars.k.node != null && vars.k.node.type == "episode"){				
@@ -709,18 +733,19 @@ function highLightElements() {
 			}
 			return transform = "translate("+ [offset, 0] +")rotate(" + (0) + ")translate(" + tr2 + ")";
 		});	
+	
 	nodeGraphSVG.selectAll("circle")
 		.attr("fill", function(d) {
-			if (d === null) return "#000";
+			if (d === null) return vars.color.node.circle;
 			else if ( vars.clickedNode != undefined ){
 					if ( vars.clickedNode.map[d.key] )
-						return changeElementColor(d, "#666", vars.clickedColor); 
+						return changeElementColor(d, vars.color.node.circle, vars.clickedColor); 
 				 }
-			return changeElementColor(d, "#666", vars.highLightColor);
+			return changeElementColor(d, vars.color.node.circle, vars.highLightColor);
 		})
 		.attr("stroke", function(d) {
 			if (d === null)  return changeElementColor(d, null, vars.highLightColor);
-			else return "#000";					
+			else return changeElementColor(d, vars.color.node.circle_stroke, "#000");					
 		})
 		.attr("stroke-width", function(d) {
 			if (d === vars.L.node) 
@@ -730,23 +755,41 @@ function highLightElements() {
 	
 	nodeGraphSVG.selectAll("text.label")
 		.attr("fill", function(d) {
-			return (d === vars.L.node || d.isGroup) ? "#fff" : vars.clickedNode != undefined ? (vars.clickedNode.map[d.key] ? changeElementColor(d, "#000", vars.clickedColor) : changeElementColor(d, "#000", vars.highLightColor)) : changeElementColor(d, "#000", vars.highLightColor);
+			return (d === vars.L.node || d.isGroup) ? vars.color.node.name : vars.clickedNode != undefined ? (vars.clickedNode.map[d.key] ? changeElementColor(d, vars.color.node.name, vars.clickedColor) : changeElementColor(d, vars.color.node.name, vars.highLightColor)) : changeElementColor(d, vars.color.node.name, vars.highLightColor);
 		});
 
 }
 
+function getReseracherPublicationsOnTopic( link ){
+	var vars = $.activeResearchers.variables;
+	var nrPubl = 0;
+	
+	if ( vars.k != null && vars.k.node !== null ) {
+		if ( vars.k.node.publications != null && vars.k.node.publications.length > 0){
+			vars.k.node.publications.forEach( function( p ){ 
+				if ( p.topics != null && p.topics.length > 0) {
+					p.topics.forEach( function( t ){
+						if ( t.termvalues[ link.source.name ] != null || t.termvalues[ link.target.name ] != null )
+							nrPubl ++;
+					})
+				}
+			});		
+		}
+	}
+	return nrPubl;
+} 
+
 function addTooltip( elem, episode ){
 	var tooltipParam =  {
 		className 	: $.activeResearchers.variables.tooltipName,
-		width 		: 250,
+		width 		: 200,
 		height		: 80,
 		borderRadius: 5,
 		fontSize	: 12
 	}
 	var tooltip = new Tooltip( tooltipParam );
 	tooltip.buildTooltip( elem, episode );
-	
-	
+	tooltip.extraTranslate( elem, [0, -10] );
 }
 
 function changeElementColor(X, initial, changed) 

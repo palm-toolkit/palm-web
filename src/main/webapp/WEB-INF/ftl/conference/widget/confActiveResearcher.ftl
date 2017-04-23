@@ -1,12 +1,13 @@
 <div class="box-body no-padding container-fluid">
 		<div class="container-box filter-box key-researchers-criteria row">
-			<div class="filter basedOn col-md-4">
+			<div class="filter basedOn col-md-6">
   				<span class="title font-small col-md-3"> Based On: </span>
-  				<div class="dropdown col-md-9">
+  				<div class="dropdown col-md-6">
     				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Number of publications <span class="caret"></span> </button>
     				<ul class="dropdown-menu">
+    					<li data-value="nrPublications" class="selected" ><a href="#" >Number of publications</a></li>
       					<li data-value="hindex" ><a href="#" >Resercher's H-index</a></li>
-      					<li data-value="nrPublications"><a href="#">Publications' Citations</a></li>
+      					<li data-value="nrCitations"><a href="#">Publications' Citations</a></li>
     				</ul>
   				</div>
 			</div>
