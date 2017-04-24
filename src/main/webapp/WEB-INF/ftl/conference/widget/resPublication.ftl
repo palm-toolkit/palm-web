@@ -7,6 +7,9 @@
 			<div class="box-title-container">
           		<h3 class="box-title">Publications <span class="author_name"></span> </h3>
         	</div>
+        	<div class="box-tools pull-right">
+          		<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+         	 </div>
 		</div>
 		<div class="box-content">
 		<div class="box-footer"> </div>
@@ -23,39 +26,14 @@
 			allowPageScroll: true,
    			touchScrollStep: 50,
    			railVisible: true,
-    		alwaysVisible: true
+    		alwaysVisible: false
+    		
 	    });
 
 		$("#publications-box-${wUniqueName} .box-content").css({"max-height": "600px", "height":"100%"});
 	
-		function getCurrentUser(){
-			<#if currentUser??>
-				return true;
-			<#else>
-				return false;
-			</#if>	
-		}
-		
-		var url = "<@spring.url '/resources/json/publicationList.json' />";
-		d3.json(url, function(error, data){
-			$.publicationList.init( data.status, "${wUniqueName}", "<@spring.url ''/>", getCurrentUser(), 0 );
-		} );
-	
 		<#-- set widget unique options -->
-		var options ={
-	<#--		source : "<@spring.url '/researcher/publicationList' />",
-			queryString : "",
-			id: "",
-			onRefreshStart: function( widgetElem ){
-						},
-			onRefreshDone: function(  widgetElem , data ){
-				v
-				});
-
-				<#-- append everything to  -->
-			<#--	mainContainer.append( timeLineContainer );
-		} -->
-		};
+		var options ={};
 		
 		<#-- register the widget -->
 		$.PALM.options.registeredWidget.push({

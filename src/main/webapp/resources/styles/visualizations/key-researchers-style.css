@@ -15,10 +15,6 @@
 	right	 : 0;
 }
 
-#widget-conference_active_researcher .box-title-container{
-	width : 80%;
-}
-
 #widget-conference_active_researcher .callout-warning{
 	position: absolute;
     top		: 40%;
@@ -39,7 +35,6 @@
 #widget-conference_active_researcher .box-body .episode, #widget-conference_active_researcher .box-body .node, #widget-conference_active_researcher .box-body .detail text, #widget-conference_active_researcher .box-body .all-episodes {
   cursor: pointer;
 }
-
 
 #widget-conference_active_researcher .box-body .detail a text:hover, #widget-conference_active_researcher .box-body text .all-episodes:hover {
   text-decoration: underline;
@@ -73,10 +68,10 @@
 }
 
 #widget-conference_active_researcher .clicked-gradient-stop-color-1{
-	stop-color : #1b38e8 /*#d2c7b0;*/	
+	stop-color : #0073b7;	
 }
 #widget-conference_active_researcher .clicked-gradient-stop-color-2{
-	stop-color : #b6c8ef /*#eee;	*/
+	stop-color : #8aa9bb;
 }
 
 #widget-conference_active_researcher .light-color{
@@ -89,22 +84,30 @@
 	stroke :  rgb(13, 40, 185) /*#f39c12;*/
 }
 #widget-publications-conference_active_researcher	{
-	position: relative;
-    height: 100%;
+	position   : relative;
+    max-height : 100%;
 }
 #widget-publications-conference_active_researcher>div{
-    height: 100%;
+    max-height	: 100%;
+    border-left : 1px solid #d2d6de;
 }
 
 #widget-conference_active_researcher .node .label:hover{
 	fill : #000;
 }
-
-
 /*----------------LIST-----------------*/
+#widget-publications-conference_active_researcher .slimScrollBar{
+	top : 0px;
+}
+
 #widget-publications-conference_active_researcher .author-name,
 #widget-publications-conference_active_researcher .author_name{
-	text-transform: capitalize;
+	text-transform : capitalize;
+	color 		   :rgb(0, 79, 126);
+}
+#widget-publications-conference_active_researcher .box-title-container{
+	width 		: 80%;
+	white-space : normal; 
 }
 
 #widget-publications-conference_active_researcher .box-title,

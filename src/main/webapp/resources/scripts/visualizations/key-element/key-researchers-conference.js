@@ -1,19 +1,3 @@
-$( window ).resize(function() {
-	var oldWidth =  $.activeResearchers.variables.width;
-	var visualization = $( $.activeResearchers.variables.containerId + " .visualization-main" );
-	if ( visualization != undefined)
-		 $.activeResearchers.variables.width = visualization.width();
-	
-	//resizeSVG(oldWidth);
-});
-function resizeSVG(oldWidth){
-	var vars = $.activeResearchers.variables;
-	var svg  = d3.select(vars.containerId +" .visualization-main svg" );
-	var newWidth = svg.node().getBoundingClientRect().width;
-	svg.attr("transform", "translate(" + vars.width/2 + " , " + vars.height/2 + ")scale(" +( (newWidth / oldWidth) * 100) + ")");
-	
-}
-
 $.activeResearchers = {};
 $.activeResearchers.variables ={
 		widgetUniqueName : undefined,
@@ -33,11 +17,11 @@ $.activeResearchers.variables ={
 		t 	  : 10, 
 		transitionDuration  : 1000, 
 		easeType 			: "elastic", 
-		highLightColor 		: "rgb(74, 74, 74)", //"#0073b7", //"#f39c12",
-		clickedColor 		: "#0073b7", //"rgb(13, 40, 185)",//"#f39c12",
+		highLightColor 		: "rgb(74, 74, 74)", // "#0073b7", //"#f39c12",
+		clickedColor 		: "#004f7e", // "rgb(13, 40, 185)",//"#f39c12",
 		color : {
 			episode : {
-				name	: "#0073b7",
+				name	: "#004f7e", //"#0073b7",
 				value	: "#4a4a4a"
 			},
 			node 	: {
@@ -64,8 +48,10 @@ $.activeResearchers.init = function(widgetUniqueName, eventData, currentURL, isU
 	vars.widgetUniqueName = widgetUniqueName;
 	vars.currentURL		  = currentURL;
 	vars.isUserLogged	  = isUserLogged;
+	vars.L				  = {};
 	
 	$(vars.containerId + " .visualization-main" ).height( vars.height );
+	$(vars.containerId + " .visualization-details" ).addClass( "hidden" );
 	
 	var mappedJsonObject, mergedJsonObjectArray, combinedJsonObject, linkObject, episodeConceptLinkJsonArray;
 
@@ -89,7 +75,7 @@ $.activeResearchers.init = function(widgetUniqueName, eventData, currentURL, isU
 	var graphSVG = d3.select(vars.containerId +" .box-body .visualization-main" ).append("svg")
 		.attr("width",  vars.width)
 		.attr("height", vars.height)
-		.attr("viewBox", -vars.width / 2 + " " + ( -vars.height / 2 - 20 ) + " " +  vars.width + " " +  vars.height)
+		.attr("viewBox", ( -vars.width / 2 + 10) + " " + ( -vars.height / 2 - 20 ) + " " +  vars.width + " " +  vars.height )
 		.attr("preserveAspectRatio", "xMinYMin")
 		.append("g");
 
@@ -126,8 +112,10 @@ $.activeResearchers.data = function( eventData ){
 				
 				var positionTopicNode = data.rights.map( function( x ){ return x.name; }).indexOf( link );
 				
-				if ( positionTopicNode >= 0 )
-					topicNode.count = data.rights[ positionTopicNode ].count + 1;				
+				if ( positionTopicNode >= 0 ){
+					topicNode.count = data.rights[ positionTopicNode ].count + 1;	
+					data.rights[ positionTopicNode ].count = data.rights[ positionTopicNode ].count + 1;	
+				}
 				else{
 					topicNode.count = 1;				
 					data.rights.push( topicNode );
@@ -148,7 +136,7 @@ $.activeResearchers.data = function( eventData ){
 	var combinedJsonObject 	  = {};
 		
 		
-	mergedJsonObjectArray.forEach(function(thisJsonObject) {	
+	mergedJsonObjectArray.forEach( function( thisJsonObject ) {	
 		thisJsonObject.key = getLowerCase(thisJsonObject.name);
 		thisJsonObject.canonicalKey = thisJsonObject.key;
 		combinedJsonObject[thisJsonObject.key] = thisJsonObject;								
@@ -188,7 +176,8 @@ $.activeResearchers.data = function( eventData ){
 			jsonRecord.x = vars.episodeWidth / -2;
 			jsonRecord.y = index * i - y;						
 		});
-		// initial degree determines the initial configuration, it's a global variable
+		// initial degree determines the initial configuration, it's a global
+		// variable
 		var startDegree = 180 + vars.initialDegree, 
 			endDegree   = 360 - vars.initialDegree, 
 			rotateDegree= (endDegree - startDegree) / (mappedJsonObject.get("lefts").length - 1);
@@ -250,35 +239,37 @@ $.activeResearchers.visualize.links = function(episodeConceptLinkJsonArray){
 	var vars = $.activeResearchers.variables;
 	var linkGraphSVG = d3.select(vars.containerId + " svg g.links");
 	
-	var group = linkGraphSVG.selectAll("g").data( episodeConceptLinkJsonArray ).enter().append("g").attr("class", "link");
-	var paths = group	
-		.append("path")
-		.attr("d", function(Z) {
-			var Y = Z.source ? { x : Z.source.x, y : Z.source.y } : { x : 0, y : 0};
-			return vars.diagonal({
-						source : Y,
-						target : Y
+	if ( episodeConceptLinkJsonArray != null ){
+		var group = linkGraphSVG.selectAll("g").data( episodeConceptLinkJsonArray ).enter().append("g").attr("class", "link");
+		var paths = group	
+			.append("path")
+			.attr("d", function(Z) {
+				var Y = Z.source ? { x : Z.source.x, y : Z.source.y } : { x : 0, y : 0};
+				return vars.diagonal({
+							source : Y,
+							target : Y
+				});
 			});
-		});
-	paths.attr("d", function(X) {
-				return vars.line([[X.x1, X.y1], [X.x1, X.y1], [X.x1, X.y1]]);
-		});
-	paths.transition().duration(vars.transitionDuration).ease(d3.easeElastic)
-			.attr("d", function(X) { return vars.line([[X.x1, X.y1], [X.target.xOffset * vars.s, 0],[X.x2, X.y2]]); });	
-	
-	group.append("text")
-		.attr("class", "link-text")
-		.attr("fill", vars.highLightColor)
-		.attr("dx", function (d){ return d.target.x < 180 ?  "-0.35em" : "0.35em";})
-		.attr("dy", "0.35em")
-		.style("font-weight", "bold")
-		.attr("text-anchor", function (d){ return d.target.x < 180 ? "start" : "end"; });				
+		paths.attr("d", function(X) {
+					return vars.line([[X.x1, X.y1], [X.x1, X.y1], [X.x1, X.y1]]);
+			});
+		paths.transition().duration(vars.transitionDuration).ease(d3.easeElastic)
+				.attr("d", function(X) { return vars.line([[X.x1, X.y1], [X.target.xOffset * vars.s, 0],[X.x2, X.y2]]); });	
+		
+		group.append("text")
+			.attr("class", "link-text")
+			.attr("fill", vars.highLightColor)
+			.attr("dx", function (d){ return d.target.x < 180 ?  "-0.35em" : "0.35em";})
+			.attr("dy", "0.35em")
+			.style("font-weight", "bold")
+			.attr("text-anchor", function (d){ return d.target.x < 180 ? "start" : "end"; });	
+	}			
 }
 
 $.activeResearchers.visualize.elements = function(mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
 	this.elements.episodes(mappedJsonObject.get("episodes"), mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
 	this.elements.nodes(d3.merge([mappedJsonObject.get("lefts"), mappedJsonObject.get("rights")]), mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
-};
+}
 
 $.activeResearchers.visualize.elements.episodes = function(episodesData, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
 	var vars 			= $.activeResearchers.variables;
@@ -291,12 +282,10 @@ $.activeResearchers.visualize.elements.episodes = function(episodesData, mappedJ
 		.attr("class", "episode")
 		.on("mouseover", function(d){ $.activeResearchers.visualize.interactions.mouseoverEpisode(this, d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray); })
 		.on("mouseout",  function(d){ $.activeResearchers.visualize.interactions.mouseleaveEpisode(this, d); })
-		.on("click", $.activeResearchers.visualize.interactions.click);
+		.on("click", $.activeResearchers.visualize.interactions.episodeClicked);
 	
 	episode.transition(transition)
 		.attr("transform", function(Z) { return "translate(" + [ Z.x, Z.y ] + ")"; });
-	
-	var heightBar = 9;
 	
 	episode.append("rect")
 		.attr("class", "rect-base light-color")
@@ -349,7 +338,7 @@ $.activeResearchers.visualize.elements.episodes = function(episodesData, mappedJ
 			.attr("transform", function(Z) { return "translate(" + [ vars.episodeWidth / -2, vars.episodeHeight / -2] + ")" ; });
 	
 	episode.exit().transition().duration(vars.transitionDuration).remove();
-};
+}
 
 $.activeResearchers.visualize.elements.nodes = function(nodesData, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
 	var vars 		 = $.activeResearchers.variables;
@@ -357,6 +346,10 @@ $.activeResearchers.visualize.elements.nodes = function(nodesData, mappedJsonObj
 	var nodeGraphSVG = d3.select(vars.containerId + " svg g.nodes"); 	
 	
 	var keys = nodesData.map( function( d ){ return d.key; });
+	
+	if ( keys.length == 0 ) 
+		return;
+	
 	var nodes = nodeGraphSVG.selectAll(".node").data( nodesData );
 	var node  = nodes.enter().append("g")
 		.attr("class", "node")
@@ -367,7 +360,8 @@ $.activeResearchers.visualize.elements.nodes = function(nodesData, mappedJsonObj
 		.on("mouseover", function(d){ 
 			$.activeResearchers.visualize.interactions.mouseoverEpisode( this, d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
 		})
-		.on("mouseout", function(d){ $.activeResearchers.visualize.interactions.mouseleaveEpisode(this, d); });//.on("click", G);
+		.on("mouseout", function(d){ $.activeResearchers.visualize.interactions.mouseleaveEpisode( this, d ); })
+		.on("click", $.activeResearchers.visualize.interactions.nodeClicked );
 	
 	var radiusRange = d3.scaleLinear()
 		.domain([1, d3.max(nodesData, function(n){ return n.count; })])
@@ -438,7 +432,7 @@ $.activeResearchers.visualize.basedOn = function( basedOn ){
 	var episodeGraphSVG = svg.select("g.episodes");
 	var nodeGraphSVG 	= svg.select("g.nodes");	
 	
-	//remove existing data 
+	// remove existing data
 	linkGraphSVG.html("");
 	episodeGraphSVG.html("");
 	nodeGraphSVG.html("");
@@ -476,131 +470,151 @@ $.activeResearchers.visualize.interactions = {
 			mouseOnEpisode(elem, episode, linkObject, episodeConceptLinkJsonArray);
 		},
 		mouseleaveEpisode:  function(elem, episode){
-			if ( !d3.select(elem).classed("clicked") ){
-				$.activeResearchers.variables.k = {
-						node : null,
-						map : {}
-				};
-			}
+			$.activeResearchers.variables.k = { node : null, map : {} };
 			d3.select( elem.nearestViewportElement ).selectAll( "." + $.activeResearchers.variables.tooltipName ).remove();
 
 			highLightElements();
 		},
-		click : function (episode){		
+		closeList: function( ){
 			var vars 		= $.activeResearchers.variables;
 			var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
-			var keywordText = thisWidget.element.find("#publist-search").val() || "";
-			var queryString = "?id=" + episode.id + "&year=all&query=" + keywordText + "&queryKeywords=" + episode.links;
 			
-			if ( vars.clickedNode != null){
-				if ( vars.clickedNode.node.id === episode.id)
-					removeHighlightClickedNode( );
-				else {
-					highlightClickedNode( this );
-					getPublicationAuthor( this );
-				}
-			}
-			else {
-				highlightClickedNode( this );
-				getPublicationAuthor( this );
-			}
+			thisWidget.element.find( ".visualization-details" ).addClass( "hidden" );
 			
-			resize();
+			if ( vars.clickedNode != null && vars.clickedNode.node != null )
+				removeHighlightClickedNode( );
 			
-			function highlightClickedNode( elem ){
-				d3.selectAll("g.episode").classed("clicked", false);
-				d3.select(elem).classed("clicked", true);		
-				vars.clickedNode = jQuery.extend(true, {}, vars.k);
-			}
 			function removeHighlightClickedNode( ){
 				d3.selectAll("g.episode").classed("clicked", false);	
 				vars.clickedNode = undefined;
-				thisWidget.element.find( ".visualization-details" ).hide(600, function(){
-					thisWidget.element.find( ".visualization-details" ).addClass("hidden");
-				});
-				
-				thisWidget.element.find(".visualization-main").removeClass("col-md-8").addClass("col-md-12");
 				
 				if ( vars.publicationRequest != null ){
 					vars.publicationRequest.abort();
 					vars.publicationRequest = null;
 				}
+				highLightElements();
 			}
-			function resize(){		
-				var svg = d3.select(".visualization-main svg");
-				var bbox = svg.node().getBBox();
-				var vis = $( $.activeResearchers.variables.containerId + " .visualization-main" );
-				var visSize = {
-						width : vis.width(),
-						height: vis.height(),
-						x : -vis.width()/2,
-						y : -vis.height()/2  
-					};
-
-				svg.attr("viewBox", (visSize.x)+" "+(visSize.y)+" "+(visSize.width)+" "+(visSize.height));
-				svg.attr("width", (visSize.width));
-				svg.attr("height",(visSize.height));
-				
-				var nodesGr = d3.select(".visualization-main svg .nodes");
-				var bboxGr = nodesGr.node().getBBox();
-				
-				if (bboxGr.width > visSize.width)
-					scale = visSize.width/bboxGr.width;
-				else
-					scale = 1;
-				 d3.select(".visualization-main svg>g").attr("transform", "scale(" + scale + ")");		
-			}
+		},
+		episodeClicked : function ( episode ){	
+			var vars 		= $.activeResearchers.variables;
+			var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
+			var keywordText = thisWidget.element.find("#publist-search").val() || "";
+			var queryString = "?id=" + episode.id + "&year=all&query=" + keywordText + "&queryKeywords=" + episode.links;
 			
+			activeResearchers_highlightClickedElement( this );
+			getPublicationAuthor( this );
+		
 			function getPublicationAuthor( author ){
 				var vars 		= $.activeResearchers.variables;
 				var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
 				var queryString = "?id=" + episode.id + "&year=all&queryKeywords=" + episode.links;
 				thisWidget.options.queryString = queryString;
 				
-				//thisWidget.element.find(".visualization-main").removeClass("col-md-12").addClass("col-md-8");
-				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
-				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
-				
 				thisWidget.element.find( ".visualization-details" ).removeClass( "hidden" );
-				thisWidget.element.find( ".visualization-details" ).show( 600 );
+				
+				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).show( 800 );
+				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
+				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );				
 
-				if ( vars.publicationRequest != null){
-					vars.publicationRequest.abort();
-				}
-				vars.publicationRequest = $.get( vars.currentURL + "/researcher/publicationList" + queryString , function( response ){ 
-					// this has to be data that is returned by server 
-					response.queryKeywords = episode.links;
-					for (var i = 0 ; i < response.publications.length; i++){
-						if ( i % 2 == 0 && i % 3 == 0)
-							response.publications[i].keyword = [ episode.links[0] ];
-						else
-							if ( i % 2 == 0 )
-								response.publications[i].keyword = [ episode.links[1] ];
-							else
-								response.publications[i].keyword = [ episode.links[0], episode.links[1] ];
-					}
-					//--------------------------------------
+					// --------------------------------------
 						
-					$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( response.author.name );
+				var response = episode;
+				var status 	 = ( episode.publications != null && episode.publications.length > 0 ) ? "ok" : "error"; 
+				$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( "(" + response.publications.length + "): " + getAbbreviatedName( response.author.name ) );
 						
-					var mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
-					$.publicationList.init( response.status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged, vars.height - 10);
-					response.element = response.author;
-					$.publicationList.visualize( mainContainer, response);
+				var mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
+				
+				$.publicationList.init( status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged, vars.height - 30);
+				response.element = response.author;
+				
+				$.publicationList.visualize( mainContainer, response);
 					
-					thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
+				//remove overlay and list unused elements 
+				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
 						
-					$("#publications-box-" + vars.widgetUniqueName + " .box-header .box-title-container").removeClass("box-title-container");	
+				$("#publications-box-" + vars.widgetUniqueName + " .pull-left").css("display", "none");
+				$("#publications-box-" + vars.widgetUniqueName + " .timeline .time-label").css("display", "none");
+				if ( !mainContainer.hasClass( "small" ) )
+					mainContainer.addClass( "small" );
+			}
+		},
+		nodeClicked : function ( node ){
+			var vars = $.activeResearchers.variables;
+			
+			activeResearchers_highlightClickedElement( this );
+			showPublicationTopic( node );
+			
+			function showPublicationTopic( node ){		
+				var publOnTopic = getPublicationsOnInterestOrTopic( node.name );
+				var status		= publOnTopic == null || publOnTopic.length == 0 ? "error" : "ok";		
+				var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
+				var queryString = "?year=all&queryKeywords=" + node.name;
+				
+				//show list container
+				var mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
+				
+				thisWidget.element.find( ".visualization-details" ).removeClass( "hidden" );			
+				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).show( 800 );
+				
+				$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( "(" + publOnTopic.length + "): " + node.name );
+				
+				//init and visualize list
+				$.publicationList.init( status, vars.widgetUniqueName, vars.currentURL, null, vars.height - 10);
+				
+				if ( status == "ok" ){
+					var data = {
+							element : node,
+							publications : publOnTopic,
+							totalPublication : publOnTopic.length
+						}; 		
+					$.publicationList.visualize( mainContainer, data);
+					
+					//hide unused elements  
 					$("#publications-box-" + vars.widgetUniqueName + " .pull-left").css("display", "none");
 					$("#publications-box-" + vars.widgetUniqueName + " .timeline .time-label").css("display", "none");
-					if ( !$("#publications-box-" + vars.widgetUniqueName + " .box-content").hasClass( "small" ) )
-						$("#publications-box-" + vars.widgetUniqueName + " .box-content").addClass( "small" );
-					vars.publicationRequest = null;
-				});
+					if ( !mainContainer.hasClass( "small" ) )
+						mainContainer.addClass( "small" );
+				}
+			}
+			
+			function getPublicationsOnInterestOrTopic( topic ){
+				var publicationsOnInterest = [];
+				
+				var author = d3.select( "#widget-" + vars.widgetUniqueName + " .episodes .episode");	
+				
+				var publications = author.datum().publications;
+				
+				for( var i = 0; i < publications.length; i++ ){
+					var hasTopic = publications[i].topics.filter( function( publTopic ){ 
+						var keys = Object.keys( publTopic.termvalues ).map(function(x) { return x.toLowerCase(); });
+						return keys.indexOf( topic.toLowerCase() ) >= 0; 
+					});
+					if ( hasTopic.length != 0 )
+						if ( publicationsOnInterest.indexOf( publicationsOnInterest[i] ) < 0)
+							publicationsOnInterest = publicationsOnInterest.concat( publications[i] );
+				}
+				return publicationsOnInterest;
 			}
 		}
 }
 
+function activeResearchers_highlightClickedElement( elem ){
+	var vars = $.activeResearchers.variables;
+	
+	d3.selectAll("g.episode").classed("clicked", false);
+	d3.selectAll("g.node").classed("clicked", false);
+	
+	d3.select(elem).classed("clicked", true);		
+	vars.clickedNode = jQuery.extend(true, {}, vars.k);
+}
+
+function getAbbreviatedName( name ){
+	var lastName  = name.substring( name.lastIndexOf(" "), name.length );
+	var firstName = name.substring(0, name.lastIndexOf(" ") );
+	var initials  = firstName == "" ? "" : ( firstName.match(/\b(\w)/g) ).join( ". " );
+	
+	return initials == "" ? lastName : initials + "." + lastName;
+}
 
 function getLowerCase(str) {
 	return str.toLowerCase().replace(/[ .,()]/g, "-");
@@ -633,7 +647,7 @@ function mouseOnEpisode(elem, episode, linkObject, episodeConceptLinkJsonArray){
 	highLightElements();
 	
 	if (  episode.type != undefined && episode.type === "episode"){
-		/*add fictive data to episode till backend will provide the data*/
+		/* add fictive data to episode till backend will provide the data */
 		episode.author = { name : episode.name, id : episode.id};
 		episode.affiliation = episode.aff != null ? episode.aff.institution : "";
 		/*------------*/
@@ -652,7 +666,7 @@ function highLightElements() {
 		.attr("class", function(d) { 
 			if ( vars.clickedNode != undefined ){
 				if ( vars.clickedNode.node.id == d.id)
-					return changeElementColor(d, "light-color", "clicked-color"); 
+					return "rect-base " + changeElementColor(d, "light-color", "clicked-color"); 
 			}
 			return "rect-base " + changeElementColor(d, "light-color", "dark-color"); });
 	
@@ -678,11 +692,14 @@ function highLightElements() {
 	linkGraphSVG.selectAll("path")
 		.style("stroke", function(d) { 
 			if ( vars.clickedNode != undefined ){
-				if ( vars.clickedNode.node.id == d.source.id || vars.clickedNode.node.id == d.target.id)
+				var isClickedEpisodeHovered = vars.clickedNode.node.id != null && ( vars.clickedNode.node.id == d.source.id || vars.clickedNode.node.id == d.target.id );
+				var isClickedNodeHovered    = vars.clickedNode.node.id == null && ( vars.clickedNode.node.name == d.source.name || vars.clickedNode.node.name == d.target.name );
+				
+				if ( isClickedEpisodeHovered || isClickedNodeHovered )
 					return changeElementColor(d, vars.color.link.line_stroke, vars.clickedColor); 
 			}
-			return changeElementColor(d, vars.color.link.line_stroke, vars.highLightColor); })
-		.style("stroke-width", function(d) { return changeElementColor(d, "1.5px", "1.5px");})
+			return changeElementColor(d, vars.color.link.line_stroke, vars.highLightColor); 
+		})
 		.style("stroke-opacity", function(d) { return changeElementColor(d, 0.5, 0.3);})
 		.sort(function(a, b) {
 				if (!vars.k.node) return 0;				
@@ -700,11 +717,21 @@ function highLightElements() {
 		.classed("hidden", function ( d ) { return changeElementColor(d, true, false); } )
 		.text( function(d) {
 			var isMouseOver = changeElementColor(d, false, true);
-			if ( vars.clickedNode != undefined )
-				if ( vars.clickedNode.node.id == d.source.id || vars.clickedNode.node.id == d.target.id)
+			
+			if ( vars.clickedNode != undefined ){
+				var isClickedEpisodeHovered = vars.clickedNode.node.id != null && ( vars.clickedNode.node.id == d.source.id || vars.clickedNode.node.id == d.target.id );
+				var isClickedNodeHovered    = vars.clickedNode.node.id == null && ( vars.clickedNode.node.name == d.source.name || vars.clickedNode.node.name == d.target.name );
+				
+				if ( isClickedEpisodeHovered || isClickedNodeHovered )
 					return null;
+			}
+			
 			if ( isMouseOver ){
-				return getReseracherPublicationsOnTopic( d, d3.select( this.parentNode ) ) + ".publ";
+				if ( vars.k != null && vars.k.node != null )
+					if  ( vars.k.node.type === "episode" )
+						return getResearcherPublicationsOnTopic( d3.select( this.parentNode ).datum() ) + ".publ";
+					else
+						return getPublicationsOnTopic( d3.select( this.parentNode ).datum() ) + ".publ";
 			}
 		})
 		.attr("transform", function ( d ){
@@ -714,10 +741,10 @@ function highLightElements() {
 				var tr2 = [d.x2,d.y2];
 				var offset = -2.25 * d.target.xOffset;
 				
-				if (vars.clickedNode != undefined && vars.clickedNode.node.id == d.target.id){
+				if (vars.clickedNode != undefined && vars.clickedNode.node.id != null && vars.clickedNode.node.id == d.target.id){
 					var e = null;
 					var tr2 = [];
-					var offset = null;
+					var offset = 0;
 				}
 			}				
 			else{
@@ -760,7 +787,7 @@ function highLightElements() {
 
 }
 
-function getReseracherPublicationsOnTopic( link ){
+function getResearcherPublicationsOnTopic( link ){
 	var vars = $.activeResearchers.variables;
 	var nrPubl = 0;
 	
@@ -776,6 +803,24 @@ function getReseracherPublicationsOnTopic( link ){
 			});		
 		}
 	}
+	return nrPubl;
+} 
+
+function getPublicationsOnTopic( link ){
+	var vars = $.activeResearchers.variables;
+	var nrPubl = 0;
+	
+	if ( link.source.type === "episode")
+		var episode = link.source;
+	else
+		var episode = link.target;
+	
+	if ( episode.links != null && episode.links.length > 0 ){
+		var topics = episode.links.filter( function( l ){ return l == vars.k.node.name });
+		nrPubl += topics.length;
+	}		
+	
+	
 	return nrPubl;
 } 
 
@@ -837,3 +882,27 @@ function createGradientColor( svg, id, classColor1, classColor2 ){
 		.attr("stop-opacity", 1);
 }
 
+function resize(){		
+	var svg = d3.select(".visualization-main svg");
+	var bbox = svg.node().getBBox();
+	var vis = $( $.activeResearchers.variables.containerId + " .visualization-main" );
+	var visSize = {
+			width : vis.width(),
+			height: vis.height(),
+			x : -vis.width()/2,
+			y : -vis.height()/2  
+		};
+
+	svg.attr("viewBox", (visSize.x)+" "+(visSize.y)+" "+(visSize.width)+" "+(visSize.height));
+	svg.attr("width", (visSize.width));
+	svg.attr("height",(visSize.height));
+	
+	var nodesGr = d3.select(".visualization-main svg .nodes");
+	var bboxGr = nodesGr.node().getBBox();
+	
+	if (bboxGr.width > visSize.width)
+		scale = visSize.width/bboxGr.width;
+	else
+		scale = 1;
+	 d3.select(".visualization-main svg>g").attr("transform", "scale(" + scale + ")");		
+}

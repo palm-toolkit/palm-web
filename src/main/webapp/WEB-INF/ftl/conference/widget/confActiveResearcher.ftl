@@ -75,7 +75,12 @@ $( function(){
 			$.activeResearchers.visualize.basedOn( $(this).data("value") );
 		}
 	});
-		 
+	
+	<#-- list close button was clicked -->	 
+	$("#widget-${wUniqueName}" + " .btn.btn-box-tool").on("click", function(){
+		$.activeResearchers.visualize.interactions.closeList( );
+	});
+	
 	<#-- register the widget -->
 	$.PALM.options.registeredWidget.push({
 		"type":"${wType}",
