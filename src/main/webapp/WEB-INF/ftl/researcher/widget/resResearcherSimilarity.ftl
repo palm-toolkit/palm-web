@@ -1,38 +1,39 @@
-<div id="boxbody-${wUniqueName}" class="box-body no-padding">
-	<div class="similar_researchers">
-		<div class="filter-criteria similarity-criteria">
-			<div class="container">
-  				<span class="title font-small"> Similarity Based On: </span>
-  				<div class="dropdown">
-    				<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Topics of Interest
-   						<span class="caret"></span>
-   					</button>
+<div id="boxbody-${wUniqueName}" class="box-body">
+	<div class="box-content">
+		<div class="container-box filter-box similarity-criteria row">
+			<div class="filter groupedBy col-lg-4 col-md-5 col-sm-8">
+  				<span class="title font-small col-md-5  col-sm-5"> Similarity Based On: </span>
+  				<div class="dropdown col-md-6 col-sm-6">
+    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Topics of Interest<span class="caret"></span> </button>
     				<ul class="dropdown-menu">
-      					<li><a href="#">Published Publications</a></li>
-      					<li><a href="#">Published Venues</a></li>
+    					<li data-value="topics" class="selected" ><a href="#">Topics of Interest</a></li>
+    					<li data-value="venues"><a href="#">Venues</a></li>
     				</ul>
   				</div>
 			</div>
 		</div>
+		<div class="container-box visualization-box row">
+			<div class="visualization-main col-md-8  col-sm-8"></div>
+			<div class="visualization-details col-md-4 hidden"></div>
+		</div>
 	</div>
 </div>
+
 <script>
 	$( function(){
 		<#-- add slim scroll -->
-       $("#boxbody-${wUniqueName}>.similar_researchers").slimscroll({
-			height: "300px",
+    <#--   $("#boxbody-${wUniqueName} .box-content").slimscroll({
+			height: "500px",
 	        size: "6px",
 			allowPageScroll: true,
    			touchScrollStep: 50//,
    			//railVisible: true,
     		//alwaysVisible: true
 	    });
-	    
+	 -->   
 	    <#-- generate unique id for progress log -->
 		var uniquePidSimilarResearchers = $.PALM.utility.generateUniqueId();	
-		
 
-		  
 		  data1 = {
   "author": {
     "id": "88267d19-2ec7-4076-9aa0-bbffbf1235f9",
@@ -546,24 +547,29 @@
   ]
 };
 		
-		createSimilarResearchers("#boxbody-${wUniqueName} .similar_researchers", data1);
-		$.PALM.popUpMessage.remove( uniquePidSimilarResearchers );
+		var targetContainer = $( "#boxbody-${wUniqueName}" ).find( ".visualization-main" );
+			targetContainer.html( "" );
+		createSimilarResearchers("${wUniqueName}", data1);
 		
+		$.PALM.popUpMessage.remove( uniquePidSimilarResearchers );
+					
 		$( ".similar-author" ).click( function( event ){
 			
 			$.PALM.popUpIframe.create( $(this).data("url") , {popUpHeight:"456px"}, $(this).attr("title") );
+			
 			var _thisData = d3.select(this).datum();
 			if (_thisData.similarTopics != undefined && _thisData.similarTopics.length > 0){
 				$.get( "<@spring.url '/researcher/papersByTopicAndAuthor' />?id=" + _thisData.id + "&topic=" + JSON.stringify(_thisData.similarTopics),
 					function( response ){
 						var data = response.topicPapers[0].papers;
 						response.topicPapers.forEach(function(topic, i){
-							if (topic.papers.length > 0) 
-								$( ".similar_researchers #accordion" ).children("div")[i].append($(addList(topic.papers))[0]);
+							var accordionBox = $( "#boxbody-${wUniqueName} #accordion" ).children("div")[i];
+							if ( topic.papers!= null && topic.papers.length > 0 ) 
+								$( accordionBox ).append($(addList(topic.papers))[0]);
 							else
-								$( ".similar_researchers #accordion-container" ).children("div")[i].append($("<p/>").text("No paper available"));
+								$( accordionBox ).append($("<p/>").text("No paper available"));
 						});		
-						$("#boxbody-${wUniqueName} .similar_researchers #accordion .content-list").slimscroll({
+						$("#boxbody-${wUniqueName} #accordion .content-list").slimscroll({
 							height: "100%",
 	        				size: "6px",
 							allowPageScroll: true,
@@ -572,7 +578,7 @@
    							railVisible: true   						
 	    				});			
 				}).done(function() {
-    				$( ".similar_researchers #accordion-container .loading-icon" ).remove();
+    				$( "#boxbody-${wUniqueName} #accordion-container .loading-icon" ).remove();
   				});
 			}							
 	});

@@ -1,5 +1,5 @@
 function Tooltip( params ){
-	var className 	= params.className;
+	var className 	= params.className || "tooltip";
 	var width 		= params.width	  || 200;
 	var height		= params.height	  || 70;
 	var fontSize	= params.fontSize || 12;
@@ -43,11 +43,14 @@ Tooltip.prototype.extraTranslate = function ( gNode, extraTranslate ){
 
 Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 		var fontSize = this.getFontSize();
-		var svg 	 = this.getContainer() == null ? d3.select( gNode.node().nearestViewportElement ) : this.getContainer();
+		var container = this.getContainer() == null ? d3.select( gNode.node().nearestViewportElement ) : this.getContainer();
+		var svg = d3.select( gNode.node().nearestViewportElement );
 		var gTooltip = null;
-		if (svg != null){
+		var visualizations = new Visualizations();
+		
+		if (container != null){
 			//add tooltip
-			gTooltip = svg.append("g").attr("class", "myTooltip " + this.getClassName());
+			gTooltip = container.append("g").attr("class", "myTooltip " + this.getClassName());
 	
 			//add stroke	
 			var pathTooltip = gTooltip.append("path").classed("tooltip-path", true);
@@ -81,8 +84,8 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 								break;
 				case "right"  : translate = translateRight( this ); 
 								rotate 	  = translate[0] + tooltipWidth <= svg.node().getBBox().width ? 0 : 180;
-								translate[0] += translate[0] + tooltipWidth <= svg.node().getBBox().width ? 0 : -5;
-								translate[1] += translate[0] + tooltipWidth <= svg.node().getBBox().width ? 0 : tooltipHeight;
+								translate[0] = rotate == 0 ? this.getImageRadius()/2 : -this.getImageRadius()/2;
+								translate[1] = rotate == 0 ? -( contentHeight - 3 ) / 2 : ( contentHeight - 3)  / 2 ;
 								break;
 				case "bottom" : translate = translateBottom( this );
 								rotate = 0; 
@@ -104,8 +107,8 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			var tooltipWidth  = Tooltip.getWidth()  - Tooltip.getBorderRadius();
 			var tooltipHeight = Tooltip.getHeight() - Tooltip.getBorderRadius();
 			
-			tooltip_shadow( gTooltip );
-
+			visualizations.common.addShadow( gTooltip, "120%", 2, "#666" );
+			
 			stroke
 				.attr("d", "M 0 0 H " + tooltipWidth + 
 					" A " + Tooltip.getBorderRadius() + " " + Tooltip.getBorderRadius() + " 0 0 1 " + Tooltip.getWidth() + " " + Tooltip.getBorderRadius()/2 + " " +
@@ -174,22 +177,31 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 					.attr("stroke", Tooltip.getStrokeColor() )
 					.attr("fill",   Tooltip.getBkgroundColor() );
 			
+			var imageBkground = visualizations.common.getImageBackground( "." + Tooltip.getClassName(), dataObject, Tooltip.getImageRadius() );
+			if ( imageBkground != null ){
+				var circle = image.append("circle").classed("image", true)
+					.attr("r",      Tooltip.getImageRadius() )
+					.attr("stroke", Tooltip.getStrokeColor() )
+					.attr("fill",   Tooltip.getBkgroundColor() );
+				circle.style("fill", "url(#pattern_" + dataObject.id + ")" );
+			}else
+				visualizations.common.addMissingPhotoIcon( image, Tooltip.getImageRadius() );
 			
-			if (dataObject.photo != null){
-					var imagePattern = createImagePattern( Tooltip );
-					var circle = image.append("circle").classed("image", true)
-							.attr("r",      Tooltip.getImageRadius() )
-							.attr("stroke", Tooltip.getStrokeColor() )
-							.attr("fill",   Tooltip.getBkgroundColor() );
-					circle.style("fill", "url(#pattern_" + dataObject.author.id + ")" );
-			} else {
-					image.append('text').classed("image missing-photo-icon", true)
-						.attr("dy", 			".35em")
-						.style('font-size', 	1.5 * Tooltip.getImageRadius() + 'px' )
-						.style("font-family", 	"fontawesome")
-						.style("text-anchor", 	"middle")
-						.text("\uf007"); 
-			}		
+			
+			
+			
+//			if (dataObject.photo != null){
+//				visualization
+//					var imagePattern = createImagePattern( Tooltip );
+//					
+//			} else {
+//					image.append('text').classed("image missing-photo-icon", true)
+//						.attr("dy", 			".35em")
+//						.style('font-size', 	1.5 * Tooltip.getImageRadius() + 'px' )
+//						.style("font-family", 	"fontawesome")
+//						.style("text-anchor", 	"middle")
+//						.text("\uf007"); 
+//			}		
 		}
 		
 		function positionContentElements( distanceLeft ){
@@ -340,41 +352,5 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 							.text( textArray.join(" ") );
 				}				
 			}
-		}
-		
-		function tooltip_shadow( gTooltip ){
-			var defs = gTooltip.append("defs");
-			var filter = defs.append("filter")
-			    .attr("id", "drop-shadow")
-			    .attr("height", "130%");
-			filter.append("feGaussianBlur")
-			    .attr("in", "SourceAlpha")
-			    .attr("stdDeviation", 5)
-			    .attr("result", "blur");
-
-			filter.append("feOffset")
-			    .attr("in", "blur")
-			    .attr("dx", 5)
-			    .attr("dy", 5)
-			    .attr("result", "offsetBlur");
-			
-			filter.append("feFlood")
-			  .attr("in", "offsetBlur")
-			  .attr("flood-color", "#666")
-			  .attr("flood-opacity", "1")
-			  .attr("result", "offsetColor");
-			
-			 filter.append("feComposite")
-	            .attr("in", "offsetColor")
-	            .attr("in2", "offsetBlur")
-	            .attr("operator", "in")
-	            .attr("result", "offsetBlur");
-			 
-			var feMerge = filter.append("feMerge");
-
-			feMerge.append("feMergeNode")
-			    .attr("in", "offsetBlur")
-			feMerge.append("feMergeNode")
-			    .attr("in", "SourceGraphic");
 		}
 }

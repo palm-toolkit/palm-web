@@ -1,43 +1,43 @@
-.similar_researchers .similar-authors-elements .similar-author:hover{
+#widget-researcher_similarity .similar-authors-elements .similar-author:hover{
 	cursor : pointer;
 }
 
-.similar_researchers .similar-author circle{
+#widget-researcher_similarity circle{
 	fill		: #ebebeb;
 	stroke		: #dadada;
 	stroke-width: 2px;
 }
-.similar_researchers .similar-author .missing-photo-icon{
+#widget-researcher_similarity .similar-author .missing-photo-icon{
 	font-family : fontawesome;
 	text-anchor : middle;
 	dominant-baseline : central;
 	fill :  #808080;
 }
-.similar_researchers .tooltip-similar-author .tooltip-stroke{
+#widget-researcher_similarity .tooltip-similar-author .tooltip-stroke{
 	fill	: #EBEBEB;
 	stroke 	: #dadada;
 }
 
-.similar_researchers .tooltip-content .font-small{
+#widget-researcher_similarity .tooltip-content .font-small{
 	font-size : 35% !important;
 }
 
-.similar_researchers text{
+#widget-researcher_similarity text{
 	font-family	: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	fill 		: #333;
 	font-size 	: 14px;
 }
 
-.similar_researchers .tooltip-content text{
+#widget-researcher_similarity .tooltip-content text{
 	font-size 	: 7px;
 }
-.similar_researchers .name,
-.similar_researchers .paper,
-.similar_researchers .hindex{
+#widget-researcher_similarity .name,
+#widget-researcher_similarity .paper,
+#widget-researcher_similarity .hindex{
 	font-weight: 600;
 }
 
-.similar_researchers #accordion-container .loading-icon{
+#widget-researcher_similarity #accordion-container .loading-icon{
 	position: relative;
     top: 50px;
     left: 50%;
@@ -46,11 +46,11 @@
     color: #000;
     font-size: 30px;
 }
-.similar_researchers #accordion{
+#widget-researcher_similarity #accordion{
 	padding-right: 5px;
 }
 
-.similar_researchers #accordion .ui-accordion-content {
+#widget-researcher_similarity #accordion .ui-accordion-content {
 	margin		: 0;
 	padding	  	: .5em;
 	font-size	: 12px;

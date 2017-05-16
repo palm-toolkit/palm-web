@@ -70,12 +70,14 @@ $.COAUTHOR.graph.graphData = function (data){
 			});
 		}
 		
-		d.commonPublications.map( function(publ, pos){
-			if (publicationsIds.indexOf( publ.id ) == -1){
-				selectedAuthorPublications.push( publ );
-				publicationsIds.push( publ.id );
-			}
-		});
+		if ( d.commonPublications != undefined && d.commonPublications.length > 0){
+			d.commonPublications.map( function(publ, pos){
+				if (publicationsIds.indexOf( publ.id ) == -1){
+					selectedAuthorPublications.push( publ );
+					publicationsIds.push( publ.id );
+				}
+			});
+		}
 	});
 	
 	data.author.commonPublications = selectedAuthorPublications.sort( function( a, b ){
