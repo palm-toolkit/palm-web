@@ -547,11 +547,7 @@
   ]
 };
 		
-		var targetContainer = $( "#boxbody-${wUniqueName}" ).find( ".visualization-main" );
-			targetContainer.html( "" );
-		createSimilarResearchers("${wUniqueName}", data1);
-		
-		$.PALM.popUpMessage.remove( uniquePidSimilarResearchers );
+	
 					
 		$( ".similar-author" ).click( function( event ){
 			
@@ -584,21 +580,22 @@
 	});
 		<#-- source : "<@spring.url '/researcher/similarAuthorList' />", -->
 	    <#-- unique options in each widget -->
-	<#--	var options ={
-			source : "<@spring.url '/researcher/coAuthorList' />",
+		var options ={
+			source : "<@spring.url '/researcher/similarAuthorList' />",
 			query: "",
 			queryString : "",
 			page:0,
 			maxresult:50,
 			onRefreshStart: function(  widgetElem  ){
 				<#-- show pop up progress log -->
-	<#--			$.PALM.popUpMessage.create( "loading similar researchers list", {uniqueId: uniquePidSimilarResearchers, popUpHeight:40, directlyRemove:false , polling:false});
+				$.PALM.popUpMessage.create( "loading similar researchers list", {uniqueId: uniquePidSimilarResearchers, popUpHeight:40, directlyRemove:false , polling:false});
 			},
-	<#--		onRefreshDone: function(  widgetElem , data ){
-				var targetContainer = $( widgetElem ).find( ".similar_researchers" );
-				<#-- remove previous list -->
-	<#--			targetContainer.html( "" );	
-				
+			onRefreshDone: function(  widgetElem , data ){
+			console.log( data );
+			
+				var targetContainer = $( "#boxbody-${wUniqueName}" ).find( ".visualization-main" );
+					targetContainer.html( "" );
+
 				data.author.photo = "http://nlp.stanford.edu/manning/images/Christopher_Manning_027_132x132.jpg";
 				
 				if( data.count == 0 ){
@@ -607,8 +604,8 @@
 				}							
 				if( data.count > 0 ){ 
 					<#-- remove any remaing tooltip -->
-	<#--				$( "body .tooltip" ).remove(); 
-					 createSimilarResearchers("#boxbody-${wUniqueName} .similar_researchers", data);
+					$( "body .tooltip" ).remove(); 
+					 createSimilarResearchers("${wUniqueName}", data);
 				} 
 
 				$.PALM.popUpMessage.remove( uniquePidSimilarResearchers );
@@ -622,7 +619,7 @@
 			"source": "${wSource}",
 			"selector": "#widget-${wUniqueName}",
 			"element": $( "#widget-${wUniqueName}" ),
-	     	"options": {}
+	     	"options": options
 		});
 	} );
 </script>
