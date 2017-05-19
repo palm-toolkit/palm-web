@@ -1,4 +1,28 @@
-function createSimilarResearchers(widgetUniqueName, data){
+$.SIMILAR = {};
+$.SIMILAR.variables = {
+		width  : 0,
+		height : 400,
+		margin : {
+			bottom  : 40,
+			top 	: 10,
+			right   : 10,
+			left 	: 10
+		},
+		levels : 6,
+		startAngle : -0.3 * Math.PI,
+		endAngle   :  0.3 * Math.PI,
+		color : d3.scaleOrdinal(d3.schemeCategory20),
+		levelColor : "grey",
+		labelColor: "#CCB5CB",
+		segmentLineColor : "#ead6fd",
+		format : d3.format(".0%"),
+		radiusElement : 10,
+		circle	: {
+			bkgroundColor : "#EBEBEB"
+		}
+};
+
+$.SIMILAR.create = function( widgetUniqueName, data ){
 	$.SIMILAR.variables.widgetUniqueName = widgetUniqueName;
 	$.SIMILAR.variables.containerId   	 = "#widget-" + widgetUniqueName;
 	$.SIMILAR.variables.mainContainer 	 = $( $.SIMILAR.variables.containerId + " .visualization-main" );
@@ -7,34 +31,6 @@ function createSimilarResearchers(widgetUniqueName, data){
 	$.SIMILAR.variables.radius 			 = Math.min( $.SIMILAR.variables.width / 2 , $.SIMILAR.variables.height  );	
 	$.SIMILAR.variables.visualizations 	 = new Visualizations();
 	
-	$.SIMILAR.create( data );
-}
-$.SIMILAR = {};
-
-$.SIMILAR.variables = {
-	width  : 0,
-	height : 400,
-	margin : {
-		bottom  : 40,
-		top 	: 10,
-		right   : 10,
-		left 	: 10
-	},
-	levels : 6,
-	startAngle : -0.3 * Math.PI,
-	endAngle   :  0.3 * Math.PI,
-	color : d3.scaleOrdinal(d3.schemeCategory20),
-	levelColor : "grey",
-	labelColor: "#CCB5CB",
-	segmentLineColor : "#ead6fd",
-	format : d3.format(".0%"),
-	radiusElement : 10,
-	circle	: {
-		bkgroundColor : "#EBEBEB"
-	}
-};
-
-$.SIMILAR.create = function( data ){
 	var svg = d3.select( this.variables.containerId + " .visualization-main" ).append("svg")
 		.attr("viewBox",  "0 0 " + this.variables.width + " " + this.variables.height )
 		.attr("preserveAspectRatio", "xMinYMin meet" );
@@ -107,7 +103,7 @@ $.SIMILAR.base= function (gSVG, data){
 			if( bkground != null ) 
 				return bkground;
 			
-			$.SIMILAR.variables.visualizations.common.addMissingIcon( d3.select( this.parentNode ), authorAvatarRadius );
+			$.SIMILAR.variables.visualizations.common.addMissingPhotoIcon( d3.select( this.parentNode ), authorAvatarRadius );
 			
 			return $.SIMILAR.variables.circle.bkgroundColor;
 		});
@@ -123,7 +119,8 @@ $.SIMILAR.base= function (gSVG, data){
 	gAuthorAvatar.attr("transform", "translate(0, " + -authorAvatarRadius + ")");
 }
 $.SIMILAR.elements= function (gSVG, data){
-	var similarAuthors = data.coAuthors.filter(function(d, index){ 
+	var similarAuthors = data.similarAuthors.filter(function(d, index){ 
+		d.similarity *= 10; 
 		return "similarity" in d && d.similarity >= 0.5;
 	});
 	

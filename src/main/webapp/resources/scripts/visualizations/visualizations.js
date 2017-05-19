@@ -2,11 +2,18 @@ function Visualizations(){};
 
 Visualizations.prototype.common = {
 		getImageBackground : function( widgetUniqueName, element, radius ){
-			if ( element.photo != undefined ){ // add image pattern
+			if ( isImageURLValid( element ) ){ // if url valid add image pattern
 				var authorImagePattern = this.createImagePattern( widgetUniqueName, element, radius);
 				return  "url(#pattern_" + element.id + ")";
 			} 
 			return null;
+			
+			function isImageURLValid( element ){
+				if ( element.photo == undefined )
+					return false;
+				
+				return true;
+			}
 		},
 		addMissingPhotoIcon : function( box, radius ){
 			box.append('text').classed("missing-photo-icon", true)
