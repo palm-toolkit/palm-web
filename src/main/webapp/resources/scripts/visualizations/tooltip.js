@@ -6,6 +6,7 @@ function Tooltip( params ){
 	var borderRadius= params.borderRadius || 5;
 	var imageRadius	= 30;
 	var position    = params.position || "top";
+	var padding		= params.padding  || 10;
 	var bkgroundColor = params.bkgroundColor || "rgba(255, 255, 255, 0.55)";
 	var strokeColor = params.strokeColor || "#dadada";
 	var withImage	= params.withImage == undefined ? true : params.withImage;
@@ -18,11 +19,11 @@ function Tooltip( params ){
 	this.getFontSize 	 = function(){ return fontSize; };
 	this.getImageRadius  = function(){ return imageRadius; };
 	this.getPosition	 = function(){ return position; };
+	this.getPadding	 	 = function(){ return padding; };	
 	this.getBkgroundColor= function(){ return bkgroundColor; };
 	this.getStrokeColor	 = function(){ return strokeColor; };
 	this.getWithImage	 = function(){ return withImage; };
-	this.getContainer	 = function(){ return container; };
-	
+	this.getContainer	 = function(){ return container; };	
 	this.setHeight	 	 = function( h ){ return height = h; };
 	this.setPosition	 = function( p ){ return position = p; };
 	this.setImageRadius	 = function( iR ){ return imageRadius = iR; };
@@ -62,7 +63,7 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			tooltip_content( this );
 			
 			//set tooltip height based on content text
-			var contentHeight = gContent.node().getBBox().height + 10;
+			var contentHeight = gContent.node().getBBox().height + this.getPadding();
 			this.setHeight( contentHeight );
 			this.setImageRadius( contentHeight / 2 - 5 );
 		
@@ -84,7 +85,7 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 								translate[1] = rotate == 0 ? -( contentHeight - 3 ) / 2 : ( contentHeight - 3)  / 2 ;
 								break;
 				case "right"  : translate = translateRight( this ); 
-								rotate 	  = translate[0] + tooltipWidth <= svg.node().getBBox().width ? 0 : 180;
+								rotate 	  = translate[0] + tooltipWidth <= svg.node().getBoundingClientRect().width ? 0 : 180;
 								translate[0] = rotate == 0 ? this.getImageRadius()/2 : -this.getImageRadius()/2;
 								translate[1] = rotate == 0 ? -( contentHeight - 3 ) / 2 : ( contentHeight - 3)  / 2 ;
 								break;
@@ -108,7 +109,7 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			var tooltipWidth  = Tooltip.getWidth()  - Tooltip.getBorderRadius();
 			var tooltipHeight = Tooltip.getHeight() - Tooltip.getBorderRadius();
 			
-			visualizations.common.addShadow( gTooltip, "120%", 2, "#666" );
+			visualizations.common.addShadow( gTooltip, "drop-shadow", "120%", 2, "#666" );
 			
 			stroke
 				.attr("d", "M 0 0 H " + tooltipWidth + 
@@ -124,7 +125,7 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 		}
 
 		function tooltip_content( Tooltip ){
-			var tooltipHeight = Tooltip.getHeight() - Tooltip.getBorderRadius();
+			var tooltipHeight = Tooltip.getHeight() - Tooltip.getBorderRadius() ;
 			var distanceLeft  = tooltipHeight/2 + 5;	
 					
 			//title
@@ -164,7 +165,15 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			var hindexString = dataObject.hindex || "none";
 			var hindex = gContent.append("g").classed("hindex content-text", true)
 				.attr("transform", "translate(" + distanceLeft + ", " + 0 + ")");;
-			wrapText(hindex, "H-index: " + hindexString, ( Tooltip.getWidth() - distanceLeft), "hindex font-small");				
+			wrapText(hindex, "H-index: " + hindexString, ( Tooltip.getWidth() - distanceLeft), "hindex font-small");
+			
+			//h-index
+			if ( dataObject.similarity != undefined ){
+				var similarity = gContent.append("g").classed("similarity content-text", true)
+					.attr("transform", "translate(" + distanceLeft + ", " + 0 + ")");
+				wrapText(similarity, "Similarity Degree: " + Number(dataObject.similarity).toFixed(2) + "%", ( Tooltip.getWidth() - distanceLeft), "similarity font-small");	
+			}
+					
 			
 			positionContentElements( distanceLeft );
 		}	
@@ -186,23 +195,7 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 					.attr("fill",   Tooltip.getBkgroundColor() );
 				circle.style("fill", "url(#pattern_" + dataObject.id + ")" );
 			}else
-				visualizations.common.addMissingPhotoIcon( image, Tooltip.getImageRadius() );
-			
-			
-			
-			
-//			if (dataObject.photo != null){
-//				visualization
-//					var imagePattern = createImagePattern( Tooltip );
-//					
-//			} else {
-//					image.append('text').classed("image missing-photo-icon", true)
-//						.attr("dy", 			".35em")
-//						.style('font-size', 	1.5 * Tooltip.getImageRadius() + 'px' )
-//						.style("font-family", 	"fontawesome")
-//						.style("text-anchor", 	"middle")
-//						.text("\uf007"); 
-//			}		
+				visualizations.common.addMissingPhotoIcon( image, Tooltip.getImageRadius() );	
 		}
 		
 		function positionContentElements( distanceLeft ){
@@ -213,7 +206,7 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			
 			gContent.selectAll("g.content-text")
 				.attr("transform", function (d, i) {	
-					var heightLine = d3.select(this).select("text").node().getBBox().height;
+					var heightLine = d3.select(this).select("text").node().getBBox().height + 1;
 					var heightElem = this.getBBox().height;
 					
 					if (i == 0){

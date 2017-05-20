@@ -20,10 +20,10 @@ Visualizations.prototype.common = {
 				.style('font-size', 1.5 * radius + 'px' )
 				.text( "\uf007" ); 
 		},
-		addShadow : function( element, height, deviation, color ){
+		addShadow : function( element, id, height, deviation, color ){
 			var defs = element.append("defs");
 			var filter = defs.append("filter")
-			    .attr("id", "drop-shadow")
+			    .attr("id", id )
 			    .attr("height", height );
 			filter.append("feGaussianBlur")
 			    .attr("in", "SourceAlpha")
@@ -70,5 +70,12 @@ Visualizations.prototype.common = {
 				   	.attr("height", radius * 2)
 				   	.attr("x", 0)
 				   	.attr("y", 0);
+		},
+		createArc : function (innerRadius, outerRadius, startAngle, endAngle){
+				return d3.arc()
+			    	.innerRadius(innerRadius)
+			    	.outerRadius(outerRadius)
+			    	.startAngle( startAngle )
+			    	.endAngle( endAngle );
 		}
 }

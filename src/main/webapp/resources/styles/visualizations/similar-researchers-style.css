@@ -33,7 +33,8 @@
 }
 #widget-researcher_similarity .name,
 #widget-researcher_similarity .paper,
-#widget-researcher_similarity .hindex{
+#widget-researcher_similarity .hindex,
+#widget-researcher_similarity .similarity{
 	font-weight: 600;
 }
 
@@ -57,6 +58,7 @@
 	margin		: 0;
 	padding	  	: .5em;
 	font-size	: 12px;
+	min-height  : 100px;
 }
 
 
