@@ -645,37 +645,23 @@ $.COAUTHOR.graph.interactions = {
 				
 				function addTooltip( gnode, node ){
 					var position = node.angle <= Math.PI/2 || 
-								   node.angle >= Math.PI * 3/2 ? "right" : "left";
-					var params = {
-							className 	: "tooltip-coauthor",
-							width 		: 200,
-							height		: 80,
-							fontSize	: 9,
-							borderRadius: 5,
-							imageRadius	: 30,
-							position    : position,
-							bkgroundColor : "rgba(255, 255, 255, 0.83)",
-							strokeColor : "#ececec",
-							withImage	: false,	
-							container	: gnode 
-					};
+								   node.angle >= Math.PI * 3/2 ? "left" : "right";
+
+					var tooltipS = new Tooltip( {
+						className 	: "tooltip-coauthor",
+						width 		: 200,
+						height		: 80,
+						fontSize	: 9,
+						borderRadius: 5,
+						imageRadius	: 30,
+						position    : position,
+						bkgroundColor : "rgba(255, 255, 255, 0.83)",
+						strokeColor : "#ececec",
+						withImage	: false,	
+						container	: gnode 
+					} );
 					
-					var tooltipS = new Tooltip( params );
 					tooltipS.buildTooltip( gnode, node );	
-					
-					var tooltipTranslate = params.position == "right" ? [5, params.height/2] : [5, -params.height/2];
-					var tooltipRotate	 = params.position == "right" ? 180 : 0;
-					
-					d3.select( $.COAUTHOR.graph.options.containerID + " .tooltip-coauthor")
-						.attr("transform", "translate(" + tooltipTranslate + ")rotate(" + tooltipRotate +")");		
-					
-					d3.select( $.COAUTHOR.graph.options.containerID + " .tooltip-content")
-						.attr("transform", function(d){ 
-							if ( params.position === "right") 
-								return d3.select(this).attr("transform").split("rotate")[0] + "rotate(" + tooltipRotate +")";
-							else
-								return "rotate(" + tooltipRotate +")"; 
-						});
 				}
 				
 				function createImagePattern( dataObject, imageRadius ){

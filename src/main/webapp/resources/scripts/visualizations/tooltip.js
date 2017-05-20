@@ -80,7 +80,8 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 								break;
 				case "left"   : translate = translateRight( this ); 
 								rotate 	  = translate[0] - tooltipWidth >= 0 ? 180 : 0;
-								translate[1] += translate[0] - tooltipWidth >= 0 ? tooltipHeight: 0;
+								translate[0] = rotate == 0 ? this.getImageRadius()/2 : -this.getImageRadius()/2;
+								translate[1] = rotate == 0 ? -( contentHeight - 3 ) / 2 : ( contentHeight - 3)  / 2 ;
 								break;
 				case "right"  : translate = translateRight( this ); 
 								rotate 	  = translate[0] + tooltipWidth <= svg.node().getBBox().width ? 0 : 180;
@@ -153,8 +154,8 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			affiliation.selectAll(".afiliation-name").attr("dx", "1.3em");
 			
 			//nr publications & citations
-			var nrPublications = dataObject.publicationsNumber || "none";
-			var nrCitations	   = dataObject.citedBy || " - ";			
+			var nrPublications = dataObject.publicationsNumber || "0";
+			var nrCitations	   = dataObject.citedBy || " 0 ";			
 			var publicationsAndCitations = gContent.append("g").classed("pubs content-text", true)
 				.attr("transform", "translate(" + distanceLeft + ", " + 0+ ")");
 			wrapText(publicationsAndCitations, "Publications: " + nrPublications + ", Cited By: " + nrCitations, ( Tooltip.getWidth() - distanceLeft), "paper font-small");

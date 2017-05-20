@@ -14,10 +14,10 @@
 }
 
 .box-body .title{
-    font-weight: 600;
-    color: inherit;
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    line-height: 2.5em;
+    font-weight	: 600;
+    color		: inherit;
+    font-family	: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    display		: block;
 }
 
 .container-box{

@@ -37,6 +37,9 @@
 	font-weight: 600;
 }
 
+#widget-researcher_similarity .similar-author .title{
+	line-height	: 2.5em;
+}
 #widget-researcher_similarity #accordion-container .loading-icon{
 	position: relative;
     top: 50px;

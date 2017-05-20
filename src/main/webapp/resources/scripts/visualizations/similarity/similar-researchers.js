@@ -8,7 +8,7 @@ $.SIMILAR.variables = {
 			right   : 10,
 			left 	: 10
 		},
-		levels : 6,
+		levels : 10,
 		startAngle : -0.3 * Math.PI,
 		endAngle   :  0.3 * Math.PI,
 		color : d3.scaleOrdinal(d3.schemeCategory20),
@@ -23,6 +23,7 @@ $.SIMILAR.variables = {
 };
 
 $.SIMILAR.create = function( widgetUniqueName, data ){
+	console.log("create graph data"); console.log( data ); 
 	$.SIMILAR.variables.widgetUniqueName = widgetUniqueName;
 	$.SIMILAR.variables.containerId   	 = "#widget-" + widgetUniqueName;
 	$.SIMILAR.variables.mainContainer 	 = $( $.SIMILAR.variables.containerId + " .visualization-main" );
@@ -31,6 +32,9 @@ $.SIMILAR.create = function( widgetUniqueName, data ){
 	$.SIMILAR.variables.radius 			 = Math.min( $.SIMILAR.variables.width / 2 , $.SIMILAR.variables.height  );	
 	$.SIMILAR.variables.visualizations 	 = new Visualizations();
 	
+	$.SIMILAR.variables.mainContainer.empty();
+	$.SIMILAR.variables.mainContainer.empty();
+
 	var svg = d3.select( this.variables.containerId + " .visualization-main" ).append("svg")
 		.attr("viewBox",  "0 0 " + this.variables.width + " " + this.variables.height )
 		.attr("preserveAspectRatio", "xMinYMin meet" );
@@ -39,11 +43,17 @@ $.SIMILAR.create = function( widgetUniqueName, data ){
 		.attr("transform", "translate(" + ( this.variables.width / 2 ) + "," + ( this.variables.height - this.variables.margin.bottom ) + ")")
 		.on("click", clickedSvgGroup);
 
-	this.base(gSVG, data);
-	this.elements(gSVG, data);
+	var similarAuthors = data.similarAuthors.filter(function(d, index){ 
+		d.name += " " + Math.round(d.similarity).toFixed(2) + "%";
+		return "similarity" in d && d.similarity >= 10;
+	});
+	var mapData = mapDataBySimilarity(similarAuthors);
+	
+	this.base(gSVG, data.author, mapData);
+	this.elements(gSVG, similarAuthors, mapData);
 }
 
-$.SIMILAR.base= function (gSVG, data){
+$.SIMILAR.base= function (gSVG, author, mapData){
 	var filter = gSVG.append('defs').append('filter').attr('id','glow'),
 		feGaussianBlur = filter.append('feGaussianBlur').attr('stdDeviation','2.5').attr('result','coloredBlur'),
 		feMerge = filter.append('feMerge'),
@@ -56,9 +66,24 @@ $.SIMILAR.base= function (gSVG, data){
 	
 	var dataRange = d3.range(1,($.SIMILAR.variables.levels + 1)).reverse();
 	
-	for (var i = 1; i < $.SIMILAR.variables.levels + 1; i++){
-		var outerRadius = $.SIMILAR.variables.radius / $.SIMILAR.variables.levels * dataRange[i];
-		var innerRadius = $.SIMILAR.variables.radius / $.SIMILAR.variables.levels * (dataRange[i - 1] );
+	var missingLevels = 0;
+	
+	dataRange.forEach( function(d, i){
+		if (  mapData[(d * 10).toString()] == undefined && mapData[(d * 10 + 5).toString()] == undefined )
+			missingLevels ++ ;
+	})
+
+	var missingLevelHeight = missingLevels != $.SIMILAR.variables.levels ? $.SIMILAR.variables.radius / $.SIMILAR.variables.levels / 2 : $.SIMILAR.variables.radius / $.SIMILAR.variables.levels;
+	var levelHeight		   = $.SIMILAR.variables.radius / ( $.SIMILAR.variables.levels - Math.floor( missingLevels / 2 ) );
+	
+	var innerRadius = $.SIMILAR.variables.radius;
+	var outerRadius = $.SIMILAR.variables.radius;
+	
+	for (var i = 0; i < $.SIMILAR.variables.levels  ; i++){
+		outerRadius = innerRadius;	
+		innerRadius = mapData[(dataRange[$.SIMILAR.variables.levels -i] * 10).toString()] == undefined && mapData[(dataRange[$.SIMILAR.variables.levels -i] * 10 + 5).toString()] == undefined ? 
+				innerRadius - missingLevelHeight : innerRadius - levelHeight;	
+		
 		var arc = d3.arc()
 			.innerRadius(innerRadius)
 			.outerRadius(outerRadius)
@@ -68,37 +93,42 @@ $.SIMILAR.base= function (gSVG, data){
 		gPath.append("path")
 			.attr("id", "level_" + i)
 			.attr("class", "levelCircle")
+			.attr("data-innerradius", innerRadius )
+			.attr("data-outerradius", outerRadius )
 			.attr("d", arc)
 			.style("fill", "#CDCDCD")
 			.style("stroke", "white")
 			.style("filter" , "url(#glow)");
 	}
 	
+	var innerRadius = $.SIMILAR.variables.radius;
+	
 	gLabels.selectAll(".axisLabel")
 	   .data(d3.range(1,($.SIMILAR.variables.levels + 1 )).reverse())
 	  .enter().append("text")
 	   .attr("class", "axisLabel")
-	   .attr("x", function(d){
-		   return Math.sin($.SIMILAR.variables.endAngle) * $.SIMILAR.variables.radius / $.SIMILAR.variables.levels * d;
-	   })
-	   .attr("y", function(d){
-		   return -Math.cos($.SIMILAR.variables.endAngle) * $.SIMILAR.variables.radius / $.SIMILAR.variables.levels * d;})
 	   .attr("dy", "0.4em")
 	   .style("font-size", "10px")
 	   .style("font-weight", 600)
 	   .attr("fill", "#737373")
-	   .text(function(d,i) { return $.SIMILAR.variables.format(1 - ( d-1 )/10); });
+	   .text(function(d,i) { 
+		   innerRadius = mapData[(dataRange[$.SIMILAR.variables.levels - i ] * 10).toString()] == undefined && mapData[(dataRange[$.SIMILAR.variables.levels - i ] * 10 + 5).toString()] == undefined ? 
+					innerRadius - missingLevelHeight : innerRadius - levelHeight;	
+		   d3.select( this )
+		   	.attr("x",  Math.sin($.SIMILAR.variables.endAngle) * innerRadius )
+		   	.attr("y",  -Math.cos($.SIMILAR.variables.endAngle) * innerRadius );
+		   return $.SIMILAR.variables.format(1 - ( d-1 )/10); 
+		 });
 	
 	//author Avatar
 	var gAuthorAvatar = gSVG.append("g").classed("authorAvatar", true);	
 	var authorAvatarRadius = 20;	
-	
-	
+		
 	var user = gAuthorAvatar.append("circle")
 		.classed("author-icon", true)
 		.attr("r",authorAvatarRadius)
 		.style("fill", function(){ 
-			var bkground = $.SIMILAR.variables.visualizations.common.getImageBackground( "#widget-" + $.SIMILAR.variables.widgetUniqueName + " svg", data.author, authorAvatarRadius );
+			var bkground = $.SIMILAR.variables.visualizations.common.getImageBackground( "#widget-" + $.SIMILAR.variables.widgetUniqueName + " svg", author, authorAvatarRadius );
 			
 			if( bkground != null ) 
 				return bkground;
@@ -114,22 +144,19 @@ $.SIMILAR.base= function (gSVG, data){
 		.attr("dy", "2.5em")
 		.style("text-anchor", "middle")
 		.style("font-weight", 600)
-		.text( data.author.name );
+		.text( author.name );
 	
 	gAuthorAvatar.attr("transform", "translate(0, " + -authorAvatarRadius + ")");
 }
-$.SIMILAR.elements= function (gSVG, data){
-	var similarAuthors = data.similarAuthors.filter(function(d, index){ 
-		d.similarity *= 10; 
-		return "similarity" in d && d.similarity >= 0.5;
-	});
-	
+$.SIMILAR.elements= function (gSVG, similarAuthors, mapData){
 	var gSimilarAuthors = gSVG.append("g").attr("class", "similar-authors-elements");
 	var defs = gSVG.select("defs");
 	var radius = $.SIMILAR.variables.radiusElement;
 	
 	createElements(similarAuthors, gSimilarAuthors, defs, radius);
-	positionElementsOnRadar(similarAuthors, radius);
+	positionElementsOnRadar(similarAuthors, radius, mapData);
+
+	$( $.SIMILAR.variables.containerId ).find(".overlay").remove();
 };
 
 function clickedSvgGroup(){
@@ -143,7 +170,7 @@ function clickedSvgGroup(){
 	
 	if ( d3.selectAll(".similar-authors-elements .clicked").nodes().length == 0){
 		d3.select(".similar-author-details").remove();
-		jQuery(".similar_researchers .similar-topics-of-interest").remove();
+		jQuery( $.SIMILAR.variables.detailsContainer.selector + " .similar-topics-of-interest").remove();
 	}
 }
 
@@ -169,42 +196,71 @@ function createElements(similarAuthors, gSimilarAuthors, defs, radius){
 		});
 }
 
-function positionElementsOnRadar(similarAuthors, bubbleRadius){
-	var mapData = mapDataBySimilarity(similarAuthors);
-	
+function positionElementsOnRadar( similarAuthors, bubbleRadius, mapData ){
 	var similarityLevel = 100;
 	var level = 1;
 	var angle = Math.abs($.SIMILAR.variables.startAngle) + Math.abs($.SIMILAR.variables.endAngle);
 	
-	while (similarityLevel >= 50){
-		if ( mapData[similarityLevel.toString()] !== undefined ){
-			var elementsToPosition = mapData[similarityLevel.toString()].length; 
-			var pathLength = angle * ( level * $.SIMILAR.variables.radius / $.SIMILAR.variables.levels);
-			var fittingBubbles = pathLength / ( bubbleRadius * 2 );
-			var fittingAngle   =  fittingBubbles < elementsToPosition ?  angle / fittingBubbles : angle / elementsToPosition; 
-			var startingAngle  = $.SIMILAR.variables.startAngle + fittingAngle/2;
-			for (var i = 0; i < elementsToPosition; i++){
-				var x =  Math.sin(i * fittingAngle + startingAngle) * $.SIMILAR.variables.radius / $.SIMILAR.variables.levels * level;
-				var y = -Math.cos(i * fittingAngle + startingAngle) * $.SIMILAR.variables.radius / $.SIMILAR.variables.levels * level;
-				
-				var node = d3.selectAll("g.similar-author").nodes().filter(function(d, index){ 
-					return d3.select(d).datum().id === mapData[similarityLevel.toString()][i].id;
-					});
-				d3.select(node[0]).attr("transform", "translate(" + x + "," + y + ")");
-			}
+	var positioned = {};
+	
+	d3.selectAll("g.similar-author").each( function( d, i ){
+						 
+		var innerRadius = parseInt( d3.select( "#level_" + Math.floor( d.similarityLevel / 10 ) ).attr("data-innerradius") );
+		var outerRadius = parseInt( d3.select( "#level_" + Math.floor( d.similarityLevel / 10 ) ).attr("data-outerradius") );
+		var elementsToPosition = mapData[d.similarityLevel.toString()].length; 
+		
+		if ( ! ( d.similarityLevel in positioned ) ){
+			positioned[ d.similarityLevel ] = [];
+			positioned[ d.similarityLevel ].push(elementsToPosition);
 		}
-		similarityLevel -= 5;
-		level += 0.5; 
-	}	
+		
+		var pathLength = angle * outerRadius;
+		var fittingBubbles = pathLength / ( bubbleRadius * 2 );
+		var fittingAngle   = fittingBubbles < elementsToPosition ?  angle / fittingBubbles : angle / elementsToPosition; 
+		var startingAngle  = $.SIMILAR.variables.startAngle + fittingAngle/2;
+		
+		var lev = d.similarityLevel % 2 == 0 ? 0 : ( outerRadius - innerRadius ) / 2 ;
+		var x =  Math.sin( ( elementsToPosition - positioned[ d.similarityLevel ] ) * fittingAngle + startingAngle) * ( outerRadius - lev );
+		var y = -Math.cos( ( elementsToPosition - positioned[ d.similarityLevel ] ) * fittingAngle + startingAngle) * ( outerRadius - lev );
+			
+		d3.select( this ).attr("transform", "translate(" + x + "," + y + ")");
+		
+		positioned[ d.similarityLevel ] --;
+	});
+	
+//	while (similarityLevel >= 10){
+//		if ( mapData[similarityLevel.toString()] !== undefined ){
+//			var elementsToPosition = mapData[similarityLevel.toString()].length; 
+//			var pathLength = angle * ( level * $.SIMILAR.variables.radius / $.SIMILAR.variables.levels);
+//			var fittingBubbles = pathLength / ( bubbleRadius * 2 );
+//			var fittingAngle   =  fittingBubbles < elementsToPosition ?  angle / fittingBubbles : angle / elementsToPosition; 
+//			var startingAngle  = $.SIMILAR.variables.startAngle + fittingAngle/2;
+//			for (var i = 0; i < elementsToPosition; i++){
+//				var x =  Math.sin(i * fittingAngle + startingAngle) * $.SIMILAR.variables.radius / $.SIMILAR.variables.levels * level;
+//				var y = -Math.cos(i * fittingAngle + startingAngle) * $.SIMILAR.variables.radius / $.SIMILAR.variables.levels * level;
+//				
+//				var node = d3.selectAll("g.similar-author").nodes().filter(function(d, index){ 
+//					return d3.select(d).datum().id === mapData[similarityLevel.toString()][i].id;
+//					});
+//				d3.select(node[0]).attr("transform", "translate(" + x + "," + y + ")");
+//			}
+//		}
+//		similarityLevel -= 5;
+//		level += 0.5; 
+//	}	
 }
 
 function mapDataBySimilarity(similarAuthors){
 	var mapData = {};
 	for (var i = 0; i < similarAuthors.length; i++ ){
-		var value 		 = similarAuthors[i].similarity * 10;
+		var value 		 = similarAuthors[i].similarity ;
 		var roundedValue = Math.round( value );
-		var key = value >= roundedValue ? (roundedValue * 10).toString() : ((roundedValue-1) * 10 + 5).toString();
+		//var key = value >= roundedValue ? (roundedValue ).toString() : ((roundedValue-1) + 5).toString();
+		var lastDigit = value >= roundedValue ? (roundedValue ) % 10 : (roundedValue-1) % 10;
+		var key = lastDigit == 0 ? Math.floor(value/10).toString() + lastDigit : lastDigit > 0 && lastDigit < 8 ? Math.floor(value/10).toString() + "5" : ( Math.floor(value/10) + 1 ).toString() + "0" ;
 			
+		similarAuthors[i].similarityLevel = key;
+		
 		if (key in mapData)
 			mapData[key].push(similarAuthors[i]);
 		else{
@@ -237,7 +293,7 @@ function mouseoverNode(){
 		width 		: 100,
 		height		: 35,
 		borderRadius: 5,
-		fontSize	: 12,
+		fontSize	: 12/scaleFactor,
 		withImage   : false,
 		container	: d3.select( this )
 	} );
@@ -312,10 +368,10 @@ function addBasicInfo(gAuthorDetails, node) {
 }
 
 function addListSimilarTopics(gAuthorDetails, node){
-	var similarTopics = node.datum().similarTopics || [];
+	var similarTopics = node.datum().topicdetail || [];
 		similarTopics = similarTopics.sort(function(a, b){ return a.value < b.value; });
 	
-	var fontSize = 20;
+	var fontSize = 14;
 	var scale = d3.scaleLinear()
 		.domain([0, 1])
 		.range([8, 20]);
@@ -341,7 +397,7 @@ function addListSimilarTopics(gAuthorDetails, node){
 		icons: icons,
 		collapsible: true,	
 		active: false,
-		heightStyle: "auto"
+		heightStyle: "content"
 	});
 		
 	accordionContainer.append(title);
@@ -353,9 +409,9 @@ function addListSimilarTopics(gAuthorDetails, node){
 	
 	$.SIMILAR.variables.detailsContainer.append(accordionContainer);
 	
-	$.SIMILAR.variables.detailsContainer.children("#accordion").children("h3").each(function(i, d){
+	$( $.SIMILAR.variables.detailsContainer.selector + " #accordion h3" ).each(function(i, d){
 		jQuery(d).css({
-			"font-size": scale(similarTopics[i].value) * fontSize / 20,
+			"font-size": fontSize,
 			"font-weight": 400,
 			"padding" : "1px 1px 1px 30px"
 		});	
@@ -366,9 +422,10 @@ function addListSimilarTopics(gAuthorDetails, node){
 		jQuery(d).css({ "height": jQuery(accordionContainer).height()/2 + "px"}).append(loading);	
 	});
 	
-	var availableSpace = $( $.SIMILAR.variables.mainContainer.selector ).height() - accordionDiv.height();
+	var basicDetailsHeight = d3.select( $.SIMILAR.variables.detailsContainer.selector + " .author-basic-info" ).node().getBoundingClientRect().height;
+	
 	accordionDiv.slimscroll({
-		height: $( $.SIMILAR.variables.mainContainer.selector ).height() - availableSpace,
+		height: $( $.SIMILAR.variables.mainContainer.selector ).height() - basicDetailsHeight - title.height(),
 		width: "100%",
 		size: "6px",
 		alwaysVisible: true,
