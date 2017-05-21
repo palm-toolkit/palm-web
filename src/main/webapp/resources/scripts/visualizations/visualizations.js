@@ -1,7 +1,7 @@
 function Visualizations(){};
 
 Visualizations.prototype.common = {
-		getImageBackground : function( widgetUniqueName, element, radius ){
+		getImageBackground : function( widgetUniqueName, element ){
 			if ( isImageURLValid( element ) ){ // if url valid add image pattern
 				var authorImagePattern = this.createImagePattern( widgetUniqueName, element);
 				return  "url(#pattern_" + element.id + ")";
@@ -15,10 +15,20 @@ Visualizations.prototype.common = {
 				return true;
 			}
 		},
-		addMissingPhotoIcon : function( box, radius ){
-			box.append('text').classed("missing-photo-icon", true)
-				.style('font-size', 1.5 * radius + 'px' )
-				.text( "\uf007" ); 
+		addMissingPhotoIcon : function( box, position, details ){
+			var className = details.className || "missing-photo-icon";
+			if ( position == "first" )
+				var text = box.insert( 'text',  ":first-child" )	
+			else
+				var text = box.append( 'text' );
+			
+			text.classed( className, true)
+				.attr("dy", details.dy)
+				.attr("fill", details.color)
+				.attr("text-anchor", details.textAnchor)
+				.style('font-size', details.size + 'px' )
+				.style("font-family", "fontawesome")
+				.text( details.text ); 
 		},
 		addShadow : function( element, id, height, deviation, color ){
 			var defs = element.append("defs");

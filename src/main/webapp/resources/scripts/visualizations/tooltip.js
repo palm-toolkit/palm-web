@@ -79,15 +79,27 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 				case "top"    : translate = translateTop( this ); 
 								rotate = 0;
 								break;
-				case "left"   : translate = translateRight( this ); 
-								rotate 	  = translate[0] - tooltipWidth >= 0 ? 180 : 0;
-								translate[0] = rotate == 0 ? this.getImageRadius()/2 : -this.getImageRadius()/2;
-								translate[1] = rotate == 0 ? -( contentHeight - 3 ) / 2 : ( contentHeight - 3)  / 2 ;
+				case "left"   : translate = translateRight( this );
+								if ( container.node() !==  svg.node() ){
+									rotate 	  = translate[0] - tooltipWidth >= 0 ? 180 : 0;
+									translate[0] = rotate == 0 ? this.getImageRadius()/2 : -this.getImageRadius()/2;
+									translate[1] = rotate == 0 ? -( contentHeight - 3 ) / 2 : ( contentHeight - 3)  / 2 ;
+								}else{
+									rotate 	  = translate[0] - tooltipWidth >= 0 ? 180 : 0;
+									ranslate[0]  += rotate == 0 ?  1 : -this.getImageRadius()/2;
+									translate[1] += rotate == 0 ? -1 : contentHeight;
+								}
 								break;
 				case "right"  : translate = translateRight( this ); 
-								rotate 	  = translate[0] + tooltipWidth <= svg.node().getBoundingClientRect().width ? 0 : 180;
-								translate[0] = rotate == 0 ? this.getImageRadius()/2 : -this.getImageRadius()/2;
-								translate[1] = rotate == 0 ? -( contentHeight - 3 ) / 2 : ( contentHeight - 3)  / 2 ;
+								if ( container.node() !==  svg.node() ){
+									rotate 	  = translate[0] + tooltipWidth <= svg.node().getBoundingClientRect().width ? 0 : 180;
+									translate[0] = rotate == 0 ? this.getImageRadius()/2 : -this.getImageRadius()/2;
+									translate[1] = rotate == 0 ? -( contentHeight - 3 ) / 2 : ( contentHeight - 3)  / 2 ;
+								}else{
+									rotate 	  = translate[0] + tooltipWidth <= svg.node().getBoundingClientRect().width ? 0 : 180;
+									translate[0] += rotate == 0 ?  1 : -this.getImageRadius()/2;
+									translate[1] += rotate == 0 ? -1 : contentHeight;
+								}
 								break;
 				case "bottom" : translate = translateBottom( this );
 								rotate = 0; 
@@ -187,15 +199,15 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 					.attr("stroke", Tooltip.getStrokeColor() )
 					.attr("fill",   Tooltip.getBkgroundColor() );
 			
-			var imageBkground = visualizations.common.getImageBackground( "." + Tooltip.getClassName(), dataObject, Tooltip.getImageRadius() );
+			var imageBkground = visualizations.common.getImageBackground( "." + Tooltip.getClassName(), dataObject );
 			if ( imageBkground != null ){
 				var circle = image.append("circle").classed("image", true)
 					.attr("r",      Tooltip.getImageRadius() )
 					.attr("stroke", Tooltip.getStrokeColor() )
 					.attr("fill",   Tooltip.getBkgroundColor() );
 				circle.style("fill", "url(#pattern_" + dataObject.id + ")" );
-			}else
-				visualizations.common.addMissingPhotoIcon( image, Tooltip.getImageRadius() );	
+			}else		
+			visualizations.common.addMissingPhotoIcon( image, "last", {className: "missing-photo-icon author_avatar", size: 1.5 * Tooltip.getImageRadius(), color: Tooltip.getStrokeColor(), dy : ".35em", textAnchor : "middle", text: "\uf007" } );	
 		}
 		
 		function positionContentElements( distanceLeft ){

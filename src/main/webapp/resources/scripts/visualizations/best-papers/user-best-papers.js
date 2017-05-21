@@ -197,7 +197,7 @@ $.bestPapers.visualise = function( data ){
 			radius		 : function( d ){ return d.group === 1 ? radScale(d.basedOn) : authScale(d.hindex); },
 			fill		 : function( d ){ 
 							if ( d.group ===  2 ){
-								var bkground = vars.visualizations.common.getImageBackground( "#widget-" + vars.wUniqueName + " svg", d, d.r );
+								var bkground = vars.visualizations.common.getImageBackground( "#widget-" + vars.wUniqueName + " svg", d );
 								
 								if( bkground != null ) 
 									return bkground;
@@ -213,21 +213,9 @@ $.bestPapers.visualise = function( data ){
 	
 	var addIcon = function( container, className, group, icon, color, size){
 		if ( group === 1 )
-			container.append('text').classed(className, true)
-				.attr("dy", ".35em")
-				.attr("fill", color)
-				.style('font-size', size + 'px' )
-				.style("font-family", "fontawesome")
-				.style("text-anchor", "middle")
-				.text(icon); 
+			vars.visualizations.common.addMissingPhotoIcon( container, "last",  { className: className, size: size, color: color, dy : ".35em", textAnchor : "middle", text: icon } );
 		else
-			container.insert('text', ":first-child").classed(className, true)
-				.attr("dy", ".35em")
-				.attr("fill", color)
-				.style('font-size', size + 'px' )
-				.style("font-family", "fontawesome")
-				.style("text-anchor", "middle")
-				.text(icon); 
+			vars.visualizations.common.addMissingPhotoIcon( container, "first", { className: className, size: size, color: color, dy : ".35em", textAnchor : "middle", text: icon } );
 	};
 	
 	var createNodesLayer = function(nodesClassName, textClassName, data){

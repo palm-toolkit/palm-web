@@ -409,6 +409,9 @@
 					<#-- special for publication list, set only query recent 10 publication -->
 						if( obj.selector === "#widget-circle_publication_timeline" )
 							obj.options.queryString += "&maxresult=10";
+						
+						if( obj.selector === "#widget-circle_activity_status" )
+							obj.options.queryString += "&maxresult=1000";
 					
 					<#-- check for cloud and evolution widget -->
 					if( obj.selector === "#widget-circle_interest_cloud" && isInterestEvolutionWidgetExecuted )

@@ -62,6 +62,7 @@
 					return false;
 				}
 				
+				
 				var visData = response.researchers.filter( function (d, i){
 					
 					if (d.citedBy != undefined && d.citedBy > 0 && d.publicationsNumber != undefined && d.publicationsNumber > 0 	)
@@ -71,6 +72,7 @@
 				$.activityStatus.init ( url, id, currentUser, visData );
 			}
 			};
+		
 		<#-- register the widget -->
 		$.PALM.options.registeredWidget.push({
 			"type":"${wType}",

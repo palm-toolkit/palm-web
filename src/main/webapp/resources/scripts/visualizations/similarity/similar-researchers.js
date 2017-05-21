@@ -124,12 +124,12 @@ $.SIMILAR.base= function (gSVG, author, mapData){
 		.classed("author-icon", true)
 		.attr("r",authorAvatarRadius)
 		.style("fill", function(){ 
-			var bkground = $.SIMILAR.variables.visualizations.common.getImageBackground( "#widget-" + $.SIMILAR.variables.widgetUniqueName + " svg", author, authorAvatarRadius );
+			var bkground = $.SIMILAR.variables.visualizations.common.getImageBackground( "#widget-" + $.SIMILAR.variables.widgetUniqueName + " svg", author);
 			
 			if( bkground != null ) 
 				return bkground;
 			
-			$.SIMILAR.variables.visualizations.common.addMissingPhotoIcon( d3.select( this.parentNode ), authorAvatarRadius );
+			$.SIMILAR.variables.visualizations.common.addMissingPhotoIcon( d3.select( this.parentNode ),  "last", {className: "missing-photo-icon author_avatar", size: 1.5 * authorAvatarRadius, color: "grey", dy : "0", textAnchor : "middle", text: "\uf007" }  );
 			
 			return $.SIMILAR.variables.circle.bkgroundColor;
 		});
@@ -182,12 +182,13 @@ function createElements(similarAuthors, gSimilarAuthors, defs, radius){
 		.classed("coauthor-icon", true)
 		.attr("r",radius)
 		.style("fill", function(d, i){
-			var imageBkground = $.SIMILAR.variables.visualizations.common.getImageBackground( "#widget-" + $.SIMILAR.variables.widgetUniqueName + " svg", similarAuthors[i], radius );
+			var imageBkground = $.SIMILAR.variables.visualizations.common.getImageBackground( "#widget-" + $.SIMILAR.variables.widgetUniqueName + " svg", similarAuthors[i] );
 			
 			if ( imageBkground != null ) // add image pattern
 				return  "url(#pattern_" + similarAuthors[i].id + ")";
 			
-			$.SIMILAR.variables.visualizations.common.addMissingPhotoIcon( d3.select( this.parentNode ), radius );
+			$.SIMILAR.variables.visualizations.common.addMissingPhotoIcon( d3.select( this.parentNode ),  "first", {className: "missing-photo-icon author_avatar", size: 1.5 * radius, color: "grey", dy : ".35em", textAnchor : "middle", text: "\uf007" }  );
+	
 			return $.SIMILAR.variables.circle.bkgroundColor;
 		});
 }

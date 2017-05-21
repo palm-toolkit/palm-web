@@ -1,46 +1,71 @@
-.axis line,
-.axis path{
+#widget-circle_activity_status .axis line,
+#widget-circle_activity_status .axis path{
 	fill: none;
     stroke: rgba(0, 0, 0, 0.14);
     shape-rendering: crispEdges;
 }
 
-svg g.dot.clicked:not(.hovered) circle{
+#widget-circle_activity_status  svg g.dot.clicked:not(.hovered) circle{
 	fill: #ccc !important;
 }
-
-svg g.dot.hovered .author-name-label{
-	display: none;
+#widget-circle_activity_status  svg g.dot.clicked:not(.hovered) text{
+	font-weight: bold !important;
 }
 
-svg g.dot.hovered circle{
+#widget-circle_activity_status  svg g.dot.hovered .author-name-label{
+	display : none;
+}
+
+#widget-circle_activity_status  svg g.dot.hovered circle{
 	stroke-width : 1px;
 }
-/* slider */
 
-#slider >* {
+/*----------------SLIDER-----------------*/
+#widget-circle_activity_status  #slider >* {
 	display  : inline-block;
 	position : absolute;
 }
 
-#slider .body{
+#widget-circle_activity_status  #slider .body{
 	top  : 35%;
     left : 17%;
 }
-#slider .ui-slider {
+#widget-circle_activity_status  #slider .ui-slider {
 	height 		: .5em;
 	border 		: 1px solid #b1b1b1;
 } 
 
-#slider .ui-widget-header{
+#widget-circle_activity_status  #slider .ui-widget-header{
 	box-shadow: inset 0px 1px 4px 1px rgba(125, 125, 125, 0.75);
 }
 
-#slider .ui-slider-handle {
+#widget-circle_activity_status #slider .ui-slider-handle {
 	height		  : .9em;
     width    	  : .9em;
     border		  : #b1b1b1;
     border-radius : .5em;
     background    : #ddd url(../../images/visualizations/metal.jpg) 50% 50% repeat-x;
     box-shadow    :  0px 1px 4px 1px rgba(35, 35, 35, 0.75);
+}
+
+/*----------------LIST-----------------*/
+#widget-publications-circle_activity_status .author-name,
+#widget-publications-circle_activity_status .author_name{
+	text-transform: capitalize;
+}
+
+#widget-publications-circle_activity_status .box-title,
+#widget-publications-circle_activity_status .timeline-header
+{
+	font-size: 12px;
+}
+#widget-publications-circle_activity_status .timeline:before{
+	left : 13px;
+}
+#widget-publications-circle_activity_status .timeline>li>.fa{
+	left : 0;
+}
+#widget-publications-circle_activity_status .timeline>li>.timeline-item{
+	margin-right : 0;
+	margin-left	 : 35px;
 }

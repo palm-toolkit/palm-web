@@ -1,6 +1,7 @@
 $.activityStatus = {};
 $.activityStatus.variables = {
-		userColor	 : "#0073b7"
+		userColor	   : "#0073b7",
+		visualizations : new Visualizations()
 };
 $.activityStatus.getData = function( url, container, user, callback){
 	var vars 		  = $.activityStatus.variables;
@@ -33,9 +34,9 @@ $.activityStatus.getData = function( url, container, user, callback){
 }
 
 $.activityStatus.init = function( url, container, user, data ){
-	var margin = {top: 20, right: 20, bottom: 40, left: 40},
+	var margin = {top: 20, right: 20, bottom: 50, left: 40},
 		width  =  $("#widget-" + container + " .visualization-main" ).width() - margin.left - margin.right,
-		height =  600,
+		height =  600 - margin.top, 
 		color  = d3.scale.category10();
 	
 	setVariables( url, container, user, margin, width, height, color);
@@ -71,16 +72,7 @@ $.activityStatus.visualise = function( data ){
     	.attr("transform", "translate(" + vars.margin.left + "," + vars.margin.bottom + ")");
 
 	// add the tooltip area to the webpage
-	var tooltip = new Tooltip({
-		className 	  : vars.tooltipClassName || "",
-		width 		  : 200,
-		height		  : 80,
-		bkgroundColor : "rgba(255, 255, 255, 0.75)",
-		strokeColor   : "white",
-		position  	  : "right", 
-		withImage	  : false
-	});
-
+	
 	var user = {};
 	// change string (from CSV) into number format
 	data.forEach(function(d) {
@@ -155,7 +147,7 @@ $.activityStatus.visualise = function( data ){
   var dotGroup =  dotsGroup.selectAll(".dot").data(data)
   		.enter().append("g").attr("class", "dot")
   		.attr("transform", function (d) { return "translate(" + [ xScale(xValue(d)),  yScale(yValue(d))] + ")" })
-  		.on("mouseenter", function( d ){ $.activityStatus.interactions.mouseoverNode( this, d, tooltip ); })
+  		.on("mouseenter", function( d ){ $.activityStatus.interactions.mouseoverNode( this, d ); })
   		.on("mouseleave",   $.activityStatus.interactions.mouseleaveNode )
   		.on("click",      $.activityStatus.interactions.clickNode);
   
@@ -173,7 +165,7 @@ $.activityStatus.visualise = function( data ){
       .attr("fill", "white");
  
   dotGroup.append("text").attr("class", "author-name-label")
-  	.attr("dy", "-.75em")
+  	.attr("dy", "-0.75em" )
   	.style("text-anchor", "middle")
   	.text( function (d){ 
   		var lastName  = d.name.substring(d.name.lastIndexOf(" "), d.name.length);
@@ -237,7 +229,7 @@ $.activityStatus.publications = function (year1, year2){
 	if ( vars.year1 != undefined &&  vars.year2 != undefined &&  vars.year1.length != 0 &&  vars.year2.length != 0)
 		yearFilter  = true;
 	
-	var queryString = !yearFilter ? thisWidget.options.queryString : thisWidget.options.queryString + "?yearMin=" + year1 + "&yearMax=" + year2;
+	var queryString = !yearFilter ? "?id=" + $.PALM.selected.circle + "&maxresult=1000" : "?id=" + $.PALM.selected.circle + "&maxresult=1000" + "&yearMin=" + vars.year1 + "&yearMax=" + vars.year2;
 	
 //	var url			=  vars.currentURL + "/resources/json/publicationsListCircle.json"
 //	d3.json( url, function(error, response) {
@@ -257,17 +249,30 @@ $.activityStatus.publications = function (year1, year2){
 	
 	var url 		= vars.currentURL + "/circle/publicationList" + queryString;
 	$.get( url, function (response){
-		$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( "" );
 		var $mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
+		
+		$mainContainer.html("");
+		if ( !$mainContainer.hasClass("small") ) 
+			$mainContainer.addClass("small");
+		
+		$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( "" );
+		
 		$.publicationList.init( response.status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged, vars.height - 10);
 		
 		if( response.status == "ok"){
 			response.element = response.circle;
 			$.publicationList.visualize( $mainContainer, response );
 
-			$.activityStatus.filter( response );
+			$.activityStatus.filter( response );		
+			
+			var title = "(" + response.publications.length + ") : " + response.circle.name;
 			
 			thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
+
+			$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( title );
+			$("#publications-box-" + vars.widgetUniqueName + " .box-header .box-title-container").removeClass("box-title-container");	
+			$("#publications-box-" + vars.widgetUniqueName + " .pull-left").css("display", "none");
+			$("#publications-box-" + vars.widgetUniqueName + " .timeline .time-label").css("display", "none");
 		}
 	
 	})
@@ -424,11 +429,13 @@ $.activityStatus.interactions = {
 			var $this       = this;
 			var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
 			var keywordText = thisWidget.element.find("#publist-search").val() || "";
-			var queryString = "?id=" + node.id + "&year=all&query=" + keywordText ;
 			
 			if ( vars.clickedNode != null){
-				if ( vars.clickedNode.id === node.id)
+				if ( vars.clickedNode.id === node.id){
 					removeHighlightClickedNode( );
+					thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+					$.activityStatus.publications();
+				}
 				else {
 					highlightClickedNode( $this );
 					getPublicationAuthor( node );
@@ -440,7 +447,7 @@ $.activityStatus.interactions = {
 			}
 			
 		},
-		mouseoverNode : function( elem, node, tooltip  ){
+		mouseoverNode : function( elem, node ){
 			d3.selection.prototype.moveToFront = function() {  
 			      return this.each(function(){
 			        this.parentNode.appendChild(this);
@@ -461,20 +468,22 @@ $.activityStatus.interactions = {
 					return d3.select( $this ).attr("transform") + " scale(4)";
 				});
 			
-			//add icon 
-			if (node.photo != null){
-				var imagePattern = createImagePattern( node, parseInt( d3.select(elem).select("circle").attr('r') ) );
-				d3.select(elem).select("circle").attr("fill", "url(#pattern_" + node.id + ")" );
-			} else {
-				d3.select(elem).append('text').classed("image missing-photo-icon author_avatar", true)
-					.attr("dy", ".35em")
-					.style('font-size', 1.5 * 7 + 'px' )
-					.style("font-family", "fontawesome")
-					.style("text-anchor", "middle")
-					.text("\uf007"); 
-			}		
-			
+			//add icon 			
+			vars.visualizations.common.addMissingPhotoIcon( d3.select( elem ), "first", {className: "missing-photo-icon author_avatar", size: 7, color: vars.userColor, dy : ".35em", textAnchor : "middle", text: "\uf007" } );
+			var image = vars.visualizations.common.getImageBackground( "#widget-" + vars.widgetUniqueName + " svg", node );
+			d3.select(elem).select("circle").attr("fill", image != null ? image : "white" );
+
 			//add tooltip
+			var tooltip = new Tooltip({
+				className 	  : vars.tooltipClassName || "",
+				width 		  : 200,
+				height		  : 80,
+				bkgroundColor : "rgba(255, 255, 255, 0.75)",
+				strokeColor   : "white",
+				position  	  : "right", 
+				withImage	  : false
+			});
+
 			tooltip.buildTooltip( d3.select($this), node );
 		},
 		mouseleaveNode : function( node ){
@@ -487,6 +496,7 @@ $.activityStatus.interactions = {
 					var transform = d3.transform( d3.select( this ).attr("transform"));
 						return "translate(" + transform.translate + ")";
 				});
+			
 			vars.hoveredNode = undefined;
 			//remove icon
 			d3.select( "#widget-" + vars.widgetUniqueName + " svg" ).selectAll( ".author_avatar").remove();
@@ -546,7 +556,7 @@ function getPublicationAuthor( author ){
 	var vars 		= $.activityStatus.variables;
 	var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
 	var keywordText = thisWidget.element.find("#publist-search").val() || "";
-	var queryString = "?id=" + author.id + "&year=all&query=" + keywordText ;
+	var queryString = "?id=" + $.PALM.selected.circle + "&author_id=" + author.id + "&year=all&query=" + keywordText ;
 	thisWidget.options.queryString = queryString;
 	
 	thisWidget.element.find(".visualization-main").removeClass("col-md-12 col-sm-12").addClass("col-md-8 col-sm-8");
@@ -557,43 +567,28 @@ function getPublicationAuthor( author ){
 	if ( vars.publicationRequest != null){
 		vars.publicationRequest.abort();
 	}
-	vars.publicationRequest = $.get( vars.currentURL + "/researcher/publicationList" + queryString , function( response ){ 
+	vars.publicationRequest = $.get( vars.currentURL + "/circle/memberPublicationList" + queryString , function( response ){ 
 		// this has to be data that is returned by server 
 		response.queryKeywords = "";
 		response.query = keywordText;
 		
-		//--------------------------------------
-			
-		$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( response.author.name );
-			
+		//--------------------------------------	
 		var mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
 		$.publicationList.init( response.status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged, vars.height - 10);
-		response.element = response.author;
+		response.element = author;
 		$.publicationList.visualize( mainContainer, response);
 		
+		var title = "(" + response.publications.length + ") : " + author.name;
+		
 		thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
-			
+
+		$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( title );
+		$("#publications-box-" + vars.widgetUniqueName + " .box-header .box-title-container").removeClass("box-title-container");	
+		$("#publications-box-" + vars.widgetUniqueName + " .pull-left").css("display", "none");
+		$("#publications-box-" + vars.widgetUniqueName + " .timeline .time-label").css("display", "none");
+	
 		vars.publicationRequest = null;
 	});
-}
-
-function createImagePattern( dataObject, imageRadius ){
-	var svg = d3.select("#widget-" + $.activityStatus.variables.widgetUniqueName + " svg");
-	if ( svg.select("defs").node() == undefined)
-		var defs = svg.append("defs");
-	else
-		var defs = svg.select("defs");
-	return defs.append("svg:pattern")
-			.attr("id", "pattern_" + dataObject.id)
-			.attr("class", "author_avatar")
-			.attr("width", 1)
-			.attr("height", 1)
-		   .append("svg:image")
-		   	.attr("xlink:href", dataObject.photo )
-		   	.attr("width", imageRadius * 2)
-		   	.attr("height", imageRadius * 2)
-		   	.attr("x", 0)
-		   	.attr("y", 0);
 }
 
 function createShadow( element ){
