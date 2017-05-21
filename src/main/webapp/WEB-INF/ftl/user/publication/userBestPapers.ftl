@@ -31,10 +31,10 @@
                     	<input type="radio" id="top5" name="top" value="5" /> 5
                 	</label> 
                 	<label class="radio-inline active">
-                    	<input type="radio" id="top10" name="top" checked="checked" value="10" /> 10
+                    	<input type="radio" id="top10" name="top" value="10" /> 10
                	 	</label> 
                 	<label class="radio-inline">
-                    	<input type="radio" id="q158" name="top" value="15" /> 15
+                    	<input type="radio" id="q158" name="top" value="15"  checked="checked"  /> 15
                 	</label> 
             </div>
 			</div>
@@ -122,8 +122,6 @@
 		
 		<#-- filter publications -->
 		$("#widget-${wUniqueName}" + " .top input[name=top]").on("click", function(){
-			console.log("click");	
-			
 			$.bestPapers.filterBy.top( $(this).val() );
 			
 		});

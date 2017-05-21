@@ -4,9 +4,10 @@ $.bestPapers.variables = {
 		pubColor: "#" +
 				"51aee4",
 		authColor: "#ff6666",
-		minRadius: 10,
-		maxRadius: 40,
-		authRadius: 10
+		minRadius: 5,
+		maxRadius: 30,
+		authRadius: 10,
+		visualizations : new Visualizations()
 };
 $.bestPapers.init = function( url, wUniqueName, userLoggedID, data, height){
 	var $mainContainer = $("#widget-" + wUniqueName + " .visualization-main");
@@ -91,15 +92,21 @@ $.bestPapers.processData = function( data ){
 $.bestPapers.visualise = function( data ){
 	var vars 	   = $.bestPapers.variables;
 	var citValue   = function(d){ if( d.basedOn != undefined ) return d.basedOn; };
-	var radScale   = d3.scaleLinear()
-		.domain([d3.min(data.nodes, citValue), d3.max(data.nodes, citValue)])
-		.range([vars.minRadius, vars.maxRadius]);
+	var hindexValue= function(d){ if( d.hindex != undefined ) return d.hindex; };
 	var publTotalRadius = 0; var authTotalRadius = 0;
 	var linkedById  = {};
-	
 	var $mainContainer = $("#widget-" + vars.wUniqueName + " .visualization-main");
 	var svg 	   = d3.select("#widget-" + vars.wUniqueName + " .visualization-main" ).append("svg");
 	var layer	   = svg.append("g").classed("best-papers-layer", true);	
+	
+	var radScale   = d3.scaleLinear()
+		.domain([d3.min(data.nodes, citValue), d3.max(data.nodes, citValue)])
+		.range([vars.minRadius, vars.maxRadius]);
+	
+	var authScale   = d3.scaleLinear()
+		.domain([d3.min(data.nodes, hindexValue), d3.max(data.nodes, hindexValue)])
+		.range([vars.minRadius, vars.maxRadius]);
+
 	var simulation = d3.forceSimulation()
     	.force("link", d3.forceLink().id(function(d) { return d.index }))
     	.force("collide",d3.forceCollide( function(d){ if (d.group == 1) return radScale(d.basedOn) +8; else return 18; }).iterations(16) )
@@ -173,13 +180,13 @@ $.bestPapers.visualise = function( data ){
   		.attr("height", vars.height)
 	    .call(zoom);
 
-	var linkWidth = vars.authRadius/8 < 1 ? 1 : vars.authRadius/8 ;
+	var linkWidth = 1.5 ;
 	var link = layer.append("g")
   		.attr("class", "links")
   		.selectAll(".link")
   		.data(data.links)
   		.enter().append("path")
-  			.attr("stroke", "black").attr("stroke-width", linkWidth ).attr("stroke-opacity", 0.1).attr("stroke-linecap", "round")
+  			.attr("stroke", "black").attr("stroke-width", linkWidth ).attr("stroke-opacity", 0.2).attr("stroke-linecap", "round")
   			.attr("fill", "none")
   			.attr("class", function(d){ return "link" + d.source.name + "-" +d.target.name})
   			.attr("opacity", 0);
@@ -187,29 +194,40 @@ $.bestPapers.visualise = function( data ){
 	var nodesLayer = layer.append("g").attr("class", "nodes-layer");
 	
 	var circleDetails = {
-			radius		 : function( d ){ return d.group === 1 ? radScale(d.basedOn) : vars.authRadius + d.hindex; },
+			radius		 : function( d ){ return d.group === 1 ? radScale(d.basedOn) : authScale(d.hindex); },
 			fill		 : function( d ){ 
-								if (d.group === 2 && d.photo != null && d.photo.length != 0 ){
-									createImagePattern( d, d.r );	
-									return "url(#pattern_" + d.id + ")" ;
-								}
-								return "white";
+							if ( d.group ===  2 ){
+								var bkground = vars.visualizations.common.getImageBackground( "#widget-" + vars.wUniqueName + " svg", d, d.r );
+								
+								if( bkground != null ) 
+									return bkground;
+							}	
+							return "white";
 						   }, 
 			fillOpacity	 : 1,
     		strokeColor  : function( d, color1, color2, step ){ return d.group === 1 ? d3.hsl( color1 ).darker( step ) : d3.hsl( color2 ).darker( step ); },
-    		strokeWidth  : 2,
+    		strokeWidth  : function( d ){ return d.group === 1 ? 2 : 0; },
     		strokeOpacity: 1,
     		fontSize	 : 12
     };
 	
-	var addIcon = function( container, className, icon, color, size){
-		container.append('text').classed(className, true)
-			.attr("dy", ".35em")
-			.attr("fill", color)
-			.style('font-size', size + 'px' )
-			.style("font-family", "fontawesome")
-			.style("text-anchor", "middle")
-			.text(icon); 
+	var addIcon = function( container, className, group, icon, color, size){
+		if ( group === 1 )
+			container.append('text').classed(className, true)
+				.attr("dy", ".35em")
+				.attr("fill", color)
+				.style('font-size', size + 'px' )
+				.style("font-family", "fontawesome")
+				.style("text-anchor", "middle")
+				.text(icon); 
+		else
+			container.insert('text', ":first-child").classed(className, true)
+				.attr("dy", ".35em")
+				.attr("fill", color)
+				.style('font-size', size + 'px' )
+				.style("font-family", "fontawesome")
+				.style("text-anchor", "middle")
+				.text(icon); 
 	};
 	
 	var createNodesLayer = function(nodesClassName, textClassName, data){
@@ -221,10 +239,7 @@ $.bestPapers.visualise = function( data ){
 		// add circle
 		nodes.append("circle")
 			.attr("r", function(d){  d.r = circleDetails.radius(d);
-				if ( d.group === 1 )
-					publTotalRadius += d.r * 2;
-				else
-					authTotalRadius += d.r * 2;
+				
 				return d.r;
 			})
 			.attr("fill",   	   circleDetails.fill)
@@ -237,28 +252,46 @@ $.bestPapers.visualise = function( data ){
 		var distanceConstant  = nodesClassName.indexOf("nodesPubl") >= 0 ? (vars.width - publTotalRadius ) / data.length : ( vars.width - authTotalRadius ) / data.length ; 	
 		var nodesText         = nodes.append("g").attr("class", textClassName);
 		
-		nodes.each( function(d){	
-			var availableWidth = d.group === 1 ? 2 * d.r + distanceConstant : 2 * d.r + distanceConstant - 5;
+	 	var publRange = d3.scaleBand()
+	 		.rangeRound([0, vars.width])
+	 		.padding(0.5);
+	 	var publDomain = publRange.domain( data.map(function(d) { if (d.group === 1 ) return d.id ; }).filter( function(n){ return n != undefined} ) );
+	 	
+	 	var authRange = d3.scaleBand()
+			.rangeRound([0, vars.width])
+			.padding(1);
+ 	 	var authDomain = authRange.domain( data.map(function(d) { if (d.group === 2 ) return d.id ; }).filter( function(n){ return n != undefined} ) );
+
+		nodes.each( function(d){
+			var prevSibling =  d3.select(this.previousSibling);
+			
+			if ( d.group == 1 ){
+				var distance = prevSibling.node() != undefined ? publDomain( d.id ) - publDomain( prevSibling.datum().id ) - prevSibling.datum().r - d.r - 5 : 0;
+			}else
+				var distance = prevSibling.node() != undefined ? 2*(  authDomain( d.id ) - authDomain( prevSibling.datum().id ) - prevSibling.datum().r - d.r) : 0;
+			
+			var availableWidth = d3.select( this ).node().getBoundingClientRect().width + distance;
 			var name = d.group === 1 ? d.name : abbrAuthorName( d. name );
-			wrapText( d3.select(this).select("g." + textClassName), name , availableWidth, "name", 12);
+			
+			vars.visualizations.common.wrapText( d3.select(this).select("g." + textClassName), name , availableWidth, "name", 12);
 			
 			if (d.group === 1)
-				addIcon(d3.select(this), "image publication", "\uf0f6", circleDetails.strokeColor( d, vars.pubColor, vars.authColor, 2 ), d.r * 1.3);
+				addIcon(d3.select(this), "image publication", d.group, "\uf0f6", circleDetails.strokeColor( d, vars.pubColor, vars.authColor, 2 ), d.r * 1.3);
 			else
-				if (d.photo ==  null || d.photo.length == 0 )
-					addIcon(d3.select(this), "image missing-photo-icon author_avatar", "\uf007", circleDetails.strokeColor( d, vars.pubColor, vars.authColor, 2 ), d.r * 1.3);					
+				addIcon(d3.select(this), "image missing-photo-icon author_avatar", d.group, "\uf007", circleDetails.strokeColor( d, vars.pubColor, vars.authColor, 2 ), d.r * 1.8);					
 		} );
 		//position text
 		nodesText.attr("transform", function(d, i){ 
 			var height = this.getBBox().height;
-			var y	   = d.group === 1 ? -(d.r + height) : distanceConstant <= 0 && i % 2 == 0 ?  -d.r * 2 : d.r * 2;  	
+			var nrLines= d3.select( this ).selectAll(".name").nodes().length - 1;
+			var y	   = d.group === 1 ? -(d.r + height) : i % 2 == 0 ?  ( -d.r - nrLines * circleDetails.fontSize - 2) :( d.r  + circleDetails.fontSize);  	
 			return "translate(0," + y + ")" ;
 		} );
 		
 		//add label
 		nodes.each(function( d, i ){
 			var height 		  = this.getBBox().height,
-		 		labelFontSize = circleDetails.fontSize + 2,
+		 		labelFontSize = circleDetails.fontSize,
 		 		padding		  = 5;
 		
 			if (d.group === 1){
@@ -267,7 +300,7 @@ $.bestPapers.visualise = function( data ){
 					.attr("fill", circleDetails.strokeColor( d, vars.pubColor, vars.authColor, 2 ))
 					.attr("y", d.r + labelFontSize + padding)
 					.style("font-size", labelFontSize )
-					.text(vars.criterion + ": " + d.basedOn);				
+					.text(vars.criterion + ":" + d.basedOn);				
 				d3.select(this).append("text")
 					.attr("class", "publ-label")
 					.attr("fill", circleDetails.strokeColor( d, vars.pubColor, vars.authColor, 2 ))
@@ -275,11 +308,12 @@ $.bestPapers.visualise = function( data ){
 					.style("font-size", labelFontSize)
 					.text( d.year);
 			}else{
-				var y = distanceConstant <= 0 && i % 2 == 0 ?  (d.r + labelFontSize + padding)  : -(d.r + labelFontSize) ;  	
+				var y = i % 2 == 0 ?  (d.r + labelFontSize + padding)  : -d.r  ;  	
 				d3.select(this).append("text")
 					.attr("class", "auth-label")
 					.attr("fill", circleDetails.strokeColor( d, vars.pubColor, vars.authColor, 2 ))
 					.attr("y", y)
+					.attr("dy", "-0.35em")
 					.style("font-size", labelFontSize);			
 			}			
 		})
@@ -306,18 +340,29 @@ $.bestPapers.visualise = function( data ){
 	  		.style("font-weight", "bold");
     	d3.select(this).select("text.auth-label").text( "H-index:" + d.hindex);
     	
-    	d3.selectAll(".node").selectAll("circle").transition().duration(550)
+    	d3.selectAll(".node").transition().duration(550)
+    		.attr("transform",     function(l){ 
+    			var t = d3.transform( d3.select( this ).attr("transform") );
+    			if ( l.group === 1 )
+    				return "translate(" + t.translate + ") scale(1)";
+    			return neighbors(d, l) || neighbors(l, d) || d === l ? "translate(" + t.translate + ") scale(1.2)"	 : "translate(" + t.translate + ") scale(1)"; })
+    		.selectAll("circle")
     	  	.attr("fill-opacity",  function(l){ return neighbors(d, l) || neighbors(l, d) || d === l ? circleDetails.fillOpacity     : circleDetails.fillOpacity/3 })
-    	  	.attr("stroke-width",  function(l){ return neighbors(d, l) || neighbors(l, d) || d === l ? circleDetails.strokeWidth + 1 : circleDetails.strokeWidth; })
+    	  	.attr("stroke-width",  function(l){ return neighbors(d, l) || neighbors(l, d) || d === l ? circleDetails.strokeWidth(l) + 1 : circleDetails.strokeWidth(l); })
     	  	.attr("stroke-opacity",function(l){ return neighbors(d, l) || neighbors(l, d) || d === l ? circleDetails.strokeOpacity   : circleDetails.strokeOpacity / 10; })
-    		.attr("r", 			   function(l){ return neighbors(d, l) || neighbors(l, d) || d === l ? l.r + 4 						 : l.r; });
+    		.attr("r", 			   function(l){ 
+    			if ( l.group === 2 )
+    				return l.r;
+    			return neighbors(d, l) || neighbors(l, d) || d === l ? l.r + 4 						 : l.r; })
+    	  	;
+    	
     	d3.selectAll(".node").selectAll("text").transition().duration(550)	
     		.attr("opacity", function(l){ return neighbors(d, l) || neighbors(l, d) || d === l ? circleDetails.fillOpacity     : circleDetails.fillOpacity/3 });
     		
     	link.transition().duration(550)
     		.attr("stroke", 		function(l) { return  ( d === l.source || d ===  l.target ) ? (d.group === 1 ? vars.pubColor : vars.authColor) : "black"; })
     		.attr('stroke-width', 	function(l) { return  ( d === l.source || d ===  l.target ) ? ( linkWidth == 1 ? 2 : vars.authRadius/4) : linkWidth; })
-    		.attr("stroke-opacity", function(l) { return  ( d === l.source || d ===  l.target ) ? 0.6 : 0.1; });
+    		.attr("stroke-opacity", function(l) { return  ( d === l.source || d ===  l.target ) ? 0.8 : 0.1; });
     }
 
     function mouseout() {
@@ -325,7 +370,9 @@ $.bestPapers.visualise = function( data ){
   			.style("font-weight", "normal");
     	d3.select(this).select("text.auth-label").text("");
     	
-    	d3.selectAll(".node").selectAll("circle").transition().duration(550)
+    	d3.selectAll(".node").transition().duration(550)
+    	.attr("transform", function(l){ return "translate(" + d3.transform( d3.select( this ).attr("transform") ).translate + ") scale(1)"} )
+    	.selectAll("circle")
 	  		.attr("fill-opacity",   circleDetails.fillOpacity )
 	  		.attr("stroke-width",   circleDetails.strokeWidth )
 	  		.attr("stroke-opacity", circleDetails.strokeOpacity )
@@ -342,24 +389,6 @@ $.bestPapers.visualise = function( data ){
     
     function neighbors(a, b){
     	return linkedById[a.id + "," + b.id];
-    }
-    
-    function createImagePattern( dataObject, imageRadius ){
-    	if ( svg.select("defs").node() == undefined)
-    		var defs = svg.append("defs");
-    	else
-    		var defs = svg.select("defs");
-    	return defs.append("svg:pattern")
-    			.attr("id", "pattern_" + dataObject.id)
-    			.attr("class", "author_avatar")
-    			.attr("width", 1)
-    			.attr("height", 1)
-    		   .append("svg:image")
-    		   	.attr("xlink:href", dataObject.photo )
-    		   	.attr("width", imageRadius * 2)
-    		   	.attr("height", imageRadius * 2)
-    		   	.attr("x", 0)
-    		   	.attr("y", 0);
     }
 }
 
@@ -416,7 +445,7 @@ $.bestPapers.filterBy = {
 			coauthors     = [],
 			dataProcessed = {};
 		
-		dataProcessed.nodes = vars.data.nodes.filter( function(d){ 
+		dataProcessed.nodes = vars.data.nodes.filter( function(d){
 			publications += d.group == 1 ? 1 : 0;
 			if ( d.group == 1 ) coauthors = coauthors.concat( d.coauthors );
 			
@@ -459,55 +488,4 @@ function abbrAuthorName( name ){
 	var initials  = (firstName.match(/\b(\w)/g)).join(".");
 	
 	return initials +"."+ lastName.trim() ;
-}
-
-function wrapText( container, text, width, className, fontSize){
-	var lineHeight = fontSize;
-	var y = 0;
-	var words = text.split(" ").reverse();
-	var textArray = [];
-	var text = container.append("text").attr("class", className);
-	
-	while(word = words.pop()){
-		textArray.push(word);
-		text.text( textArray.join(" ") );
-		
-		if ( text.node().getBBox().width > width ){
-			y += lineHeight; 
-			var w = textArray.pop();
-			
-			if ( textArray.length == 0 ){
-				var ind = splitWord( container, w, width );
-				var first = ind == w.length? w.substr(0, ind ) : w.substr(0, ind) + "-";
-				textArray.push( first);
-				
-				w = w.substr( ind, w.length );
-			}
-			
-			text.text( textArray.join(" ") );
-			
-			textArray = [w];
-			text = container.append("text").attr("class", className)
-					.attr("dy", y )
-					.text( textArray.join(" ") );
-		}				
-	}
-}
-
-function splitWord( container, word, width ){
-	var letters = word.split("").reverse();
-	var wordArray = [];
-	var text  = container.append("text");
-	
-	while(letter = letters.pop()){
-		wordArray.push( letter );
-		text.text( wordArray.join("") );
-		
-		if ( text.node().getBBox().width > width ){
-			text.remove();
-			return wordArray.length - 1;
-		}		
-	}
-	
-	return wordArray.length;
 }
