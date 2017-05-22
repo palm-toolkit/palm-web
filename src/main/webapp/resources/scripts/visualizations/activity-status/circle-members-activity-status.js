@@ -3,7 +3,7 @@ $.activityStatus.variables = {
 		userColor	   : "#0073b7",
 		visualizations : new Visualizations()
 };
-$.activityStatus.getData = function( url, container, user, callback){
+$.activityStatus.getData = function( container, user, callback){
 	var vars 		  = $.activityStatus.variables;
 	var thisWidget    = $.PALM.boxWidget.getByUniqueName( container ); 
 	var mainContainer = $("#widget-" + container + " .visualization-main");
@@ -12,10 +12,10 @@ $.activityStatus.getData = function( url, container, user, callback){
 		var queryString = thisWidget.options.queryString;
 	
 		if ( vars.year1 != undefined &&  vars.year2 != undefined &&  vars.year1.length != 0 &&  vars.year2.length != 0)
-			queryString = thisWidget.options.queryString + "?yearMin=" + vars.year1 + "&yearMax=" + vars.year2;
+			queryString = "?id=" + $.PALM.selected.circle + "&yearMin=" + vars.year1 + "&yearMax=" + vars.year2 + "&maxresult=1000";
 	}
 	var urlData = vars.currentURL + "/circle/researcherList" + queryString;
-	$.get(url, function( response ){
+	$.get( urlData, function( response ){
 		if( typeof response === 'undefined' || response.status != "ok" || typeof response.researchers === 'undefined'){
 			$.PALM.callout.generate( mainContainer , "warning", "Empty Members !", "The circle does not have any memeber on PALM database" );
 			return false;
@@ -27,7 +27,7 @@ $.activityStatus.getData = function( url, container, user, callback){
 			return d;
 		});
 			
-		callback( url, container, user, visData );					
+		callback( vars.currentURL, container, user, visData );					
 	});
 	
 	$.PALM.boxWidget.getByUniqueName( container ).element.find(".overlay").remove();	
@@ -350,7 +350,7 @@ $.activityStatus.filter.time = function ( data, min, max ){
 				var $mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
 				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 					
-				$.activityStatus.getData(vars.currentURL, vars.widgetUniqueName, vars.userLoggedID, $.activityStatus.init);	
+				$.activityStatus.getData( vars.widgetUniqueName, vars.userLoggedID, $.activityStatus.init);	
 				thisWidget.element.find(".overlay").remove();
 			};
 			setTimeout( updateVis, 200);
@@ -556,7 +556,11 @@ function getPublicationAuthor( author ){
 	var vars 		= $.activityStatus.variables;
 	var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
 	var keywordText = thisWidget.element.find("#publist-search").val() || "";
-	var queryString = "?id=" + $.PALM.selected.circle + "&author_id=" + author.id + "&year=all&query=" + keywordText ;
+	
+	if ( vars.year1 != undefined &&  vars.year2 != undefined &&  vars.year1.length != 0 &&  vars.year2.length != 0)
+		yearFilter  = true;
+	
+	var queryString = !yearFilter ? "?id=" + $.PALM.selected.circle + "&author_id=" + author.id + "&year=all&query=" + keywordText + "&maxresult=1000" : "?id=" + $.PALM.selected.circle + "&author_id=" + author.id +  "&maxresult=1000" + "&yearMin=" + vars.year1 + "&yearMax=" + vars.year2;
 	thisWidget.options.queryString = queryString;
 	
 	thisWidget.element.find(".visualization-main").removeClass("col-md-12 col-sm-12").addClass("col-md-8 col-sm-8");

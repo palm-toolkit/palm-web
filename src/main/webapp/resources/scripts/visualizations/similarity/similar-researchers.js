@@ -187,7 +187,7 @@ function createElements(similarAuthors, gSimilarAuthors, defs, radius){
 			if ( imageBkground != null ) // add image pattern
 				return  "url(#pattern_" + similarAuthors[i].id + ")";
 			
-			$.SIMILAR.variables.visualizations.common.addMissingPhotoIcon( d3.select( this.parentNode ),  "first", {className: "missing-photo-icon author_avatar", size: 1.5 * radius, color: "grey", dy : ".35em", textAnchor : "middle", text: "\uf007" }  );
+			$.SIMILAR.variables.visualizations.common.addMissingPhotoIcon( d3.select( this.parentNode ),  "last", {className: "missing-photo-icon author_avatar", size: 1.5 * radius, color: "grey", dy : ".35em", textAnchor : "middle", text: "\uf007" }  );
 	
 			return $.SIMILAR.variables.circle.bkgroundColor;
 		});
