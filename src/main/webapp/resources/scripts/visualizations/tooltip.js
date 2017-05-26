@@ -43,7 +43,7 @@ Tooltip.prototype.extraTranslate = function ( gNode, extraTranslate ){
 };
 
 Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
-		var fontSize = this.getFontSize();
+//		var fontSize = this.getFontSize();
 		var container = this.getContainer() == null ? d3.select( gNode.node().nearestViewportElement ) : this.getContainer();
 		var svg = d3.select( gNode.node().nearestViewportElement );
 		var gTooltip = null;
@@ -98,7 +98,7 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 								}else{
 									rotate 	  = translate[0] + tooltipWidth <= svg.node().getBoundingClientRect().width ? 0 : 180;
 									translate[0] += rotate == 0 ?  1 : -this.getImageRadius()/2;
-									translate[1] += rotate == 0 ? -1 : contentHeight;
+									translate[1] += rotate == 0 ? -1 : contentHeight - 2;
 								}
 								break;
 				case "bottom" : translate = translateBottom( this );
@@ -121,7 +121,7 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			var tooltipWidth  = Tooltip.getWidth()  - Tooltip.getBorderRadius();
 			var tooltipHeight = Tooltip.getHeight() - Tooltip.getBorderRadius();
 			
-			visualizations.common.addShadow( gTooltip, "drop-shadow", "120%", 2, "#666" );
+			visualizations.common.addShadow( gTooltip, "drop-shadow", "120%", 2, "rgba(187, 187, 187, 0.1)"  );
 			
 			stroke
 				.attr("d", "M 0 0 H " + tooltipWidth + 
@@ -140,12 +140,14 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			var tooltipHeight = Tooltip.getHeight() - Tooltip.getBorderRadius() ;
 			var distanceLeft  = tooltipHeight/2 + 5;	
 					
+			var visualizations = new Visualizations();
+			
 			//title
 			var title = gContent.append("g").classed("title content-text", true)
 				.attr("transform", "translate(" + distanceLeft + ", " + 0 +")");
 
 			var authorName = shortcutName( toTitleCase(dataObject.name) );
-			wrapText(title, authorName, ( Tooltip.getWidth() - distanceLeft), "title-name");	
+			visualizations.common.wrapText(title, authorName, ( Tooltip.getWidth() - distanceLeft), "title-name", Tooltip.getFontSize() );	
 			title.selectAll(".title-name");
 			
 			//status
@@ -154,7 +156,7 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			status.append("text").classed("icon-briefcase font-small", true)
 				.style("font-family", "fontawesome")
 				.text('\uf0b1');
-			wrapText(status, dataObject.status || "none", ( Tooltip.getWidth() - distanceLeft), "status-name font-small");	
+			visualizations.common.wrapText(status, dataObject.status || "none", ( Tooltip.getWidth() - distanceLeft - Tooltip.getFontSize()), "status-name font-small", Tooltip.getFontSize() );	
 			status.selectAll(".status-name").attr("dx", "1.3em");
 			
 			//affiliation
@@ -163,7 +165,7 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			affiliation.append("text").classed("icon-institution font-small", true)
 				.style("font-family", "fontawesome")
 				.text('\uf19c');
-			wrapText(affiliation, dataObject.affiliation || "none", ( Tooltip.getWidth() - distanceLeft), "afiliation-name font-small");	
+			visualizations.common.wrapText(affiliation, dataObject.affiliation || "none", ( Tooltip.getWidth() - distanceLeft - Tooltip.getFontSize()), "afiliation-name font-small", Tooltip.getFontSize() );	
 			affiliation.selectAll(".afiliation-name").attr("dx", "1.3em");
 			
 			//nr publications & citations
@@ -171,19 +173,19 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			var nrCitations	   = dataObject.citedBy || " 0 ";			
 			var publicationsAndCitations = gContent.append("g").classed("pubs content-text", true)
 				.attr("transform", "translate(" + distanceLeft + ", " + 0+ ")");
-			wrapText(publicationsAndCitations, "Publications: " + nrPublications + ", Cited By: " + nrCitations, ( Tooltip.getWidth() - distanceLeft), "paper font-small");
+			visualizations.common.wrapText(publicationsAndCitations, "Publications: " + nrPublications + ", Cited By: " + nrCitations, ( Tooltip.getWidth() - distanceLeft), "paper font-small", Tooltip.getFontSize() );
 					
 			//h-index
 			var hindexString = dataObject.hindex || "none";
 			var hindex = gContent.append("g").classed("hindex content-text", true)
 				.attr("transform", "translate(" + distanceLeft + ", " + 0 + ")");;
-			wrapText(hindex, "H-index: " + hindexString, ( Tooltip.getWidth() - distanceLeft), "hindex font-small");
+			visualizations.common.wrapText(hindex, "H-index: " + hindexString, ( Tooltip.getWidth() - distanceLeft), "hindex font-small", Tooltip.getFontSize() );
 			
-			//h-index
+			//similarity
 			if ( dataObject.similarity != undefined ){
 				var similarity = gContent.append("g").classed("similarity content-text", true)
 					.attr("transform", "translate(" + distanceLeft + ", " + 0 + ")");
-				wrapText(similarity, "Similarity Degree: " + Number(dataObject.similarity).toFixed(2) + "%", ( Tooltip.getWidth() - distanceLeft), "similarity font-small");	
+				visualizations.common.wrapText(similarity, "Similarity Degree: " + Number(dataObject.similarity).toFixed(2) + "%", ( Tooltip.getWidth() - distanceLeft), "similarity font-small", Tooltip.getFontSize() );	
 			}
 					
 			
@@ -336,27 +338,27 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			return [x, y];
 		}
 		
-		function wrapText( container, text, width, className){
-			var lineHeight = fontSize;
-			var y = 0;
-			var words = text.split(" ").reverse();
-			var textArray = [];
-			var text = container.append("text").attr("class", className);
-			
-			while(word = words.pop()){
-				textArray.push(word);
-				text.text( textArray.join(" ") );
-				
-				if ( text.node().getBBox().width > width ){
-					y += lineHeight; 
-					var w = textArray.pop();
-					text.text( textArray.join(" ") );
-					
-					textArray = [w];
-					text = container.append("text").attr("class", className)
-							.attr("dy", y )
-							.text( textArray.join(" ") );
-				}				
-			}
-		}
+//		function wrapText( container, text, width, className){
+//			var lineHeight = fontSize;
+//			var y = 0;
+//			var words = text.split(" ").reverse();
+//			var textArray = [];
+//			var text = container.append("text").attr("class", className);
+//			
+//			while(word = words.pop()){
+//				textArray.push(word);
+//				text.text( textArray.join(" ") );
+//				
+//				if ( text.node().getBBox().width > width ){
+//					y += lineHeight; 
+//					var w = textArray.pop();
+//					text.text( textArray.join(" ") );
+//					
+//					textArray = [w];
+//					text = container.append("text").attr("class", className)
+//							.attr("dy", y )
+//							.text( textArray.join(" ") );
+//				}				
+//			}
+//		}
 }

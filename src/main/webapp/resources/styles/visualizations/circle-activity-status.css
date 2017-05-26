@@ -35,21 +35,37 @@
 }
 
 /*----------------SLIDER-----------------*/
+#widget-circle_activity_status  #slider {
+	padding-top: 20px;
+}
+
 #widget-circle_activity_status  #slider >* {
 	display  : inline-block;
 	position : absolute;
+	font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight: 700;
+	font-size: 85%; 
 }
 
 #widget-circle_activity_status  #slider .body{
 	top  : 35%;
 }
+#widget-circle_activity_status  #slider .top{
+	top : -20px ! important;
+}
+
+#widget-circle_activity_status  #slider .ui-slider {
+	height 		: .5em;
+	border 		: 1px solid #b1b1b1;
+} 
+
 #widget-circle_activity_status  #slider .ui-slider {
 	height 		: .5em;
 	border 		: 1px solid #b1b1b1;
 } 
 
 #widget-circle_activity_status  #slider .ui-widget-header{
-	box-shadow: inset 0px 1px 4px 1px rgba(125, 125, 125, 0.75);
+	box-shadow: inset 0px 1px 4px 1px rgba(205, 205, 205, 0.75);
 }
 
 #widget-circle_activity_status #slider .ui-slider-handle {
@@ -83,6 +99,9 @@
 	margin-left	 : 35px;
 }
 
+#widget-publications-circle_activity_status .box-tools.pull-right{
+	display : none;
+}
 /*-----------------------------------------*/
 #widget-circle_activity_status .infobox{
 	 border:2px solid steelblue;
@@ -118,7 +137,9 @@
     padding: .2em;
 }
 
-#widget-circle_activity_status .visualization-details .citationRate .label{
+#widget-circle_activity_status .visualization-details .citationRate .label,
+#widget-circle_activity_status .visualization-main .axis .label{
 	font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	fill : #444;
+	font-size : 12px;
 }

@@ -30,7 +30,7 @@ Visualizations.prototype.common = {
 				.style("font-family", "fontawesome")
 				.text( details.text ); 
 		},
-		addShadow : function( element, id, height, deviation, color ){
+		addShadow : function( element, id, height, deviation, color, opacity ){
 			var defs = element.append("defs");
 			var filter = defs.append("filter")
 			    .attr("id", id )
@@ -42,14 +42,14 @@ Visualizations.prototype.common = {
 
 			filter.append("feOffset")
 			    .attr("in", "blur")
-			    .attr("dx", deviation)
-			    .attr("dy", deviation)
+			    .attr("dx", deviation + 2)
+			    .attr("dy", deviation + 2)
 			    .attr("result", "offsetBlur");
 			
 			filter.append("feFlood")
 			  .attr("in", "offsetBlur")
 			  .attr("flood-color",  color)
-			  .attr("flood-opacity", "1")
+			  .attr("flood-opacity", 1)
 			  .attr("result", "offsetColor");
 			
 			 filter.append("feComposite")

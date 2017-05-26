@@ -26,12 +26,17 @@
 			allowPageScroll: true,
    			touchScrollStep: 50,
    			railVisible: true,
-    		alwaysVisible: false
-    		
+    		alwaysVisible: false   		
 	    });
 
 		$("#publications-box-${wUniqueName} .box-content").css({"max-height": "600px", "height":"100%"});
 	
+		<#-- generate unique id for progress log -->
+		var uniquePidPublicationListWidget = $.PALM.utility.generateUniqueId();
+		
+		var isUserLogged = false;
+		
+			
 		<#-- set widget unique options -->
 		var options ={};
 		
@@ -44,5 +49,6 @@
 			"element": $( "#widget-publications-box-${wUniqueName}" ),
 			"options": options
 		});
+		
 	});<#-- end document ready -->
 </script>

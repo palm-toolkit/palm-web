@@ -34,9 +34,9 @@ $.activityStatus.getData = function( container, user, callback){
 }
 
 $.activityStatus.init = function( url, container, user, data ){
-	var margin = {top: 20, right: 20, bottom: 50, left: 40},
+	var margin = {top: 20, right: 40, bottom: 50, left: 40},
 		width  =  $("#widget-" + container + " .visualization-main" ).width() - margin.left - margin.right,
-		height =  600 - margin.top, 
+		height =  400, 
 		color  = d3.scale.category10();
 	
 	setVariables( url, container, user, margin, width, height, color);
@@ -53,7 +53,7 @@ $.activityStatus.visualise = function( data ){
 
 	// setup y
 	var yValue = function(d) { return d.citedBy ;}; // data -> value
-	var yScale = d3.scaleLog().range([vars.height, 0]).base(2);;
+	var yScale = d3.scaleLog().range([vars.height - vars.margin.top, 0]).base(2);;
 
 	// setup fill color
 	var cValue = function(d) { return d.isAdded;};
@@ -64,12 +64,13 @@ $.activityStatus.visualise = function( data ){
 
 	d3.select( "#boxbody" + vars.widgetUniqueName + " .visualization-main").html("");
 	
+	var translateTop = vars.margin.top * 2;
 	// add the graph canvas to the body of the webpage
 	var svg = d3.select( "#boxbody" + vars.widgetUniqueName + " .visualization-main").append("svg")
 		.attr("width", vars.width + vars.margin.left + vars.margin.right)
-    	.attr("height", vars.height + vars.margin.top + vars.margin.bottom)
+    	.attr("height", vars.height + translateTop + vars.margin.bottom)
       .append("g")
-    	.attr("transform", "translate(" + vars.margin.left + "," + vars.margin.bottom + ")");
+    	.attr("transform", "translate(" + vars.margin.left + "," + translateTop + ")");
 
 	// add the tooltip area to the webpage
 	
@@ -94,8 +95,8 @@ $.activityStatus.visualise = function( data ){
        .call(d3.axisBottom(xScale).tickSize(-vars.height) )
     .append("text")
       .attr("class", "label")
-      .attr("x", vars.width)
-      .attr("y", -6)
+      .attr("x", vars.width/2 )
+      .attr("y", 25)
       .attr("fill", "black")
       .style("text-anchor", "end")
       .text("Publications");
@@ -107,10 +108,10 @@ $.activityStatus.visualise = function( data ){
     .append("text")
       .attr("class", "label")
       .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
+      .attr("y", -30)
+      .attr("x", -vars.height/2 )
       .attr("fill", "black")
-      .style("text-anchor", "end")
+      .style("text-anchor", "start")
       .text("Citations");
 
   //draw lines 
@@ -146,39 +147,44 @@ $.activityStatus.visualise = function( data ){
   var dotsGroup = svg.append("g").attr("class", "dots");
   var dotGroup =  dotsGroup.selectAll(".dot").data(data)
   		.enter().append("g").attr("class", "dot")
-  		.attr("transform", function (d) { return "translate(" + [ xScale(xValue(d)),  yScale(yValue(d))] + ")" })
   		.on("mouseenter", function( d ){ $.activityStatus.interactions.mouseoverNode( this, d ); })
   		.on("mouseleave",   $.activityStatus.interactions.mouseleaveNode )
   		.on("click",      $.activityStatus.interactions.clickNode);
-  
+  dotGroup
+  		.transition()
+  		.duration(1000)
+  		.delay(function(d, i) {return i / data.length * 200; })
+  		.on("end", function(d, i){
+  			if ( i == data.length - 1)
+  			  arrangeLabels( svg );
+  		})
+  		.attr("transform", function (d) { return "translate(" + [ xScale(xValue(d)),  yScale(yValue(d))] + ")" });
+  		
   var circle = dotGroup.append("circle")
       .attr("class", "dot")
       .attr("r", 7)
       .attr("stroke", function(d) { return vars.color(cValue(d));})
       .attr("stroke-width", "2px")
-      .attr("stroke-dasharray", function(d){
-    	  /** Make dasharray based on citationsTendency
-    	   * */
-    	  return 0;
-    	 // return d.citationsTendency > 0 ? 0 : 3;
-      })
       .attr("fill", "white");
- 
+
   dotGroup.append("text").attr("class", "author-name-label")
   	.attr("dy", "-0.75em" )
-  	.style("text-anchor", "middle")
   	.text( function (d){ 
   		var lastName  = d.name.substring(d.name.lastIndexOf(" "), d.name.length);
 		var firstName = d.name.substring(0, d.name.lastIndexOf(" "));
 		var initials  = (firstName.match(/\b(\w)/g)).join(". ");
 		
 		return initials + "." + lastName;
-  	});
-  
-  arrangeLabels( svg );
+  	})
+  	.style("text-anchor", function( d ){ 
+  		if ( xScale(xValue(d)) - this.getComputedTextLength()/2 < 0 )
+  			return "start";
+  		if ( xScale(xValue(d)) + this.getComputedTextLength()/2 > vars.width )
+  			return "end";
+  		return "middle"; });
 }
 
-$.activityStatus.publications = function (year1, year2){
+$.activityStatus.publications = function ( query ){
 	var vars 		= $.activityStatus.variables;
 	var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
 	var yearFilter  = false;
@@ -186,7 +192,9 @@ $.activityStatus.publications = function (year1, year2){
 	if ( vars.year1 != undefined &&  vars.year2 != undefined &&  vars.year1.length != 0 &&  vars.year2.length != 0)
 		yearFilter  = true;
 	
-	var queryString = !yearFilter ? "?id=" + $.PALM.selected.circle + "&maxresult=1000" : "?id=" + $.PALM.selected.circle + "&maxresult=1000" + "&yearMin=" + vars.year1 + "&yearMax=" + vars.year2;
+	queryString = !yearFilter ? "?id=" + $.PALM.selected.circle + "&maxresult=1000" : "?id=" + $.PALM.selected.circle + "&maxresult=1000" + "&yearMin=" + vars.year1 + "&yearMax=" + vars.year2;
+	queryString += query != null ? "&query=" + query : "";
+	
 	var url 		= vars.currentURL + "/circle/publicationList" + queryString;
 	
 	$.get( url, function (response){
@@ -198,24 +206,38 @@ $.activityStatus.publications = function (year1, year2){
 		
 		$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( "" );
 		
-		$.publicationList.init( response.status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged, vars.height - 10);
+		$.publicationList.init( response.status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged, vars.height - 10, queryString, "/circle/publicationList");
 		
-		if( response.status == "ok"){
-			response.element = response.circle;
-			$.publicationList.visualize( $mainContainer, response );
+		response.element = response.circle;
+		$.publicationList.visualize( $mainContainer, response );
 
-			$.activityStatus.filter( response );		
+		$.activityStatus.filter( response );		
 			
-			var title = "(" + response.publications.length + ")" ;
-			thisWidget.element.find(".title-visualization-details").html( response.circle.name );
+		var title = response.publications != null ? "(" + response.publications.length + ")" :  "(0)";
+		thisWidget.element.find(".title-visualization-details").html( response.circle.name );
 			
-			thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
+		thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
 
-			$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( title );
-			$("#publications-box-" + vars.widgetUniqueName + " .box-header .box-title-container").removeClass("box-title-container");	
-			$("#publications-box-" + vars.widgetUniqueName + " .pull-left").css("display", "none");
-			$("#publications-box-" + vars.widgetUniqueName + " .timeline .time-label").css("display", "none");
-		}
+		$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( title );
+		$("#publications-box-" + vars.widgetUniqueName + " .box-header .box-title-container").removeClass("box-title-container");	
+		$("#publications-box-" + vars.widgetUniqueName + " .pull-left .btn-group").css("display", "none");
+		$("#publications-box-" + vars.widgetUniqueName + " .timeline .time-label").css("display", "none");
+			
+		thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName).find(".overlay").remove();
+		
+		thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName).find( "#publist-search" ).keyup(function(e){
+			if(e.keyCode == 13){
+				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+				var keywordText = thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName).find( "#publist-search" ).val();
+				$.activityStatus.publications( keywordText );
+			}
+		});
+		thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName).find(" #publist-search-button").on( "click", function(){
+			thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+			var keywordText = thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName).find( "#publist-search" ).val();
+			$.activityStatus.publications( keywordText );
+		} ); 
+			
 	})
 }
 
@@ -261,7 +283,7 @@ $.activityStatus.filter.time = function ( data, min, max ){
 		vars.year1 = min;
 		vars.year2 = max;
 	}
-	
+
 	$sliderBody.slider({
 		range: true,
 		height: "0.5em",
@@ -275,13 +297,19 @@ $.activityStatus.filter.time = function ( data, min, max ){
 				
 				labelPosition.of = ui.handle;
 				
+				vars.tooClose = ui.values[1] - ui.values[0] < 3 ? true : false;
+				
 				$(label)
 					.html( ui.value )
 					.position( labelPosition );
 				
+				if ( vars.tooClose )
+					$(label).addClass("top");
+				else
+					$(label).removeClass("top");
+				
 				vars.year1 = $sliderBody.slider('values', 0);
 				vars.year2 = $sliderBody.slider('values', 1);
-
 			}
 			setTimeout(delay, 5);
 		},
@@ -290,7 +318,13 @@ $.activityStatus.filter.time = function ( data, min, max ){
 				var thisWidget     = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
 				var $mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
 				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
-					
+				thisWidget.element.find( ".visualization-details >.citation-average-trend" ).remove();
+				
+				if ( vars.clickedNode != null ){
+					getPublicationAuthor( vars.clickedNode, {} );
+					return;
+				} 
+
 				$.activityStatus.getData( vars.widgetUniqueName, vars.userLoggedID, $.activityStatus.init);	
 				thisWidget.element.find(".overlay").remove();
 			};
@@ -302,7 +336,7 @@ $.activityStatus.filter.time = function ( data, min, max ){
 	$sliderContainer.children(".min")
 		.html( $sliderBody.slider('values', 0) )
 		.position( labelPosition );
-	
+
 	labelPosition.of = $( $sliderBody.children("span").eq(1) );
 	$sliderContainer.children(".max")
 		.html( $sliderBody.slider('values', 1) )
@@ -418,10 +452,10 @@ $.activityStatus.interactions = {
 			//add tooltip
 			var tooltip = new Tooltip({
 				className 	  : vars.tooltipClassName || "",
-				width 		  : 200,
+				width 		  : 210,
 				height		  : 80,
-				bkgroundColor : "rgba(255, 255, 255, 0.75)",
-				strokeColor   : "white",
+				bkgroundColor : "rgba(255, 255, 255, 0.8)",
+				strokeColor   : "steelblue",
 				position  	  : "right", 
 				withImage	  : false
 			});
@@ -623,7 +657,7 @@ function createLineChart( container, data ){
 		var y0 = -vars.margin.top - 10;
 		
 		var x = x0 + coord[0] - $infobox.width()/2;
-		var y = y0 - ( height - coord[1]) - $infobox.height() - 20;
+		var y = y0 - ( height - coord[1]) - $infobox.height() ;
 		
 		if ( x + $infobox.width() > width )
 			x -= $infobox.width() /2;
@@ -677,7 +711,7 @@ function createLineChart( container, data ){
 	var x = d3.scaleTime().range([0, width]).domain( [minDate, maxDate] ).nice();
 	var y = d3.scaleLinear().range([height, 0]).domain([0, d3.max(data, function(d) { return d.citationCount / d.paperCount ; } )]).nice();
 	
-	var xTicks = data.length > 5 ? 5 : data.length;
+	var xTicks = data.length > 5 ? 5 : data.length < 2 ?  4 : data.length;
 	var yTicks = data.length > 5 ? 5 : data.length;
 	// x-axis
 	gSVG.append("g")
@@ -723,15 +757,25 @@ function createLineChart( container, data ){
 		 .attr("r", 3)
 		 .attr("stroke", "transparent")
 		 .attr("stroke-width", 6)
-		 .attr("cx", function(d) { return x(new Date( d.year + "" ) ); })
-		 .attr("cy", function(d) { return y( d.citationCount/ d.paperCount ); })
 		 .on("mouseover", function(d) { showData(this, d);})
-		 .on("mouseout", function(){ hideData();});
+		 .on("mouseout", function(){ hideData();})
+		 .attr("cx", function(d) { return x(new Date( d.year + "" ) ); })
+		 .attr("cy", function(d) { return y( d.citationCount/ d.paperCount ); });
 		 
-	gSVG.append("svg:path")
+	var path = gSVG.append("svg:path")
 		.attr("d", line(data)) 
 		.attr("fill", "none")
-		.attr("stroke", "steelblue");	
+		.attr("stroke", "steelblue")
+		.attr("stroke-width", "2px");
+	
+	var totalLength = path.node().getTotalLength();
+	 path
+     .attr("stroke-dasharray", totalLength + " " + totalLength)
+     .attr("stroke-dashoffset", totalLength)
+     .transition()
+       .duration(1500)
+       .attr("stroke-dashoffset", 0);
+
 	
 	$(gSVG.node().closest("div")).prepend("<div class='infobox details hidden'/>");
 }

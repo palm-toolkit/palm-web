@@ -21,27 +21,27 @@ $.publicationList.init = function( status, widgetUniqueName, currentURL, isUserL
 	mainContainer.css({"max-height":  + height + "px", "height":"100%"});
 	
 	mainContainer.html( "" );
-		
-	if( status != "ok"){
-		$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher does not have any publication on PALM database" );
-		return false;
-	}
 };
 
 $.publicationList.visualize = function( mainContainer, data){
 	$.publicationList.variables.data = data;
 	mainContainer.append( $.publicationList.visualize.filter( data ) );
 	
-	if ( typeof data.publications === 'undefined') {
-		if( typeof data.query === "undefined" || data.query == "" )
-			$.PALM.callout.generate( mainContainer , "warning", "Empty Publications!", "Currently no publications found on PALM database" );
-		else
-			$.PALM.callout.generate( mainContainer , "warning", "Empty search result!", "No publications found with query \"" + data.query + "\"" );
-		return false;
-	}
-	
-	if ( typeof data.publications === 'undefined') {
-		$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher does not have any publication on PALM" );
+	if( data.status != "ok"){
+		
+		if ( typeof data.publications === 'undefined') {
+			if( typeof data.query === "undefined" || data.query == "" )
+				$.PALM.callout.generate( mainContainer , "warning", "Empty Publications!", "Currently no publications found on PALM database" );
+			else
+				$.PALM.callout.generate( mainContainer , "warning", "Empty search result!", "No publications found with query \"" + data.query + "\"" );
+			return false;
+		}
+		
+		if ( typeof data.publications === 'undefined') {
+			$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher does not have any publication on PALM" );
+			return false;
+		}
+		$.PALM.callout.generate( mainContainer , "warning", "Empty Publications !", "Researcher does not have any publication on PALM database" );
 		return false;
 	}
 	
@@ -62,32 +62,32 @@ $.publicationList.visualize.filter.search = function( data ){
 	var filterSearch = $( '<div/>' ).addClass( "input-group" )
 		.css({'width':'100%'});
 	
-	var publistSearch = $( '<input/>' ).attr({'type':'text', 'id':'publist-search', 'class':'form-control input-sm pull-right'})
-				.keyup(function(e){
-					if(e.keyCode == 13){
-						var thisWidget = $.PALM.boxWidget.getByUniqueName( $.publicationList.variables.widgetUniqueName ); 
-						// find keyword if any 
-						var keywordText = filterSearch.find( "#publist-search" ).val();
-							
-						thisWidget.options.queryString = "?id=" + data.element.id + "&year=all&query=" + keywordText;			
-						thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
-						$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
-					}
-				});
+	var publistSearch = $( '<input/>' ).attr({'type':'text', 'id':'publist-search', 'class':'form-control input-sm pull-right'});
+//				.keyup(function(e){
+//					if(e.keyCode == 13){
+//						var thisWidget = $.PALM.boxWidget.getByUniqueName( $.publicationList.variables.widgetUniqueName ); 
+//						// find keyword if any 
+//						var keywordText = filterSearch.find( "#publist-search" ).val();
+//							
+//						thisWidget.options.queryString = "?id=" + data.element.id + "&year=all&query=" + keywordText;			
+//						thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+//						$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
+//					}
+//				});
 	
 	var buttonSearch = $( '<div/>' ).attr({'id':'publist-search-button-cont', 'class':'input-group-btn', 'title':'Will automatically search for all ' + data.element.name + '\'s publications'})
 				.append( $( '<button/>' ).attr({'id':'publist-search-button', 'class':'btn btn-sm btn-default'})
 				.append( $( '<i/>' ).attr({'class':'fa fa-search'}) ) );
-	buttonSearch.on( "click", function(){
-		var thisWidget = $.PALM.boxWidget.getByUniqueName( $.publicationList.variables.widgetUniqueName ); 
-		// find keyword if any
-		var keywordText = filterSearch.find( "#publist-search" ).val();
-
-		thisWidget.options.queryString = "?id=" + data.element.id + "&year=all&query=" + keywordText;
-		// add overlay 
-		thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
-		$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
-	} ); 
+//	buttonSearch.on( "click", function(){
+//		var thisWidget = $.PALM.boxWidget.getByUniqueName( $.publicationList.variables.widgetUniqueName ); 
+//		// find keyword if any
+//		var keywordText = filterSearch.find( "#publist-search" ).val();
+//
+//		thisWidget.options.queryString = "?id=" + data.element.id + "&year=all&query=" + keywordText;
+//		// add overlay 
+//		thisWidget.element.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+//		$.PALM.boxWidget.refresh( thisWidget.element , thisWidget.options );
+//	} ); 
 	
 	if (data.query != undefined && data.query != "")
 			publistSearch.val( data.query );

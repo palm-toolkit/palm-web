@@ -77,7 +77,7 @@
 												.html( item.status )
 											)
 										);
-									if( typeof item.aff != 'undefined')
+									if( typeof item.affiliation != 'undefined')
 										researcherDetail.append(
 											$( '<div/>' )
 											.addClass( 'affiliation' )
@@ -87,7 +87,7 @@
 											).append( 
 												$( '<span/>' )
 												.addClass( 'info font-xs' )
-												.html( item.aff )
+												.html( item.affiliation )
 											)
 										);
 									if( typeof item.publicationsNumber != 'undefined'){
