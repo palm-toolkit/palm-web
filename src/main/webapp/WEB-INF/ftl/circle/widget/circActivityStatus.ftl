@@ -20,6 +20,7 @@
 		<div class="container-box visualization-box row">
 			<div class="visualization-main col-md-8  col-sm-8"></div>
 			<div class="visualization-details col-md-4  col-sm-4">
+				<span class="title-visualization-details"></span>
 				<#include "/resPublication.ftl">
 			</div>
 		</div>

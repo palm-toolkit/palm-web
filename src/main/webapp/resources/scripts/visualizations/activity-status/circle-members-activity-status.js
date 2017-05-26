@@ -175,49 +175,6 @@ $.activityStatus.visualise = function( data ){
 		return initials + "." + lastName;
   	});
   
-  // draw legend
-  var legend = d3.select( "#widget-" + vars.widgetUniqueName + " svg" ).append("g").attr("class", "legend");
-  
-  // draw legend circle explanation
-  var legendItems = [
-     { "label" : "Increase", "strokedashed" : 0 },
-     { "label" : "Decrease", "strokedashed" : 3}
-  ];
-		  
-  var gLegendItems = legend.append("g").attr("class", "legend-items");
-  
-  gLegendItems.append("text")
-  	.attr("dx", "-.75em")
-  	.attr("dy", "-1em")
-	.style('font-size', 14 + 'px' )
-	.style("font-family", "fontawesome")
-	.style("text-anchor", "start")
-	.text("Citations' Tendency: "+ "\uf05a")
-	.on("mouseover", $.activityStatus.interactions.mouseOverInfo )
-	.on("mouseleave", $.activityStatus.interactions.mouseLeaveInfo );
- 
-  var gLegend = gLegendItems.selectAll(".legend-item-group")
-  	.data(legendItems)
-  	.enter().append("g").attr("class", "legend-item-group");
-  
-  gLegend.append("circle")
-  		.attr("r", 7)
-    	.attr("stroke", "grey")
-    	.attr("stroke-width", "2px")
-    	.attr("stroke-dasharray", function(d){ return d.strokedashed; })
-    	.style("fill", "white");
-  gLegend.append("text").attr("class", "label")
-    	.attr("dx", "1em")
-    	.attr("dy", ".35em")
-    	.style("text-anchor", "start")
-    	.text( function(d){ return d.label; } );  
-  gLegend.attr("transform", function (d, i){
-		var widthPrev = i == 0 ? 0 : i * ( d3.select(this.previousSibling).node().getBBox().width + 5);
-		return "translate(" + widthPrev + ",0)";
-	});
-  
-  legend.attr("transform", function (d) { return "translate(" + [vars.margin.left + 10, vars.margin.top+5] + ")" } );
-  
   arrangeLabels( svg );
 }
 
@@ -230,24 +187,8 @@ $.activityStatus.publications = function (year1, year2){
 		yearFilter  = true;
 	
 	var queryString = !yearFilter ? "?id=" + $.PALM.selected.circle + "&maxresult=1000" : "?id=" + $.PALM.selected.circle + "&maxresult=1000" + "&yearMin=" + vars.year1 + "&yearMax=" + vars.year2;
-	
-//	var url			=  vars.currentURL + "/resources/json/publicationsListCircle.json"
-//	d3.json( url, function(error, response) {
-//		$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( "" );
-//		var $mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
-//		$.publicationList.init( response.status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged, vars.height - 10);
-//		
-//		if( response.status == "ok"){
-//			response.element = response.circle;
-//			$.publicationList.visualize( $mainContainer, response );
-//
-//			$.activityStatus.filter( response );
-//			
-//			thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
-//		}
-//	});
-	
 	var url 		= vars.currentURL + "/circle/publicationList" + queryString;
+	
 	$.get( url, function (response){
 		var $mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
 		
@@ -265,7 +206,8 @@ $.activityStatus.publications = function (year1, year2){
 
 			$.activityStatus.filter( response );		
 			
-			var title = "(" + response.publications.length + ") : " + response.circle.name;
+			var title = "(" + response.publications.length + ")" ;
+			thisWidget.element.find(".title-visualization-details").html( response.circle.name );
 			
 			thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
 
@@ -274,7 +216,6 @@ $.activityStatus.publications = function (year1, year2){
 			$("#publications-box-" + vars.widgetUniqueName + " .pull-left").css("display", "none");
 			$("#publications-box-" + vars.widgetUniqueName + " .timeline .time-label").css("display", "none");
 		}
-	
 	})
 }
 
@@ -429,6 +370,7 @@ $.activityStatus.interactions = {
 			var $this       = this;
 			var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
 			var keywordText = thisWidget.element.find("#publist-search").val() || "";
+			thisWidget.element.find( ".visualization-details >.citation-average-trend" ).remove();
 			
 			if ( vars.clickedNode != null){
 				if ( vars.clickedNode.id === node.id){
@@ -438,12 +380,12 @@ $.activityStatus.interactions = {
 				}
 				else {
 					highlightClickedNode( $this );
-					getPublicationAuthor( node );
+					getPublicationAuthor( node, $this );
 				}
 			}
 			else {
 				highlightClickedNode( $this );
-				getPublicationAuthor( node );
+				getPublicationAuthor( node, $this );
 			}
 			
 		},
@@ -505,23 +447,23 @@ $.activityStatus.interactions = {
 		},
 		mouseOverInfo : function( node ){
 			var $this = this;
+			var width = d3.select( $this.parentNode ).node().getBBox().width / 2 + 40;
 			var infoText = d3.select($this.parentNode).append("g").attr("class", "infoText");
 			var rect = infoText.append("rect");
-			var text = "Tendency Decrease: the number of citations in the first half time period is larger."+
-				" Tendency Increase: the number of citations in the second half time period is larger."
-			wrapText(infoText, text, 240, "info-text", 12 );
+			var text = "Citations Average per Year = sum of the papers' citations published in a year devided by the number of publications in that year."
+			wrapText(infoText, text, width, "info-text", 12 );
 			
 			var padding = 10;
 			createShadow( infoText ); 
 			rect.attr("width", infoText.node().getBBox().width + padding)
 				.attr("height", infoText.node().getBBox().height + padding)
-				.attr("x", -padding/2 + "px")
+				.attr("x", -padding/3 + "px")
 				.attr("y", "-1em")
 				.attr("fill", "white")
 				.attr("opacity", 0.8)
 				.style("filter", "url(#drop-shadow)");
 			
-			infoText.attr("transform", "translate(" +[ $this.getBBox().width - padding/2 , -padding/2 ]+ ")")
+			infoText.attr("transform", "translate(" +[ $this.getBBox().width/2 - padding*3 , padding/2 ]+ ")")
 		},
 		mouseLeaveInfo : function( node ){
 			var $this = this;
@@ -552,10 +494,11 @@ function wrapText( container, text, width, className, fontSize){
 	}
 }
 
-function getPublicationAuthor( author ){
+function getPublicationAuthor( author, gNode ){
 	var vars 		= $.activityStatus.variables;
 	var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
 	var keywordText = thisWidget.element.find("#publist-search").val() || "";
+	var yearFilter  = false;
 	
 	if ( vars.year1 != undefined &&  vars.year2 != undefined &&  vars.year1.length != 0 &&  vars.year2.length != 0)
 		yearFilter  = true;
@@ -571,6 +514,7 @@ function getPublicationAuthor( author ){
 	if ( vars.publicationRequest != null){
 		vars.publicationRequest.abort();
 	}
+	
 	vars.publicationRequest = $.get( vars.currentURL + "/circle/memberPublicationList" + queryString , function( response ){ 
 		// this has to be data that is returned by server 
 		response.queryKeywords = "";
@@ -578,11 +522,13 @@ function getPublicationAuthor( author ){
 		
 		//--------------------------------------	
 		var mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
-		$.publicationList.init( response.status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged, vars.height - 10);
+		$.publicationList.init( response.status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged, vars.height - 200- 10);
 		response.element = author;
 		$.publicationList.visualize( mainContainer, response);
 		
-		var title = "(" + response.publications.length + ") : " + author.name;
+		var title = "(" + response.publications.length + ")";
+		
+		thisWidget.element.find(".title-visualization-details").html( author.name );
 		
 		thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
 
@@ -592,6 +538,11 @@ function getPublicationAuthor( author ){
 		$("#publications-box-" + vars.widgetUniqueName + " .timeline .time-label").css("display", "none");
 	
 		vars.publicationRequest = null;
+		
+		if ( response.citationRate != null ){
+			$("<div/>").addClass("citation-average-trend").insertBefore( " #widget-publications-" + vars.widgetUniqueName );
+			createLineChart( d3.select( "#widget-" + vars.widgetUniqueName + " .citation-average-trend" ), response.citationRate);
+		}
 	});
 }
 
@@ -647,4 +598,140 @@ function removeHighlightClickedNode( ){
 		vars.publicationRequest.abort();
 		vars.publicationRequest = null;
 	}
+}
+
+function createLineChart( container, data ){
+	var vars = $.activityStatus.variables;
+	var height = 150, 
+		width  = $("#widget-" + vars.widgetUniqueName + " .visualization-details").width() - vars.margin.left -10; 
+	
+	var showData = function (obj, d) {
+		var coord = [ d3.select(obj).node().getBBox().x + vars.margin.left, d3.select(obj).node().getBBox().y ];
+		var infobox = d3.select("#widget-" + vars.widgetUniqueName + " .infobox");
+		var $infobox = $("#widget-" + vars.widgetUniqueName + " .infobox");
+		 // now we just position the infobox roughly where our mouse is
+		$infobox.empty();
+		
+		$infobox.append("<span> Average: " + Number( d.citationCount / d.paperCount).toFixed(2) + "</span>"); 
+		$infobox.append("<span style='float: right;'>" + d.year + "</span>"); 
+		$infobox.append("<div class='label'>#Publications per Year:<span class='label'>" + d.paperCount + "</span></div>");
+		$infobox.append("<div class='label'>#Citations per Year:<span class='label'>" + d.citationCount + "</span></div>");
+		
+		$infobox.removeClass("hidden");
+		
+		var x0 = vars.margin.left; 
+		var y0 = -vars.margin.top - 10;
+		
+		var x = x0 + coord[0] - $infobox.width()/2;
+		var y = y0 - ( height - coord[1]) - $infobox.height() - 20;
+		
+		if ( x + $infobox.width() > width )
+			x -= $infobox.width() /2;
+		if ( y <  -height - vars.margin.top)
+			y += $infobox.height() + 30;
+		infobox.style("left", x + "px");
+		infobox.style("top", y + "px");
+		
+	}
+	
+	var hideData = function(){
+		$("#widget-" + vars.widgetUniqueName + " .infobox").addClass("hidden");
+	}
+	 
+	var gSVG = container
+	 	.insert("svg", ":first-child")
+	 		.attr("width", width )
+	 		.attr("height", height  )
+	 		.style("width",  $("#widget-" + vars.widgetUniqueName + " .visualization-details").width() )
+	 		.style("height", 150 + vars.margin.top * 2 + 10)
+	 	.append("g").attr("class", "citationRate");	  
+	  
+	 gSVG.append("text")
+	 	.attr("class", "label")
+	  	.attr("dx", "-.75em")
+	  	.attr("dy", "-0.65em")
+	  	.style('font-size', 14 + 'px' )
+	  	.text( "Citations' Average Trend" );
+	 gSVG.append("text")
+	 	.attr("dx", "-.75em")
+	  	.attr("dy", "-0.65em")
+		.style('font-size', 14 + 'px' )
+		.style("font-family", "fontawesome")
+		.style("text-anchor", "end")
+		.text( "\uf05a" )
+		.on("mouseover", $.activityStatus.interactions.mouseOverInfo )
+		.on("mouseleave", $.activityStatus.interactions.mouseLeaveInfo );
+
+	 gSVG.attr("transform", function (d) { return "translate(" + [vars.margin.left - 5, vars.margin.top] + ")" } );	  
+
+	data = data.sort(function(a, b) {
+		 var year1 = parseInt( a.year );
+		 var year2 = parseInt( b.year );
+		 return year1 - year2;
+	});
+		 
+	// get max and min dates - this assumes data is sorted
+	 var minDate = new Date( data[0].year + "" ),
+		 maxDate = new Date( data[data.length - 1].year + "");
+		 
+	var x = d3.scaleTime().range([0, width]).domain( [minDate, maxDate] ).nice();
+	var y = d3.scaleLinear().range([height, 0]).domain([0, d3.max(data, function(d) { return d.citationCount / d.paperCount ; } )]).nice();
+	
+	var xTicks = data.length > 5 ? 5 : data.length;
+	var yTicks = data.length > 5 ? 5 : data.length;
+	// x-axis
+	gSVG.append("g")
+	      .attr("class", "x axis")
+	      .attr("transform", "translate(0," + height + ")")
+	       .call(d3.axisBottom(x).ticks(xTicks).tickFormat(d3.timeFormat("%Y")).tickSize(-height) )
+	    .append("text")
+	      .attr("class", "label")
+	      .attr("x", width / 2)
+	      .attr("y", 25)
+	      .attr("dx", "-.3em")
+	      .attr("fill", "black")
+	      .style("text-anchor", "start" )
+	      .style("font-size", "12px" )
+	      .text("Year");
+
+	  // y-axis
+	gSVG.append("g")
+	      .attr("class", "y axis")
+	      .call(d3.axisLeft(y).ticks(yTicks).tickSize(-width) )
+	    .append("text")
+	      .attr("class", "label")
+	      .attr("transform", "rotate(-90)")
+	      .attr("y", -25)
+	      .attr("dx", "-1.7em")
+	      .attr("fill", "black")
+	      .style("font-size", "12px" )
+	      .style("text-anchor", "end" )
+	      .text("Citations' Average");
+
+	  
+		// create a line function that can convert data[] into x and y points
+	var line = d3.svg.line()
+		 .x(function(d, i) { return x( new Date( d.year + "" ) ); })
+		 .y(function(d) { return y( d.citationCount/ d.paperCount ); });
+		
+	//dots
+	gSVG
+		 .selectAll("circle")
+		 .data(data)
+		 .enter().append("circle")
+		 .attr("fill", "steelblue")
+		 .attr("r", 3)
+		 .attr("stroke", "transparent")
+		 .attr("stroke-width", 6)
+		 .attr("cx", function(d) { return x(new Date( d.year + "" ) ); })
+		 .attr("cy", function(d) { return y( d.citationCount/ d.paperCount ); })
+		 .on("mouseover", function(d) { showData(this, d);})
+		 .on("mouseout", function(){ hideData();});
+		 
+	gSVG.append("svg:path")
+		.attr("d", line(data)) 
+		.attr("fill", "none")
+		.attr("stroke", "steelblue");	
+	
+	$(gSVG.node().closest("div")).prepend("<div class='infobox details hidden'/>");
 }
