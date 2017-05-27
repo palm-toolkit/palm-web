@@ -1,6 +1,8 @@
 <#-- jquery validation -->
 <script src="<@spring.url '/resources/scripts/jquery.validate.min.js' />"></script>
 
+<script src="<@spring.url '/resources/plugins/jQueryUI/jquery-ui.min.js' />"></script>
+
 <#-- jQuery fileupload -->
 <script src="<@spring.url '/resources/scripts/jquery.fileupload.js' />" type="text/javascript"></script>
 

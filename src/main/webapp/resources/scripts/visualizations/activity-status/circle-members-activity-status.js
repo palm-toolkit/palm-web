@@ -49,7 +49,7 @@ $.activityStatus.visualise = function( data ){
 	var vars = 	$.activityStatus.variables;
 	// setup x 
 	var xValue = function(d) { return d.publicationsNumber; }; // data -> value
-	var xScale = d3.scaleLog().range([0, vars.width]).base(2);
+	var xScale = d3.scaleLinear().range([0, vars.width]);//.base(2);
 
 	// setup y
 	var yValue = function(d) { return d.citedBy ;}; // data -> value
@@ -70,7 +70,8 @@ $.activityStatus.visualise = function( data ){
 		.attr("width", vars.width + vars.margin.left + vars.margin.right)
     	.attr("height", vars.height + translateTop + vars.margin.bottom)
       .append("g")
-    	.attr("transform", "translate(" + vars.margin.left + "," + translateTop + ")");
+    	.attr("transform", "translate(" + vars.margin.left + "," + translateTop + ")")
+    	.attr("class", "activity-status-chart");
 
 	// add the tooltip area to the webpage
 	
@@ -84,9 +85,12 @@ $.activityStatus.visualise = function( data ){
 			user = d;
 	});
 
+ var miny = d3.min(data, yValue) == 0 ? 1 : d3.min(data, yValue);
+ var maxy = d3.max(data, yValue) == 0 ? 1 : d3.max(data, yValue);
+	
   // don't want dots overlapping axis, so add in buffer to data domain
-  xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+5]);
-  yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+5]);
+  xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+5]).nice();
+  yScale.domain([ miny, maxy]);
 
   // x-axis
   svg.append("g")
@@ -156,7 +160,7 @@ $.activityStatus.visualise = function( data ){
   		.delay(function(d, i) {return i / data.length * 200; })
   		.on("end", function(d, i){
   			if ( i == data.length - 1)
-  			  arrangeLabels( svg );
+  			  arrangeLabels( svg, dotGroup );
   		})
   		.attr("transform", function (d) { return "translate(" + [ xScale(xValue(d)),  yScale(yValue(d))] + ")" });
   		
@@ -206,7 +210,7 @@ $.activityStatus.publications = function ( query ){
 		
 		$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( "" );
 		
-		$.publicationList.init( response.status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged, vars.height - 10, queryString, "/circle/publicationList");
+		$.publicationList.init( response.status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged, vars.height - 10 );
 		
 		response.element = response.circle;
 		$.publicationList.visualize( $mainContainer, response );
@@ -239,7 +243,61 @@ $.activityStatus.publications = function ( query ){
 		} ); 
 			
 	})
-}
+};
+
+$.activityStatus.refresh = function( container, widgetUniqueName, user, data ){
+	var vars = $.activityStatus.variables;
+	var thisWidget = $.PALM.boxWidget.getByUniqueName( widgetUniqueName );
+	
+	var circles = d3.selectAll( thisWidget.element.find( "g.dot" ) );
+	var axisX 	= d3.select( thisWidget.element.find( ".visualization-main .x.axis" ).selector );
+	var axisY 	= d3.select( thisWidget.element.find( ".visualization-main .y.axis" ).selector );
+	
+	// setup x 
+	var xValue = function(d) { return d.publicationsNumber; }; // data -> value
+	var xScale = d3.scaleLinear().range([0, vars.width]);
+
+	// setup y
+	var yValue = function(d) { return d.citedBy ;}; // data -> value
+	var yScale = d3.scaleLog().range([vars.height - vars.margin.top, 0]).base(2);;
+
+	var miny = d3.min(data, yValue) == 0 ? 1 : d3.min(data, yValue);
+	var maxy = d3.max(data, yValue) == 0 ? 1 : d3.max(data, yValue);
+	
+	xScale.domain([ d3.min(data, xValue), d3.max(data, xValue) ]).nice();
+	yScale.domain([ miny, maxy ]).nice();
+
+	circles.style("visibility", "hidden");
+	
+	for ( var i = 0; i < data.length; i++){
+		var found = circles.filter( function( c ){ return c.id == data[i].id; });
+		var x = xScale(xValue( data[i] )); var y = yScale(yValue( data[i] ));
+		
+		if ( found.nodes().length > 0){
+			var circle = d3.select( found.nodes()[0] );	
+		
+			circle.datum().publicationsNumber = data[i].publicationsNumber;
+			circle.datum().citedBy = data[i].citedBy;
+			
+			circle
+				.style("visibility", "visible")
+				.transition()
+				.duration(1000)
+				.delay( i / data.length * 200 )
+				.on("end", i == data.length - 1 ? arrangeLabels( d3.select( "g.activity-status-chart"  ), circles ) : null )
+				.attr("transform", "translate(" +  x + "," + y + ")" );	
+		}
+	}
+
+	axisX
+		.transition()
+		.duration(1000)
+		.call(d3.axisBottom(xScale).tickSize(-vars.height) );
+	axisY
+		.transition()
+		.duration(1000)
+		.call(d3.axisLeft(yScale).tickSize(-vars.width) );
+};
 
 function setVariables( url, widgetUniqueName, user, margin, width, height, color){
 	$.activityStatus.variables.currentURL 		= url,
@@ -290,29 +348,6 @@ $.activityStatus.filter.time = function ( data, min, max ){
 		min: vars.initialMinYear,
 		max: vars.initialMaxYear,
 		values: [vars.year1, vars.year2] ,
-		slide: function( event, ui ) {
-			var delay = function() {
-				var handleIndex = $(ui.handle).data('uiSliderHandleIndex');
-				var label 		=  handleIndex == 0 ? '.min' : '.max';
-				
-				labelPosition.of = ui.handle;
-				
-				vars.tooClose = ui.values[1] - ui.values[0] < 3 ? true : false;
-				
-				$(label)
-					.html( ui.value )
-					.position( labelPosition );
-				
-				if ( vars.tooClose )
-					$(label).addClass("top");
-				else
-					$(label).removeClass("top");
-				
-				vars.year1 = $sliderBody.slider('values', 0);
-				vars.year2 = $sliderBody.slider('values', 1);
-			}
-			setTimeout(delay, 5);
-		},
 		stop: function( event, i){
 			var updateVis = function(){
 				var thisWidget     = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
@@ -325,11 +360,41 @@ $.activityStatus.filter.time = function ( data, min, max ){
 					return;
 				} 
 
-				$.activityStatus.getData( vars.widgetUniqueName, vars.userLoggedID, $.activityStatus.init);	
+				$.activityStatus.getData( vars.widgetUniqueName, vars.userLoggedID, $.activityStatus.refresh);	
+				$.activityStatus.publications();
 				thisWidget.element.find(".overlay").remove();
 			};
 			setTimeout( updateVis, 200);
 		}
+	});
+	
+	$sliderBody.on( "slide", function( event, ui ) {
+		var slider = this;
+		var delay = function() {
+			var handleIndex = $(ui.handle).data('uiSliderHandleIndex');
+			var label 		=  handleIndex == 0 ? '.min' : '.max';
+			
+			labelPosition.of = ui.handle;
+			
+			vars.tooClose = ui.values[1] - ui.values[0] < 4 ? true : false;			
+			
+			$(label)
+				.html( ui.value )
+				.position( labelPosition );
+			
+			
+			if ( vars.tooClose ) {
+				if ( $(".top").length == 0 )
+					$(label).addClass("top");
+			}
+			else
+				$(label).removeClass("top");
+				
+			vars.year1 = $sliderBody.slider('values', 0);
+			vars.year2 = $sliderBody.slider('values', 1);
+		
+	    }
+		setTimeout(delay, 0);
 	});
 	
 	labelPosition.of = $( $sliderBody.children("span").eq(0) );
@@ -343,7 +408,20 @@ $.activityStatus.filter.time = function ( data, min, max ){
 		.position( labelPosition );
 }
 
-function arrangeLabels( svg ) {
+function arrangeLabels( svg, circles ) {
+	
+	circles.selectAll(".author-name-label")
+		.style("text-anchor", function( d ){ 
+			var translateX = d3.transform( d3.select(this.parentNode).attr("transform") ).translate[0];
+			
+	  		if ( translateX - this.getComputedTextLength()/2 < 0 )
+	  			return "start";
+	  		if ( translateX + this.getComputedTextLength()/2 > $.activityStatus.variables.width )
+	  			return "end";
+	  		return "middle"; 
+	  	});
+	
+	
 	  var move = 1;
 	  while(move > 0) {
 	    move = 0;
@@ -404,13 +482,20 @@ $.activityStatus.interactions = {
 			var $this       = this;
 			var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
 			var keywordText = thisWidget.element.find("#publist-search").val() || "";
+			
+			var $sliderContainer = $("#widget-" + $.activityStatus.variables.widgetUniqueName + " #slider" );
+			var $sliderBody 	 = $sliderContainer.children(".body");
+			
 			thisWidget.element.find( ".visualization-details >.citation-average-trend" ).remove();
 			
 			if ( vars.clickedNode != null){
 				if ( vars.clickedNode.id === node.id){
 					removeHighlightClickedNode( );
 					thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
+					$.activityStatus.getData(vars.widgetUniqueName, vars.userLoggedID, $.activityStatus.refresh );
 					$.activityStatus.publications();
+				//	$sliderBody.slider( "disable" );
+					return;
 				}
 				else {
 					highlightClickedNode( $this );
@@ -421,7 +506,7 @@ $.activityStatus.interactions = {
 				highlightClickedNode( $this );
 				getPublicationAuthor( node, $this );
 			}
-			
+			//$sliderBody.slider( "disable" );
 		},
 		mouseoverNode : function( elem, node ){
 			d3.selection.prototype.moveToFront = function() {  
@@ -552,7 +637,6 @@ function getPublicationAuthor( author, gNode ){
 	vars.publicationRequest = $.get( vars.currentURL + "/circle/memberPublicationList" + queryString , function( response ){ 
 		// this has to be data that is returned by server 
 		response.queryKeywords = "";
-		response.query = keywordText;
 		
 		//--------------------------------------	
 		var mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
@@ -560,7 +644,7 @@ function getPublicationAuthor( author, gNode ){
 		response.element = author;
 		$.publicationList.visualize( mainContainer, response);
 		
-		var title = "(" + response.publications.length + ")";
+		var title = response.publications != null ? "(" + response.publications.length + ")" : "(0)";
 		
 		thisWidget.element.find(".title-visualization-details").html( author.name );
 		
@@ -573,7 +657,7 @@ function getPublicationAuthor( author, gNode ){
 	
 		vars.publicationRequest = null;
 		
-		if ( response.citationRate != null ){
+		if ( response.citationRate != null && response.citationRate.length != 0 ){
 			$("<div/>").addClass("citation-average-trend").insertBefore( " #widget-publications-" + vars.widgetUniqueName );
 			createLineChart( d3.select( "#widget-" + vars.widgetUniqueName + " .citation-average-trend" ), response.citationRate);
 		}
