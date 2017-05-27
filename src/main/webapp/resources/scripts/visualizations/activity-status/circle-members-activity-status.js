@@ -269,6 +269,8 @@ $.activityStatus.refresh = function( container, widgetUniqueName, user, data ){
 
 	circles.style("visibility", "hidden");
 	
+	var transition = d3.transition().duration(1000).delay( i / data.length * 200 );
+	
 	for ( var i = 0; i < data.length; i++){
 		var found = circles.filter( function( c ){ return c.id == data[i].id; });
 		var x = xScale(xValue( data[i] )); var y = yScale(yValue( data[i] ));
@@ -281,10 +283,10 @@ $.activityStatus.refresh = function( container, widgetUniqueName, user, data ){
 			
 			circle
 				.style("visibility", "visible")
-				.transition()
+				.transition( transition )
 				.duration(1000)
-				.delay( i / data.length * 200 )
-				.on("end", i == data.length - 1 ? arrangeLabels( d3.select( "g.activity-status-chart"  ), circles ) : null )
+				.delay( i / data.length * 150 )
+				.on("end", i == ( data.length - 1 ) ? arrangeLabels( d3.select( "g.activity-status-chart"  ), circles ) : null )
 				.attr("transform", "translate(" +  x + "," + y + ")" );	
 		}
 	}
@@ -419,7 +421,8 @@ function arrangeLabels( svg, circles ) {
 	  		if ( translateX + this.getComputedTextLength()/2 > $.activityStatus.variables.width )
 	  			return "end";
 	  		return "middle"; 
-	  	});
+	  	})
+	  	.attr("transform", null);
 	
 	
 	  var move = 1;
@@ -433,13 +436,14 @@ function arrangeLabels( svg, circles ) {
 	            .each(function() {
 	              if(this != that) {
 	                var b = this.getBoundingClientRect();
-	                if((Math.abs(a.left - b.left) * 2 < (a.width + b.width)) &&
-	                   (Math.abs(a.top - b.top) * 2 < (a.height + b.height))) {
+	                             
+	                if((Math.abs(a.left - b.left)  < Math.max(a.width, b.width)) &&
+	 	                   (Math.abs(a.top - b.top) < Math.min(a.height, b.height))) {
 	                  // overlap, move labels
 	                  var dx = (Math.max(0, a.right - b.left) +
-	                           Math.min(0, a.left - b.right)) * 0.01,
+	                           Math.min(0, a.left - b.right)) * 0.02,
 	                      dy = (Math.max(0, a.bottom - b.top) +
-	                           Math.min(0, a.top - b.bottom)) * 0.02,
+	                           Math.min(0, a.top - b.bottom)) * 0.03,
 	                      tt = d3.transform(d3.select(this).attr("transform")),
 	                      to = d3.transform(d3.select(that).attr("transform"));
 	                  move += Math.abs(dx) + Math.abs(dy);
