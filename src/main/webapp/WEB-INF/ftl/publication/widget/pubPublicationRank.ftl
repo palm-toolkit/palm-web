@@ -61,7 +61,7 @@
 		<#else>
 			var targetId = "";
 		</#if>
-		var height = 630;
+		var height = 530;
 		<#-- add slimscroll to widget body -->
 		<#-- $("#boxbody${wUniqueName} .box-content").slimscroll({
 			height: height + "px",
@@ -89,23 +89,28 @@
 
 		var options ={
 			source : "<@spring.url '/publication/basicInformationAndTopics' />",
-			
+			queryString:"",
 			query: "",
 			onRefreshStart: function( widgetElem ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
-				var wUniqueName   = "${wUniqueName}"; 
 				var url 		  = "<@spring.url ''/>";
 				var userLoggedId  = <#if currentUser.author??>"${currentUser.author.id}"<#else>""</#if>; 
+				var mainContainer = $( widgetElem ).find( "#boxbody${wUniqueName}" ).find(".visualization-main");
+				
+				mainContainer.html("");
+				
+				if (  data.basicinfo.publication.event != null && data.basicinfo.publication.event.id != null ){
+					var query  = "?id=" + data.basicinfo.publication.event.id + "&maxresult=" + 15;
+					var confPublURL = "<@spring.url '/venue/publicationTopList' />" + query;
+					
+					var conferencePublications = $.get(confPublURL, function(response){
+						console.log("response"); console.log(response);
+						$.publRank.visualization.draw( "<@spring.url ''/>", userLoggedId, "${wUniqueName}", response, data, height);
+					})
+				}else
+					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications!", "Currently no venue found on PALM database for this publication." );
 
-				var query  = "?id=" + data.basicinfo.publication.event.id + "&maxresult=" + 15;
-				var confPublURL = "<@spring.url '/venue/publicationTopList' />" + query;
-				
-				var conferencePublications = $.get(confPublURL, function(response){
-					console.log("response"); console.log(response);
-					$.publRank.visualization.draw( url, userLoggedId, wUniqueName, response, data, height);
-				})
-				
 				<#-- remove overlay -->
 				$container.find(".overlay").remove();
 			}
@@ -122,7 +127,7 @@
 		});
 		
 		<#-- user.author.id exist, triger ajax call -->
-		<#if currentUser.author??>
+		<#--<#if currentUser.author??>
 			$.PALM.boxWidget.refresh( $( "#widget-${wUniqueName}" ) , options );
 		<#else>
 			$("#boxbody${wUniqueName} .box-content").html( "No publication found. Please link yourself to a researcher on PALM" );

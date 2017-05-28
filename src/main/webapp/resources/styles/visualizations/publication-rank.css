@@ -1,3 +1,11 @@
 #widget-publication_rank .visualization-main .bar.clicked rect{
     stroke-width: 2px;
 }
+#widget-publication_rank .visualization-box{
+	color : #444;
+	fill  : #444;
+}
+
+#widget-publication_rank .axis-label{
+	font-weight : 700;
+}
