@@ -10,7 +10,7 @@
 #widget-researcher_similarity .missing-photo-icon{
 	font-family : fontawesome;
 	text-anchor : middle;
-	dominant-baseline : central;
+/* 	dominant-baseline : central; */
 	fill :  #808080;
 }
 #widget-researcher_similarity .tooltip-similar-author .tooltip-stroke{

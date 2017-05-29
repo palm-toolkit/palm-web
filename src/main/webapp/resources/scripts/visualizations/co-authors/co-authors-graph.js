@@ -19,7 +19,7 @@ $.COAUTHOR.graph.options = {
 		left : 20, right : 20, top : 20, bottom : 20
 	},
 	color : d3.scaleOrdinal(d3.schemeCategory20),
-	coauthorIconColor : {"same" : "#1f2f62", "national" : "#764d37" , "international" : "#13ae9c"},
+	coauthorIconColor : {"same" : "#1f2f62" , "national" : "#13ae9c", "international" : "#6aedde"},
 	coauthorLinkColor: "#eee",
 	topicIconColor : "rgb(198, 1, 73)",
 	scaleTopicIconColor : d3.scale.linear().interpolate(d3.interpolateHcl).range(["rgb(255, 222, 26)", "rgb(0, 0, 0)"])
@@ -647,6 +647,19 @@ $.COAUTHOR.graph.interactions = {
 					var position = node.angle <= Math.PI/2 || 
 								   node.angle >= Math.PI * 3/2 ? "left" : "right";
 
+					node.publicationsNumber = node.publicationsNumber == null ? node.commonPublications != null ? node.commonPublications.length : 0 :  node.publicationsNumber;
+					
+					var sum = function(a, b){ 
+						return a + b.cited;
+						if ( a != null && b != null )
+							return a + b.cited;
+						else
+							if ( a != null )
+								return a; 
+						return b.cited; 
+					};
+					node.citedBy = node.citedBy == null ? node.commonPublications != null ? node.commonPublications.reduce( sum, 0) : 0 : node.citedBy ; 
+					
 					var tooltipS = new Tooltip( {
 						className 	: "tooltip-coauthor",
 						width 		: 200,
@@ -737,7 +750,8 @@ $.COAUTHOR.graph.publications = function( node ){
 		$mainContainer.addClass("small");
 	
 	//create list
-	$.publicationList.init( "ok",  widgetUniqueName, $.COAUTHOR.graph.options.currentURL, null, containerFullHeight - legendHeight - $.COAUTHOR.graph.options.margin.bottom - $.COAUTHOR.graph.options.margin.top);
+	data.status = "ok";
+	$.publicationList.init( data.status,  widgetUniqueName, $.COAUTHOR.graph.options.currentURL, null, containerFullHeight - legendHeight - $.COAUTHOR.graph.options.margin.bottom - $.COAUTHOR.graph.options.margin.top);
 	$.publicationList.visualize( $mainContainer, data);
 	
 	var title = "(" + data.publications.length + ") : " + node.name;
@@ -885,8 +899,12 @@ function highlightTopicCoauthors(nodeDOM, nodeObject){
 	});				
 	d3.select(nodeDOM).classed("disabled", false);
 	
-	d3.selectAll( containerID + " .gCoauthors .link").classed("disabled", function(link) {		
-		var found = $.grep(topicCoauthors, function(author){return link.source === author || link.target === author});
+	d3.selectAll( containerID + " .gCoauthors .link").classed("disabled", function(link) {	
+		var found = $.grep(topicCoauthors, function(author){
+			var condition = link.source === author && link.target.id === $.PALM.selected.researcher || link.target === author && link.source.id === $.PALM.selected.researcher;
+			
+			return condition; 
+		});
 		return found.length > 0 ? false : true;
 	});
 }
