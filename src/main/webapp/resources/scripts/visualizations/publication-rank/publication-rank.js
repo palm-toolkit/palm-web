@@ -6,47 +6,51 @@ $.publRank.variables =  {
 };
 
 $.publRank.visualization = {
-	data 	: function( data ){
+	data 	: function( publications ){
 				var vars 	= $.publRank.variables,		
 					dataset = [],
 					myPaper = vars.publication.basicinfo.publication; 
-					myPaper.topics = vars.publication.topics.topics;
-				data.publications.map(function( d ){
-					d.cited = d.cited == null || d.cited == 0 ?  Math.floor((Math.random() * 500 ) + 0) : d.cited;
-					if ( d.id !== myPaper.id)
-						dataset.push(d);	
-				});	
+					myPaper.topics = vars.publication.topics != null && vars.publication.topics.status =="ok" ? vars.publication.topics.topicModel :[];
+				
+				if ( publications != null && publications.length > 0 ){
+					publications.map(function( d ){
+						d.cited = d.cited == null || d.cited == 0 ?  0 : d.cited; //Math.floor((Math.random() * 500 ) + 0) : d.cited;
+						if ( d.id !== myPaper.id)
+							dataset.push(d);	
+					});
+				} 
+					
 				return dataset.sort( function(a, b){ return b.cited - a.cited}).concat( myPaper );
 	},
-	setVars : function( url, user, widgetUniqueName, height, publication ){
+	setVars : function( url, user, widgetUniqueName, height, data ){
 		var vars = $.publRank.variables;
 		
 		vars.url 			  = url;
 		vars.user 			  = user;
 		vars.widgetUniqueName = widgetUniqueName;
 		vars.height 	      = height;
-		vars.publication	  = publication;
+		vars.publication	  = {basicinfo : data.basicinfo, topics : data.topics};
 		vars.mainContainer    = $("#widget-" + widgetUniqueName + " .visualization-main");
 		vars.detailsContainer = $("#widget-" + widgetUniqueName + " .visualization-details");
 		vars.thisWidget 	  = $.PALM.boxWidget.getByUniqueName( widgetUniqueName );	
 		vars.width  	  	  = vars.mainContainer.width() - vars.margin.left - vars.margin.right;
 		vars.width			  = vars.width > 800 ? 800 : vars.width; 
 	},
-	draw : function(url, user, widgetUniqueName, data, publication, height){
+	draw : function(url, user, widgetUniqueName, data, height){
 		if( data.status === "ok" && typeof data.publications !== 'undefined'){
 	
-			this.setVars(url, user, widgetUniqueName, height, publication);
+			this.setVars(url, user, widgetUniqueName, height, data);
 			
 			var vars = $.publRank.variables;
 			vars.thisWidget.element.find(".overlay").remove();			
 			vars.mainContainer.html( "" );
 		
-			var dataset = this.data( data ) 
+			var dataset = this.data( data.publications ) 
 			this.base( dataset );
 			this.basicinfo();
 //			this.list( dataset );
 		}else{
-			$.PALM.callout.generate( $mainContainer , "warning", "Empty Publications !", "Sorry, you don't have any publication." );
+			$.PALM.callout.generate($("#widget-" + widgetUniqueName + " .visualization-main") , "warning", "Empty Publications !", "Sorry, you don't have any publication." );
 			return false;
 		}
 	},
@@ -60,7 +64,9 @@ $.publRank.visualization = {
 		          "#c4d3e0", "#5dd3e9", "#0194fe", "#012b7e", "#011149",
 		          "#99d578", "#71cc49", "#043b05", "#043b05", "#031c06" ];
 		var colors = ["#0073b7", "#f39c12"];
-		var colorScale = "#7593a5";
+		var colorBar = "#ebf3f8";
+		var colorScale = "#c4dcea";//"#7593a5";
+		var colorScaleSame = "rgb(208, 118, 130)";
 		
 
 		var svg   = d3.select("#widget-" + vars.widgetUniqueName + " .visualization-main" ).append("svg")
@@ -72,36 +78,53 @@ $.publRank.visualization = {
 		var index    = function(d, i){ return i+1; };
 		
 		var xScale = d3.scaleBand()
-			.rangeRound([0, vars.width]).padding(0.1)
+			.rangeRound([1, vars.width]).padding(0.2)
 			.domain(dataset.map( index ));
 
-		var yScale = d3.scaleLog()
+		if ( d3.max(dataset, citation) - d3.min(dataset, citation) > 500 ){
+			var yAxisScale = d3.scaleLog();
+			var yScale = d3.scaleLog();
+		}
+		else{
+			var yAxisScale = d3.scaleLinear();
+			var yScale = d3.scaleLinear();
+		}
+
+		yScale
 			.range([1, vars.height - vars.margin.bottom - vars.margin.top])
-			.domain([d3.min(dataset, citation), d3.max(dataset, citation)]).base(2).nice();
-
-		var yAxisScale = d3.scaleLog()
+			.domain([ 1 , d3.max(dataset, citation)]).nice();
+		yAxisScale 
 			.range([vars.height - vars.margin.bottom - vars.margin.top, 1])
-			.domain([d3.min(dataset, citation), d3.max(dataset, citation)]).base(2).nice();
-
-		if ( vars.publication.topics.length != 0 &&  vars.publication.topics.topics != null ){
-			var terms = vars.publication.topics.topics[0].termvalues.map(function( d){ return d.term; });
+			.domain([ 1, d3.max(dataset, citation)]).nice();
+		
+		if ( vars.publication.topics.length != 0 &&  vars.publication.topics.topicModel != null ){
+			var terms = vars.publication.topics.topicModel[0].termvalues.map(function( d){ return d.term; });
 			var max = terms.length - 1;
 		}
 		
 		vars.colorScale = colorScale;
 
-		var bars = svg.selectAll("g")
+		var barWidth =  xScale.bandwidth() > 40 ? 40 : xScale.bandwidth();
+		
+		var barsBox = svg.append("g").attr("class", "bars")
+			.attr("transform", "translate(" + vars.margin.left + " , " + 0 + ")");
+		var bars = barsBox.selectAll("g")
 			.data(dataset)
 			.enter().append("g")
 				.attr("class", function(d, i){ return i+1 == dataset.length ? "bar clicked" : "bar"; })
+				.attr("transform",function(d, i){
+					var x = xScale.bandwidth() != barWidth ? xScale( i+1 ) + (  xScale.bandwidth()/2 - barWidth/4 ) : xScale( i+1 );
+					var y = vars.height - vars.margin.bottom ;
+					return "translate(" + x + "," + y +")"; 
+				})
 				.on("mouseenter", this.interactions.mouseoverBar)
 				.on("mouseleave", this.interactions.mouseleaveBar)
 				.on("click", this.interactions.clickedBar);
 		
-		var barWidth =  xScale.bandwidth() > 40 ? 40 : xScale.bandwidth();
+		
 		//add rectangular
 		bars.append("rect")
-			.attr("fill", "white")
+			.attr("fill", colorBar )
 			.attr("stroke", "black")
 			.attr("stroke-opacity", "0.5")
 			.attr("width", barWidth)
@@ -110,23 +133,24 @@ $.publRank.visualization = {
 		//add label
 		bars.append("text").attr("class", "bar-label")
 			.style("font-size", "14px")
-			.attr("fill", "black")
+			.attr("fill", "#444")
 			.attr("opacity", "0.7")
 			.attr("dy", "-.35em")
-			.attr("dx", function () { return (barWidth - this.getComputedTextLength()) / 2; } ) 
+			.attr("dx", function () { return ( barWidth - this.getComputedTextLength()) / 2; } ) 
 			.style("text-anchor", "middle")
 			.text(function( d ){ return d.cited || "0"; });
-		
+
 		//position bars
-		bars.attr("transform", function( d, i ) {
+		bars
+			.transition().duration( function(d, i){ return 400 * i; }).ease(d3.easeCubic)
+			.attr("transform", function( d, i ) {
     		if ( d.cited == null || d.cited == 0 )
     			y = -1 + vars.height - vars.margin.bottom;
     		else y = -yScale(d.cited) + vars.height - vars.margin.bottom;
-    		return "translate(" + [ xScale( i+1 ) + vars.margin.left, y] + ")";
-    	});
-		
-		//animate bars height
-		bars.transition().duration(function(d,i){ return 100 * i; }).ease(d3.easeCubic)
+    		
+    		var x = xScale.bandwidth() != barWidth ? xScale( i+1 ) + (  xScale.bandwidth()/2 - barWidth/4 ) : xScale( i+1 );
+    		return "translate(" + [ x, y] + ")";
+    	})
 			.selectAll("rect")
 			.attr("height", function( d ){
 				if ( d.cited == null || d.cited == 0){
@@ -144,11 +168,19 @@ $.publRank.visualization = {
 		// Add a rect for each topic value
 		var rects = groups.selectAll("rect")
 				.data( function(d) { 
-					if ( d.topics != null && d.topics.length != 0 ){
-						d.topics.total = d3.sum(d.topics[0].termvalues, function(d){ return d.value;});
-						return d.topics[0].termvalues.reverse().slice(0,5).reverse();
-					}
-					return []; 
+					if ( d.topics != null )
+						if ( d.topics.status == "ok" ){
+							var topics = d.topics.topics != null ?  d.topics.topics[0].termvalues : [];
+							if ( d.topics.topicModel != null )
+								topics = d.topics.topicModel[0].termvalues;
+						
+							if ( topics.length > 0){
+								d.topics.total = d3.sum( topics, function(d){ return d.value;});
+								d.topTopics = topics.reverse().slice(0,5).reverse()
+								return d.topTopics;	
+							}
+						}
+					return d.topTopics = []; 
 				})
 				.enter().append("rect")
 					.attr("height", 0)
@@ -156,7 +188,8 @@ $.publRank.visualization = {
 					.style("fill-opacity", function(d, i){
 						return d3.select(this.parentElement).datum().id == vars.publication.basicinfo.publication.id ? 1 : 0;						
 					});
-			
+		
+		
 		var position = 0;		
 		rects
 			.attr("y", function(d,i) { 
@@ -166,21 +199,19 @@ $.publRank.visualization = {
 			})
 			.style("fill", function( d, i ){ 
 				if ( colorScale != null )
-//					if ( colorScale.domain().indexOf( i ) >= 0 )
-//						return colorScale( i ) ;
-//					else 
-						return d3.lab(colorScale).darker( i );})
+					if ( Array.isArray( vars.publication.topics.topicModel ) && vars.publication.topics.topicModel.length != null )
+						if ( d3.select(this.parentElement).datum().id != $.PALM.selected.publication )
+							if ( $.publRank.visualization.searchTerm( vars.publication.topics.topicModel, d.term ) )
+								return colorScaleSame;							
+						return d3.lab(colorScale).darker( i *0.5 );
+				})
 			.attr("height", function( d,i ){ return d.height; });
 		
 		
 		var positionY1 = 0, positionY2 = 0;
 		groups.selectAll("line")
 			.data( function(d) { 
-				if ( d.topics != null && d.topics.length != 0 ){
-					d.topics.total = d3.sum(d.topics[0].termvalues, function(d){ return d.value;});
-					return d.topics[0].termvalues.slice(0,5).reverse();
-				}
-				return []; 
+				return d.topTopics;
 			})
 			.enter().append("line")
 				.attr("x1", 0)     
@@ -203,26 +234,26 @@ $.publRank.visualization = {
 		// x y axis
 		svg.append("g")
 			.attr("class","x axis")
-			.attr("transform","translate(" + vars.margin.left + "," + (vars.height - vars.margin.bottom) + ")")
-			.call(d3.axisBottom( xScale ).tickSize(5));
+			.attr("transform","translate(" + (vars.margin.left+10) + "," + (vars.height - vars.margin.bottom) + ")")
+			.call(d3.axisBottom( xScale ).ticks( dataset.length ).tickSize(5));
 
 		svg.append("g")
 			.attr("class","y axis")
-			.attr("transform","translate(" + vars.margin.left + "," + vars.margin.top + ")")
-			.call( d3.axisLeft( yAxisScale ) );
+			.attr("transform","translate(" + (vars.margin.left+10) + "," + vars.margin.top + ")")
+			.call( d3.axisLeft( yAxisScale ).ticks(5) );
 		
 		//labels
 		svg.append("text")
 			.attr("class","axis-label")
 			.attr("transform","rotate(-90)")
 			.attr("y", 0 - 3)
-			.attr("x", 0-(vars.height/2))
+			.attr("x", -(vars.height/2) - vars.margin.left)
 			.attr("dy","1em")
 			.text("Number of Citations");
 
 		svg.append("text")
 			.attr("class","axis-label")
-		  	.attr("x",vars.width/2 - vars.margin.left)
+		  	.attr("x",vars.width/2)
 		  	.attr("y",vars.height + vars.margin.bottom)
 		  	.attr("text-anchor","middle")
 		  	.text("Publications");
@@ -232,7 +263,8 @@ $.publRank.visualization = {
 		
 		vars.visualizations.common.wrapText( gTitle, text, vars.width, "title", 14);
 		
-		gTitle.attr("transform", "translate(0, " + (gTitle.node().getBBox().height - 14) + ")" );
+		var y = gTitle.node().getBBox().height / 14 >= 2 ? gTitle.node().getBBox().height - 14 : gTitle.node().getBBox().height;
+		gTitle.attr("transform", "translate(0, " + y + ")" );
 		//citation axis
 		var myPaperHeight = dataset[ dataset.length-1 ].height;
 		svg.append("line")
@@ -245,6 +277,15 @@ $.publRank.visualization = {
 			.style("stroke-dasharray", ("3, 3"));
 
 
+	},
+	searchTerm : function( topics, term ){
+		var found = false;
+		topics.forEach( function( t, i ){
+			var f = t.termvalues.filter( function( tv ){ return tv.term == term; });
+			if ( f.length > 0)
+				found = true;
+		});
+		return found;
 	},
 	elements : function(){},
 	list : function( dataset ){
@@ -297,9 +338,12 @@ $.publRank.visualization = {
 	bartopics : function( elem, d){
 		var vars    = $.publRank.variables;
 		var top     = -20;
-		var topics  =  d.topics != null && d.topics.length > 0 ? d.topics[0].termvalues.slice(0,5) : [];
 		var right   = false;
 		var svg 	= d3.select("#widget-" + vars.widgetUniqueName + " svg");
+		var topics  =  d.topics != null && d.topics.status == "ok" ? d.topics.topics != null ? d.topics.topics[0].termvalues.slice(0,5) : [] : [];
+		
+		if ( d.topics != null && d.topics.topicModel !=  null )
+			topics = d.topics.topicModel[0].termvalues.slice(0,5);
 		
 		if (topics.length > 0 ){
 			var list = svg.append("g").attr("class","list-topics");
@@ -336,7 +380,7 @@ $.publRank.visualization = {
 				if ( vars.colorScale != null )
 //					return vars.colorScale( j );
 //				else 
-					return d3.lab(vars.colorScale).darker( ( (topics.length-1) - j ) ); 
+					return d3.lab(vars.colorScale).darker( ( (topics.length-1) - j ) * 0.5 ); 
 			});
 			
 			var barPosition = d3.transform( d3.select(elem).attr("transform") ).translate;
@@ -345,19 +389,19 @@ $.publRank.visualization = {
 			if ( barPosition[0] - list.node().getBBox().width < vars.margin.left )
 				right = true;
 			
-			console.log( "Right: " + right);
-			
 			var y = vars.height - vars.margin.top - list.node().getBBox().height;
 			
 			if ( right ){
 				var text1Prop = { "x" : 10,  "dx" : "0.35em", "anchor" : "start" }; 
 				var text2Prop = { "x" : -10, "dx" : "0.35em", "anchor" : "end"  };
-				var translate = [ barPosition[0] + list.node().getBBox().width / 2 , y];
+				var translate = [ barPosition[0] + list.node().getBBox().width / 2, y];
 			}else{
 				var text1Prop = { "x" : 0,  "dx" : "-0.35em", "anchor" : "end" }; 
 				var text2Prop = { "x" : 10, "dx" : "0.35em",  "anchor" : "start" };
-				var translate = [ barPosition[0] - list.node().getBBox().width / 2  , y ];
+				var translate = [ barPosition[0] - list.node().getBBox().width / 2  , y ];				
 			}
+			
+			list.attr("transform", "translate(" + (translate[0] + vars.margin.left) + "," + y + ")");
 			
 			list.selectAll(".text-term")
 				.attr("x",  text1Prop.x)
@@ -378,14 +422,14 @@ $.publRank.visualization = {
 	  					if ( vars.colorScale != null)
 //						return vars.colorScale( i );
 //					else 
-						return d3.lab( vars.colorScale ).darker((topics.length-1) - i); })
+						return d3.lab( vars.colorScale ).darker( ( (topics.length-1) - i) * 0.5 ); })
 	  				.attr("stroke-width", 2 )
 	  				.attr("opacity", 0.5)
 	  				.attr("fill", "none")
 	  				.attr("class", "link" )
 //	  				.attr("transform", "translate(" + [translate[0], -y] + ")");
 		
-			list.attr("transform", "translate(" + translate + ")");
+			
 			
 			links.attr("d", function( dl, i ){
 				if (right){
@@ -507,13 +551,14 @@ $.publRank.visualization = {
 			var publication = vars.publication.basicinfo.publication ;
 			var topics 		= [];
 			
-			if ( typeof vars.publication.topics !== "object" && vars.publication.topics.length != 0 )
-				if ( vars.publication.topics.topics.length != 0 )
-					var topics = vars.publication.topics.topics[0].termvalues;	
+			if ( Array.isArray( vars.publication.topics.topicModel ) && vars.publication.topics.topicModel.length != 0 )
+				if ( vars.publication.topics.topicModel.length != 0 )
+					var topics = vars.publication.topics.topicModel[0].termvalues;	
 		}else{
 			var publication = publ;
-			var topics      = publ.topics != null && publ.topics[0] != null ?  publ.topics[0].termvalues : [] ;
-			
+			var topics      = publ.topics != null && publ.topics.status == "ok" ?  publ.topics.topics != null ? publ.topics.topics[0].termvalues : [] : [];
+			if ( publ.topics != null && publ.topics.topicModel != null )
+				topics =  publ.topics.topicModel[0].termvalues;
 		}
 		
 		var max = topics.length == 0 ? 0 : topics.length - 1;
@@ -568,27 +613,28 @@ $.publRank.visualization = {
 		 		currentCol = Math.floor(i / topicsPerCol);
 		 		pos        = (i - currentCol*topicsPerCol ) *25 +10;
 			
+		 		//shape
 		 		g.append("rect")
 		 			.attr("x", space )
 		 			.attr("y", pos)
 		 			.attr("width", rectMaxSize)
-		 			.attr("height",10)
+		 			.attr("height", 10)
 		 			.attr("fill", "transparent")
 		 			.attr("stroke", "black")
 		 			.attr("stroke-opacity", 0.5)
 		 			.style("text-anchor", "start");
 		 		
 		 		g.append("rect")
-	 				.attr("x", space )
-	 				.attr("y", pos)
+	 				.attr("x", space + 1)
+	 				.attr("y", pos + 1)
 	 				.attr("width", function( dt ){ return rectScale(dt.value); })
-	 				.attr("height",10)
+	 				.attr("height", 8 )
 	 				.attr("fill", function( dt ){ 
 	 					if ( i < 5)
-	 						return d3.lab(vars.colorScale).darker( ( 4 - i ) );
+	 						return d3.lab(vars.colorScale).darker( ( 4 - i ) * 0.5 );
 	 					return vars.colorScale; })
 	 				.style("text-anchor", "start");
-
+		 		//text
 		 		g.append("text")
 	 				.attr("x", function( dt ){ return  space ; })
 	 				.attr("y", pos + 10)
@@ -653,19 +699,17 @@ $.publRank.visualization = {
 			
 			d3.select(this).attr("opacity", 1);
 			d3.select(this).select("rect").attr("stroke-width", "3px");
-			d3.select(this).selectAll("text").style("font-weight", "bold");
-			d3.select(this).selectAll("text").style("text-anchor", "middle");
+			d3.select(this).selectAll("line").attr("stroke-opacity", 0.6);
 			
+			d3.select(this).selectAll("text").style("text-anchor", "middle");
 			d3.select(this).selectAll(".rgroups rect ").style("fill-opacity", 1);
 			$.publRank.visualization.bartopics( this, d);		
-			
-//			d3.select("#list-item-" + d.id).selectAll("text").style("font-weight", "bold");		
 		},
 		mouseleaveBar: function(d){
 			d3.selectAll(".bar").attr("opacity", 1);
 			
-			d3.select(this).select("rect").attr("stroke-width", "1px");
-			d3.select(this).select("text").style("font-weight", "normal");
+			d3.select(this).select("rect").attr("stroke-width", "1px" );
+			d3.select(this).selectAll("line").attr("stroke-opacity", 0 );
 			
 			d3.select(this).selectAll(".rgroups rect ").style("fill-opacity", function( d ){ return d3.select(this.parentElement).datum().id == $.publRank.variables.publication.basicinfo.publication.id ? 1 : 0; });
 						
@@ -687,8 +731,6 @@ $.publRank.visualization = {
 			})
 		},
 		mouseleaveList: function(d){
-			d3.select(this).selectAll("text").style("font-weight", "normal");
-			
 			d3.selectAll(".bar").each(function( e ){
 				var g = d3.select(this);
 				g.selectAll("text").style("font-weight", "normal");
@@ -706,18 +748,17 @@ $.publRank.visualization = {
 			
 			d3.selectAll(".bar").nodes().map( function( db, i){
 				var bar = d3.select(db);	
+				var topics = d3.select( db ).datum().topics[0] != null ? d3.select( db ).datum().topics[0].termvalues : [];
 				
-				var termFound =  bar.datum().topics != null && bar.datum().topics.length != 0 && bar.datum().topics[0].termvalues.map( function( dt ){ return dt.term; } ).indexOf( d.term ) >= 0;
+				var termFound =  topics.length > 0 &&  topics.map( function( dt ){ return dt.term; } ).indexOf( d.term ) >= 0;
 				
 				bar.attr("opacity", termFound ? 1 : 0.3);
 				bar.select("rect").attr("stroke-width", termFound ? "3px" : "1px" );
-				bar.select("text").style("font-weight", termFound ? "bold" : "normal" );
 			});
 		},
 		mouseleaveTopic : function(d){
 			d3.selectAll(".bar").attr("opacity", 1);
 			d3.selectAll(".bar").select("rect").attr("stroke-width", "1px");
-			d3.selectAll(".bar").select("text").style("font-weight", "normal");
 			
 			d3.select(this).select("rect").attr("stroke-width", "1px");
 			d3.select(this).selectAll("text").style("font-weight", "normal");
@@ -799,10 +840,11 @@ function addTitle( elem, d ){
 		widthBox = vars.width -vars.margin.right,
 		barPos   = d3.transform( d3.select(elem).attr("transform") ).translate;
 	
-	var title = d3.select(elem.parentNode).append("g").attr("class", "bar-title");		
+	var title = d3.select( elem.parentNode.parentNode ).append("g").attr("class", "bar-title");		
 	var titleBackground = title.append("rect")
 		.attr("rx", 5).attr("ry", 5)
-		.attr("fill", "white");
+		.attr("fill", "white")
+		.attr("stroke", "rgb(196, 220, 234)");
 		
 	vars.visualizations.common.wrapText(title, d.title, 250, "bar-title-chunk", 14);
 	
@@ -811,7 +853,7 @@ function addTitle( elem, d ){
 		x = vars.margin.left;
 	else
 		if ( x + title.node().getBBox().width > widthBox) //too much right
-			x = barPos[0] - title.node().getBBox().width  +d3.select(elem).node().getBBox().width;
+			x = barPos[0] - title.node().getBBox().width  + d3.select(elem).node().getBBox().width + vars.margin.left;
 	
 	y = vars.height;
 	

@@ -7,36 +7,14 @@
 			<div class="filter basedOn col-lg-4 col-md-5 col-sm-8">
   				<span class="title font-small col-md-4  col-sm-4"> Based on : </span>
   				<div class="dropdown col-md-8 col-sm-8">
-    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Publications' Citations<span class="caret"></span> </button>
-    				<ul class="dropdown-menu">
-    					<li class="selected" data-value="cited"><a href="#">Publications' Citations</a></li>
-      					<li><a href="#" data-value="venue">Publication's Venue Rank</a></li>  					
-    				</ul>
+    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Publications' Citations</button>    				
   				</div>
 			</div>
 			<div class="filter orderedBy col-lg-4 col-md-5 col-sm-8">
   				<span class="title font-small col-md-4  col-sm-4"> Ordered by: </span>
   				<div class="dropdown col-md-8 col-sm-8">
-    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Publications' Citations <span class="caret"></span> </button>
-    				<ul class="dropdown-menu">
-      					<li class="selected" data-value="cited"><a href="#">Publications' Citations</a></li>
-      					<li data-value="year"><a href="#" >Year of publication</a></li>
-    				</ul>
+    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Publications' Citations </button>
   				</div>
-			</div>
-			<div class="filter top col-lg-4 col-md-5 col-sm-8">
-  				<span class="title font-small col-md-4  col-sm-4"> Top : </span>
-  				 <div class="btn-group" data-toggle="">
-                	<label class="radio-inline">
-                    	<input type="radio" id="top5" name="top" value="5" /> 5
-                	</label> 
-                	<label class="radio-inline active">
-                    	<input type="radio" id="top10" name="top" checked="checked" value="10" /> 10
-               	 	</label> 
-                	<label class="radio-inline">
-                    	<input type="radio" id="q158" name="top" value="15" /> 15
-                	</label> 
-            </div>
 			</div>
 		</div>
 		<div class="container-box visualization-box row">
@@ -61,7 +39,7 @@
 		<#else>
 			var targetId = "";
 		</#if>
-		var height = 530;
+		var height = 450;
 		<#-- add slimscroll to widget body -->
 		<#-- $("#boxbody${wUniqueName} .box-content").slimscroll({
 			height: height + "px",
@@ -104,10 +82,8 @@
 					var query  = "?id=" + data.basicinfo.publication.event.id + "&maxresult=" + 15;
 					var confPublURL = "<@spring.url '/venue/publicationTopList' />" + query;
 					
-					var conferencePublications = $.get(confPublURL, function(response){
-						console.log("response"); console.log(response);
-						$.publRank.visualization.draw( "<@spring.url ''/>", userLoggedId, "${wUniqueName}", response, data, height);
-					})
+					$.publRank.visualization.draw( "<@spring.url ''/>", userLoggedId, "${wUniqueName}", data, height);
+					
 				}else
 					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications!", "Currently no venue found on PALM database for this publication." );
 
@@ -143,13 +119,10 @@
 			}
 		});
 		
-		<#-- filter publications -->
-		$("#widget-${wUniqueName}" + " .top input[name=top]").on("click", function(){
-			console.log("click");	
-			
-			$.bestPapers.filterBy.top( $(this).val() );
-			
-		});
+		<#-- filter publications 
+		<#-- $("#widget-${wUniqueName}" + " .top input[name=top]").on("click", function(){			
+			$.bestPapers.filterBy.top( $(this).val() );	
+		});-->
 			
 	});<#-- end document ready -->
 </script>

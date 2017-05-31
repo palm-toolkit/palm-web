@@ -1,6 +1,19 @@
+#widget-publication_rank .visualization-main .bar{
+	cursor: pointer;
+}
+
 #widget-publication_rank .visualization-main .bar.clicked rect{
     stroke-width: 2px;
+    fill	 	: #76afd0;
 }
+#widget-publication_rank .visualization-main .bar text{
+	font-weight	: 700;
+}
+	
+#widget-publication_rank .visualization-main .bar.clicked text{
+	fill	 	: #76afd0;	
+}
+
 #widget-publication_rank .visualization-box{
 	color : #444;
 	fill  : #444;
@@ -9,3 +22,4 @@
 #widget-publication_rank .axis-label{
 	font-weight : 700;
 }
+

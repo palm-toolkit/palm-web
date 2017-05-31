@@ -106,7 +106,7 @@ $.each( data.topicModel, function( index, item){
 			);
 	
 	<#-- add visualization -->
-	visualizeTermValue( item.termvalue, "#tab_" + tabHeaderText );
+	visualizeTermValue( item.termvalues, "#tab_" + tabHeaderText );
 	document.getElementById("tab_" + tabHeaderText).style.height = "500px";
 	
 });
@@ -127,10 +127,10 @@ function visualizeTermValue( termValueMap, svgContainer )
 		nv.addGraph(function() {
   		var chart = nv.models.pieChart()
 	      .x(function(d) { 
-	      	return d[0]
+	      	return d.term
 	      })
 	      .y(function(d) { 
-	      	return d[1] 
+	      	return d.value
 	      })
 	      .showLabels(true)     //Display pie labels
 	      .labelThreshold(.00)  //Configure the minimum slice size for labels to show up

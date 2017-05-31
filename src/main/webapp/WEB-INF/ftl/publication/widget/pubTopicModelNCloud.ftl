@@ -62,14 +62,14 @@ targetContainerFilter.find( ".box-filter-button" ).find( "span" ).html( "" );
 	console.log(uniqueWords);
 -->
 
-for ( var i = 0; i < data.termvalue.length; i++){
+for ( var i = 0; i < data.termvalues.length; i++){
 
-	for (var k in data.termvalue[i]){
+	for (var k in data.termvalues[i]){
 		var termValue = {
 			"text" : k,
-			"size" : data.termvalue[i][k]
+			"size" : data.termvalues[i][k]
 		}
-		uniqueWords.push({"text" : k, "size" : parseFloat(data.termvalue[i][k])});
+		uniqueWords.push({"text" : k, "size" : parseFloat(data.termvalues[i][k])});
 		//uniqueWords.push(termValue);
 	}
 }
