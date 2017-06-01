@@ -192,14 +192,16 @@ $.TOPIC_EVOLUTION = {
 				content : function( data ){
 					var vars = $.TOPIC_EVOLUTION.variables;
 					
-					var legend = d3.select("#legend")
+
+					var legend = d3.select("#legend").append("g")
+						.attr("transform", " translate(" + vars.margin.left + "," + vars.margin.top + ")" )
 						.selectAll("text")
 						.data( data, function(d){return d.key} );
 
 					//checkboxes
 					legend.enter().append("circle")
 						.attr("r", 5)
-						.attr("cx", vars.margin.left )
+						.attr("cx", 0 )
 						.attr("cy", function (d, i) { return 0 +i * 15; })  // spacing
 						.attr("fill",function(d) { return vars.color(d.key); })
 						.attr("stroke",function(d) { return vars.color(d.key); })
@@ -218,8 +220,8 @@ $.TOPIC_EVOLUTION = {
 								.style("display", function(d){ return d.inactive ? "none" : "block"; });						 
 						});
 					// Add the Legend text
-				    legend.enter().append("text")
-				    	.attr("x", vars.margin.left + 15)
+					legend.enter().append("text")
+				    	.attr("x", 15)
 				    	.attr("y", function(d,i){return 10 + i*15;})
 				    	.attr("class", "legend")
 				      	.style("fill", "#777" )
