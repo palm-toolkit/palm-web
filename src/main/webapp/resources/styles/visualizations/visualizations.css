@@ -4,6 +4,7 @@
 @import url("key-researchers-style.css");
 @import url("circle-activity-status.css");
 @import url("publication-rank.css");
+@import url("topic-evolution.css");
 
 .box-body .font-small{
 	font-size : 85% !important;

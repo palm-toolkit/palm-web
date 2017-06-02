@@ -1,0 +1,73 @@
+#widget-researcher_topicmodel_evolution svg {
+  font: 10px sans-serif;
+}
+ 
+#widget-researcher_topicmodel_evolution .axis path,
+#widget-researcher_topicmodel_evolution .axis line {
+  fill: none;
+  stroke: #444;
+  shape-rendering: crispEdges;
+}
+
+#widget-researcher_topicmodel_evolution .y.axis .tick line{
+	stroke: #eee;
+    stroke-dasharray: 5;
+}
+#widget-researcher_topicmodel_evolution .y.axis .tick:nth-child(2) line{
+	display : none;
+}
+
+#widget-researcher_topicmodel_evolution .y.axis path {
+  fill: none;
+  stroke: #444;
+  shape-rendering: crispEdges;
+}
+
+#widget-researcher_topicmodel_evolution .brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+#widget-researcher_topicmodel_evolution .line {
+  fill: none;
+  stroke-width : 1.5px;
+}
+#widget-researcher_topicmodel_evolution .zoom {
+  cursor: move;
+  fill: transparent;
+  pointer-events: all;
+}
+
+/* TOOLTIP */
+#widget-researcher_topicmodel_evolution .vertical-line{
+	position: absolute;
+	z-index : 19;
+	width 	: 1px;
+	background-color : #444;
+	left	: 0px;
+}
+#widget-researcher_topicmodel_evolution .tooltip{
+	opacity 	: 1;
+	background	: white;
+    border		: 1px solid #dadada;
+    border-radius: 2px;
+    padding		: 0.5em;
+    webkit-box-shadow: 5px 8px 6px -6px #eee;
+    -moz-box-shadow	 : 5px 8px 6px -6px #eee;
+    box-shadow		 : 5px 8px 6px -6px #eee;
+}
+
+#widget-researcher_topicmodel_evolution .tooltip table td{
+    padding		: 0.2em 0.1em;
+}
+
+#widget-researcher_topicmodel_evolution .tooltip table .circle{
+    height	: 10px;
+    width	: 10px;
+    border-radius: 50%;
+}
+#widget-researcher_topicmodel_evolution .tooltip table tr.hovered{
+	border-top 	  : 1px solid grey;
+	border-bottom : 1px solid grey;
+}

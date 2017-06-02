@@ -49,150 +49,211 @@ $.TOPIC_EVOLUTION = {
 			});
 			return data.elements;
 		},
-		draw : {
-			chart : function( data, svgContainer ){
-				this.base( data, svgContainer );
+		chart : {
+			draw : function( data, svgContainer ){
+				this.base.content( data, svgContainer );
 				this.legend.content( data );
+				this.tooltip.content();
 			},
-			base : function( data, svgContainer ){
-				var vars = $.TOPIC_EVOLUTION.variables;
-
-				var x  = d3.scaleTime().range([0, vars.width]),
-				    x2 = d3.scaleTime().range([0, vars.width]),
-				    y  = d3.scaleLinear().range([ vars.height, 0]),
-				    y2 = d3.scaleLinear().range([ vars.height2, 0]);
-				 
-				var xAxis = d3.axisBottom(x),
-				    xAxis2 = d3.axisBottom(x2),
-				    yAxis = d3.axisLeft(y);
-				 
-				var brush = d3.brushX()
-				    .extent([[0, 0], [ vars.width, vars.height2 ]])
-				    .on("brush end", brushed);
-				 
-				var zoom = d3.zoom()
-					.scaleExtent([1, Infinity])
-					.translateExtent([[0, 0], [vars.width, vars.height]])
-					.extent([[0, 0], [vars.width, vars.height]])
-					.on("zoom", zoomed);
-
-				var line = d3.line()
-				    .x(function(d) { return x(d.x); })
-				    .y(function(d) { return y(d.y); });
-				 
-				var line2 = d3.line()
-				    .x(function(d) {return x2(d.x); })
-				    .y(function(d) {return y2(d.y); });
-				 
-				vars.line = line; 
-				vars.line2 = line2; 
-				
-				var svg = d3.select(svgContainer).append("svg")
-				    .attr("width",  vars.width  + vars.margin.left + vars.margin.right)
-				    .attr("height", vars.height + vars.margin.top  + vars.margin.bottom);
-				 
-				svg.append("defs").append("clipPath")
-				    .attr("id", "clip")
-				  .append("rect")
-				    .attr("width", vars.width)
-				    .attr("height", vars.height);
-				 
-				var focus = svg.append("g").attr("class", "focus")
-				  .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
-				      
-				var context = svg.append("g").attr("class", "context")
-				  .attr("transform", "translate(" + vars.margin2.left + "," + vars.margin2.top + ")");
-				  
-				vars.color.domain( data.map( function( d ){ return d.key; }) );
-				
-				x.domain( d3.extent( data[0].values.map( function(d){ return d.x; }) ));
-				y.domain([d3.min(data, function(c) { return d3.min(c.values, function(v) { return v.y; }); }),
-				          d3.max(data, function(c) { return d3.max(c.values, function(v) { return v.y; }); }) ]);
-				x2.domain(x.domain());
-				y2.domain(y.domain());
-				    
-				var focuslineGroups = focus.selectAll("g")
-				   .data(data)
-				   .enter().append("g");
-				      
-				var focuslines = focuslineGroups.append("path")
-				    .attr("class","line")
-				    .attr("d", function(d) { return line(d.values); })
-				    .style("stroke", function(d) {return vars.color(d.key);})
-				    .attr("clip-path", "url(#clip)");
-				    
-				focus.append("g")
-				    .attr("class", "x axis")
-				    .attr("transform", "translate(0," + vars.height + ")")
-				    .call(xAxis);
-				 
-				focus.append("g")
-				    .attr("class", "y axis")
-				    .call(yAxis);
-				        
-				var contextlineGroups = context.selectAll("g")
-				    .data(data)
-				    .enter().append("g");
-				    
-				var contextLines = contextlineGroups.append("path")
-				    .attr("class", "line")
-				    .attr("d", function(d) { return line2( d.values ); })
-				    .style("stroke", function(d) {return vars.color(d.key);})
-				    .attr("clip-path", "url(#clip)");
-				 
-				context.append("g")
-					.attr("class", "x axis")
-				    .attr("transform", "translate(0," + vars.height2 + ")")
-				    .call(xAxis2);
-				 
-				context.append("g")
-				    .attr("class", "x brush")
-				    .call( brush )
-				    .call( brush.move, x.range() )
-				.selectAll("rect")
-				    .attr("y", -6)
-				    .attr("width", vars.width )
-				    .attr("height", vars.height2 + 7)
-				    
-				svg.append("rect")
-					.attr("class", "zoom")
-					.attr("width", vars.width )
-					.attr("height", vars.height )
-					.attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")")
-				    .call(zoom);
-
-				function brushed() {
-					if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+			base : {
+				content : function( data, svgContainer ){
+					var vars = $.TOPIC_EVOLUTION.variables;
+	
+					var x  = d3.scaleTime().range([0, vars.width]),
+					    x2 = d3.scaleTime().range([0, vars.width]),
+					    y  = d3.scaleLinear().range([ vars.height, 0]),
+					    y2 = d3.scaleLinear().range([ vars.height2, 0]);
 					 
-					var s = d3.event.selection || x2.range();
+					var xAxis = d3.axisBottom(x),
+					    xAxis2 = d3.axisBottom(x2),
+					    yAxis = d3.axisLeft(y).tickSize( - vars.width );
+					 
+					vars.brush = d3.brushX()
+					    .extent([[0, 0], [ vars.width, vars.height2 ]])
+					    .on("brush end", function(){ return $.TOPIC_EVOLUTION.chart.base.interactions.brushed(x, x2, xAxis); });
+					 
+					vars.zoom = d3.zoom()
+						.scaleExtent([1, Infinity])
+						.translateExtent([[0, 0], [vars.width, vars.height]])
+						.extent([[0, 0], [vars.width, vars.height]])
+						.on("zoom",  function(){ return $.TOPIC_EVOLUTION.chart.base.interactions.zoomed(x, x2, xAxis);  });
+	
+					var line = d3.line()
+					    .x(function(d) { return x(d.x); })
+					    .y(function(d) { return y(d.y); });
+					 
+					var line2 = d3.line()
+					    .x(function(d) {return x2(d.x); })
+					    .y(function(d) {return y2(d.y); });
+					 
+					vars.line = line; 
+					vars.line2= line2; 
 					
-					x.domain(s.map(x2.invert, x2));
-					focus.selectAll("path.line").attr("d", function(d){ return line( d.values ); });
-					focus.select(".x.axis").call(xAxis);
+					var svg = d3.select(svgContainer).append("svg")
+					    .attr("width",  vars.width  + vars.margin.left + vars.margin.right)
+					    .attr("height", vars.height + vars.margin.top  + vars.margin.bottom)
+					    .on( "mouseover", function(){ return $.TOPIC_EVOLUTION.chart.base.interactions.mouseOverChart( x, this )} )
+					    .on( "mousemove", function(){ return $.TOPIC_EVOLUTION.chart.base.interactions.mouseOverChart( x, this )} );
+					 
+					svg.append("defs").append("clipPath")
+					    .attr("id", "clip")
+					  .append("rect")
+					    .attr("width", vars.width)
+					    .attr("height", vars.height);
+					 
+					var focus = svg.append("g").attr("class", "focus")
+					  .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
+					      
+					var context = svg.append("g").attr("class", "context")
+					  .attr("transform", "translate(" + vars.margin2.left + "," + vars.margin2.top + ")");
+					  
+					vars.color.domain( data.map( function( d ){ return d.key; }) );
 					
-					svg.select(".zoom")
-						.call(zoom.transform, d3.zoomIdentity.scale(vars.width / (s[1] - s[0])).translate(-s[0], 0));
-				}
+					x.domain( d3.extent( data[0].values.map( function(d){ return d.x; }) ));
+					y.domain([d3.min(data, function(c) { return d3.min(c.values, function(v) { return v.y; }); }),
+					          d3.max(data, function(c) { return d3.max(c.values, function(v) { return v.y; }); }) ]);
+					x2.domain(x.domain());
+					y2.domain(y.domain());
+					
+					focus.append("g")
+				    	.attr("class", "x axis")
+				    	.attr("transform", "translate(0," + vars.height + ")")
+				    	.call(xAxis);
+				 
+					focus.append("g")
+				    	.attr("class", "y axis")
+				    	.call(yAxis);
 				
-				function zoomed() {
-					  if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
-					  
-					  var t = d3.event.transform;
-					  
-					  x.domain(t.rescaleX(x2).domain());
-					  
-					  focus.selectAll("path.line").attr("d", function(d){ return line( d.values ); });
-					  focus.select(".x.axis").call(xAxis);
-					  
-					  context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
-				}
+					var focuslineGroups = focus.selectAll("g.lines")
+					   .data(data)
+					   .enter().append("g").attr("class", "lines");
+					      
+					var focuslines = focuslineGroups.append("path")
+					    .attr("class","line")
+					    .attr("d", function(d) { return line(d.values); })
+					    .style("stroke", function(d) { d.color = vars.color(d.key); return d.color;})
+					    .attr("clip-path", "url(#clip)");
+					 
+					 
+					focuslineGroups.append("g").selectAll("circle")
+						.data( function( d){ return d.values } )
+					    .enter().append("circle")
+					    .attr("r", 3)
+					    .attr("cx", function(d){return x(d.x)})
+					    .attr("cy", function(d){return y(d.y)})
+					    .attr("fill", "white")
+					    .attr("stroke", function(d){ return d3.select(this.parentNode.parentNode).select("path.line").style("stroke"); });					   
+					    
+					var contextlineGroups = context.selectAll("g")
+					    .data(data)
+					    .enter().append("g");
+					    
+					var contextLines = contextlineGroups.append("path")
+					    .attr("class", "line")
+					    .attr("d", function(d) { return line2( d.values ); })
+					    .style("stroke", function(d) {return vars.color(d.key);})
+					    .attr("clip-path", "url(#clip)");
+					 
+					context.append("g")
+						.attr("class", "x axis")
+					    .attr("transform", "translate(0," + vars.height2 + ")")
+					    .call(xAxis2);
+					 
+					context.append("g")
+					    .attr("class", "x brush")
+					    .call( vars.brush )
+					    .call( vars.brush.move, x.range() )
+					.selectAll("rect")
+					    .attr("y", -6)
+					    .attr("width", vars.width )
+					    .attr("height", vars.height2 + 7)
+					    
+					svg.append("rect")
+						.attr("class", "zoom")
+						.attr("width", vars.width )
+						.attr("height", vars.height )
+						.attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")")
+					    .call( vars.zoom );
+				},		
+				interactions : {
+					mouseOverChart : function( x, $this ){
+						var vars    = $.TOPIC_EVOLUTION.variables;
+						var mouseX 	= d3.mouse( $this )[0];
+						var invertX = x.invert( mouseX );
+						var bisect	= d3.bisector( function( d ){ return d.x; }).right;
+						var vertical= d3.select( "#widget-" + vars.widgetUniqueName + " .vertical-line");
+						var focus	= d3.select( "#widget-" + $.TOPIC_EVOLUTION.variables.widgetUniqueName + " .focus");
+						
+						vertical.style("left", ( mouseX + 5 ) + "px");
+						
+						focus.selectAll(".line")
+							.each( function( l ){
+								var index 	= bisect( l.values, invertX );
+								
+								d3.select( this.parentNode ).selectAll("circle")
+									.transition().duration(100)
+									.attr("r", 3)
+									.attr("fill", "white" );
+							
+								var parentBox = d3.select( this.parentNode );
+								
+								var indexCheck = function( index ){	
+									parentBox.select("circle:nth-child(" + index + ")")
+										.attr("class", function(c){
+											var xSame = Math.abs( this.getBoundingClientRect().left - vertical.node().getBoundingClientRect().left ) < 10;
+											var ySame = Math.abs( this.getBoundingClientRect().top  - ( d3.mouse( $this )[1]  + focus.node().getBoundingClientRect().top ) ) < 10;
+											return xSame && ySame ? "hovered" : "";
+										})
+										.transition().duration(100)										
+										.attr("r", function(c){ return  Math.abs( this.getBoundingClientRect().left - vertical.node().getBoundingClientRect().left) < 10 ? 5 : 3; })
+										.attr("fill", function( c ){ return Math.abs( this.getBoundingClientRect().left - vertical.node().getBoundingClientRect().left) < 10  ? d3.select(this).attr("stroke") : "white"; });
+									};
+								
+								indexCheck( index - 1); 
+								indexCheck( index ); 
+							});
+						
+						$.TOPIC_EVOLUTION.chart.tooltip.show( invertX );
+					},
+					zoomed : function( x, x2, xAxis ){
+						if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
+						
+						var vars 	= $.TOPIC_EVOLUTION.variables;
+						var focus 	= d3.select("#widget-" + vars.widgetUniqueName + " g.focus");
+						var context = d3.select("#widget-" + vars.widgetUniqueName + " g.context")
+						var t 		= d3.event.transform;
+						  
+						x.domain(t.rescaleX( x2 ).domain());
+						  
+						focus.selectAll("path.line").attr("d", function(d){ return vars.line( d.values ); });
+						focus.selectAll("circle").attr("cx", function(d, i){return x(d.x)});
+						focus.select(".x.axis").call( xAxis );
 
+						context.select(".brush").call( vars.brush.move, x.range().map(t.invertX, t));
+					},
+					brushed : function ( x, x2, xAxis ) {
+						if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+						
+						var vars  = $.TOPIC_EVOLUTION.variables;
+						var focus = d3.select("#widget-" + vars.widgetUniqueName + " g.focus");
+						var svg   = d3.select("#widget-" + vars.widgetUniqueName + " #tab-evolution svg");
+						var s 	  = d3.event.selection || x2.range();
+						
+						x.domain(s.map( x2.invert, x2));
+						focus.selectAll("path.line").attr("d", function(d){ return vars.line( d.values ); });
+						focus.selectAll("circle").attr("cx", function(d){return x(d.x)});
+						focus.select(".x.axis").call( xAxis );
+						
+						
+						svg.select(".zoom")
+							.call( vars.zoom.transform, d3.zoomIdentity.scale( vars.width / (s[1] - s[0])).translate(-s[0], 0));
+					}
+				}
 			},
 			legend : {
 				content : function( data ){
 					var vars = $.TOPIC_EVOLUTION.variables;
-					
-
+				
 					var legend = d3.select("#legend").append("g")
 						.attr("transform", " translate(" + vars.margin.left + "," + vars.margin.top + ")" )
 						.selectAll("text")
@@ -243,8 +304,56 @@ $.TOPIC_EVOLUTION = {
 					d3.select("#legend").selectAll("circle").transition().duration(100)
 						.attr("fill", function(d){ d.inactive = true; return "white"; });
 				}
-			}		
-		} 
+			},
+			tooltip : {
+				content : function( data,year ){
+					var vertical = d3.select("#widget-" + $.TOPIC_EVOLUTION.variables.widgetUniqueName + " #tooltipContainer")
+				        .insert("div", ":first-child")
+				        .attr("class"	 , "vertical-line" )
+				        .style("height"	 , $.TOPIC_EVOLUTION.variables.height + "px" )
+				        .style("margin-top"	 , 10 + $.TOPIC_EVOLUTION.variables.margin.top + "px" );
+				},
+				show : function( year, mouseY ){	 
+					var vars = $.TOPIC_EVOLUTION.variables;
+			
+					var $table = $("#widget-" + vars.widgetUniqueName + " #tooltipContainer .tooltip table");
+					$table.empty().hide();
+					
+					$table.append($("<thead/>").append( $("<td/>").append("<strong>" + year.getFullYear() + "</strong>") ));
+					
+					var $body = $("<tbody/>");
+					var $row = $("<tr/>");
+						
+					var circles = d3.select( "#widget-" + vars.widgetUniqueName + " .focus").selectAll("circle")
+						.filter( function(){ return parseInt( d3.select(this).attr("r") ) > 3 });
+					
+					if ( circles.nodes().length == 0){
+						$table.empty();
+						return;
+					}
+						
+					for ( var i = 0; i < circles.nodes().length; i++ ){
+						var data = d3.select(circles.nodes()[i]).datum();
+						
+						$row = $("<tr/>").addClass( d3.select( circles.nodes()[i] ).attr("class") );
+						$row.append( $("<td/>").append( $("<div/>").addClass("circle").css( "background-color", "#" + data.color ) ) );
+						$row.append( $("<td/>").append( $("<span/>").text( data.key ) ) );
+						
+						var value = data.values.filter( function(v){ return v.x.getFullYear() == year.getFullYear(); } )[0].y;
+						$row.append( $("<td/>").append( $("<strong/>").text( Number(value).toFixed(2) ) ) ); 
+						
+						d3.select( circles.nodes()[i] ).classed("hovered", false);
+						
+						if ( value > 0)
+							$body.append( $row );
+					}
+					
+					$table.append( $body );
+					
+				    $table.show();    
+				}
+			}
+		}
 			
 }
 
@@ -257,6 +366,6 @@ function visualizeTermValue( data, svgContainer, widgetUniqueName ){
 	   
 	var processedData = $.TOPIC_EVOLUTION.processData ( data );
 	var filteredData  = $.TOPIC_EVOLUTION.filterData ( processedData );
-	$.TOPIC_EVOLUTION.draw.chart( filteredData, svgContainer );
+	$.TOPIC_EVOLUTION.chart.draw( filteredData, svgContainer );
 	
 }

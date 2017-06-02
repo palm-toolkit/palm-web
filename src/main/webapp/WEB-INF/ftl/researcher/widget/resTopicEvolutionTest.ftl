@@ -1,38 +1,4 @@
-<style>
- 
-svg {
-  font: 10px sans-serif;
-}
- 
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
 
-.y.axis path {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-.brush .extent {
-  stroke: #fff;
-  fill-opacity: .125;
-  shape-rendering: crispEdges;
-}
-
-.line {
-  fill: none;
-  stroke-width : 1.5px;
-}
-.zoom {
-  cursor: move;
-  fill: transparent;
-  pointer-events: all;
-}
-</style>
 <div id="boxbody${wUniqueName}" class="box-body" style="overflow:hidden">
 	
 	<div class="callout callout-warning" style="display:none">
@@ -52,6 +18,11 @@ svg {
 		</div>
 		<div id="clearAll">
 			<input name="clearAllButton" type="button" value="Hide All" onclick="$.TOPIC_EVOLUTION.draw.legend.hideAll()" />
+		</div>
+		 <div id="tooltipContainer" class="tooltipContainer">
+		 	<div class="tooltip">
+		 		<table></table>
+		 	</div>
 		</div>
         <div class="tab-content" id="tab_evolution">
         </div>
@@ -92,8 +63,28 @@ if( typeof data.termvalues === "undefined" || data.termvalues.length == 0){
 <#-- show tab -->
 tabContainer.show();
 
+var jsonOutput = [];
+
+for (var i = 0; i < data.termvalues.length; i++)
+{
+	var valuesTopic = data.termvalues[i].values;
+	var keyTopic = data.termvalues[i].key;
+	var colorTopic = data.termvalues[i].color;
+	
+	var valuesT = [];
+	var k;
+	for (k in valuesTopic) {
+		valuesT.push({x: parseInt(k), y: parseFloat(valuesTopic[k])});
+	}
+	
+	jsonOutput.push({
+			values: valuesT, 
+			key: keyTopic, 
+			color: colorTopic});
+}
 <#-- add visualization -->
 visualizeTermValue( data, "#tab_evolution", "${wUniqueName}");
+<#--visualizeTermValue1( jsonOutput, "#tab_evolution");-->
 document.getElementById("tab_evolution").style.height = "500px";
 	
 
