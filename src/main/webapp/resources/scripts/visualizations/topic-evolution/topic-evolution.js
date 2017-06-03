@@ -1,10 +1,11 @@
 $.TOPIC_EVOLUTION = {
 		variables : {
 				margin : {top: 10, right: 10, bottom: 100, left: 40},
-			    margin2 : {top: 430, right: 10, bottom: 20, left: 40},
-			    width : 960,
-			    height : 500,
-			    color : d3.scaleOrdinal( d3.schemeCategory20 )
+			    margin2 : {top: 330, right: 10, bottom: 20, left: 40},
+			    width :  960,
+			    height : 400,
+			    color : d3.scaleOrdinal( d3.schemeCategory20 ),
+			    visualizations : new Visualizations()
 		},
 		processData : function( data ){
 			var processData = { elements : [], years : [] };
@@ -51,6 +52,8 @@ $.TOPIC_EVOLUTION = {
 		},
 		chart : {
 			draw : function( data, svgContainer ){
+				d3.select(svgContainer).selectAll("*").remove();
+				
 				this.base.content( data, svgContainer );
 				this.legend.content( data );
 				this.tooltip.content();
@@ -91,10 +94,8 @@ $.TOPIC_EVOLUTION = {
 					
 					var svg = d3.select(svgContainer).append("svg")
 					    .attr("width",  vars.width  + vars.margin.left + vars.margin.right)
-					    .attr("height", vars.height + vars.margin.top  + vars.margin.bottom)
-					    .on( "mouseover", function(){ return $.TOPIC_EVOLUTION.chart.base.interactions.mouseOverChart( x, this )} )
-					    .on( "mousemove", function(){ return $.TOPIC_EVOLUTION.chart.base.interactions.mouseOverChart( x, this )} );
-					 
+					    .attr("height", vars.height + vars.margin.top  + vars.margin.bottom);
+					
 					svg.append("defs").append("clipPath")
 					    .attr("id", "clip")
 					  .append("rect")
@@ -102,7 +103,10 @@ $.TOPIC_EVOLUTION = {
 					    .attr("height", vars.height);
 					 
 					var focus = svg.append("g").attr("class", "focus")
-					  .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
+					  .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")")
+					  .on( "mouseover", function(){ return $.TOPIC_EVOLUTION.chart.base.interactions.mouseOverChart( x, this )} )
+					  .on( "mousemove", function(){ return $.TOPIC_EVOLUTION.chart.base.interactions.mouseOverChart( x, this )} );
+					 
 					      
 					var context = svg.append("g").attr("class", "context")
 					  .attr("transform", "translate(" + vars.margin2.left + "," + vars.margin2.top + ")");
@@ -166,14 +170,7 @@ $.TOPIC_EVOLUTION = {
 					.selectAll("rect")
 					    .attr("y", -6)
 					    .attr("width", vars.width )
-					    .attr("height", vars.height2 + 7)
-					    
-					svg.append("rect")
-						.attr("class", "zoom")
-						.attr("width", vars.width )
-						.attr("height", vars.height )
-						.attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")")
-					    .call( vars.zoom );
+					    .attr("height", vars.height2 + 7)	    
 				},		
 				interactions : {
 					mouseOverChart : function( x, $this ){
@@ -182,9 +179,9 @@ $.TOPIC_EVOLUTION = {
 						var invertX = x.invert( mouseX );
 						var bisect	= d3.bisector( function( d ){ return d.x; }).right;
 						var vertical= d3.select( "#widget-" + vars.widgetUniqueName + " .vertical-line");
-						var focus	= d3.select( "#widget-" + $.TOPIC_EVOLUTION.variables.widgetUniqueName + " .focus");
-						
-						vertical.style("left", ( mouseX + 5 ) + "px");
+						var focus	= d3.select( $this ).select(".focus");
+						var threshold = 8;
+						vertical.style({"left": ( mouseX ) + "px", "display" : "none"});
 						
 						focus.selectAll(".line")
 							.each( function( l ){
@@ -198,24 +195,25 @@ $.TOPIC_EVOLUTION = {
 								var parentBox = d3.select( this.parentNode );
 								
 								var indexCheck = function( index ){	
-									parentBox.select("circle:nth-child(" + index + ")")
+									parentBox.selectAll("circle").filter( function(d, i){ return i === index; })
 										.attr("class", function(c){
-											var xSame = Math.abs( this.getBoundingClientRect().left - vertical.node().getBoundingClientRect().left ) < 10;
-											var ySame = Math.abs( this.getBoundingClientRect().top  - ( d3.mouse( $this )[1]  + focus.node().getBoundingClientRect().top ) ) < 10;
+											var xSame = Math.abs( this.getBoundingClientRect().left - vertical.node().getBoundingClientRect().left ) < threshold;
+											var ySame = Math.abs( this.getBoundingClientRect().top  - ( d3.mouse( $this )[1]  + focus.node().getBoundingClientRect().top ) ) < threshold;
 											return xSame && ySame ? "hovered" : "";
 										})
 										.transition().duration(100)										
-										.attr("r", function(c){ return  Math.abs( this.getBoundingClientRect().left - vertical.node().getBoundingClientRect().left) < 10 ? 5 : 3; })
-										.attr("fill", function( c ){ return Math.abs( this.getBoundingClientRect().left - vertical.node().getBoundingClientRect().left) < 10  ? d3.select(this).attr("stroke") : "white"; });
+										.attr("r", function(c){ return  Math.abs( this.getBoundingClientRect().left - vertical.node().getBoundingClientRect().left) < threshold ? 5 : 3; })
+										.attr("fill", function( c ){ return Math.abs( this.getBoundingClientRect().left - vertical.node().getBoundingClientRect().left) < threshold  ? d3.select(this).attr("stroke") : "white"; });
 									};
 								
 								indexCheck( index - 1); 
 								indexCheck( index ); 
-							});
+						});
 						
 						$.TOPIC_EVOLUTION.chart.tooltip.show( invertX );
 					},
 					zoomed : function( x, x2, xAxis ){
+						console.log( d3.event.sourceEvent);
 						if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
 						
 						var vars 	= $.TOPIC_EVOLUTION.variables;
@@ -232,6 +230,7 @@ $.TOPIC_EVOLUTION = {
 						context.select(".brush").call( vars.brush.move, x.range().map(t.invertX, t));
 					},
 					brushed : function ( x, x2, xAxis ) {
+						console.log( d3.event.sourceEvent);
 						if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
 						
 						var vars  = $.TOPIC_EVOLUTION.variables;
@@ -241,57 +240,88 @@ $.TOPIC_EVOLUTION = {
 						
 						x.domain(s.map( x2.invert, x2));
 						focus.selectAll("path.line").attr("d", function(d){ return vars.line( d.values ); });
-						focus.selectAll("circle").attr("cx", function(d){return x(d.x)});
+						
+						focus.selectAll("circle").attr("cx", function(c){ return x(c.x); } );
 						focus.select(".x.axis").call( xAxis );
+					}
+				},
+				filterBy :{
+					top : function( val ){
+						var vars = $.TOPIC_EVOLUTION.variables;						
+						var termvalues  = vars.data.termvalues.slice(0, parseInt(val) );
+						var data = { termvalues : termvalues };
 						
-						
-						svg.select(".zoom")
-							.call( vars.zoom.transform, d3.zoomIdentity.scale( vars.width / (s[1] - s[0])).translate(-s[0], 0));
+						var processedData = $.TOPIC_EVOLUTION.processData ( data );
+						var filteredData  = $.TOPIC_EVOLUTION.filterData ( processedData );
+																
+						$.TOPIC_EVOLUTION.chart.draw( filteredData, "#tab_evolution" );						
 					}
 				}
 			},
 			legend : {
 				content : function( data ){
 					var vars = $.TOPIC_EVOLUTION.variables;
-				
-					var legend = d3.select("#legend").append("g")
-						.attr("transform", " translate(" + vars.margin.left + "," + vars.margin.top + ")" )
+					
+					d3.select("#widget-" + vars.widgetUniqueName + " #legend").selectAll("*").remove();
+					
+					var legend = d3.select("#widget-" + vars.widgetUniqueName + " #legend").append("g")
+						.attr("transform", " translate(" + vars.margin.left + "," + 6 + ")" )
 						.selectAll("text")
 						.data( data, function(d){return d.key} );
 
-					//checkboxes
-					legend.enter().append("circle")
-						.attr("r", 5)
-						.attr("cx", 0 )
-						.attr("cy", function (d, i) { return 0 +i * 15; })  // spacing
-						.attr("fill",function(d) { return vars.color(d.key); })
-						.attr("stroke",function(d) { return vars.color(d.key); })
-						.attr("stroke-width", "2px")
-						.attr("class", function(d,i){return "legendcheckbox " + d.key})
-						.on("click", function(d){
-							d.inactive = !d.inactive;
-						  
-							d3.select(this).attr("fill", function(d){
-								if( d.inactive )
-									return "white"; 
-								else return vars.color(d.key);  
-							});
-							
-							d3.select("#widget-" + vars.widgetUniqueName + " #tab_evolution").selectAll(".line")
-								.style("display", function(d){ return d.inactive ? "none" : "block"; });						 
-						});
+					
 					// Add the Legend text
-					legend.enter().append("text")
-				    	.attr("x", 15)
-				    	.attr("y", function(d,i){return 10 + i*15;})
-				    	.attr("class", "legend")
-				      	.style("fill", "#777" )
-				      	.text(function(d){return d.key;});
+					var prev = 3;
+					legend.enter().append("g").each( function(d, i){		
+						if ( i != 0 )
+							prev = prev + d3.select(this.previousSibling).node().getBBox().height;
+						
+						//checkboxes
+						d3.select(this).append("circle")
+							.attr("r", 5)
+							.attr("cx", -0.75 +"em" )
+							.attr("cy", -0.3 +"em" )  // spacing
+							.attr("fill",function(d) { return vars.color(d.key); })
+							.attr("stroke",function(d) { return vars.color(d.key); })
+							.attr("stroke-width", "2px")
+							.attr("class", function(d,i){return "legendcheckbox " + d.key})
+							.on("click", function(d){
+								d.inactive = !d.inactive;
+							  
+								d3.select(this).attr("fill", function(d){
+									if( d.inactive )
+										return "white"; 
+									else return vars.color(d.key);  
+								});
+								
+								d3.select("#widget-" + vars.widgetUniqueName + " #tab_evolution").selectAll(".line")
+									.style("display", function(d){ return d.inactive ? "none" : "block"; });	
+								d3.select("#widget-" + vars.widgetUniqueName + " #tab_evolution").selectAll("circle")
+									.style("display", function(d){ return d3.select(this.parentNode).datum().inactive ? "none" : "block"; });	
+							});
+						//text
+						vars.visualizations.common.wrapText( d3.select(this), d.key, vars.width - vars.margin.left, "legend", 12);
+						d3.select(this).attr("transform", "translate(" + 14 + "," + prev+ ")" );
+					})
+					
+				
+//					
+//				    	.attr("x", 15)
+//				    	.attr("y", function(d,i){return 5 + i*15;})
+//				    	.attr("class", "legend")
+//				      	.style("fill", "#777" )
+//				      	.text(function(d){return d.key;});
 
-					legend.exit().remove();
+					var transX = ( vars.width - d3.select("#widget-" + vars.widgetUniqueName + " #legend >g").node().getBBox().width )/ 2;
+					transX = transX < 0 ? 0 : transX;
+					d3.select("#widget-" + vars.widgetUniqueName + " #legend").attr("transform", " translate(" + transX + "," + vars.margin.top + ")" );					
+					
+					legend.exit().remove();				
 				},
 				showAll : function(){
 					d3.select("#widget-" + $.TOPIC_EVOLUTION.variables.widgetUniqueName + " #tab_evolution").selectAll(".line")
+						.style("display", "block" );
+					d3.select("#widget-" + $.TOPIC_EVOLUTION.variables.widgetUniqueName + " #tab_evolution").selectAll("circle")
 						.style("display", "block" );
 					
 					 d3.select("#legend").selectAll("circle")
@@ -300,6 +330,8 @@ $.TOPIC_EVOLUTION = {
 				hideAll : function(){
 					d3.select("#widget-" + $.TOPIC_EVOLUTION.variables.widgetUniqueName + " #tab_evolution").selectAll(".line").transition().duration(100)
 						.style("display", "none");
+					d3.select("#widget-" + $.TOPIC_EVOLUTION.variables.widgetUniqueName + " #tab_evolution").selectAll("circle").transition().duration(100)
+						.style("display", "none");
 					
 					d3.select("#legend").selectAll("circle").transition().duration(100)
 						.attr("fill", function(d){ d.inactive = true; return "white"; });
@@ -307,17 +339,23 @@ $.TOPIC_EVOLUTION = {
 			},
 			tooltip : {
 				content : function( data,year ){
+					d3.select("#widget-" + $.TOPIC_EVOLUTION.variables.widgetUniqueName + " #tooltipContainer").select(".vertical-line").remove();
+					
 					var vertical = d3.select("#widget-" + $.TOPIC_EVOLUTION.variables.widgetUniqueName + " #tooltipContainer")
 				        .insert("div", ":first-child")
 				        .attr("class"	 , "vertical-line" )
 				        .style("height"	 , $.TOPIC_EVOLUTION.variables.height + "px" )
-				        .style("margin-top"	 , 10 + $.TOPIC_EVOLUTION.variables.margin.top + "px" );
+				        .style("margin-top"	 , 24 + $.TOPIC_EVOLUTION.variables.margin.top + "px" )
+				        .style("display", "none");
 				},
 				show : function( year, mouseY ){	 
 					var vars = $.TOPIC_EVOLUTION.variables;
 			
-					var $table = $("#widget-" + vars.widgetUniqueName + " #tooltipContainer .tooltip table");
-					$table.empty().hide();
+					var $tooltip = $("#widget-" + vars.widgetUniqueName + " #tooltipContainer .tooltip");					
+					$tooltip.hide();
+					
+					var $table = $tooltip.find( "table" );
+					$table.empty();
 					
 					$table.append($("<thead/>").append( $("<td/>").append("<strong>" + year.getFullYear() + "</strong>") ));
 					
@@ -334,23 +372,23 @@ $.TOPIC_EVOLUTION = {
 						
 					for ( var i = 0; i < circles.nodes().length; i++ ){
 						var data = d3.select(circles.nodes()[i]).datum();
+						var dataParent = d3.select(circles.nodes()[i].parentNode).datum();
 						
 						$row = $("<tr/>").addClass( d3.select( circles.nodes()[i] ).attr("class") );
-						$row.append( $("<td/>").append( $("<div/>").addClass("circle").css( "background-color", "#" + data.color ) ) );
-						$row.append( $("<td/>").append( $("<span/>").text( data.key ) ) );
+						$row.append( $("<td/>").append( $("<div/>").addClass("circle").css( "background-color", "#" + dataParent.color ) ) );
+						$row.append( $("<td/>").append( $("<span/>").text( dataParent.key ) ) );
 						
-						var value = data.values.filter( function(v){ return v.x.getFullYear() == year.getFullYear(); } )[0].y;
-						$row.append( $("<td/>").append( $("<strong/>").text( Number(value).toFixed(2) ) ) ); 
+						$row.append( $("<td/>").append( $("<strong/>").text( Number( data.y ).toFixed(2) ) ) ); 
 						
 						d3.select( circles.nodes()[i] ).classed("hovered", false);
 						
-						if ( value > 0)
+						if ( data.y > 0)
 							$body.append( $row );
 					}
 					
 					$table.append( $body );
 					
-				    $table.show();    
+					$tooltip.show();    
 				}
 			}
 		}
@@ -358,14 +396,18 @@ $.TOPIC_EVOLUTION = {
 }
 
 function visualizeTermValue( data, svgContainer, widgetUniqueName ){	 
-	var vars = $.TOPIC_EVOLUTION.variables ;
-	vars.width 	 = vars.width  - vars.margin.left - vars.margin.right;
+	var vars  = $.TOPIC_EVOLUTION.variables ;
+	var width = $("#widget-" + widgetUniqueName + " .visualization-main").width() > 960 ? 960 : $("#widget-" + widgetUniqueName + " .visualization-main").width() ;
+	vars.width 	 = width  - vars.margin.left - 4*vars.margin.right;
 	vars.height2 = vars.height - vars.margin2.top - vars.margin2.bottom;
 	vars.height  = vars.height - vars.margin.top  - vars.margin.bottom;
 	vars.widgetUniqueName  = widgetUniqueName;
 	   
 	var processedData = $.TOPIC_EVOLUTION.processData ( data );
 	var filteredData  = $.TOPIC_EVOLUTION.filterData ( processedData );
+	
+	vars.data = data;
+	
 	$.TOPIC_EVOLUTION.chart.draw( filteredData, svgContainer );
 	
 }

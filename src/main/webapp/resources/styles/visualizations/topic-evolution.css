@@ -4,13 +4,13 @@
  
 #widget-researcher_topicmodel_evolution .axis path,
 #widget-researcher_topicmodel_evolution .axis line {
-  fill: none;
-  stroke: #444;
+  fill			 : none;
+  stroke		 : #444;
   shape-rendering: crispEdges;
 }
 
 #widget-researcher_topicmodel_evolution .y.axis .tick line{
-	stroke: #eee;
+	stroke			: #eee;
     stroke-dasharray: 5;
 }
 #widget-researcher_topicmodel_evolution .y.axis .tick:nth-child(2) line{
@@ -24,19 +24,24 @@
 }
 
 #widget-researcher_topicmodel_evolution .brush .extent {
-  stroke: #fff;
-  fill-opacity: .125;
+  stroke		 : #fff;
+  fill-opacity	 : .125;
   shape-rendering: crispEdges;
 }
 
 #widget-researcher_topicmodel_evolution .line {
-  fill: none;
-  stroke-width : 1.5px;
+  fill		  : none;
+  stroke-width: 1.5px;
 }
-#widget-researcher_topicmodel_evolution .zoom {
-  cursor: move;
-  fill: transparent;
-  pointer-events: all;
+
+/* LEGEND */
+#widget-researcher_topicmodel_evolution #legendContainer .buttons{
+	position: relative;
+	float	: right;
+}
+
+#widget-researcher_topicmodel_evolution #legendContainer .buttons>*{
+	display: inline-block;
 }
 
 /* TOOLTIP */
@@ -44,8 +49,9 @@
 	position: absolute;
 	z-index : 19;
 	width 	: 1px;
-	background-color : #444;
 	left	: 0px;
+	background-color : #444;
+	margin-left 	 : 20px;
 }
 #widget-researcher_topicmodel_evolution .tooltip{
 	opacity 	: 1;

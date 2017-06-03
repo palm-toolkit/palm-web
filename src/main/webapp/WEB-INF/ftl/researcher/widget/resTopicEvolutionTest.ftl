@@ -1,34 +1,51 @@
-
-<div id="boxbody${wUniqueName}" class="box-body" style="overflow:hidden">
-	
-	<div class="callout callout-warning" style="display:none">
-	    <h4></h4>
-	    <p></p>
+<div id="boxbody${wUniqueName}" class="box-body" style="overflow:hidden">	
+	<div class="box-content">
+		<div class="container-box filter-box activity-status-criteria row">
+			<div class="filter top col-lg-4 col-md-5 col-sm-8">
+  				<span class="title font-small col-md-4  col-sm-4"> Top : </span>
+  				 <div class="btn-group" data-toggle="">
+                	<label class="radio-inline">
+                    	<input type="radio" id="top5" name="top" value="5" /> 5
+                	</label> 
+                	<label class="radio-inline active">
+                    	<input type="radio" id="top10" name="top" value="10" checked="checked" /> 10
+               	 	</label> 
+                	<label class="radio-inline">
+                    	<input type="radio" id="q158" name="top" value="15"/> 15
+                	</label> 
+           		</div>
+			</div>
+		</div>
+		<div class="container-box visualization-box row">
+			<div class="visualization-main col-md-12  col-sm-12">
+				<div class="callout callout-warning" style="display:none">
+				    <h4></h4>
+				    <p></p>
+				</div>
+				<div class="nav-tabs-custom" style="display:none">
+			        <ul class="nav nav-tabs"> </ul>
+			        
+			    <div id="legendContainer" class="legendContainer">
+					<svg id="legend"></svg>
+					<div class="buttons">
+						<div id="showAll">
+							<input name="showAllButton" class="btn btn-xs btn-info" type="button" value="Show All" onclick="$.TOPIC_EVOLUTION.chart.legend.showAll()" />
+						</div>
+						<div id="clearAll">
+							<input name="clearAllButton" class="btn btn-xs btn-default" type="button" value="Hide All" onclick="$.TOPIC_EVOLUTION.chart.legend.hideAll()" />
+						</div>
+					</div>
+				</div>
+				
+				<div id="tooltipContainer" class="tooltipContainer">
+					<div class="tooltip  hidden">
+					 	<table></table>
+					 </div>
+				</div>
+			    <div class="tab-content" id="tab_evolution"></div>
+			</div>
+		</div>
 	</div>
-                  
-	<div class="nav-tabs-custom" style="display:none">
-        <ul class="nav nav-tabs">
-        </ul>
-        
-        <div id="legendContainer" class="legendContainer">
-			<svg id="legend"></svg>
-		</div>
-		<div id="showAll">
-			<input name="showAllButton" type="button" value="Show All" onclick="$.TOPIC_EVOLUTION.draw.legend.showAll()" />
-		</div>
-		<div id="clearAll">
-			<input name="clearAllButton" type="button" value="Hide All" onclick="$.TOPIC_EVOLUTION.draw.legend.hideAll()" />
-		</div>
-		 <div id="tooltipContainer" class="tooltipContainer">
-		 	<div class="tooltip">
-		 		<table></table>
-		 	</div>
-		</div>
-        <div class="tab-content" id="tab_evolution">
-        </div>
-     </div>
-
-
 </div>
 
 <script>
@@ -140,6 +157,12 @@ function visualizeTermValue1( termValueMap, svgContainer )
 
 			}<#-- end of onrefresh done -->
 		};<#-- end of options -->
+		
+		<#-- filter topics -->
+		$("#widget-${wUniqueName}" + " .top input[name=top]").on("click", function(){
+			$.TOPIC_EVOLUTION.chart.base.filterBy.top( $(this).val() );
+			
+		});
 		
 		<#-- register the widget -->
 		$.PALM.options.registeredWidget.push({
