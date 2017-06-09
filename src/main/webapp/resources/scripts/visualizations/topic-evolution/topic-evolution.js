@@ -1,11 +1,8 @@
 $.TOPIC_EVOLUTION = {
 		variables : {
-				margin : {top: 10, right: 10, bottom: 100, left: 40},
+				margin  : {top: 10, right: 10, bottom: 100, left: 40},
 			    margin2 : {top: 330, right: 10, bottom: 20, left: 40},
-			    width :  960,
-			    height : 400,
-			    color : d3.scaleOrdinal( d3.schemeCategory20 ),
-			    visualizations : new Visualizations()
+			    color   : d3.scaleOrdinal( d3.schemeCategory20 )
 		},
 		processData : function( data ){
 			var processData = { elements : [], years : [] };
@@ -178,10 +175,14 @@ $.TOPIC_EVOLUTION = {
 						var mouseX 	= d3.mouse( $this )[0];
 						var invertX = x.invert( mouseX );
 						var bisect	= d3.bisector( function( d ){ return d.x; }).right;
-						var vertical= d3.select( "#widget-" + vars.widgetUniqueName + " .vertical-line");
-						var focus	= d3.select( $this ).select(".focus");
+						var vertical= vars.widget.select( ".vertical-line" );
+						var focus	= vars.widget.select(".focus");
 						var threshold = 8;
-						vertical.style({"left": ( mouseX ) + "px", "display" : "none"});
+						
+						var left = mouseX < vars.margin.left-5 ? vars.margin.left-5 : mouseX + vars.margin.left - 5;
+						vertical
+							.style("left", left + "px")
+							.style("display", "block" );
 						
 						focus.selectAll(".line")
 							.each( function( l ){
@@ -203,22 +204,23 @@ $.TOPIC_EVOLUTION = {
 										})
 										.transition().duration(100)										
 										.attr("r", function(c){ return  Math.abs( this.getBoundingClientRect().left - vertical.node().getBoundingClientRect().left) < threshold ? 5 : 3; })
-										.attr("fill", function( c ){ return Math.abs( this.getBoundingClientRect().left - vertical.node().getBoundingClientRect().left) < threshold  ? d3.select(this).attr("stroke") : "white"; });
+										.attr("fill", function( c ){ 
+											return Math.abs( this.getBoundingClientRect().left - vertical.node().getBoundingClientRect().left) < threshold ?
+													d3.select(this).attr("stroke") : "white"; });
 									};
 								
 								indexCheck( index - 1); 
 								indexCheck( index ); 
 						});
 						
-						$.TOPIC_EVOLUTION.chart.tooltip.show( invertX );
+						$.TOPIC_EVOLUTION.chart.tooltip.show( invertX, d3.mouse( $this )[1] );
 					},
 					zoomed : function( x, x2, xAxis ){
-						console.log( d3.event.sourceEvent);
 						if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
 						
 						var vars 	= $.TOPIC_EVOLUTION.variables;
-						var focus 	= d3.select("#widget-" + vars.widgetUniqueName + " g.focus");
-						var context = d3.select("#widget-" + vars.widgetUniqueName + " g.context")
+						var focus 	= vars.widget.select( "g.focus" );
+						var context = vars.widget.select( "g.context" )
 						var t 		= d3.event.transform;
 						  
 						x.domain(t.rescaleX( x2 ).domain());
@@ -234,8 +236,8 @@ $.TOPIC_EVOLUTION = {
 						if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
 						
 						var vars  = $.TOPIC_EVOLUTION.variables;
-						var focus = d3.select("#widget-" + vars.widgetUniqueName + " g.focus");
-						var svg   = d3.select("#widget-" + vars.widgetUniqueName + " #tab-evolution svg");
+						var focus = vars.widget.select( "g.focus" );
+						var svg   = vars.widget.select( "#tab-evolution svg" );
 						var s 	  = d3.event.selection || x2.range();
 						
 						x.domain(s.map( x2.invert, x2));
@@ -248,7 +250,7 @@ $.TOPIC_EVOLUTION = {
 				filterBy :{
 					top : function( val ){
 						var vars = $.TOPIC_EVOLUTION.variables;						
-						var termvalues  = vars.data.termvalues.slice(0, parseInt(val) );
+						var termvalues  = $.PALM.visualizations.data.termvalues.slice(0, parseInt(val) );
 						var data = { termvalues : termvalues };
 						
 						var processedData = $.TOPIC_EVOLUTION.processData ( data );
@@ -262,9 +264,9 @@ $.TOPIC_EVOLUTION = {
 				content : function( data ){
 					var vars = $.TOPIC_EVOLUTION.variables;
 					
-					d3.select("#widget-" + vars.widgetUniqueName + " #legend").selectAll("*").remove();
+					vars.widget.select( "#legend" ).selectAll("*").remove();
 					
-					var legend = d3.select("#widget-" + vars.widgetUniqueName + " #legend").append("g")
+					var legend = vars.widget.select( "#legend" ).append("g")
 						.attr("transform", " translate(" + vars.margin.left + "," + 6 + ")" )
 						.selectAll("text")
 						.data( data, function(d){return d.key} );
@@ -294,54 +296,52 @@ $.TOPIC_EVOLUTION = {
 									else return vars.color(d.key);  
 								});
 								
-								d3.select("#widget-" + vars.widgetUniqueName + " #tab_evolution").selectAll(".line")
+								vars.widget.select( "#tab_evolution" ).selectAll(".line")
 									.style("display", function(d){ return d.inactive ? "none" : "block"; });	
-								d3.select("#widget-" + vars.widgetUniqueName + " #tab_evolution").selectAll("circle")
+								vars.widget.select( "#tab_evolution" ).selectAll("circle")
 									.style("display", function(d){ return d3.select(this.parentNode).datum().inactive ? "none" : "block"; });	
 							});
 						//text
-						vars.visualizations.common.wrapText( d3.select(this), d.key, vars.width - vars.margin.left, "legend", 12);
+						$.PALM.utility.visualizations.wrapText( d3.select(this), d.key, vars.width - vars.margin.left, "legend", 12);
 						d3.select(this).attr("transform", "translate(" + 14 + "," + prev+ ")" );
 					})
 					
-				
-//					
-//				    	.attr("x", 15)
-//				    	.attr("y", function(d,i){return 5 + i*15;})
-//				    	.attr("class", "legend")
-//				      	.style("fill", "#777" )
-//				      	.text(function(d){return d.key;});
-
-					var transX = ( vars.width - d3.select("#widget-" + vars.widgetUniqueName + " #legend >g").node().getBBox().width )/ 2;
+					var transX = ( vars.width - vars.widget.select( "#legend  >g" ).node().getBBox().width )/ 2;
 					transX = transX < 0 ? 0 : transX;
-					d3.select("#widget-" + vars.widgetUniqueName + " #legend").attr("transform", " translate(" + transX + "," + vars.margin.top + ")" );					
+					vars.widget.select( "#legend" ).attr("transform", " translate(" + transX + "," + vars.margin.top + ")" );					
 					
 					legend.exit().remove();				
 				},
 				showAll : function(){
-					d3.select("#widget-" + $.TOPIC_EVOLUTION.variables.widgetUniqueName + " #tab_evolution").selectAll(".line")
+					var vars = $.TOPIC_EVOLUTION.variables;
+		
+					vars.widget.select( "#tab_evolution" ).selectAll(".line")
 						.style("display", "block" );
-					d3.select("#widget-" + $.TOPIC_EVOLUTION.variables.widgetUniqueName + " #tab_evolution").selectAll("circle")
+					vars.widget.select( "#tab_evolution" ).selectAll("circle")
 						.style("display", "block" );
 					
-					 d3.select("#legend").selectAll("circle")
+					vars.widget.select( "#legend" ).selectAll("circle")
 					  	.attr("fill",function(d) { d.inactive = false; return $.TOPIC_EVOLUTION.variables.color( d.key ); });
 				},
 				hideAll : function(){
-					d3.select("#widget-" + $.TOPIC_EVOLUTION.variables.widgetUniqueName + " #tab_evolution").selectAll(".line").transition().duration(100)
+					var vars = $.TOPIC_EVOLUTION.variables;
+					
+					vars.widget.select( "#tab_evolution" ).selectAll(".line").transition().duration(100)
 						.style("display", "none");
-					d3.select("#widget-" + $.TOPIC_EVOLUTION.variables.widgetUniqueName + " #tab_evolution").selectAll("circle").transition().duration(100)
+					vars.widget.select( "#tab_evolution" ).selectAll("circle").transition().duration(100)
 						.style("display", "none");
 					
-					d3.select("#legend").selectAll("circle").transition().duration(100)
+					vars.widget.select( "#legend" ).selectAll("circle").transition().duration(100)
 						.attr("fill", function(d){ d.inactive = true; return "white"; });
 				}
 			},
 			tooltip : {
 				content : function( data,year ){
-					d3.select("#widget-" + $.TOPIC_EVOLUTION.variables.widgetUniqueName + " #tooltipContainer").select(".vertical-line").remove();
+					var vars = $.TOPIC_EVOLUTION.variables;
 					
-					var vertical = d3.select("#widget-" + $.TOPIC_EVOLUTION.variables.widgetUniqueName + " #tooltipContainer")
+					vars.widget.select( "#tooltipContainer" ).select(".vertical-line").remove();
+					
+					var vertical = vars.widget.select( "#tooltipContainer" )
 				        .insert("div", ":first-child")
 				        .attr("class"	 , "vertical-line" )
 				        .style("height"	 , $.TOPIC_EVOLUTION.variables.height + "px" )
@@ -351,8 +351,8 @@ $.TOPIC_EVOLUTION = {
 				show : function( year, mouseY ){	 
 					var vars = $.TOPIC_EVOLUTION.variables;
 			
-					var $tooltip = $("#widget-" + vars.widgetUniqueName + " #tooltipContainer .tooltip");					
-					$tooltip.hide();
+					var $tooltip = jQuery( vars.widget.select( "#tooltipContainer .tooltip" ).node() );					
+					$tooltip.addClass("hidden");
 					
 					var $table = $tooltip.find( "table" );
 					$table.empty();
@@ -362,7 +362,7 @@ $.TOPIC_EVOLUTION = {
 					var $body = $("<tbody/>");
 					var $row = $("<tr/>");
 						
-					var circles = d3.select( "#widget-" + vars.widgetUniqueName + " .focus").selectAll("circle")
+					var circles = vars.widget.select( ".focus" ).selectAll("circle")
 						.filter( function(){ return parseInt( d3.select(this).attr("r") ) > 3 });
 					
 					if ( circles.nodes().length == 0){
@@ -388,26 +388,10 @@ $.TOPIC_EVOLUTION = {
 					
 					$table.append( $body );
 					
-					$tooltip.show();    
+					$tooltip.removeClass("hidden");    
+					$tooltip.css({ "margin-top": mouseY - $tooltip.height() + "px"})
 				}
 			}
 		}
 			
-}
-
-function visualizeTermValue( data, svgContainer, widgetUniqueName ){	 
-	var vars  = $.TOPIC_EVOLUTION.variables ;
-	var width = $("#widget-" + widgetUniqueName + " .visualization-main").width() > 960 ? 960 : $("#widget-" + widgetUniqueName + " .visualization-main").width() ;
-	vars.width 	 = width  - vars.margin.left - 4*vars.margin.right;
-	vars.height2 = vars.height - vars.margin2.top - vars.margin2.bottom;
-	vars.height  = vars.height - vars.margin.top  - vars.margin.bottom;
-	vars.widgetUniqueName  = widgetUniqueName;
-	   
-	var processedData = $.TOPIC_EVOLUTION.processData ( data );
-	var filteredData  = $.TOPIC_EVOLUTION.filterData ( processedData );
-	
-	vars.data = data;
-	
-	$.TOPIC_EVOLUTION.chart.draw( filteredData, svgContainer );
-	
 }

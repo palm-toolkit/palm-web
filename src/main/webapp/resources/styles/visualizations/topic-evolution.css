@@ -48,9 +48,9 @@
 #widget-researcher_topicmodel_evolution .vertical-line{
 	position: absolute;
 	z-index : 19;
-	width 	: 1px;
+	width 	: 2px;
 	left	: 0px;
-	background-color : #444;
+	background-color : rgba(68, 68, 68, 0.8);
 	margin-left 	 : 20px;
 }
 #widget-researcher_topicmodel_evolution .tooltip{
@@ -62,6 +62,9 @@
     webkit-box-shadow: 5px 8px 6px -6px #eee;
     -moz-box-shadow	 : 5px 8px 6px -6px #eee;
     box-shadow		 : 5px 8px 6px -6px #eee;
+    left		: 13%;
+    position	: absolute;
+    transform	: scale(0.9);
 }
 
 #widget-researcher_topicmodel_evolution .tooltip table td{
