@@ -57,22 +57,44 @@
 				var mainContainer = $("#widget-${wUniqueName} .visualization-main");
 				mainContainer.html( "" );
 				
-				console.log(response);
 				if( typeof response === 'undefined' || response.status != "ok" || typeof response.researchers === 'undefined'){
 					$.PALM.callout.generate( mainContainer , "warning", "Empty Members !", "The circle does not have any member on PALM database" );
 					return false;
 				}
-				
-				
-				var visData = response.researchers.filter( function (d, i){
-					
-					if (d.citedBy != undefined && d.citedBy > 0 && d.publicationsNumber != undefined && d.publicationsNumber > 0 	)
-						return d;
+
+				$.PALM.visualizations.record ( {
+					data 	: response, 
+					widgetUniqueName : "${wUniqueName}", 
+					width	: 960,
+					height	: 400,
+					url		: "<@spring.url '' />",
+					user	: currentUser,
 				});
 				
-				$.activityStatus.init ( url, id, currentUser, visData );
+				circle_activities_status();
+				
+				function circle_activities_status(){
+					var data = response.researchers.filter( function (d, i){				
+						if (d.citedBy != undefined && d.citedBy > 0 && d.publicationsNumber != undefined && d.publicationsNumber > 0 )
+							return d;
+						});	
+					$.PALM.visualizations.data = data;
+					
+					var vars 	= $.activityStatus.variables;
+				
+					vars.margin = {top: 20, right: 40, bottom: 50, left: 40},
+					vars.width  = $("#widget-" + "${wUniqueName}" + " .visualization-main" ).width() - vars.margin.left - vars.margin.right,
+					vars.height	= $.PALM.visualizations.height;
+					
+					vars.color  = d3.scale.category10();
+					vars.tooltipClassName = "activity-status-tooltip";
+					vars.widget	= d3.select("#widget-" + "${wUniqueName}");
+					
+					$.activityStatus.visualise();
+					$.activityStatus.publications.circle();	
+				}
 			}
-			};
+		};
 		
 		<#-- register the widget -->
 		$.PALM.options.registeredWidget.push({

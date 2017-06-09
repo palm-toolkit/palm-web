@@ -96,7 +96,6 @@
 <script src="<@spring.url '/resources/plugins/sigma/parsers/gexf/sigma.parsers.gexf.js' />" type="text/javascript"></script>
 
 <#-- START VISUALIZATIONS IMPORTS -->
-<script src="<@spring.url '/resources/scripts/visualizations/visualizations.js' />" type="text/javascript"></script>
 <script src="<@spring.url '/resources/scripts/visualizations/tooltip.js' />" type="text/javascript"></script>
 <script src="<@spring.url '/resources/scripts/visualizations/co-authors/co-authors-graph.js' />" type="text/javascript"></script>
 <script src="<@spring.url '/resources/scripts/visualizations/similarity/similar-researchers.js' />" type="text/javascript"></script>

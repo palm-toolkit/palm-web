@@ -78,7 +78,12 @@
 
 				<#-- add visualization -->
 				
-				$.PALM.visualizations.record ( data, "${wUniqueName}", null, 960, 400);
+				$.PALM.visualizations.record ( {
+					data 	: data, 
+					widgetUniqueName : "${wUniqueName}", 
+					width	: 960,
+					height	: 400
+				});
 				
 				topic_evolution();
 								

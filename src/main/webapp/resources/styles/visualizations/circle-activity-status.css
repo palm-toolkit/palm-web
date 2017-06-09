@@ -6,7 +6,7 @@
 }
 
 #widget-circle_activity_status  svg g.dot.clicked:not(.hovered) circle{
-	fill: #ccc !important;
+	fill: #419ede !important;
 }
 #widget-circle_activity_status  svg g.dot.clicked:not(.hovered) text{
 	font-weight: bold !important;

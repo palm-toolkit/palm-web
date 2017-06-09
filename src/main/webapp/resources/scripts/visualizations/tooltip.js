@@ -47,8 +47,7 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 		var container = this.getContainer() == null ? d3.select( gNode.node().nearestViewportElement ) : this.getContainer();
 		var svg = d3.select( gNode.node().nearestViewportElement );
 		var gTooltip = null;
-		var visualizations = new Visualizations();
-		
+
 		if (container != null){
 			//add tooltip
 			gTooltip = container.append("g").attr("class", "myTooltip " + this.getClassName());
@@ -121,7 +120,7 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			var tooltipWidth  = Tooltip.getWidth()  - Tooltip.getBorderRadius();
 			var tooltipHeight = Tooltip.getHeight() - Tooltip.getBorderRadius();
 			
-			visualizations.common.addShadow( gTooltip, "drop-shadow", "120%", 2, "rgba(187, 187, 187, 0.1)"  );
+			$.PALM.utility.visualizations.addShadow( gTooltip, "drop-shadow", "120%", 2, "rgba(187, 187, 187, 0.1)"  );
 			
 			stroke
 				.attr("d", "M 0 0 H " + tooltipWidth + 
@@ -139,15 +138,13 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 		function tooltip_content( Tooltip ){
 			var tooltipHeight = Tooltip.getHeight() - Tooltip.getBorderRadius() ;
 			var distanceLeft  = tooltipHeight/2 + 5;	
-					
-			var visualizations = new Visualizations();
-			
+
 			//title
 			var title = gContent.append("g").classed("title content-text", true)
 				.attr("transform", "translate(" + distanceLeft + ", " + 0 +")");
 
 			var authorName = shortcutName( toTitleCase(dataObject.name) );
-			visualizations.common.wrapText(title, authorName, ( Tooltip.getWidth() - distanceLeft), "title-name", Tooltip.getFontSize() );	
+			$.PALM.utility.visualizations.wrapText(title, authorName, ( Tooltip.getWidth() - distanceLeft), "title-name", Tooltip.getFontSize() );	
 			title.selectAll(".title-name");
 			
 			//status
@@ -156,7 +153,7 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			status.append("text").classed("icon-briefcase font-small", true)
 				.style("font-family", "fontawesome")
 				.text('\uf0b1');
-			visualizations.common.wrapText(status, dataObject.status || "none", ( Tooltip.getWidth() - distanceLeft - Tooltip.getFontSize()), "status-name font-small", Tooltip.getFontSize() );	
+			$.PALM.utility.visualizations.wrapText(status, dataObject.status || "none", ( Tooltip.getWidth() - distanceLeft - Tooltip.getFontSize()), "status-name font-small", Tooltip.getFontSize() );	
 			status.selectAll(".status-name").attr("dx", "1.3em");
 			
 			//affiliation
@@ -165,7 +162,7 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			affiliation.append("text").classed("icon-institution font-small", true)
 				.style("font-family", "fontawesome")
 				.text('\uf19c');
-			visualizations.common.wrapText(affiliation, dataObject.affiliation || "none", ( Tooltip.getWidth() - distanceLeft - Tooltip.getFontSize()), "afiliation-name font-small", Tooltip.getFontSize() );	
+			$.PALM.utility.visualizations.wrapText(affiliation, dataObject.affiliation || "none", ( Tooltip.getWidth() - distanceLeft - Tooltip.getFontSize()), "afiliation-name font-small", Tooltip.getFontSize() );	
 			affiliation.selectAll(".afiliation-name").attr("dx", "1.3em");
 			
 			//nr publications & citations
@@ -173,19 +170,19 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 			var nrCitations	   = dataObject.citedBy || " 0 ";			
 			var publicationsAndCitations = gContent.append("g").classed("pubs content-text", true)
 				.attr("transform", "translate(" + distanceLeft + ", " + 0+ ")");
-			visualizations.common.wrapText(publicationsAndCitations, "Publications: " + nrPublications + ", Cited By: " + nrCitations, ( Tooltip.getWidth() - distanceLeft), "paper font-small", Tooltip.getFontSize() );
+			$.PALM.utility.visualizations.wrapText(publicationsAndCitations, "Publications: " + nrPublications + ", Cited By: " + nrCitations, ( Tooltip.getWidth() - distanceLeft), "paper font-small", Tooltip.getFontSize() );
 					
 			//h-index
 			var hindexString = dataObject.hindex || "none";
 			var hindex = gContent.append("g").classed("hindex content-text", true)
 				.attr("transform", "translate(" + distanceLeft + ", " + 0 + ")");;
-			visualizations.common.wrapText(hindex, "H-index: " + hindexString, ( Tooltip.getWidth() - distanceLeft), "hindex font-small", Tooltip.getFontSize() );
+			$.PALM.utility.visualizations.wrapText(hindex, "H-index: " + hindexString, ( Tooltip.getWidth() - distanceLeft), "hindex font-small", Tooltip.getFontSize() );
 			
 			//similarity
 			if ( dataObject.similarity != undefined ){
 				var similarity = gContent.append("g").classed("similarity content-text", true)
 					.attr("transform", "translate(" + distanceLeft + ", " + 0 + ")");
-				visualizations.common.wrapText(similarity, "Similarity Degree: " + Number(dataObject.similarity).toFixed(2) + "%", ( Tooltip.getWidth() - distanceLeft), "similarity font-small", Tooltip.getFontSize() );	
+				$.PALM.utility.visualizations.wrapText(similarity, "Similarity Degree: " + Number(dataObject.similarity).toFixed(2) + "%", ( Tooltip.getWidth() - distanceLeft), "similarity font-small", Tooltip.getFontSize() );	
 			}
 					
 			
@@ -201,7 +198,7 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 					.attr("stroke", Tooltip.getStrokeColor() )
 					.attr("fill",   Tooltip.getBkgroundColor() );
 			
-			var imageBkground = visualizations.common.getImageBackground( "." + Tooltip.getClassName(), dataObject );
+			var imageBkground = $.PALM.utility.visualizations.getImageBackground( "." + Tooltip.getClassName(), dataObject );
 			if ( imageBkground != null ){
 				var circle = image.append("circle").classed("image", true)
 					.attr("r",      Tooltip.getImageRadius() )
@@ -209,7 +206,7 @@ Tooltip.prototype.buildTooltip = function createTooltip( gNode, dataObject ){
 					.attr("fill",   Tooltip.getBkgroundColor() );
 				circle.style("fill", "url(#pattern_" + dataObject.id + ")" );
 			}else		
-			visualizations.common.addMissingPhotoIcon( image, "last", {className: "missing-photo-icon author_avatar", size: 1.5 * Tooltip.getImageRadius(), color: Tooltip.getStrokeColor(), dy : ".35em", textAnchor : "middle", text: "\uf007" } );	
+			$.PALM.utility.visualizations.addMissingPhotoIcon( image, "last", {className: "missing-photo-icon author_avatar", size: 1.5 * Tooltip.getImageRadius(), color: Tooltip.getStrokeColor(), dy : ".35em", textAnchor : "middle", text: "\uf007" } );	
 		}
 		
 		function positionContentElements( distanceLeft ){

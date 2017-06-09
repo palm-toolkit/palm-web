@@ -1572,7 +1572,7 @@ $.PALM.utility = {
 			filter.append("feFlood")
 			  .attr("in", "offsetBlur")
 			  .attr("flood-color",  color)
-			  .attr("flood-opacity", 1)
+			  .attr("flood-opacity", opacity || 1)
 			  .attr("result", "offsetColor");
 			
 			 filter.append("feComposite")
@@ -1737,12 +1737,13 @@ $.PALM.postForm = {
 };
 
 $.PALM.visualizations = {
-	record : function( data, widgetUniqueName, user, width, height ){
-		this.data 	= data;
-		this.widgetUniqueName = widgetUniqueName;
-		this.user 	= user;
-		this.width 	= width;
-		this.height = height;
+	record : function( obj ){
+		this.data 	= obj.data;
+		this.widgetUniqueName = obj.widgetUniqueName;
+		this.user 	= obj.user;
+		this.width 	= obj.width;
+		this.height = obj.height;
+		this.url 	= obj.url;
 	}
 }
 
