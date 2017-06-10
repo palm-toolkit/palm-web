@@ -70,27 +70,38 @@ $(function(){
 					$.PALM.callout.generate( targetContainer , "warning", "Empty Co-Authors!", "Researcher does not have any co-authors on PALM (insufficient data)" );
 					return false;
 				}
+			
+				$.PALM.visualizations.record ( {
+					data 	: data, 
+					widgetUniqueName : "${wUniqueName}", 
+					width	: 960,
+					height	: 600,
+					url		: "<@spring.url '' />"
+				});	
 							
 				if( data.count > 0 ){
-					<#-- remove any remaing tooltip -->
-						$( "body .tooltip" ).remove(); 
+				<#-- remove any remaing tooltip -->
+					$( "body .tooltip" ).remove(); 
 
-					<#-- build the researcher graph -->
-						var url = "<@spring.url '' />";
-						createCoauthorsGraph("#boxbody-${wUniqueName} .visualization-main ", data, chartHeight, url);
-						
+				<#-- build the researcher graph -->						
+					coauthors_graph();	
 				}
-				else{
-				<#-- no coauthor -->
-					<#--
-						$pageDropdown.append("<option value='0'>0</option>");
-						$( widgetElem ).find( "span.total-page" ).html( 0 );
-						$( widgetElem ).find( "span.paging-info" ).html( "Displaying researchers 0 - 0 of 0" );
-						$( widgetElem ).find( "li.toNext" ).addClass( "disabled" );
-						$( widgetElem ).find( "li.toEnd" ).addClass( "disabled" );
-					-->			
-				}
+				
 				$.PALM.popUpMessage.remove( uniquePidCoauthors );
+				
+				function coauthors_graph(){
+					var vars  = $.COAUTHOR.variables;
+					var mainContainer = $( "#widget-${wUniqueName} .visualization-main");
+					
+					vars.width  = mainContainer.width();
+					vars.height = $.PALM.visualizations.height;				
+					vars.widget = d3.select( "#widget-${wUniqueName}" );		
+					vars.containerID = "#boxbody-${wUniqueName} .visualization-main ";
+					
+					mainContainer.html("");
+					
+					$.COAUTHOR.graph.create();				
+				}
 			}
 		};
 	

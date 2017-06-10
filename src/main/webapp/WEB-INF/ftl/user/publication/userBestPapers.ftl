@@ -7,11 +7,7 @@
 			<div class="filter basedOn col-lg-4 col-md-5 col-sm-8">
   				<span class="title font-small col-md-4  col-sm-4"> Based on : </span>
   				<div class="dropdown col-md-8 col-sm-8">
-    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Publications' Citations<span class="caret"></span> </button>
-    				<ul class="dropdown-menu">
-    					<li class="selected" data-value="cited"><a href="#">Publications' Citations</a></li>
-      					<li><a href="#" data-value="venue">Publication's Venue Rank</a></li>  					
-    				</ul>
+    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Publications' Citations </button>  				
   				</div>
 			</div>
 			<div class="filter orderedBy col-lg-4 col-md-5 col-sm-8">

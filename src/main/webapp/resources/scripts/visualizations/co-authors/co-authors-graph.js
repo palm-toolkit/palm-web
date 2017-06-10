@@ -1,18 +1,7 @@
-function createCoauthorsGraph(containerID, data, chartHeight, currentURL) {
-	$.COAUTHOR.graph.options.width = $(containerID).width();
-	$.COAUTHOR.graph.options.height = chartHeight;
-	
-	$.COAUTHOR.graph.options.containerID = containerID;
-	$.COAUTHOR.graph.options.currentURL = currentURL;
-	
-	$(containerID).html("");
-	$.COAUTHOR.graph.create(containerID, data);
-}
-
 $.COAUTHOR = {};
 
 $.COAUTHOR.graph = {};
-$.COAUTHOR.graph.options = {
+$.COAUTHOR.variables = {
 	width : 0,
 	height : 0,
 	margin : {
@@ -34,7 +23,7 @@ $.COAUTHOR.graph.graphData = function (data){
 	var publicationsIds = [];
 	
 	//Filter values
-	var boxClass	  =	 $.COAUTHOR.graph.options.containerID.substr( 0, $.COAUTHOR.graph.options.containerID.length - " .visualization-main".length - 1 ).split("-")[1];;
+	var boxClass	  =	 $.COAUTHOR.variables.containerID.substr( 0, $.COAUTHOR.variables.containerID.length - " .visualization-main".length - 1 ).split("-")[1];;
 	var filterOrderBy = "coauthorTimes";
 	var filterGroupBy = "affiliation";
 
@@ -172,19 +161,20 @@ $.COAUTHOR.graph.graphData.mostUsedTopics = function( publications ){
 	}
 }
 
-$.COAUTHOR.graph.create = function(containerID, data) {
-	var graphOptions  = this.options;	
+$.COAUTHOR.graph.create = function( ) {
+	var vars  		  = $.COAUTHOR.variables;	
+	var data		  = $.PALM.visualizations.data;
 	var graphData     = this.graphData(data);
 	var coauthorsData = graphData.coauthors;
 	
-	var svg = d3.select(containerID).append("svg");
+	var svg = vars.widget.select(".visualization-main").append("svg");
 	var gGraph = svg.append("g").attr("class", "gGraph");
 	
 	svg.call(d3.zoom().scaleExtent([1/2, 8])
 			.on("zoom", zoomed))
 			.on("dblclick.zoom", null);
 	
-	svg.attr("viewBox", "0 0 " + graphOptions.width + " " + (graphOptions.height - graphOptions.margin.bottom - graphOptions.margin.top) )
+	svg.attr("viewBox", "0 0 " + vars.width + " " + (vars.height - vars.margin.bottom - vars.margin.top) )
 		.attr("preserveAspectRatio", "xMinYMin meet");
 	//---------------- coauthors
 	var coauthorsLayer = gGraph.append("g")
@@ -199,7 +189,7 @@ $.COAUTHOR.graph.create = function(containerID, data) {
 		.attr("class", "nodes");
 	
 	var distanceToCenter = coauthorsData.nodes.length < 20 ? ( 5 * coauthorsData.nodes.length + 50 * 1/(coauthorsData.nodes.length/10) ) : 4 * coauthorsData.nodes.length ;
-	graphOptions.coauthor_distanceToCenter = distanceToCenter;
+	vars.coauthor_distanceToCenter = distanceToCenter;
 	
 	this.nodes(coauthorsData, nodesContainer, "coauthor", distanceToCenter);
 	this.links(coauthorsData, linksContainer);	
@@ -230,15 +220,14 @@ $.COAUTHOR.graph.create = function(containerID, data) {
 	var nodesContainer   = topicsLayer.append("g")
 		.attr("class", "nodes");
 
-	var authorLayerSize = d3.select(containerID + " .gCoauthors").node().getBBox();
+	var authorLayerSize = vars.widget.select( ".gCoauthors" ).node().getBBox();
 	var distancePadding = 20;
 	distanceToCenter = authorLayerSize.width > authorLayerSize.height ? authorLayerSize.width/2  + distancePadding: authorLayerSize.height/2  + distancePadding;
 	
 	this.nodes(topicsData, nodesContainer, "topic", distanceToCenter);
 	
 	//-------------- legend
-	var containerDetailsID = containerID.substr(0, containerID.length - ".visualization-main".length) + "visualization-details";
-	this.legend( containerDetailsID );
+	this.legend( );
 	
 	this.publications( data.author );
 	
@@ -250,7 +239,7 @@ $.COAUTHOR.graph.create = function(containerID, data) {
 		var simulation = d3.forceSimulation()
 			.force("link", d3.forceLink().id(function(d) { return d.id; }))
 			.force("charge", d3.forceManyBody())
-			.force("center", d3.forceCenter(graphOptions.width / 2, graphOptions.height / 2));
+			.force("center", d3.forceCenter(vars.width / 2, vars.height / 2));
 
 		simulation.nodes(data.nodes);
 		simulation.force("link").links(data.links);
@@ -260,7 +249,7 @@ $.COAUTHOR.graph.create = function(containerID, data) {
 }
 
 $.COAUTHOR.graph.nodes = function (graphData, nodesContainer, mode, distance){
-	var graphOptions = this.options;
+	var vars = $.COAUTHOR.variables;
 	
 	var coauthRadiusScale = d3.scaleLinear()
 		.domain( [d3.min( graphData.nodes, function( d ){ return d.hindex; } ), d3.max( graphData.nodes, function( d ){ return d.hindex; } ) ] )
@@ -280,15 +269,15 @@ $.COAUTHOR.graph.nodes = function (graphData, nodesContainer, mode, distance){
 		.attr("dominant-baseline", "central")
 		.attr("fill", function(d, i){ 
 			if ( mode === "coauthor"){
-				var institutionAffiliation = graphOptions.coauthorIconColor[d.institutionAffiliation];
+				var institutionAffiliation = vars.coauthorIconColor[d.institutionAffiliation];
 					return institutionAffiliation != null ? institutionAffiliation : "grey" ;
 			}
 			else{
 				var minValue = d3.min(graphData.nodes, function(d){ return d.value});
 				var maxValue = d3.max(graphData.nodes, function(d){ return d.value});
-				graphOptions.scaleTopicIconColor.domain( [ minValue, maxValue ] );
+				vars.scaleTopicIconColor.domain( [ minValue, maxValue ] );
 				
-				return graphOptions.scaleTopicIconColor(d.value);
+				return vars.scaleTopicIconColor(d.value);
 			}
 		})
 		.style("font-family", "fontawesome")
@@ -342,7 +331,7 @@ $.COAUTHOR.graph.nodesPosition = function (node, radius, mode){
 	if ( mode !== "coauthor")
 		angleScale.range([0, 2 * Math.PI - 2 * Math.PI/node.nodes().length ]);
 	
-	var center = { x: this.options.width / 2, y: this.options.height/2};
+	var center = { x: $.COAUTHOR.variables.width / 2, y: $.COAUTHOR.variables.height/2};
 	
 	node.attr("transform", function(d, i) {
 		if ( $.PALM.selected.researcher == d.id ){
@@ -360,14 +349,14 @@ $.COAUTHOR.graph.nodesPosition = function (node, radius, mode){
 
 $.COAUTHOR.graph.nodes.textPosition = function(text, mode){
 	var center = {
-			x : $.COAUTHOR.graph.options.width / 2,
-			y : $.COAUTHOR.graph.options.height / 2
+			x : $.COAUTHOR.variables.width / 2,
+			y : $.COAUTHOR.variables.height / 2
 	};
 	var nrNodes 	= mode === "coauthor" ? text.nodes().length - 1 : text.nodes().length;
 	var angleSegm 	= (2 * Math.PI) / nrNodes;
 	var distance	= 10;
 	
-	$.COAUTHOR.graph.options.angleCoauthor = angleSegm;
+	$.COAUTHOR.variables.angleCoauthor = angleSegm;
 	
 	text.attr("text-anchor", function(d, i){ 
 		if ( $.PALM.selected.researcher == d.id )
@@ -417,7 +406,7 @@ $.COAUTHOR.graph.nodes.textPosition = function(text, mode){
 }
 
 $.COAUTHOR.graph.links = function (graphData, linksContainer){
-	var graphOptions = this.options;
+	var vars = $.COAUTHOR.variables;
 	
 	var link = linksContainer.selectAll("line")
 		.data(graphData.links)
@@ -426,7 +415,7 @@ $.COAUTHOR.graph.links = function (graphData, linksContainer){
 	var line = link.append("line")
 		.attr("class", "link-line")
 		.attr("dy", ".35em")
-		.attr("stroke", graphOptions.coauthorLinkColor)
+		.attr("stroke", vars.coauthorLinkColor)
 		.attr("stroke-width", function(d) { return Math.sqrt(d.value); })
 		.text(function(d) { return d.value; });;
 	
@@ -451,14 +440,14 @@ $.COAUTHOR.graph.links = function (graphData, linksContainer){
 
 
 $.COAUTHOR.graph.showInterests = function( show ){
-	var svg = d3.select($.COAUTHOR.graph.options.containerID + " svg" );
+	var svg = d3.select($.COAUTHOR.variables.containerID + " svg" );
 	
 	svg.select(".gInterests").classed("hidden", show == 0 ? true : false);
 	svg.select(".gTopics").classed("hidden", show == 0 ? true : false);
 };
 
 $.COAUTHOR.graph.orderBy = function( orderBy, groupBy ){
-	var vars 	   = $.COAUTHOR.graph.options,
+	var vars 	   = $.COAUTHOR.variables,
 		svg		   = d3.select(vars.containerID + " svg" );
 	
 	//order nodes
@@ -528,10 +517,11 @@ $.COAUTHOR.graph.orderBy = function( orderBy, groupBy ){
 		return grouped["same"].concat( grouped["national"], grouped["international"], grouped["unknown"] );
 	}
 }
-$.COAUTHOR.graph.legend = function (containerID){
-	var graphOptions = this.options;
+$.COAUTHOR.graph.legend = function (){
+	var vars = $.COAUTHOR.variables;
 	var legendContainer  = $("<div/>").addClass("divLegend");
 	
+	var containerID = "#" + vars.widget.attr("id") + " .visualization-details";
 	$(containerID).children(".divLegend").remove();
 	
 	legendContainer.append($("<span/>").addClass("title-legend").text("Legend"));
@@ -592,9 +582,9 @@ $.COAUTHOR.graph.legend = function (containerID){
 	}
 	function styleTopicImportanceLegend(containerID){
 		var children = $(containerID).children();
-		graphOptions.scaleTopicIconColor.domain([5, 0])
+		vars.scaleTopicIconColor.domain([5, 0])
 		for (var i  = 0; i < children.length; i++){
-			$(children[i]).css("color", graphOptions.scaleTopicIconColor(i));
+			$(children[i]).css("color", vars.scaleTopicIconColor(i));
 		}
 	}
 	function styleNrCollaborationsLegend(containerID){
@@ -608,9 +598,9 @@ $.COAUTHOR.graph.legend = function (containerID){
 		var initialBorderTopSize = 17;
 		var children = $(containerID).children();
 
-		$(children[0]).css("color", graphOptions.coauthorIconColor["same"]);
-		$(children[1]).css("color", graphOptions.coauthorIconColor["national"]);
-		$(children[2]).css("color", graphOptions.coauthorIconColor["international"]);
+		$(children[0]).css("color", vars.coauthorIconColor["same"]);
+		$(children[1]).css("color", vars.coauthorIconColor["national"]);
+		$(children[2]).css("color", vars.coauthorIconColor["international"]);
 		
 	}
 }
@@ -629,10 +619,11 @@ $.COAUTHOR.graph.interactions = {
 						addTooltip( d3.select(this), node );
 					
 					//image
+					
 					if ( node.photo != null && node.photo.length != 0 ){						
-							createImagePattern( node, node.radius  );	
-							d3.select(this).select("circle")
-								.attr("fill", "url(#pattern_" + node.id + ")");	
+						var image = $.PALM.utility.visualizations.getImageBackground( "#widget-" + $.PALM.visualizations.widgetUniqueName + " svg", node  );	
+							
+						d3.select(this).select("circle").attr("fill", image != null ? image : "white" );	
 					}
 				}else { //interest mouseover
 					highlightNodeInterest(this, node);
@@ -676,29 +667,10 @@ $.COAUTHOR.graph.interactions = {
 					
 					tooltipS.buildTooltip( gnode, node );	
 				}
-				
-				function createImagePattern( dataObject, imageRadius ){
-					var svg = d3.select( $.COAUTHOR.graph.options.containerID + " svg");
-			    	if ( svg.select("defs").node() == undefined)
-			    		var defs = svg.append("defs");
-			    	else
-			    		var defs = svg.select("defs");
-			    	return defs.append("svg:pattern")
-			    			.attr("id", "pattern_" + dataObject.id)
-			    			.attr("class", "author_avatar")
-			    			.attr("width", 1)
-			    			.attr("height", 1)
-			    			.attr('patternContentUnits', 'objectBoundingBox')
-			    		   .append("svg:image")
-			    		   	.attr("xlink:href", dataObject.photo )
-			    		   	.attr("width", 1)
-			    		   	.attr("height", 1)
-			    		   	.attr("preserveAspectRatio", "xMinYMin slice");
-			    }
-				
+		
 	},
 	nodeMouseLeave : function(d){
-				var containerID = $.COAUTHOR.graph.options.containerID;
+				var containerID = $.COAUTHOR.variables.containerID;
 				d3.selectAll( containerID + " .node").classed("disabled", false).classed("hovered", false)
 					.selectAll(".topic-icon").style("font-size", null);
 				d3.selectAll( containerID + " .link").classed("disabled", false);
@@ -711,14 +683,14 @@ $.COAUTHOR.graph.interactions = {
 				d3.select(this).select(".coauthor-icon").style("display", "block");
 	},
 	nodeClicked : function( node ){
-		d3.selectAll($.COAUTHOR.graph.options.containerID + " g.node")
+		d3.selectAll($.COAUTHOR.variables.containerID + " g.node")
 			.classed("clicked", false)
 			.selectAll("circle")
 				.style("stroke", "transparent");
 		d3.select(this).classed("clicked", true);	
 		
 		if ( Object.keys(node).indexOf("name") >= 0 ){ //click on coauthor		
-			d3.select(this).select("circle").style("stroke", $.COAUTHOR.graph.options.coauthorIconColor[ node.institutionAffiliation ] || "grey");
+			d3.select(this).select("circle").style("stroke", $.COAUTHOR.variables.coauthorIconColor[ node.institutionAffiliation ] || "grey");
 			$.COAUTHOR.graph.publications( node );	
 		}else{
 			var publications = findPublicationsOnInterestOrTopic( node.term );
@@ -730,13 +702,14 @@ $.COAUTHOR.graph.interactions = {
 
 $.COAUTHOR.graph.publications = function( node ){
 	//containers
-	var mainContainerID 	= $.COAUTHOR.graph.options.containerID;
-	var widgetUniqueName 	= mainContainerID.substr( 0, mainContainerID.length - " .visualization-main".length - 1 ).split("-")[1];
+	var widgetUniqueName 	= $.PALM.visualizations.widgetUniqueName;
 	var detailsContainerID 	= widgetUniqueName + ".visualization-details" ;
 	var $mainContainer 	 	= $("#publications-box-" + widgetUniqueName + " .box-content");
-	
+	var id 					= "#" + $.COAUTHOR.variables.widget.attr("id") + " .visualization-details";
+		
+	$(id).find(".box").show();
 	//heights
-	var containerFullHeight = $.COAUTHOR.graph.options.height - $.COAUTHOR.graph.options.margin.bottom - $.COAUTHOR.graph.options.margin.top;
+	var containerFullHeight = $.COAUTHOR.variables.height - $.COAUTHOR.variables.margin.bottom - $.COAUTHOR.variables.margin.top;
 	var legendHeight 		= $( "#widget-" +  widgetUniqueName + " .divLegend").height();
 	
 	//data
@@ -751,7 +724,7 @@ $.COAUTHOR.graph.publications = function( node ){
 	
 	//create list
 	data.status = "ok";
-	$.publicationList.init( data.status,  widgetUniqueName, $.COAUTHOR.graph.options.currentURL, null, containerFullHeight - legendHeight - $.COAUTHOR.graph.options.margin.bottom - $.COAUTHOR.graph.options.margin.top);
+	$.publicationList.init( data.status,  widgetUniqueName, $.PALM.visualizations.url, null, containerFullHeight - legendHeight - $.COAUTHOR.variables.margin.bottom - $.COAUTHOR.variables.margin.top);
 	$.publicationList.visualize( $mainContainer, data);
 	
 	var title = "(" + data.publications.length + ") : " + node.name;
@@ -763,7 +736,7 @@ $.COAUTHOR.graph.publications = function( node ){
 }
 
 function findPublicationsOnInterestOrTopic( topic ){
-	var containerID = $.COAUTHOR.graph.options.containerID;
+	var containerID = $.COAUTHOR.variables.containerID;
 	var publicationsOnInterest = [];
 	
 	var author = d3.select( containerID + " .gCoauthors .node.coauthor");	
@@ -784,7 +757,7 @@ function findPublicationsOnInterestOrTopic( topic ){
 }
 
 function highlightNodeCoauthor(nodeDOM, nodeObject){
-		var containerID = $.COAUTHOR.graph.options.containerID;
+		var containerID = $.COAUTHOR.variables.containerID;
 		d3.selectAll( containerID + " .gCoauthors .node").classed("disabled", function(n){
 			return ( neighbouring( nodeObject, n ) == true) ? false : true;
 		});				
@@ -798,7 +771,7 @@ function highlightNodeCoauthor(nodeDOM, nodeObject){
 }
 
 function highlightCoauthorinterests(nodeDOM, nodeObject){
-	var containerID = $.COAUTHOR.graph.options.containerID;
+	var containerID = $.COAUTHOR.variables.containerID;
 	if( nodeObject.commonInterests != undefined ){
 		if ( nodeObject.commonInterests.length != 0 ){
 			d3.selectAll( containerID + " .gInterests g.node").classed("disabled", function(n){
@@ -816,7 +789,7 @@ function highlightCoauthorinterests(nodeDOM, nodeObject){
 }
 
 function highlightCoauthorTopics(nodeDOM, nodeObject){
-	var containerID = $.COAUTHOR.graph.options.containerID;
+	var containerID = $.COAUTHOR.variables.containerID;
 	if( nodeObject.commonPublications != undefined ){
 		if ( nodeObject.commonPublications.length != 0 ){
 			var topicsPubl = $.COAUTHOR.graph.graphData.mostUsedTopics( nodeObject.commonPublications );
@@ -840,7 +813,7 @@ function highlightCoauthorTopics(nodeDOM, nodeObject){
 
 function neighbouring(a, b){
 	var linkedByIndex = {};
-	d3.selectAll( $.COAUTHOR.graph.options.containerID + " .link").nodes().forEach( function(link){
+	d3.selectAll( $.COAUTHOR.variables.containerID + " .link").nodes().forEach( function(link){
 		linkedByIndex[d3.select(link).datum().source.index + "," + d3.select(link).datum().target.index] = 1;
 	});
 	
@@ -848,20 +821,20 @@ function neighbouring(a, b){
 }
 
 function highlightNodeInterest(nodeDOM, nodeObject){
-	d3.selectAll( $.COAUTHOR.graph.options.containerID + " .gInterests .node").classed("disabled", true);				
+	d3.selectAll( $.COAUTHOR.variables.containerID + " .gInterests .node").classed("disabled", true);				
 	d3.select(nodeDOM).classed("disabled", false);
 
 }
 
 function highlightNodeTopic(nodeDOM, nodeObject){
-	d3.selectAll( $.COAUTHOR.graph.options.containerID + " .gTopics .node").classed("disabled", true);				
+	d3.selectAll( $.COAUTHOR.variables.containerID + " .gTopics .node").classed("disabled", true);				
 	d3.select(nodeDOM).classed("disabled", false);
 
 }
 
 function highlightInterestCoauthors(nodeDOM, nodeObject){
 	var topicCoauthors = [];
-	var containerID = $.COAUTHOR.graph.options.containerID;
+	var containerID = $.COAUTHOR.variables.containerID;
 	d3.selectAll( containerID + " .gCoauthors .node").classed("disabled", function(author, i){
 		if (author.commonInterests != undefined){
 			var found = $.grep(author.commonInterests, function(commonTopic){return commonTopic.id == nodeObject.id});
@@ -882,7 +855,7 @@ function highlightInterestCoauthors(nodeDOM, nodeObject){
 
 function highlightTopicCoauthors(nodeDOM, nodeObject){
 	var topicCoauthors = [];
-	var containerID = $.COAUTHOR.graph.options.containerID;
+	var containerID = $.COAUTHOR.variables.containerID;
 	d3.selectAll( containerID + " .gCoauthors .node").classed("disabled", function(author, i){
 		if ( author.commonPublications != undefined && author.commonPublications.length > 0 ){
 			var topicsPubl = $.COAUTHOR.graph.graphData.mostUsedTopics( author.commonPublications );
@@ -907,8 +880,4 @@ function highlightTopicCoauthors(nodeDOM, nodeObject){
 		});
 		return found.length > 0 ? false : true;
 	});
-}
-
-$.COAUTHOR.block = {
-
 }
