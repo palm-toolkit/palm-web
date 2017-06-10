@@ -1660,11 +1660,12 @@ $.PALM.utility = {
 			}
 		},
 		splitWord : function ( container, word, width ){
-			var letters = word.split("").reverse();
+			var letters   = word.split("").reverse();
 			var wordArray = [];
-			var text  = container.append("text");
+			var text  	  = container.append("text");
+			var letter 	  = null;
 			
-			while(letter = letters.pop()){
+			while( letter = letters.pop() ){
 				wordArray.push( letter );
 				text.text( wordArray.join("") );
 				

@@ -50,8 +50,7 @@
 </div>
 -->
 <script>
-	$( function(){
-		var height = 630;
+	$( function(){	
 		<#-- add slimscroll to widget body -->
 		<#-- $("#boxbody${wUniqueName} .box-content").slimscroll({
 			height: height + "px",
@@ -66,6 +65,7 @@
 		var $container = $( "#widget-${wUniqueName}" );
 		$container.find( ".box" ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );
 				
+		var currentUser = <#if currentUser.author??>"${currentUser.author.id}"<#else>""</#if>;
 		<#-- set widget unique options -->
 		var options ={
 			source : "<@spring.url '/researcher/publicationTopList' />",
@@ -74,18 +74,43 @@
 			onRefreshStart: function( widgetElem ){
 						},
 			onRefreshDone: function(  widgetElem , data ){
-				var wUniqueName   = "${wUniqueName}"; 
-				var url 		  = "<@spring.url ''/>";
-				var userLoggedId  = <#if currentUser.author??>"${currentUser.author.id}"<#else>""</#if>; 
-				var processedData = $.bestPapers.init( url, wUniqueName,userLoggedId, data, height);
+				if( data.status != "ok"){
+						$.PALM.callout.generate( $mainContainer , "warning", "Empty Publications !", "Sorry, you don't have any publication, please try to add one" );
+						return false;
+				}
+				
+				$.PALM.visualizations.record ( {
+					data 	: data, 
+					widgetUniqueName : "${wUniqueName}", 
+					width	: 960,
+					height	: 630,
+					url 	: "<@spring.url ''/>",
+					user	: currentUser	
+				});
+								
+				user_best_papers();
 				
 				<#-- remove overlay -->
 				$container.find(".overlay").remove();
-				
-				if ( processedData != false )
-					 $.bestPapers.visualise( processedData );
-				else
-					return false;
+	
+				function user_best_papers(){
+					var $mainContainer = $("#widget-" + "${wUniqueName}" + " .visualization-main");
+					$mainContainer.html( "" );
+					
+					var vars = $.bestPapers.variables;				
+					
+					vars.margin = {top: 20, right: 20, bottom: 40, left: 40};
+					vars.width 	= $mainContainer.width() - vars.margin.left - vars.margin.right;
+					vars.height = $.PALM.visualizations.height;
+					
+					vars.criterion = $("#widget-" + "${wUniqueName}" + " .basedOn .dropdown-menu .selected").data("value");
+					vars.widget = d3.select("#widget-" + "${wUniqueName}");
+					
+					$.PALM.visualizations.data = $.bestPapers.processData();
+					vars.dataBackUp = $.extend(true, {}, $.PALM.visualizations.data);
+					
+					$.bestPapers.visualise.chart.draw();
+				};	
 			}
 		};
 		
