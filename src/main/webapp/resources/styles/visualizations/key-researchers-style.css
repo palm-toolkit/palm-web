@@ -16,8 +16,6 @@
 }
 
 #widget-conference_active_researcher .callout-warning{
-	position: absolute;
-    top		: 40%;
     width	: 98%;
 }
 
@@ -68,10 +66,10 @@
 }
 
 #widget-conference_active_researcher .clicked-gradient-stop-color-1{
-	stop-color : #0073b7;	
+	stop-color : #73a0bb;	
 }
 #widget-conference_active_researcher .clicked-gradient-stop-color-2{
-	stop-color : #8aa9bb;
+	stop-color : #c4e1f2;
 }
 
 #widget-conference_active_researcher .light-color{
@@ -90,6 +88,8 @@
 #widget-publications-conference_active_researcher>div{
     max-height	: 100%;
     border-left : 1px solid #d2d6de;
+    box-shadow: rgb(165, 165, 165) -6px 8px 39px -6px;
+    opacity: 0.95;
 }
 
 #widget-conference_active_researcher .node .label:hover{

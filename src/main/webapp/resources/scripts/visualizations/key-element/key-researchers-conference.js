@@ -1,8 +1,6 @@
 $.activeResearchers = {};
-$.activeResearchers.variables ={
-		widgetUniqueName : undefined,
-		isUserLogged 	 : undefined,
-		currentURL       : undefined,
+$.activeResearchers ={
+	variables : {	
 		containerId 	 : undefined,		
 		width : 1100,
 		height: 600,
@@ -18,7 +16,7 @@ $.activeResearchers.variables ={
 		transitionDuration  : 1000, 
 		easeType 			: "elastic", 
 		highLightColor 		: "rgb(74, 74, 74)", // "#0073b7", //"#f39c12",
-		clickedColor 		: "#004f7e", // "rgb(13, 40, 185)",//"#f39c12",
+		clickedColor 		: "#73a0bb", // "rgb(13, 40, 185)",//"#f39c12",
 		color : {
 			episode : {
 				name	: "#004f7e", //"#0073b7",
@@ -36,568 +34,549 @@ $.activeResearchers.variables ={
 		L	  : {},
 		k 	  : {},
 		line  : undefined,
-		diagonal : undefined,
+		diagonal		   : undefined,
 		publicationRequest : null,
-		tooltipName	: "tooltip-key-researcher"
-};
-$.activeResearchers.init = function(widgetUniqueName, eventData, currentURL, isUserLogged){
-	var vars = $.activeResearchers.variables;
-	vars.containerId 	  = "#widget-" + widgetUniqueName;	
-	vars.width  		  = $(vars.containerId + " .visualization-main" ).width();
-	vars.radius 		  = Math.min( vars.width / 2 ,vars.height  );
-	vars.widgetUniqueName = widgetUniqueName;
-	vars.currentURL		  = currentURL;
-	vars.isUserLogged	  = isUserLogged;
-	vars.L				  = {};
-	
-	$(vars.containerId + " .visualization-main" ).height( vars.height );
-	$(vars.containerId + " .visualization-details" ).addClass( "hidden" );
-	
-	var mappedJsonObject, mergedJsonObjectArray, combinedJsonObject, linkObject, episodeConceptLinkJsonArray;
-
-	var r = d3.layout.tree()
-		.size([200, vars.h / 4 - vars.R])
-		.separation(function(Y, X) {
-			return (Y.parent == X.parent ? 1 : 2) / Y.depth;
-		});
-			
-	vars.diagonal = d3.svg.diagonal.radial()
-		.projection(function(X) {
-			return [X.y, X.x / 180 * Math.PI];
-		});
-			
-	vars.line = d3.svg.line()
-		.x(function(X) { return X[0]; })
-		.y(function(X) { return X[1]; })
-		.interpolate("bundle")
-		.tension(0.5);
-			
-	var graphSVG = d3.select(vars.containerId +" .box-body .visualization-main" ).append("svg")
-		.attr("width",  vars.width)
-		.attr("height", vars.height)
-		.attr("viewBox", ( -vars.width / 2 + 10) + " " + ( -vars.height / 2 - 20 ) + " " +  vars.width + " " +  vars.height )
-		.attr("preserveAspectRatio", "xMinYMin")
-		.append("g");
-
-	var linkGraphSVG 	= graphSVG.append("g").attr("class", "links"); 
-	var episodeGraphSVG = graphSVG.append("g").attr("class", "episodes");
-	var nodeGraphSVG 	= graphSVG.append("g").attr("class", "nodes");	
-	
-	
-	createGradientColor(graphSVG, "light-box-gradient", "light-gradient-stop-color-1", "light-gradient-stop-color-2");
-	createGradientColor(graphSVG, "dark-box-gradient",  "dark-gradient-stop-color-1",  "dark-gradient-stop-color-2");
-	createGradientColor(graphSVG, "clicked-box-gradient", "clicked-gradient-stop-color-1",  "clicked-gradient-stop-color-2");
-	
-	var processedData = this.data( eventData );
-	this.visualize( processedData.mappedJsonObject, processedData.combinedJsonObject, processedData.episodeConceptLinkJsonArray);		
-};
-
-$.activeResearchers.data = function( eventData ){
-	var data = {}; 
-	data.episodes = [];
-	data.lefts = [];
-	data.rights = [];
-	eventData.participants.forEach( function( participant, i ){
-		participant.type  = "episode";
-		participant.links = [];
-		participant.publications.forEach( function( publication, j ){
-			publication.topics.forEach( function( topic, q ){
-				participant.links = participant.links.concat( d3.map(topic.termvalues).keys() );
-			});
-			
-			participant.links.forEach( function( link, l ){
-				var topicNode = {};
-				topicNode.name = link;
-				topicNode.type = "right";
-				
-				var positionTopicNode = data.rights.map( function( x ){ return x.name; }).indexOf( link );
-				
-				if ( positionTopicNode >= 0 ){
-					topicNode.count = data.rights[ positionTopicNode ].count + 1;	
-					data.rights[ positionTopicNode ].count = data.rights[ positionTopicNode ].count + 1;	
-				}
-				else{
-					topicNode.count = 1;				
-					data.rights.push( topicNode );
-				}
-			} );
-			
-		} );
-		data.episodes.push( participant );
-	} );
-	var importTopics = data.rights.slice(0, 50);
-	data.rights = importTopics.slice( 0, importTopics.length/2 ); 
-	data.lefts  = importTopics.slice( importTopics.length/2, importTopics.length ).map( function( d ){ d.type="left"; return d; });
-	
-	console.log(data);
-	
-	var mappedJsonObject      = d3.map(data);		
-	var mergedJsonObjectArray = d3.merge(mappedJsonObject.values());
-	var combinedJsonObject 	  = {};
-		
-		
-	mergedJsonObjectArray.forEach( function( thisJsonObject ) {	
-		thisJsonObject.key = getLowerCase(thisJsonObject.name);
-		thisJsonObject.canonicalKey = thisJsonObject.key;
-		combinedJsonObject[thisJsonObject.key] = thisJsonObject;								
-	});
-		
-	linkObject = d3.map();				
-	mappedJsonObject.get("episodes").forEach(function(episodeJsonObject) {
-		// remove bad links
-		episodeJsonObject.links = episodeJsonObject.links.filter(function(ab) {
-			return typeof combinedJsonObject[getLowerCase(ab)] !== "undefined" && ab.indexOf("r-") !== 0;
-		});
-	});
-	
-	console.log("mappedJsonObject");
-	console.log(mappedJsonObject);
-	console.log("mergedJsonObjectArray");
-	console.log(mergedJsonObjectArray);
-	console.log("combinedJsonObject");
-	console.log(combinedJsonObject);
-	
-	var episodeConceptLinkJsonArray = prepareData(mappedJsonObject, combinedJsonObject);
-	
-	return { mappedJsonObject : mappedJsonObject, combinedJsonObject : combinedJsonObject, episodeConceptLinkJsonArray : episodeConceptLinkJsonArray };
-	
-	function prepareData(mappedJsonObject, combinedJsonObject){
-		var vars = $.activeResearchers.variables;
-		if (vars.L.node === null) return;
-			
-		vars.L = {
-			node : null,
-			map  : {}
-		};
-		var i = Math.floor(vars.height / mappedJsonObject.get("episodes").length);
-		var y = Math.floor(mappedJsonObject.get("episodes").length * i / 2);
-		
-		mappedJsonObject.get("episodes").forEach(function(jsonRecord, index) {
-			jsonRecord.x = vars.episodeWidth / -2;
-			jsonRecord.y = index * i - y;						
-		});
-		// initial degree determines the initial configuration, it's a global
-		// variable
-		var startDegree = 180 + vars.initialDegree, 
-			endDegree   = 360 - vars.initialDegree, 
-			rotateDegree= (endDegree - startDegree) / (mappedJsonObject.get("lefts").length - 1);
-		
-		mappedJsonObject.get("lefts").forEach(function(jsonRecord, index) {
-			jsonRecord.x = endDegree - index * rotateDegree;
-			jsonRecord.y = vars.h / 2 - vars.R;
-			jsonRecord.xOffset = -vars.S;
-			jsonRecord.depth   = 1;
-		});
-			
-		startDegree = vars.initialDegree;
-		endDegree   = 180 - vars.initialDegree;
-		rotateDegree= (endDegree - startDegree) / (mappedJsonObject.get("rights").length - 1);
-		
-		mappedJsonObject.get("rights").forEach(function(jsonRecord, index) {
-			jsonRecord.x = index * rotateDegree + startDegree;
-			jsonRecord.y = vars.h / 2 - vars.R;
-			jsonRecord.xOffset = vars.S;
-			jsonRecord.depth = 1;
-		});
-			
-		episodeConceptLinkJsonArray = [];	
-		
-		var linkJsonObject, Y, aa, X = vars.h / 2 - vars.R;
-		
-		mappedJsonObject.get("episodes").forEach( function(jsonEpisodeObject) {
-			jsonEpisodeObject.links.forEach( function(linkString) {
-				linkJsonObject = combinedJsonObject[getLowerCase(linkString)];
-				
-				if (!linkJsonObject || linkJsonObject.type === "reference") return;
-									
-				Y  = (linkJsonObject.x - 90) * Math.PI / 180;
-				aa = jsonEpisodeObject.key + "-to-" + linkJsonObject.key;
-				
-				episodeConceptLinkJsonArray.push({
-					source : jsonEpisodeObject,
-					target : linkJsonObject,
-					key : aa,
-					canonicalKey : aa,
-					x1 : jsonEpisodeObject.x + (linkJsonObject.type === "left" ? 0: vars.episodeWidth),
-					y1 : jsonEpisodeObject.y + vars.episodeHeight / 2,
-					x2 : Math.cos(Y) * X + linkJsonObject.xOffset,
-					y2 : Math.sin(Y) * X
+		tooltipName		   : "tooltip-key-researcher"
+	},
+	data : function( ){
+		var data = {}; 
+		data.episodes = [];
+		data.lefts = [];
+		data.rights = [];
+		$.PALM.visualizations.data.participants.forEach( function( participant, i ){
+			participant.type  = "episode";
+			participant.links = [];
+			participant.publications.forEach( function( publication, j ){
+				publication.topics.forEach( function( topic, q ){
+					participant.links = participant.links.concat( d3.map(topic.termvalues).keys() );
 				});
-			});
-		});
-		
-		return episodeConceptLinkJsonArray;
-	}
-}
-
-$.activeResearchers.visualize = function( mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray ){
-	this.visualize.links(episodeConceptLinkJsonArray);
-	this.visualize.elements(mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
-};
-
-$.activeResearchers.visualize.links = function(episodeConceptLinkJsonArray){
-	var vars = $.activeResearchers.variables;
-	var linkGraphSVG = d3.select(vars.containerId + " svg g.links");
-	
-	if ( episodeConceptLinkJsonArray != null ){
-		var group = linkGraphSVG.selectAll("g").data( episodeConceptLinkJsonArray ).enter().append("g").attr("class", "link");
-		var paths = group	
-			.append("path")
-			.attr("d", function(Z) {
-				var Y = Z.source ? { x : Z.source.x, y : Z.source.y } : { x : 0, y : 0};
-				return vars.diagonal({
-							source : Y,
-							target : Y
-				});
-			});
-		paths.attr("d", function(X) {
-					return vars.line([[X.x1, X.y1], [X.x1, X.y1], [X.x1, X.y1]]);
-			});
-		paths.transition().duration(vars.transitionDuration).ease(d3.easeElastic)
-				.attr("d", function(X) { return vars.line([[X.x1, X.y1], [X.target.xOffset * vars.s, 0],[X.x2, X.y2]]); });	
-		
-		group.append("text")
-			.attr("class", "link-text")
-			.attr("fill", vars.highLightColor)
-			.attr("dx", function (d){ return d.target.x < 180 ?  "-0.35em" : "0.35em";})
-			.attr("dy", "0.35em")
-			.style("font-weight", "bold")
-			.attr("text-anchor", function (d){ return d.target.x < 180 ? "start" : "end"; });	
-	}			
-}
-
-$.activeResearchers.visualize.elements = function(mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
-	this.elements.episodes(mappedJsonObject.get("episodes"), mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
-	this.elements.nodes(d3.merge([mappedJsonObject.get("lefts"), mappedJsonObject.get("rights")]), mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
-}
-
-$.activeResearchers.visualize.elements.episodes = function(episodesData, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
-	var vars 			= $.activeResearchers.variables;
-	var basedOn			= $("#widget-" + vars.widgetUniqueName + " .basedOn .dropdown-menu li.selected").data("value");
-	var transition 		= d3.transition().duration(vars.transitionDuration).ease(d3.easeElastic);
-	var episodeGraphSVG = d3.select(vars.containerId + " svg g.episodes"); 	
-	
-	var keys 			= episodesData.map( function( d ){ return d.key; });
-	var episode 		= episodeGraphSVG.selectAll(".episode").data( episodesData ).enter().append("g")
-		.attr("class", "episode")
-		.on("mouseover", function(d){ $.activeResearchers.visualize.interactions.mouseoverEpisode(this, d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray); })
-		.on("mouseout",  function(d){ $.activeResearchers.visualize.interactions.mouseleaveEpisode(this, d); })
-		.on("click", $.activeResearchers.visualize.interactions.episodeClicked);
-	
-	episode.transition(transition)
-		.attr("transform", function(Z) { return "translate(" + [ Z.x, Z.y ] + ")"; });
-	
-	episode.append("rect")
-		.attr("class", "rect-base light-color")
-		.attr("rx", 2)
-		.attr("ry", 2)
-		.attr("width", vars.episodeWidth)
-		.attr("height", vars.episodeHeight )
-		.attr("fill", "transparent")
-		.attr("stroke-width", "0.5px");
-	
-	var criterion = "publicationsNumber";
-	if ( basedOn == "hindex" )
-		criterion = "hindex";
-	else
-		if ( basedOn == "nrCitations" )
-			criterion = "publicationsCitations";
-	
-	var range = d3.scaleLinear()
-		.range([0, vars.episodeWidth]);
-	
-	range.domain([0, d3.max( episodesData, function( d ){ return d[criterion]; })]);
-	
-	episode.append("rect")
-		.classed("rect-filling", true)
-		.attr("rx", 2)
-		.attr("ry", 2)		
-		.attr("width", function( d, i ){ return range( d[criterion] ); })
-		.attr("height", vars.episodeHeight )
-		.attr("fill", "url(#light-box-gradient)");
-	
-	episode.append("text")
-		.attr("class", "basedOn_value" )
-		.attr("x", function( d, i ){ return range( d[criterion] )} ) 
-		.attr("dx", ".15em")
-		.attr("dy", ".75em")
-		.attr("text-anchor", "start" )
-		.attr("fill", vars.color.episode.value )
-		.attr("fill-opacity", 0.6 )
-		.text( function( d ){ return d[criterion];	} );
-
-	episode.append("text")
-		.attr("class", "researcher_name" )
-		.attr("dx", ".35em")
-		.attr("dy", "-.35em")
-		.attr("fill", vars.color.episode.name )
-		.text( function( d ) { return d.name; } );
-
-	episode.exit()
-		.transition(transition)
-			.attr("transform", function(Z) { return "translate(" + [ vars.episodeWidth / -2, vars.episodeHeight / -2] + ")" ; });
-	
-	episode.exit().transition().duration(vars.transitionDuration).remove();
-}
-
-$.activeResearchers.visualize.elements.nodes = function(nodesData, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
-	var vars 		 = $.activeResearchers.variables;
-	var transition 	 = d3.transition().duration(vars.transitionDuration).ease(d3.easeElastic);
-	var nodeGraphSVG = d3.select(vars.containerId + " svg g.nodes"); 	
-	
-	var keys = nodesData.map( function( d ){ return d.key; });
-	
-	if ( keys.length == 0 ) 
-		return;
-	
-	var nodes = nodeGraphSVG.selectAll(".node").data( nodesData );
-	var node  = nodes.enter().append("g")
-		.attr("class", "node")
-		.attr("transform", function(n) {
-			var Z = n.parent ? n.parent : { xOffset : 0, x : 0, y : 0 };
-			return "translate(" + Z.xOffset + ",0)rotate(" + (Z.x - 90) + ")translate(" + Z.y + ")";
-		})
-		.on("mouseover", function(d){ 
-			$.activeResearchers.visualize.interactions.mouseoverEpisode( this, d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
-		})
-		.on("mouseout", function(d){ $.activeResearchers.visualize.interactions.mouseleaveEpisode( this, d ); })
-		.on("click", $.activeResearchers.visualize.interactions.nodeClicked );
-	
-	var radiusRange = d3.scaleLinear()
-		.domain([1, d3.max(nodesData, function(n){ return n.count; })])
-		.range([1, 15]);
-	
-	var circle = node.append("circle").attr("r", 1)
-		.attr( "fill", vars.color.node.circle )
-		.attr("stroke", vars.color.node.circle_stroke)
-		.attr("stroke-width", "1.5px");
-	
-	var labelStroke = node.append("text")
-		.attr("class", "label-stroke")
-		.attr("stroke", vars.color.node.circle_stroke)
-		.attr("stroke-width", 4);	
-	
-	var label = node.append("text")
-		.attr("class", "label")
-		.attr("font-size", 0);
-	
-	node.transition(transition)
-		.attr("transform", function(n) {
-			if (n === vars.L.node) return null;
-			var translate = (n.isGroup) ? n.y + (7 + n.count) : n.y;
-		return "translate(" + n.xOffset + ",0)rotate(" + (n.x - 90) + ")translate(" + translate + ")";
-	});
-
-	circle
-		.attr("r", function(n) {
-			if (n == vars.L.node) return 100;
-			else 
-				if (n.isGroup) 
-					return 4 + radiusRange( n.count );
-				else 
-					return 4.5;
-		});
-	label
-		.attr("dy", ".3em")
-		.attr("font-size", function(n) {
-			if (n.depth === 0) 
-				return 20;
-			else 
-				return 15;
-		})
-		.text(function(n) { return n.name; })
-		.attr("text-anchor", function(n) {
-			if (n === vars.L.node || n.isGroup) 
-				return "middle";
-						
-			return n.x < 180 ? "start" : "end";
-		})
-		.attr("transform", function(n) {
-			if (n === vars.L.node) return null;
-			else 
-				if (n.isGroup) 
-					return n.x > 180 ? "rotate(180)" : null;					
-			return n.x < 180 ? "translate(" + vars.t + ")" : "rotate(180)translate(-" + vars.t + ")";
-		});
-	labelStroke
-		.attr("display", function(t) { return t.depth === 1 ? "block" : "none"; });
-	
-	nodes.exit().transition().duration(vars.transitionDuration).remove();
-};
-
-$.activeResearchers.visualize.basedOn = function( basedOn ){
-	var vars 	   		= $.activeResearchers.variables;
-	var svg		   	   	= d3.select(vars.containerId + " svg" );	
-	var linkGraphSVG 	= svg.select("g.links"); 
-	var episodeGraphSVG = svg.select("g.episodes");
-	var nodeGraphSVG 	= svg.select("g.nodes");	
-	
-	// remove existing data
-	linkGraphSVG.html("");
-	episodeGraphSVG.html("");
-	nodeGraphSVG.html("");
-	
-	var selected = $.PALM.selected;
-	$.get( vars.currentURL + "/venue/topResearchers?id=" + selected.event +"&orderBy=" + basedOn, function( response ){
-		if( response.status != "ok" ){
-			$.PALM.callout.generate( targetContainer , "warning", "Empty Key Researchers!", "The conference does not have any researchers assigned on PALM (insufficient data)" );
-			return false;
-		}
-		vars.L = {};
-		vars.k = {};
-		vars.clickedNode = null;
-		var processedData = $.activeResearchers.data( response );
-		$.activeResearchers.visualize( processedData.mappedJsonObject, processedData.combinedJsonObject, processedData.episodeConceptLinkJsonArray);	
-
-	} );
-}
-
-$.activeResearchers.visualize.interactions = {
-		mouseoverEpisode : function(elem, episode, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
-			var linkObject = d3.map();							
-			mappedJsonObject.get("episodes").forEach(function(episodeJsonObject) {							
-				linkObject.set(episodeJsonObject.key, episodeJsonObject.links.map(function(link) {
-					var key = getLowerCase(link);
-					if (typeof linkObject.get(key) === "undefined") {
-						linkObject.set(key, []);
+				
+				participant.links.forEach( function( link, l ){
+					var topicNode = {};
+					topicNode.name = link;
+					topicNode.type = "right";
+					
+					var positionTopicNode = data.rights.map( function( x ){ return x.name; }).indexOf( link );
+					
+					if ( positionTopicNode >= 0 ){
+						topicNode.count = data.rights[ positionTopicNode ].count + 1;	
+						data.rights[ positionTopicNode ].count = data.rights[ positionTopicNode ].count + 1;	
 					}
-					linkObject.get(key).push(episodeJsonObject);
-							
-					return combinedJsonObject[key];
-				}) );
+					else{
+						topicNode.count = 1;				
+						data.rights.push( topicNode );
+					}
+				} );
+				
+			} );
+			data.episodes.push( participant );
+		} );
+		var importTopics = data.rights.slice(0, 50);
+		data.rights = importTopics.slice( 0, importTopics.length/2 ); 
+		data.lefts  = importTopics.slice( importTopics.length/2, importTopics.length ).map( function( d ){ d.type="left"; return d; });
+		
+		var mappedJsonObject      = d3.map(data);		
+		var mergedJsonObjectArray = d3.merge(mappedJsonObject.values());
+		var combinedJsonObject 	  = {};		
+			
+		mergedJsonObjectArray.forEach( function( thisJsonObject ) {	
+			thisJsonObject.key = $.PALM.utility.visualizations.getLowerCase(thisJsonObject.name);
+			thisJsonObject.canonicalKey = thisJsonObject.key;
+			combinedJsonObject[thisJsonObject.key] = thisJsonObject;								
+		});
+			
+		linkObject = d3.map();				
+		mappedJsonObject.get("episodes").forEach(function(episodeJsonObject) {
+			// remove bad links
+			episodeJsonObject.links = episodeJsonObject.links.filter(function(ab) {
+				return typeof combinedJsonObject[$.PALM.utility.visualizations.getLowerCase(ab)] !== "undefined" && ab.indexOf("r-") !== 0;
+			});
+		});
+		
+		var episodeConceptLinkJsonArray = prepareData(mappedJsonObject, combinedJsonObject);
+		
+		return { mappedJsonObject : mappedJsonObject, combinedJsonObject : combinedJsonObject, episodeConceptLinkJsonArray : episodeConceptLinkJsonArray };
+		
+		function prepareData(mappedJsonObject, combinedJsonObject){
+			var vars = $.activeResearchers.variables;
+			if (vars.L.node === null) return;
+				
+			vars.L = {
+				node : null,
+				map  : {}
+			};
+			var i = Math.floor(vars.height / mappedJsonObject.get("episodes").length);
+			var y = Math.floor(mappedJsonObject.get("episodes").length * i / 2);
+			
+			mappedJsonObject.get("episodes").forEach(function(jsonRecord, index) {
+				jsonRecord.x = vars.episodeWidth / -2;
+				jsonRecord.y = index * i - y;						
+			});
+			// initial degree determines the initial configuration, it's a global
+			// variable
+			var startDegree = 180 + vars.initialDegree, 
+				endDegree   = 360 - vars.initialDegree, 
+				rotateDegree= (endDegree - startDegree) / (mappedJsonObject.get("lefts").length - 1);
+			
+			mappedJsonObject.get("lefts").forEach(function(jsonRecord, index) {
+				jsonRecord.x = endDegree - index * rotateDegree;
+				jsonRecord.y = vars.h / 2 - vars.R;
+				jsonRecord.xOffset = -vars.S;
+				jsonRecord.depth   = 1;
+			});
+				
+			startDegree = vars.initialDegree;
+			endDegree   = 180 - vars.initialDegree;
+			rotateDegree= (endDegree - startDegree) / (mappedJsonObject.get("rights").length - 1);
+			
+			mappedJsonObject.get("rights").forEach(function(jsonRecord, index) {
+				jsonRecord.x = index * rotateDegree + startDegree;
+				jsonRecord.y = vars.h / 2 - vars.R;
+				jsonRecord.xOffset = vars.S;
+				jsonRecord.depth = 1;
+			});
+				
+			episodeConceptLinkJsonArray = [];	
+			
+			var linkJsonObject, Y, aa, X = vars.h / 2 - vars.R;
+			
+			mappedJsonObject.get("episodes").forEach( function(jsonEpisodeObject) {
+				jsonEpisodeObject.links.forEach( function(linkString) {
+					linkJsonObject = combinedJsonObject[$.PALM.utility.visualizations.getLowerCase(linkString)];
+					
+					if (!linkJsonObject || linkJsonObject.type === "reference") return;
+										
+					Y  = (linkJsonObject.x - 90) * Math.PI / 180;
+					aa = jsonEpisodeObject.key + "-to-" + linkJsonObject.key;
+					
+					episodeConceptLinkJsonArray.push({
+						source : jsonEpisodeObject,
+						target : linkJsonObject,
+						key : aa,
+						canonicalKey : aa,
+						x1 : jsonEpisodeObject.x + (linkJsonObject.type === "left" ? 0: vars.episodeWidth),
+						y1 : jsonEpisodeObject.y + vars.episodeHeight / 2,
+						x2 : Math.cos(Y) * X + linkJsonObject.xOffset,
+						y2 : Math.sin(Y) * X
+					});
+				});
 			});
 			
-			mouseOnEpisode(elem, episode, linkObject, episodeConceptLinkJsonArray);
-		},
-		mouseleaveEpisode:  function(elem, episode){
-			$.activeResearchers.variables.k = { node : null, map : {} };
-			d3.select( elem.nearestViewportElement ).selectAll( "." + $.activeResearchers.variables.tooltipName ).remove();
-
-			highLightElements();
-		},
-		closeList: function( ){
-			var vars 		= $.activeResearchers.variables;
-			var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
-			
-			thisWidget.element.find( ".visualization-details" ).addClass( "hidden" );
-			
-			if ( vars.clickedNode != null && vars.clickedNode.node != null )
-				removeHighlightClickedNode( );
-			
-			function removeHighlightClickedNode( ){
-				d3.selectAll("g.episode").classed("clicked", false);	
-				vars.clickedNode = undefined;
-				
-				if ( vars.publicationRequest != null ){
-					vars.publicationRequest.abort();
-					vars.publicationRequest = null;
-				}
-				highLightElements();
-			}
-		},
-		episodeClicked : function ( episode ){	
-			var vars 		= $.activeResearchers.variables;
-			var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
-			var keywordText = thisWidget.element.find("#publist-search").val() || "";
-			var queryString = "?id=" + episode.id + "&year=all&query=" + keywordText + "&queryKeywords=" + episode.links;
-			
-			activeResearchers_highlightClickedElement( this );
-			getPublicationAuthor( this );
-		
-			function getPublicationAuthor( author ){
-				var vars 		= $.activeResearchers.variables;
-				var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
-				var queryString = "?id=" + episode.id + "&year=all&queryKeywords=" + episode.links;
-				thisWidget.options.queryString = queryString;
-				
-				thisWidget.element.find( ".visualization-details" ).removeClass( "hidden" );
-				
-				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).show( 800 );
-				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
-				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );				
-
-					// --------------------------------------
-						
-				var response = episode;
-				var status 	 = ( episode.publications != null && episode.publications.length > 0 ) ? "ok" : "error"; 
-				$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( "(" + response.publications.length + "): " + getAbbreviatedName( response.author.name ) );
-						
-				var mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
-				
-				$.publicationList.init( status, vars.widgetUniqueName, vars.currentURL, vars.isUserLogged, vars.height - 30);
-				response.element = response.author;
-				
-				$.publicationList.visualize( mainContainer, response);
-					
-				//remove overlay and list unused elements 
-				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).find(".overlay").remove();
-						
-				$("#publications-box-" + vars.widgetUniqueName + " .pull-left").css("display", "none");
-				$("#publications-box-" + vars.widgetUniqueName + " .timeline .time-label").css("display", "none");
-				if ( !mainContainer.hasClass( "small" ) )
-					mainContainer.addClass( "small" );
-			}
-		},
-		nodeClicked : function ( node ){
+			return episodeConceptLinkJsonArray;
+		}
+	},
+	visualise : {
+		chart : function( ){
 			var vars = $.activeResearchers.variables;
+		
+			var mappedJsonObject	= $.PALM.visualizations.data.mappedJsonObject;
+			var combinedJsonObject  = $.PALM.visualizations.data.combinedJsonObject;
+			var episodeConceptLinkJsonArray = $.PALM.visualizations.data.episodeConceptLinkJsonArray;
 			
-			activeResearchers_highlightClickedElement( this );
-			showPublicationTopic( node );
+			vars.diagonal = function( d){
+				 return "M" + d.source.y + "," + d.source.x
+			      		+ "C" + (d.source.y + d.target.y) / 2 + "," + d.source.x
+			      		+ " " + (d.source.y + d.target.y) / 2 + "," + d.target.x
+			      		+ " " + d.target.y + "," + d.target.x;
+			};
+				
+			vars.line = d3.line()
+				.x(function(X) { return X[0]; })
+				.y(function(X) { return X[1]; })
+				.curve( d3.curveBundle );
 			
-			function showPublicationTopic( node ){		
-				var publOnTopic = getPublicationsOnInterestOrTopic( node.name );
-				var status		= publOnTopic == null || publOnTopic.length == 0 ? "error" : "ok";		
-				var thisWidget  = $.PALM.boxWidget.getByUniqueName( vars.widgetUniqueName ); 
-				var queryString = "?year=all&queryKeywords=" + node.name;
+			var graphSVG = d3.select(vars.containerId +" .box-body .visualization-main" ).append("svg")
+				.attr("width",  vars.width)
+				.attr("height", vars.height)
+				.attr("viewBox", ( -vars.width / 2 + 10) + " " + ( -vars.height / 2 - 20 ) + " " +  vars.width + " " +  vars.height )
+				.attr("preserveAspectRatio", "xMinYMin")
+				.append("g");
+		
+			var linkGraphSVG 	= graphSVG.append("g").attr("class", "links"); 
+			var episodeGraphSVG = graphSVG.append("g").attr("class", "episodes");
+			var nodeGraphSVG 	= graphSVG.append("g").attr("class", "nodes");	
+			
+		
+			$.PALM.utility.visualizations.addGradient(graphSVG, "light-box-gradient", "light-gradient-stop-color-1", "light-gradient-stop-color-2");
+			$.PALM.utility.visualizations.addGradient(graphSVG, "dark-box-gradient",  "dark-gradient-stop-color-1",  "dark-gradient-stop-color-2");
+			$.PALM.utility.visualizations.addGradient(graphSVG, "clicked-box-gradient", "clicked-gradient-stop-color-1",  "clicked-gradient-stop-color-2");
+		
+			this.links(episodeConceptLinkJsonArray);
+			this.elements.create(mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
+		},
+		links : function(episodeConceptLinkJsonArray){
+			var vars = $.activeResearchers.variables;
+			var linkGraphSVG = d3.select(vars.containerId + " svg g.links");
+			
+			if ( episodeConceptLinkJsonArray != null ){
+				var group = linkGraphSVG.selectAll("g").data( episodeConceptLinkJsonArray ).enter().append("g").attr("class", "link");
+				var paths = group	
+					.append("path")
+					.attr("d", function(Z) {
+						var Y = Z.source ? { x : Z.source.x, y : Z.source.y } : { x : 0, y : 0};
+						return vars.diagonal({
+									source : Y,
+									target : Y
+						});
+					});
+				paths.attr("d", function(X) {
+							return vars.line([[X.x1, X.y1], [X.x1, X.y1], [X.x1, X.y1]]);
+					});
+				paths.transition().duration(vars.transitionDuration).ease(d3.easeElastic)
+						.attr("d", function(X) { return vars.line([[X.x1, X.y1], [X.target.xOffset * vars.s, 0],[X.x2, X.y2]]); });	
 				
-				//show list container
-				var mainContainer = $("#publications-box-" + vars.widgetUniqueName + " .box-content");
+				group.append("text")
+					.attr("class", "link-text")
+					.attr("fill", vars.highLightColor)
+					.attr("dx", function (d){ return d.target.x < 180 ?  "-0.35em" : "0.35em";})
+					.attr("dy", "0.35em")
+					.style("font-weight", "bold")
+					.attr("text-anchor", function (d){ return d.target.x < 180 ? "start" : "end"; });	
+			}			
+		},
+		elements :{  
+			create : function(mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){		
+				this.episodes(mappedJsonObject.get("episodes"), mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
+				this.nodes(d3.merge([mappedJsonObject.get("lefts"), mappedJsonObject.get("rights")]), mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
+			},
+			episodes : function(episodesData, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
+				var vars 			= $.activeResearchers.variables;
+				var basedOn			= $("#widget-" + $.PALM.visualizations.widgetUniqueName + " .basedOn .dropdown-menu li.selected").data("value");
+				var transition 		= d3.transition().duration(vars.transitionDuration).ease(d3.easeElastic);
+				var episodeGraphSVG = d3.select(vars.containerId + " svg g.episodes"); 	
 				
-				thisWidget.element.find( ".visualization-details" ).removeClass( "hidden" );			
-				thisWidget.element.find( "#publications-box-" + vars.widgetUniqueName ).show( 800 );
+				var keys 			= episodesData.map( function( d ){ return d.key; });
+				var episode 		= episodeGraphSVG.selectAll(".episode").data( episodesData ).enter().append("g")
+					.attr("class", "episode")
+					.on("mouseover", function(d){ $.activeResearchers.visualise.interactions.mouseoverEpisode(this, d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray); })
+					.on("mouseout",  function(d){ $.activeResearchers.visualise.interactions.mouseleaveEpisode(this, d); })
+					.on("click", $.activeResearchers.visualise.interactions.episodeClicked);
 				
-				$("#publications-box-" + vars.widgetUniqueName + " .box-header .author_name").html( "(" + publOnTopic.length + "): " + node.name );
+				episode.transition(transition)
+					.attr("transform", function(Z) { return "translate(" + [ Z.x, Z.y ] + ")"; });
 				
-				//init and visualize list
-				$.publicationList.init( status, vars.widgetUniqueName, vars.currentURL, null, vars.height - 10);
+				episode.append("rect")
+					.attr("class", "rect-base light-color")
+					.attr("rx", 2)
+					.attr("ry", 2)
+					.attr("width", vars.episodeWidth)
+					.attr("height", vars.episodeHeight )
+					.attr("fill", "transparent")
+					.attr("stroke-width", "0.5px");
 				
-				if ( status == "ok" ){
-					var data = {
-							element : node,
-							publications : publOnTopic,
-							totalPublication : publOnTopic.length
-						}; 		
-					$.publicationList.visualize( mainContainer, data);
+				var criterion = "publicationsNumber";
+				if ( basedOn == "hindex" )
+					criterion = "hindex";
+				else
+					if ( basedOn == "nrCitations" )
+						criterion = "publicationsCitations";
+				
+				var range = d3.scaleLinear()
+					.range([0, vars.episodeWidth]);
+				
+				range.domain([0, d3.max( episodesData, function( d ){ return d[criterion]; })]);
+				
+				episode.append("rect")
+					.classed("rect-filling", true)
+					.attr("rx", 2)
+					.attr("ry", 2)		
+					.attr("width", function( d, i ){ return range( d[criterion] ); })
+					.attr("height", vars.episodeHeight )
+					.attr("fill", "url(#light-box-gradient)");
+				
+				episode.append("text")
+					.attr("class", "basedOn_value" )
+					.attr("x", function( d, i ){ return range( d[criterion] )} ) 
+					.attr("dx", ".15em")
+					.attr("dy", ".75em")
+					.attr("text-anchor", "start" )
+					.attr("fill", vars.color.episode.value )
+					.attr("fill-opacity", 0.6 )
+					.text( function( d ){ return d[criterion];	} );
+
+				episode.append("text")
+					.attr("class", "researcher_name" )
+					.attr("dx", ".35em")
+					.attr("dy", "-.35em")
+					.attr("fill", vars.color.episode.name )
+					.text( function( d ) { return d.name; } );
+
+				episode.exit()
+					.transition(transition)
+						.attr("transform", function(Z) { return "translate(" + [ vars.episodeWidth / -2, vars.episodeHeight / -2] + ")" ; });
+				
+				episode.exit().transition().duration(vars.transitionDuration).remove();
+			},
+			nodes : function(nodesData, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
+				var vars 		 = $.activeResearchers.variables;
+				var transition 	 = d3.transition().duration(vars.transitionDuration).ease(d3.easeElastic);
+				var nodeGraphSVG = d3.select(vars.containerId + " svg g.nodes"); 	
+				
+				var keys = nodesData.map( function( d ){ return d.key; });
+				
+				if ( keys.length == 0 ) 
+					return;
+				
+				var nodes = nodeGraphSVG.selectAll(".node").data( nodesData );
+				var node  = nodes.enter().append("g")
+					.attr("class", "node")
+					.attr("transform", function(n) {
+						var Z = n.parent ? n.parent : { xOffset : 0, x : 0, y : 0 };
+						return "translate(" + Z.xOffset + ",0)rotate(" + (Z.x - 90) + ")translate(" + Z.y + ")";
+					})
+					.on("mouseover", function(d){ 
+						$.activeResearchers.visualise.interactions.mouseoverEpisode( this, d, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray);
+					})
+					.on("mouseout", function(d){ $.activeResearchers.visualise.interactions.mouseleaveEpisode( this, d ); })
+					.on("click", $.activeResearchers.visualise.interactions.nodeClicked );
+				
+				var radiusRange = d3.scaleLinear()
+					.domain([1, d3.max(nodesData, function(n){ return n.count; })])
+					.range([1, 15]);
+				
+				var circle = node.append("circle").attr("r", 1)
+					.attr( "fill", vars.color.node.circle )
+					.attr("stroke", vars.color.node.circle_stroke)
+					.attr("stroke-width", "1.5px");
+				
+				var labelStroke = node.append("text")
+					.attr("class", "label-stroke")
+					.attr("stroke", vars.color.node.circle_stroke)
+					.attr("stroke-width", 4);	
+				
+				var label = node.append("text")
+					.attr("class", "label")
+					.attr("font-size", 0);
+				
+				node.transition(transition)
+					.attr("transform", function(n) {
+						if (n === vars.L.node) return null;
+						var translate = (n.isGroup) ? n.y + (7 + n.count) : n.y;
+					return "translate(" + n.xOffset + ",0)rotate(" + (n.x - 90) + ")translate(" + translate + ")";
+				});
+
+				circle
+					.attr("r", function(n) {
+						if (n == vars.L.node) return 100;
+						else 
+							if (n.isGroup) 
+								return 4 + radiusRange( n.count );
+							else 
+								return 4.5;
+					});
+				label
+					.attr("dy", ".3em")
+					.attr("font-size", function(n) {
+						if (n.depth === 0) 
+							return 20;
+						else 
+							return 15;
+					})
+					.text(function(n) { return n.name; })
+					.attr("text-anchor", function(n) {
+						if (n === vars.L.node || n.isGroup) 
+							return "middle";
+									
+						return n.x < 180 ? "start" : "end";
+					})
+					.attr("transform", function(n) {
+						if (n === vars.L.node) return null;
+						else 
+							if (n.isGroup) 
+								return n.x > 180 ? "rotate(180)" : null;					
+						return n.x < 180 ? "translate(" + vars.t + ")" : "rotate(180)translate(-" + vars.t + ")";
+					});
+				labelStroke
+					.attr("display", function(t) { return t.depth === 1 ? "block" : "none"; });
+				
+				nodes.exit().transition().duration(vars.transitionDuration).remove();
+			}		
+		},//end episodes
+		basedOn : function( basedOn ){
+			var vars 	   		= $.activeResearchers.variables;
+			var svg		   	   	= d3.select(vars.containerId + " svg" );	
+			var linkGraphSVG 	= svg.select("g.links"); 
+			var episodeGraphSVG = svg.select("g.episodes");
+			var nodeGraphSVG 	= svg.select("g.nodes");	
+			
+			// remove existing data
+			linkGraphSVG.html("");
+			episodeGraphSVG.html("");
+			nodeGraphSVG.html("");
+			
+			$(vars.containerId + " .visualization-main" ).html( "" );
+			$(vars.containerId + " .visualization-details" ).addClass( "hidden" );
+			
+			var selected = $.PALM.selected;
+			$.get( $.PALM.visualizations.url + "/venue/topResearchers?id=" + selected.event +"&orderBy=" + basedOn, function( response ){
+				if( response.status != "ok" ){
+					$.PALM.callout.generate( targetContainer , "warning", "Empty Key Researchers!", "The conference does not have any researchers assigned on PALM (insufficient data)" );
+					return false;
+				}
+				vars.L = {};
+				vars.k = {};
+				vars.clickedNode = null;
+				
+				$.PALM.visualizations.data = response;		
+				$.PALM.visualizations.data = $.activeResearchers.data( );
+				
+				$.activeResearchers.visualise.chart( );	
+			} );
+		},
+		interactions : {
+			mouseoverEpisode : function(elem, episode, mappedJsonObject, combinedJsonObject, episodeConceptLinkJsonArray){
+				var linkObject = d3.map();							
+				
+				mappedJsonObject.get("episodes").forEach(function(episodeJsonObject) {							
+					linkObject.set(episodeJsonObject.key, episodeJsonObject.links.map(function(link) {					
+						var key = $.PALM.utility.visualizations.getLowerCase(link);
+						
+						if (typeof linkObject.get(key) === "undefined") 
+							linkObject.set(key, []);
+													
+						linkObject.get(key).push(episodeJsonObject);
+									
+						return combinedJsonObject[key];
+					}) );
+				});
 					
-					//hide unused elements  
-					$("#publications-box-" + vars.widgetUniqueName + " .pull-left").css("display", "none");
-					$("#publications-box-" + vars.widgetUniqueName + " .timeline .time-label").css("display", "none");
+				mouseOnEpisode(elem, episode, linkObject, episodeConceptLinkJsonArray);
+			},
+			mouseleaveEpisode:  function(elem, episode){
+				$.activeResearchers.variables.k = { node : null, map : {} };
+				d3.select( elem.nearestViewportElement ).selectAll( "." + $.activeResearchers.variables.tooltipName ).remove();
+
+				highLightElements();
+			},
+			closeList: function( ){
+				var vars 		= $.activeResearchers.variables;
+				var thisWidget  = $.PALM.boxWidget.getByUniqueName( $.PALM.visualizations.widgetUniqueName ); 
+					
+				thisWidget.element.find( ".visualization-details" ).addClass( "hidden" );
+					
+				if ( vars.clickedNode != null && vars.clickedNode.node != null )
+					removeHighlightClickedNode( );
+					
+				function removeHighlightClickedNode( ){
+					d3.selectAll("g.episode").classed("clicked", false);	
+					vars.clickedNode = undefined;
+						
+					if ( vars.publicationRequest != null ){
+						vars.publicationRequest.abort();
+						vars.publicationRequest = null;
+					}
+					highLightElements();
+				}
+			},
+			episodeClicked : function ( episode ){	
+				var vars 		= $.activeResearchers.variables;
+				var thisWidget  = $.PALM.boxWidget.getByUniqueName( $.PALM.visualizations.widgetUniqueName ); 
+				var keywordText = thisWidget.element.find("#publist-search").val() || "";
+				var queryString = "?id=" + episode.id + "&year=all&query=" + keywordText + "&queryKeywords=" + episode.links;
+					
+				activeResearchers_highlightClickedElement( this );
+				getPublicationAuthor( this );
+				
+				function getPublicationAuthor( author ){
+					var vars 		= $.activeResearchers.variables;
+					var thisWidget  = $.PALM.boxWidget.getByUniqueName( $.PALM.visualizations.widgetUniqueName ); 
+					var queryString = "?id=" + episode.id + "&year=all&queryKeywords=" + episode.links;
+					thisWidget.options.queryString = queryString;
+						
+					thisWidget.element.find( ".visualization-details" ).removeClass( "hidden" );
+						
+					thisWidget.element.find( "#publications-box-" + $.PALM.visualizations.widgetUniqueName ).show( 800 );
+					thisWidget.element.find( "#publications-box-" + $.PALM.visualizations.widgetUniqueName ).find(".overlay").remove();
+					thisWidget.element.find( "#publications-box-" + $.PALM.visualizations.widgetUniqueName ).append( '<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>' );				
+					// --------------------------------------
+								
+					var response = episode;
+					var status 	 = ( episode.publications != null && episode.publications.length > 0 ) ? "ok" : "error"; 
+					
+					$("#publications-box-" + $.PALM.visualizations.widgetUniqueName + " .box-header .author_name").html( "(" + response.publications.length + "): " 
+								+ $.PALM.utility.visualizations.getNameAbbreviation( response.author.name ) );
+								
+					var mainContainer = $("#publications-box-" + $.PALM.visualizations.widgetUniqueName + " .box-content");
+						
+					$.publicationList.init( status, $.PALM.visualizations.widgetUniqueName, $.PALM.visualizations.url, $.PALM.visualizations.user, vars.height - 30);
+					
+					response.element = response.author;
+					response.status  = status;
+						
+					$.publicationList.visualize( mainContainer, response);
+							
+					//remove overlay and list unused elements 
+					thisWidget.element.find( "#publications-box-" + $.PALM.visualizations.widgetUniqueName ).find(".overlay").remove();
+								
+					$("#publications-box-" + $.PALM.visualizations.widgetUniqueName + " .pull-left").css("display", "none");
+					$("#publications-box-" + $.PALM.visualizations.widgetUniqueName + " .timeline .time-label").css("display", "none");
+					
 					if ( !mainContainer.hasClass( "small" ) )
 						mainContainer.addClass( "small" );
 				}
-			}
-			
-			function getPublicationsOnInterestOrTopic( topic ){
-				var publicationsOnInterest = [];
-				
-				var author = d3.select( "#widget-" + vars.widgetUniqueName + " .episodes .episode");	
-				
-				var publications = author.datum().publications;
-				
-				for( var i = 0; i < publications.length; i++ ){
-					var hasTopic = publications[i].topics.filter( function( publTopic ){ 
-						var keys = Object.keys( publTopic.termvalues ).map(function(x) { return x.toLowerCase(); });
-						return keys.indexOf( topic.toLowerCase() ) >= 0; 
-					});
-					if ( hasTopic.length != 0 )
-						if ( publicationsOnInterest.indexOf( publicationsOnInterest[i] ) < 0)
-							publicationsOnInterest = publicationsOnInterest.concat( publications[i] );
+			},
+			nodeClicked : function ( node ){
+				var vars = $.activeResearchers.variables;
+					
+				activeResearchers_highlightClickedElement( this );
+				showPublicationTopic( node );
+					
+				function showPublicationTopic( node ){		
+					var publOnTopic = getPublicationsOnInterestOrTopic( node.name );
+					var status		= publOnTopic == null || publOnTopic.length == 0 ? "error" : "ok";		
+					var thisWidget  = $.PALM.boxWidget.getByUniqueName( $.PALM.visualizations.widgetUniqueName ); 
+					var queryString = "?year=all&queryKeywords=" + node.name;
+						
+					//show list container
+					var mainContainer = $("#publications-box-" + $.PALM.visualizations.widgetUniqueName + " .box-content");
+						
+					thisWidget.element.find( ".visualization-details" ).removeClass( "hidden" );			
+					thisWidget.element.find( "#publications-box-" + $.PALM.visualizations.widgetUniqueName ).show( 800 );
+						
+					$("#publications-box-" + $.PALM.visualizations.widgetUniqueName + " .box-header .author_name").html( "(" + publOnTopic.length + "): " + node.name );
+						
+					//init and visualise list
+					$.publicationList.init( status, $.PALM.visualizations.widgetUniqueName, $.PALM.visualizations.url, null, vars.height - 10);
+						
+					if ( status == "ok" ){
+						var data = {
+								element : node,
+								publications : publOnTopic,
+								totalPublication : publOnTopic.length,
+								status : status
+							}; 		
+							
+						$.publicationList.visualize( mainContainer, data);
+							
+						//hide unused elements  
+						$("#publications-box-" + $.PALM.visualizations.widgetUniqueName + " .pull-left").css("display", "none");
+						$("#publications-box-" + $.PALM.visualizations.widgetUniqueName + " .timeline .time-label").css("display", "none");
+						
+						if ( !mainContainer.hasClass( "small" ) )
+							mainContainer.addClass( "small" );
+					}
 				}
-				return publicationsOnInterest;
+					
+				function getPublicationsOnInterestOrTopic( topic ){
+					var publicationsOnInterest = [];					
+					var author = d3.select( "#widget-" + $.PALM.visualizations.widgetUniqueName + " .episodes .episode");							
+					var publications = author.datum().publications;
+						
+					for( var i = 0; i < publications.length; i++ ){
+						var hasTopic = publications[i].topics.filter( function( publTopic ){ 
+							var keys = Object.keys( publTopic.termvalues ).map(function(x) { return x.toLowerCase(); });
+								return keys.indexOf( topic.toLowerCase() ) >= 0; 
+						});
+						if ( hasTopic.length != 0 )
+							if ( publicationsOnInterest.indexOf( publicationsOnInterest[i] ) < 0)
+								publicationsOnInterest = publicationsOnInterest.concat( publications[i] );
+					}
+					return publicationsOnInterest;
+				}
 			}
 		}
-}
-
+	}//end visualize
+};
 function activeResearchers_highlightClickedElement( elem ){
 	var vars = $.activeResearchers.variables;
 	
@@ -608,17 +587,7 @@ function activeResearchers_highlightClickedElement( elem ){
 	vars.clickedNode = jQuery.extend(true, {}, vars.k);
 }
 
-function getAbbreviatedName( name ){
-	var lastName  = name.substring( name.lastIndexOf(" "), name.length );
-	var firstName = name.substring(0, name.lastIndexOf(" ") );
-	var initials  = firstName == "" ? "" : ( firstName.match(/\b(\w)/g) ).join( ". " );
-	
-	return initials == "" ? lastName : initials + "." + lastName;
-}
 
-function getLowerCase(str) {
-	return str.toLowerCase().replace(/[ .,()]/g, "-");
-}
 
 function mouseOnEpisode(elem, episode, linkObject, episodeConceptLinkJsonArray){
 	var vars = $.activeResearchers.variables;
@@ -819,8 +788,7 @@ function getPublicationsOnTopic( link ){
 		var topics = episode.links.filter( function( l ){ return l == vars.k.node.name });
 		nrPubl += topics.length;
 	}		
-	
-	
+
 	return nrPubl;
 } 
 
@@ -830,9 +798,11 @@ function addTooltip( elem, episode ){
 		width 		: 200,
 		height		: 80,
 		borderRadius: 5,
-		fontSize	: 12
+		fontSize	: 12,
+		bkgroundColor: "rgba(255, 255, 255, 0.9)"
 	}
 	var tooltip = new Tooltip( tooltipParam );
+	
 	tooltip.buildTooltip( elem, episode );
 	tooltip.extraTranslate( elem, [0, -10] );
 }
@@ -849,37 +819,6 @@ function changeElementColor(X, initial, changed)
 		return $.activeResearchers.variables.k.map[X.key] ? changed : initial;
 	else
 		return $.activeResearchers.variables.k.map[X.key] ||  $.activeResearchers.variables.clickedNode.map[X.key] ? changed : initial;
-}
-
-function createGradientColor( svg, id, classColor1, classColor2 ){
-	var gradient = svg.append("defs")
-	  .append("linearGradient")
-	    .attr("id", id)
-	    .attr("x1", "0%")
-	    .attr("y1", "0%")
-	    .attr("x2", "0%")
-	    .attr("y2", "100%");
-
-
-	gradient.append("stop")
-		.attr("class", classColor1)
-	    .attr("offset", "0%")
-	    .attr("stop-opacity", 1);
-
-	gradient.append("stop")
-		.attr("class", classColor2)
-	    .attr("offset", "50%")
-	    .attr("stop-opacity", 1);
-	
-	gradient.append("stop")
-		.attr("class", classColor2)
-		.attr("offset", "50%")
-		.attr("stop-opacity", 1);
-
-	gradient.append("stop")
-		.attr("class", classColor1)
-		.attr("offset", "100%")
-		.attr("stop-opacity", 1);
 }
 
 function resize(){		

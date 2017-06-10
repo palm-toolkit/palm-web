@@ -14,7 +14,7 @@
 		</div>
 		<div class="container-box visualization-box row">
 			<div class="visualization-main col-md-12"></div>
-			<div class="visualization-details hidden col-md-4">
+			<div class="visualization-details hidden col-md-5 col-sm-5">
 				<#include "/resPublication.ftl">
 			</div>
 		</div>
@@ -52,17 +52,43 @@ $( function(){
 					$.PALM.callout.generate( targetContainer , "warning", "Empty Key Researchers!", "The conference does not have any researchers assigned on PALM (insufficient data)" );
 					return false;
 				}
+				
+				$.PALM.visualizations.record ( {
+					data 	: data, 
+					widgetUniqueName : "${wUniqueName}", 
+					width	: 960,
+					height	: 660,
+					url		: "<@spring.url '' />",
+					user	: <#if currentUser??> true <#else> false </#if>
+				});
 							
-				if( data.participants.length > 0 ){
-					$.activeResearchers.init("${wUniqueName}", data , "<@spring.url '' />", getCurrentUser() );					
-				}else
+				if( data.participants.length > 0 )
+					active_key_researchers( );					
+				else
 					$.PALM.popUpMessage.remove( uniquePidKeyResearchers );
+					
+				function active_key_researchers(widgetUniqueName, eventData, currentURL, isUserLogged){
+					var vars = $.activeResearchers.variables;
+					vars.containerId = "#widget-" + "${wUniqueName}";	
+					vars.width  	 = $(vars.containerId + " .visualization-main" ).width();
+					vars.height		 = $.PALM.visualizations.height;
+					vars.radius 	 = Math.min( vars.width / 2 ,vars.height  );
+					vars.L			 = {};	
+					vars.widget  	 = d3.select(vars.containerId);
+					
+					$(vars.containerId + " .visualization-main" ).height( $.PALM.visualizations.height );
+					$(vars.containerId + " .visualization-details" ).addClass( "hidden" );	
+					
+					$.PALM.visualizations.data = $.activeResearchers.data( );
+					
+					$.activeResearchers.visualise.chart( );		
+				}
 			}
-
+		};
 				<#-- append everything to  -->
 			<#--	mainContainer.append( timeLineContainer );
 		} -->
-	};
+	
 
 	<#-- order coauthors by-->
 	$("#widget-${wUniqueName}" + " .basedOn .dropdown-menu li").on("click", function(){
@@ -72,13 +98,13 @@ $( function(){
 			$(this).parent().children("li").removeClass("selected disabled");
 			$(this).addClass("selected disabled");
 			$(this).parents(".dropdown").children("button").html( $(this).text() + " <span class='caret'></span>" );
-			$.activeResearchers.visualize.basedOn( $(this).data("value") );
+			$.activeResearchers.visualise.basedOn( $(this).data("value") );
 		}
 	});
 	
 	<#-- list close button was clicked -->	 
 	$("#widget-${wUniqueName}" + " .btn.btn-box-tool").on("click", function(){
-		$.activeResearchers.visualize.interactions.closeList( );
+		$.activeResearchers.visualise.interactions.closeList( );
 	});
 	
 	<#-- register the widget -->
@@ -92,13 +118,7 @@ $( function(){
 	});
 });
 
-function getCurrentUser(){
-			<#if currentUser??>
-				return true;
-			<#else>
-				return false;
-			</#if>	
-}
+
 	
 </script>
 

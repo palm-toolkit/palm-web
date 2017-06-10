@@ -1588,6 +1588,35 @@ $.PALM.utility = {
 			feMerge.append("feMergeNode")
 			    .attr("in", "SourceGraphic");
 		},
+		addGradient : function( element, id, classColor1, classColor2){
+			var defs = element.append("defs");
+			var gradient = defs.append("linearGradient")
+			    .attr("id", id)
+			    .attr("x1", "0%")
+			    .attr("y1", "0%")
+			    .attr("x2", "0%")
+			    .attr("y2", "100%");
+
+			gradient.append("stop")
+				.attr("class", classColor1)
+			    .attr("offset", "0%")
+			    .attr("stop-opacity", 1);
+
+			gradient.append("stop")
+				.attr("class", classColor2)
+			    .attr("offset", "50%")
+			    .attr("stop-opacity", 1);
+			
+			gradient.append("stop")
+				.attr("class", classColor2)
+				.attr("offset", "50%")
+				.attr("stop-opacity", 1);
+
+			gradient.append("stop")
+				.attr("class", classColor1)
+				.attr("offset", "100%")
+				.attr("stop-opacity", 1);
+		},
 		createImagePattern : function( boxId, dataObject){
 			var svg  = d3.select( boxId );
 			var defs = ( svg.select("defs").node() == undefined ) ? svg.append("defs") : svg.select("defs");
@@ -1676,6 +1705,16 @@ $.PALM.utility = {
 			}
 			
 			return wordArray.length;
+		},
+		getNameAbbreviation : function( name ){
+			var lastName  = name.substring( name.lastIndexOf(" "), name.length );
+			var firstName = name.substring(0, name.lastIndexOf(" ") );
+			var initials  = firstName == "" ? "" : ( firstName.match(/\b(\w)/g) ).join( ". " );
+			
+			return initials == "" ? lastName : initials + "." + lastName;
+		},
+		getLowerCase : function(str) {
+			return str.toLowerCase().replace(/[ .,()]/g, "-");
 		}
 	}
 };
