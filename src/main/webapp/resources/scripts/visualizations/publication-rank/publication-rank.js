@@ -1,8 +1,7 @@
 $.publRank = {};
 $.publRank.variables =  {
 		margin : {top: 40, right: 20, bottom: 20, left: 40},
-		padding: 10,
-		visualizations : new Visualizations()
+		padding: 10
 };
 
 $.publRank.visualization = {
@@ -22,35 +21,19 @@ $.publRank.visualization = {
 					
 				return dataset.sort( function(a, b){ return b.cited - a.cited}).concat( myPaper );
 	},
-	setVars : function( url, user, widgetUniqueName, height, data ){
-		var vars = $.publRank.variables;
-		
-		vars.url 			  = url;
-		vars.user 			  = user;
-		vars.widgetUniqueName = widgetUniqueName;
-		vars.height 	      = height;
-		vars.publication	  = {basicinfo : data.basicinfo, topics : data.topics};
-		vars.mainContainer    = $("#widget-" + widgetUniqueName + " .visualization-main");
-		vars.detailsContainer = $("#widget-" + widgetUniqueName + " .visualization-details");
-		vars.thisWidget 	  = $.PALM.boxWidget.getByUniqueName( widgetUniqueName );	
-		vars.width  	  	  = vars.mainContainer.width() - vars.margin.left - vars.margin.right;
-		vars.width			  = vars.width > 800 ? 800 : vars.width; 
-	},
-	draw : function(url, user, widgetUniqueName, data, height){
-		if( data.status === "ok" && typeof data.publications !== 'undefined'){
-	
-			this.setVars(url, user, widgetUniqueName, height, data);
-			
+	draw : function(){
+		if( $.PALM.visualizations.data.status === "ok" && typeof $.PALM.visualizations.data.publications !== 'undefined'){			
 			var vars = $.publRank.variables;
+			
 			vars.thisWidget.element.find(".overlay").remove();			
 			vars.mainContainer.html( "" );
 		
-			var dataset = this.data( data.publications ) 
+			var dataset = this.data( $.PALM.visualizations.data.publications ) 
 			this.base( dataset );
 			this.basicinfo();
 //			this.list( dataset );
 		}else{
-			$.PALM.callout.generate($("#widget-" + widgetUniqueName + " .visualization-main") , "warning", "Empty Publications !", "Sorry, you don't have any publication." );
+			$.PALM.callout.generate( $.publRank.variables.mainContainer , "warning", "Empty Publications !", "Sorry, you don't have any publication." );
 			return false;
 		}
 	},
@@ -69,7 +52,7 @@ $.publRank.visualization = {
 		var colorScaleSame = "rgb(208, 118, 130)";
 		
 
-		var svg   = d3.select("#widget-" + vars.widgetUniqueName + " .visualization-main" ).append("svg")
+		var svg   = vars.widget.select( ".visualization-main" ).append("svg")
 			.attr("width",  vars.width)
 			.attr("height", vars.height);	
 		
@@ -261,7 +244,7 @@ $.publRank.visualization = {
 		var text = "Top Publications in " + dataset[0].type + " " + dataset[0].event.name;	
 		var gTitle = svg.append("g").attr("class", "title-chart");
 		
-		vars.visualizations.common.wrapText( gTitle, text, vars.width, "title", 14);
+		$.PALM.utility.visualizations.wrapText( gTitle, text, vars.width, "title", 14);
 		
 		var y = gTitle.node().getBBox().height / 14 >= 2 ? gTitle.node().getBBox().height - 14 : gTitle.node().getBBox().height;
 		gTitle.attr("transform", "translate(0, " + y + ")" );
@@ -290,9 +273,9 @@ $.publRank.visualization = {
 	elements : function(){},
 	list : function( dataset ){
 		var vars = $.publRank.variables;
-		$("#widget-" + vars.widgetUniqueName + " .visualization-details .list-publications").empty();
+		vars.detailsContainer.find( ".list-publications" ).empty();
 		
-		var svg =  d3.select("#widget-" + vars.widgetUniqueName + " .visualization-details .list-publications" ).append("svg")
+		var svg =  vars.widget.select( ".visualization-details .list-publications" ).append("svg")
 			.attr("width",  vars.detailsContainer.width() - vars.margin.right);	
 		
 		var list = svg.append("g")
@@ -339,7 +322,7 @@ $.publRank.visualization = {
 		var vars    = $.publRank.variables;
 		var top     = -20;
 		var right   = false;
-		var svg 	= d3.select("#widget-" + vars.widgetUniqueName + " svg");
+		var svg 	= vars.widget.select( "svg" );
 		var topics  =  d.topics != null && d.topics.status == "ok" ? d.topics.topics != null ? d.topics.topics[0].termvalues.slice(0,5) : [] : [];
 		
 		if ( d.topics != null && d.topics.topicModel !=  null )
@@ -531,9 +514,9 @@ $.publRank.visualization = {
 		var boxWidth  = vars.detailsContainer.width() - vars.margin.right,
 			boxHeight = vars.height;
 		
-		$("#widget-" + vars.widgetUniqueName + " .visualization-details .basicinfo").empty();
+		vars.detailsContainer.find(".basicinfo").empty();
 		
-		var svg =  d3.select( "#widget-" + vars.widgetUniqueName + " .visualization-details .basicinfo" ).append("svg")
+		var svg =  vars.widget.select( ".visualization-details .basicinfo" ).append("svg")
 			.attr("width",  boxWidth)	
 			.attr("height", boxHeight );	
 	
@@ -585,7 +568,7 @@ $.publRank.visualization = {
 					.style("font-weight" , "bold")
 					.text( d.label );
 				
-				vars.visualizations.common.wrapText( g, d.text +"", boxWidth, "box-basicinfo-text", 14)
+				$.PALM.utility.visualizations.wrapText( g, d.text +"", boxWidth, "box-basicinfo-text", 14)
 			  	g.selectAll(".box-basicinfo-text")
 			  		.attr("y", 14)
 			});
@@ -716,7 +699,7 @@ $.publRank.visualization = {
 			d3.select("#list-item-" + d.id).selectAll("text").style("font-weight", "normal");
 			
 			d3.select(".list-topics").remove();
-			d3.select("#widget-"+ $.publRank.variables.widgetUniqueName + " svg").selectAll(".bar-title").remove();
+			$.publRank.variables.widget.select( "svg" ).selectAll(".bar-title").remove();
 		},
 		mouseoverList: function(d){
 			d3.select(this).selectAll("text").style("font-weight", "bold");
@@ -748,7 +731,8 @@ $.publRank.visualization = {
 			
 			d3.selectAll(".bar").nodes().map( function( db, i){
 				var bar = d3.select(db);	
-				var topics = d3.select( db ).datum().topics[0] != null ? d3.select( db ).datum().topics[0].termvalues : [];
+				var topics = d3.select( db ).datum().topics != null &&
+					d3.select( db ).datum().topics.topics.length > 0 ? d3.select( db ).datum().topics.topics[0].termvalues : [];
 				
 				var termFound =  topics.length > 0 &&  topics.map( function( dt ){ return dt.term; } ).indexOf( d.term ) >= 0;
 				
@@ -763,8 +747,7 @@ $.publRank.visualization = {
 			d3.select(this).select("rect").attr("stroke-width", "1px");
 			d3.select(this).selectAll("text").style("font-weight", "normal");
 			
-			d3.select("#list-item-" + d.id).selectAll("text").style("font-weight", "normal");
-			
+			d3.select("#list-item-" + d.id).selectAll("text").style("font-weight", "normal");			
 			d3.select(".list-topics").remove();
 		},
 		clickedBar : function(d){
@@ -778,7 +761,7 @@ $.publRank.visualization = {
 			d3.select(this).classed("dragged", true);
 		},
 		draggedTopicsList 	  : function(d){	
-			var topics = d3.select("#widget-" + $.publRank.variables.widgetUniqueName + " #list-publ-topics");
+			var topics =  $.publRank.variables.widget.select( "#list-publ-topics" );
 			
 			var widthBox	= $.publRank.variables.detailsContainer.width() - $.publRank.variables.margin.right;
 			var widthScroll = this.getBBox().width;
@@ -800,39 +783,6 @@ $.publRank.visualization = {
 	}
 };
 
-//function wrapText( container, text, width, className, fontSize){
-//	var lineHeight = fontSize;
-//	var y = 0;
-//	var words = text.split(" ").reverse();
-//	var textArray = [];
-//	var text = container.append("text").attr("class", className);
-//	
-//	while(word = words.pop()){
-//		textArray.push(word);
-//		text.text( textArray.join(" ") );
-//		
-//		if ( text.node().getBBox().width > width ){
-//			y += lineHeight; 
-//			var w = textArray.pop();
-//			
-//			if ( textArray.length == 0 ){
-//				var ind = splitWord( container, w, width );
-//				var first = ind == w.length? w.substr(0, ind ) : w.substr(0, ind) + "-";
-//				textArray.push( first);
-//				
-//				w = w.substr( ind, w.length );
-//			}
-//			
-//			text.text( textArray.join(" ") );
-//			
-//			textArray = [w];
-//			text = container.append("text").attr("class", className)
-//					.attr("dy", y )
-//					.text( textArray.join(" ") );
-//		}				
-//	}
-//}
-
 function addTitle( elem, d ){
 	var vars  	 = $.publRank.variables,
 		x 	  	 = 0,
@@ -841,12 +791,17 @@ function addTitle( elem, d ){
 		barPos   = d3.transform( d3.select(elem).attr("transform") ).translate;
 	
 	var title = d3.select( elem.parentNode.parentNode ).append("g").attr("class", "bar-title");		
+	$.PALM.utility.visualizations.addShadow( title, "publ-rank-drop-shadow", "120%", 1, "#ddd", 1  );
+	
 	var titleBackground = title.append("rect")
 		.attr("rx", 5).attr("ry", 5)
 		.attr("fill", "white")
-		.attr("stroke", "rgb(196, 220, 234)");
+		.attr("stroke", "rgb(196, 220, 234)")
+		.style("filter", "url(#publ-rank-drop-shadow)");
+	
+	
 		
-	vars.visualizations.common.wrapText(title, d.title, 250, "bar-title-chunk", 14);
+	$.PALM.utility.visualizations.wrapText(title, d.title, 250, "bar-title-chunk", 14);
 	
 	x = barPos[0] - title.node().getBBox().width / 2;	
 	if ( x < vars.margin.left )//too much left
@@ -864,5 +819,4 @@ function addTitle( elem, d ){
 	titleBackground.attr("height", title.node().getBBox().height + 20)
 		.attr("width", title.node().getBBox().width + 10)
 		.attr("transform", "translate(" + [-5, -18] + ")");  ;
-	
 }

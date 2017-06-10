@@ -39,7 +39,6 @@
 		<#else>
 			var targetId = "";
 		</#if>
-		var height = 450;
 		<#-- add slimscroll to widget body -->
 		<#-- $("#boxbody${wUniqueName} .box-content").slimscroll({
 			height: height + "px",
@@ -73,7 +72,7 @@
 						},
 			onRefreshDone: function(  widgetElem , data ){
 				var url 		  = "<@spring.url ''/>";
-				var userLoggedId  = <#if currentUser.author??>"${currentUser.author.id}"<#else>""</#if>; 
+				var userLoggedId  = <#if currentUser??>"${currentUser.author.id}"<#else>""</#if>; 
 				var mainContainer = $( widgetElem ).find( "#boxbody${wUniqueName}" ).find(".visualization-main");
 				
 				mainContainer.html("");
@@ -82,13 +81,40 @@
 					var query  = "?id=" + data.basicinfo.publication.event.id + "&maxresult=" + 15;
 					var confPublURL = "<@spring.url '/venue/publicationTopList' />" + query;
 					
-					$.publRank.visualization.draw( "<@spring.url ''/>", userLoggedId, "${wUniqueName}", data, height);
+					$.PALM.visualizations.record ( {
+						data 	: data, 
+						widgetUniqueName : "${wUniqueName}", 
+						width	: 800,
+						height	: 450,
+						url		: "<@spring.url '' />",
+						user	: userLoggedId,
+					});
+				
+					publication_status_in_conference();
+					
 					
 				}else
 					$.PALM.callout.generate( mainContainer , "warning", "Empty Publications!", "Currently no venue found on PALM database for this publication." );
 
 				<#-- remove overlay -->
 				$container.find(".overlay").remove();
+				
+				function publication_status_in_conference(){
+					var vars = $.publRank.variables;
+					vars.widget = d3.select("#widget-${wUniqueName}");
+					
+					vars.mainContainer    = $("#widget-${wUniqueName}" + " .visualization-main");
+					vars.detailsContainer = $("#widget-${wUniqueName}" + " .visualization-details");
+					
+					vars.publication	  = {basicinfo : $.PALM.visualizations.data.basicinfo, topics : $.PALM.visualizations.data.topics};
+					
+					vars.thisWidget 	  = $.PALM.boxWidget.getByUniqueName( "${wUniqueName}" );	
+					vars.width  	  	  = vars.mainContainer.width() - vars.margin.left - vars.margin.right;
+					vars.width			  = vars.width > $.PALM.visualizations.width ? $.PALM.visualizations.width : vars.width; 
+					vars.height 	      = $.PALM.visualizations.height;
+					
+					$.publRank.visualization.draw();
+				}
 			}
 		};
 		

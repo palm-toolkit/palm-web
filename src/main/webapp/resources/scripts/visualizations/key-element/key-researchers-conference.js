@@ -1,4 +1,3 @@
-$.activeResearchers = {};
 $.activeResearchers ={
 	variables : {	
 		containerId 	 : undefined,		
