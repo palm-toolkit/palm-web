@@ -1713,8 +1713,23 @@ $.PALM.utility = {
 			
 			return initials == "" ? lastName : initials + "." + lastName;
 		},
+		removeDuplicatesArray : function( array ) {
+		    var prims = {"boolean":{}, "number":{}, "string":{}}, 
+		    	objs = [];
+
+		    return array.filter(function(item) {
+		        var type = typeof item;
+		        if(type in prims)
+		            return prims[type].hasOwnProperty(item) ? false : (prims[type][item] = true);
+		        else
+		            return objs.indexOf(item) >= 0 ? false : objs.push(item);
+		    });
+		},
 		getLowerCase : function(str) {
 			return str.toLowerCase().replace(/[ .,()]/g, "-");
+		},
+		toTitleCase : function (str) {
+		    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 		}
 	}
 };

@@ -34,34 +34,6 @@
 	 	data2 = {"author":{"aff":{"institution":"Rheinisch Westfalische Technische Hochschule Aachen","country":"Germany"},"name":"Christoph Greven","isAdded":true,"photo":"http://lufgi9.informatik.rwth-aachen.de/dl1175","hindex":2,"id":"8e19fbd2-2068-42a9-b2f5-ae71c15b6e49"},"countTotal":29,"count":29,"similarAuthors":[{"id":"40da1aa2-86d6-4df6-9d75-f59e51031675","name":"Hendrik Thus","affiliation":"Rheinisch Westfalische Technische Hochschule Aachen","photo":"http://lufgi9.informatik.rwth-aachen.de/dl997","status":"Computer Science","citedBy":885,"publicationsNumber":90,"hindex":4,"isAdded":true,"similarity":0.3,"topicdetail":[{"name":"learning analytics,knowledge management,usage data formats,usage data formats,technology enhanced learning,learning process,work proce,laan theory,mobile learning,personal learning environment,personal learning environment,personal learning environment,","value":""}]},{"id":"8ef4eb1c-b1c3-4d68-98ad-4f0d4f89a09b","name":"darko dugoija","citedBy":0,"publicationsNumber":1,"hindex":0,"isAdded":true,"similarity":0.03333333333333333,"topicdetail":[{"name":"","value":""}]},{"id":"6528fd6b-a14f-49f0-80d5-778511afb646","name":"anna lea dyckhoff","affiliation":"RWTH Aachen University","status":"Computer Science","citedBy":1178,"publicationsNumber":36,"hindex":0,"isAdded":true,"similarity":0.06666666666666667,"topicdetail":[{"name":"learning analytics,learning analytics,learning analytics,learning analytics,technology enhanced learning,technology enhanced learning,","value":""}]},{"id":"3fdca071-720a-44dd-bb1b-c2eee810f9ca","name":"xiao pu","citedBy":0,"publicationsNumber":1,"hindex":0,"isAdded":true,"similarity":0.03333333333333333,"topicdetail":[{"name":"","value":""}]},{"id":"736b9914-4498-471c-bfcf-6cebd8435d46","name":"arham muslim","citedBy":172,"publicationsNumber":22,"hindex":0,"isAdded":true,"similarity":0.1,"topicdetail":[{"name":"learning analytics,learning analytics,learning analytics,learning analytics,learning analytics,usage data formats,usage data formats,data models,","value":""}]},{"id":"69b9bc5d-dc6a-4768-8cfd-a95ad7d82bbc","name":"mareike bultmann","citedBy":0,"publicationsNumber":1,"hindex":0,"isAdded":true,"similarity":0.03333333333333333,"topicdetail":[{"name":"learning analytics,","value":""}]},{"id":"ae4769e5-5581-4a9f-b6d6-c1f77f3c9b64","name":"dennis zielke","citedBy":0,"publicationsNumber":2,"hindex":0,"isAdded":true,"similarity":0.06666666666666667,"topicdetail":[{"name":"learning analytics,learning analytics,learning analytics,technology enhanced learning,technology enhanced learning,","value":""}]},{"id":"e0cf2317-3949-48a9-85ae-ffd4a672e4b1","name":"mareike b ltmann","citedBy":0,"publicationsNumber":1,"hindex":0,"isAdded":true,"similarity":0.03333333333333333,"topicdetail":[{"name":"learning analytics,","value":""}]},{"id":"93e5672b-85d9-4167-859b-fc20315766ef","name":"Vlatko Lukarov","affiliation":"Rheinisch Westfalische Technische Hochschule Aachen","photo":"https://scholar.google.com/citations?view_op=view_photo&user=2IYFx1QAAAAJ&citpid=1","status":"Researcher","citedBy":168,"publicationsNumber":19,"hindex":3,"isAdded":true,"similarity":0.13333333333333333,"topicdetail":[{"name":"learning analytics,learning analytics,learning analytics,learning analytics,learning analytics,learning analytics,usage data formats,usage data formats,data models,future research,","value":""}]},{"id":"09de5915-c169-4693-94f8-f948ae4c252d","name":"fatemeh salehian kia","citedBy":0,"publicationsNumber":1,"hindex":0,"isAdded":true,"similarity":0.06666666666666667,"topicdetail":[{"name":"learning analytics,usage data formats,","value":""}]},{"id":"1cb70bc1-5b6a-47bb-903c-206014bba5c6","name":"roman brandt","citedBy":0,"publicationsNumber":1,"hindex":0,"isAdded":true,"similarity":0.03333333333333333,"topicdetail":[{"name":"personal learning environment,","value":""}]},{"id":"88ee4947-5498-436b-8a5f-3734a2e949e6","name":"esra yalcin","citedBy":0,"publicationsNumber":1,"hindex":0,"isAdded":true,"similarity":0.03333333333333333,"topicdetail":[{"name":"mobile learning,mobile learning,","value":""}]},{"id":"fa08e021-ac6b-4e76-8bf5-00bd3734c3fc","name":"shima amin sharifi","citedBy":0,"publicationsNumber":1,"hindex":0,"isAdded":true,"similarity":0.16666666666666666,"topicdetail":[{"name":"learning process,recent years,selecting learning resources,personal learning environment,personal learning environment,required tools,","value":""}]},{"id":"d8d387b2-440a-464e-bfaf-ae152f375827","name":"simona dakova","citedBy":0,"publicationsNumber":2,"hindex":0,"isAdded":true,"similarity":0.03333333333333333,"topicdetail":[{"name":"personal learning environment,personal learning environment,personal learning environment,","value":""}]},{"id":"9892ba43-cf59-4246-872b-eda0826c0945","name":"christoph pallasch","citedBy":0,"publicationsNumber":1,"hindex":0,"isAdded":true,"similarity":0.03333333333333333,"topicdetail":[{"name":"mobile learning,mobile learning,","value":""}]},{"id":"4a632383-0521-4f52-b331-586818773444","name":"mostafa akbari","affiliation":"Luxembourg Institute of Science and Technology","photo":"https://scholar.google.com/citations?view_op=view_photo&user=XUp4uUEAAAAJ&citpid=1","status":"Environmental Science","citedBy":569,"publicationsNumber":62,"hindex":13,"isAdded":true,"similarity":0.03333333333333333,"topicdetail":[{"name":"personal learning environment,","value":""}]},{"id":"2ca1d87f-2c5e-4239-88f9-01dd87da05cd","name":"navid gooranourimi","citedBy":0,"publicationsNumber":1,"hindex":0,"isAdded":true,"similarity":0.16666666666666666,"topicdetail":[{"name":"learning process,recent years,selecting learning resources,personal learning environment,personal learning environment,required tools,","value":""}]},{"id":"52378999-47c5-47c6-9907-b6dc7d9a1c0e","name":"Ulrik Schroeder","affiliation":"Rheinisch Westfalische Technische Hochschule Aachen","photo":"https://scholar.google.com/citations?view_op=view_photo&user=8EYyC1MAAAAJ&citpid=1","status":"Professor","citedBy":3910,"publicationsNumber":469,"hindex":18,"isAdded":true,"similarity":0.2,"topicdetail":[{"name":"learning analytics,learning analytics,knowledge management,technology enhanced learning,technology enhanced learning,laan theory,personal learning environment,symbiotic interrelated seamless integrated mobile personalizable,","value":""}]},{"id":"9bf6485c-9d9d-4fa5-9571-41ae10f62d91","name":"togrul mageramov","citedBy":0,"publicationsNumber":1,"hindex":0,"isAdded":true,"similarity":0.03333333333333333,"topicdetail":[{"name":"mobile learning,mobile learning,","value":""}]},{"id":"07397ed7-3deb-442f-a297-bdb5b476d3e6","name":"Mohamed Amine Chatti","affiliation":"Rheinisch Westfalische Technische Hochschule Aachen","photo":"https://scholar.google.com/citations?view_op=view_photo&user=gyLI8FYAAAAJ&citpid=1","status":"Computer Science","citedBy":6123,"publicationsNumber":284,"hindex":22,"isAdded":true,"similarity":0.1,"topicdetail":[{"name":"knowledge management,technology enhanced learning,personal learning environment,personal learning environment,personal learning environment,","value":""}]},{"id":"96ff11d6-8384-4a6f-b603-85cdb6ee090e","name":"bogdan kyryliuk","citedBy":0,"publicationsNumber":1,"hindex":0,"isAdded":true,"similarity":0.03333333333333333,"topicdetail":[{"name":"mobile learning,mobile learning,","value":""}]},{"id":"be0d3b1b-d832-4094-a458-a654777b65b5","name":"tim paehler","citedBy":0,"publicationsNumber":1,"hindex":0,"isAdded":true,"similarity":0.03333333333333333,"topicdetail":[{"name":"","value":""}]},{"id":"b83d71f9-d971-41d6-a714-5ff3ce119a69","name":"arnab chakrabarti","citedBy":0,"publicationsNumber":1,"hindex":0,"isAdded":true,"similarity":0.1,"topicdetail":[{"name":"learning analytics,learning process,future research,","value":""}]},{"id":"4800d936-9a56-44a2-b6f6-8481faa806c3","name":"eva altenberndgiani","citedBy":0,"publicationsNumber":4,"hindex":0,"isAdded":true,"similarity":0.03333333333333333,"topicdetail":[{"name":"","value":""}]},{"id":"36eedee0-b6b6-4020-9fec-49e5192c4ac6","name":"georg bohm","citedBy":0,"publicationsNumber":2,"hindex":0,"isAdded":true,"similarity":0.03333333333333333,"topicdetail":[{"name":"","value":""}]},{"id":"141f62ab-26cc-444b-a1c1-34f768e1a6d3","name":"markus soworka","citedBy":0,"publicationsNumber":1,"hindex":0,"isAdded":true,"similarity":0.03333333333333333,"topicdetail":[{"name":"","value":""}]},{"id":"3c85944b-f6f0-4cac-91d1-03c90e94b554","name":"philipp rohde","citedBy":0,"publicationsNumber":3,"hindex":0,"isAdded":true,"similarity":0.03333333333333333,"topicdetail":[{"name":"","value":""}]},{"id":"620b205d-d442-4bd2-b77c-9593261151cc","name":"dominik hurtienne","citedBy":0,"publicationsNumber":1,"hindex":0,"isAdded":true,"similarity":0.03333333333333333,"topicdetail":[{"name":"","value":""}]},{"id":"8d3ec67d-5665-4731-b5d3-35e3fe97d3fe","name":"mohd m anwar","citedBy":0,"publicationsNumber":1,"hindex":0,"isAdded":true,"similarity":0.03333333333333333,"topicdetail":[{"name":"","value":""}]}]};
 	 	$.SIMILAR.create("${wUniqueName}", data1); -->
 				
-		$( ".similar-author" ).click( function( event ){		
-			$.PALM.popUpIframe.create( $(this).data("url") , {popUpHeight:"456px"}, $(this).attr("title") );
-			
-			var _thisData = d3.select(this).datum();
-			if (_thisData.topicdetail != undefined && _thisData.topicdetail.length > 0){
-				$.get( "<@spring.url '/researcher/papersByTopicAndAuthor' />?id=" + _thisData.id + "&topic=" + JSON.stringify(_thisData.topicdetail),
-					function( response ){
-						var data = response.topicPapers[0].papers;
-						response.topicPapers.forEach(function(topic, i){
-							var accordionBox = $( "#boxbody-${wUniqueName} #accordion" ).children("div")[i];
-							if ( topic.papers!= null && topic.papers.length > 0 ) 
-								$( accordionBox ).append($(addList(topic.papers))[0]);
-							else
-								$( accordionBox ).append($("<p/>").text("No paper available"));
-						});		
-						$("#boxbody-${wUniqueName} #accordion .content-list").slimscroll({
-							height: "100%",
-	        				size: "6px",
-							allowPageScroll: true,
-   							touchScrollStep: 50,
-   							alwaysVisible: true,
-   							railVisible: true   						
-	    				});			
-				}).done(function() {
-    				$( "#boxbody-${wUniqueName} #accordion-container .loading-icon" ).remove();
-  				});
-			}							
-	});
 		<#-- source : "<@spring.url '/researcher/similarAuthorList' />", -->
 	    <#-- unique options in each widget -->
 		var options ={
@@ -75,22 +47,46 @@
 				$.PALM.popUpMessage.create( "loading similar researchers list", {uniqueId: uniquePidSimilarResearchers, popUpHeight:40, directlyRemove:false , polling:false});
 			},
 			onRefreshDone: function(  widgetElem , data ){
-				console.log("similar researchers");
-				console.log( data );
-			
 				var targetContainer = $( "#boxbody-${wUniqueName}" ).find( ".visualization-main" );
 					targetContainer.html( "" );
+				
+				console.log(data);
 				if( data.count == 0 ){
 					$.PALM.callout.generate( targetContainer , "warning", "Empty Similar Researchers!", "Researcher does not have any similar researchers on PALM (insufficient data)" );
 					return false;
-				}							
+				}	
+				
+				$.PALM.visualizations.record ( {
+					data 	: data, 
+					widgetUniqueName : "${wUniqueName}", 
+					width	: 960,
+					height	: 500,
+					url 	: "<@spring.url '' />"
+				});	
+									
 				if( data.count > 0 ){ 
 					<#-- remove any remaing tooltip -->
 					$( "body .tooltip" ).remove(); 
-					 $.SIMILAR.create("${wUniqueName}", data);
+					 console.log(data);
+					 similar_researchers();
 				} 
 
 				$.PALM.popUpMessage.remove( uniquePidSimilarResearchers );
+				
+				function similar_researchers(){
+					var vars = $.SIMILAR.variables;
+					vars.widget = d3.select( "#widget-${wUniqueName}" );
+					vars.mainContainer = $( "#widget-${wUniqueName}" + " .visualization-main" );
+					vars.detailsContainer = $( "#widget-${wUniqueName}" + " .visualization-details" );
+					vars.width		   = vars.mainContainer.width();
+					vars.height		   = $.PALM.visualizations.height;
+					vars.radius 	   = Math.min( vars.width / 2 , vars.height  );	
+	
+					vars.mainContainer.empty();
+					vars.mainContainer.empty();
+					
+					$.SIMILAR.create();
+				}
 			}					
 		};
 		
