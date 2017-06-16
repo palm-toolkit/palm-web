@@ -37,10 +37,7 @@
 					</div>
 				</div>
 				
-				<div id="tooltipContainer" class="tooltipContainer">
-					<div class="tooltip  hidden">
-					 	<table></table>
-					 </div>
+				<div id="tooltipContainer" class="tooltipContainer">				
 				</div>
 			    <div class="tab-content" id="tab_evolution"></div>
 			</div>
@@ -103,6 +100,7 @@
 					var processedData = $.TOPIC_EVOLUTION.processData ( $.PALM.visualizations.data );
 					var filteredData  = $.TOPIC_EVOLUTION.filterData ( processedData );
 	
+					vars.data = $.PALM.visualizations.data;
 					$.TOPIC_EVOLUTION.chart.draw( filteredData, "#tab_evolution" );	
 				}
 				

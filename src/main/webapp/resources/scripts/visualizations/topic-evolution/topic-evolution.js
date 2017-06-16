@@ -232,7 +232,6 @@ $.TOPIC_EVOLUTION = {
 						context.select(".brush").call( vars.brush.move, x.range().map(t.invertX, t));
 					},
 					brushed : function ( x, x2, xAxis ) {
-						console.log( d3.event.sourceEvent);
 						if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
 						
 						var vars  = $.TOPIC_EVOLUTION.variables;
@@ -250,7 +249,7 @@ $.TOPIC_EVOLUTION = {
 				filterBy :{
 					top : function( val ){
 						var vars = $.TOPIC_EVOLUTION.variables;						
-						var termvalues  = $.PALM.visualizations.data.termvalues.slice(0, parseInt(val) );
+						var termvalues  = vars.data.termvalues.slice(0, parseInt(val) );
 						var data = { termvalues : termvalues };
 						
 						var processedData = $.TOPIC_EVOLUTION.processData ( data );
@@ -351,8 +350,9 @@ $.TOPIC_EVOLUTION = {
 				show : function( year, mouseY ){	 
 					var vars = $.TOPIC_EVOLUTION.variables;
 			
-					var $tooltip = jQuery( vars.widget.select( "#tooltipContainer .tooltip" ).node() );					
-					$tooltip.addClass("hidden");
+					var $tooltip = jQuery( vars.widget.select( "#tooltipContainer" ).node() );	
+					$tooltip.find(".tooltip").remove();
+					$tooltip.append ( jQuery( "<div/>" ).addClass( "tooltip hidden" ).append( jQuery("<table/>")) );					
 					
 					var $table = $tooltip.find( "table" );
 					$table.empty();
@@ -388,8 +388,8 @@ $.TOPIC_EVOLUTION = {
 					
 					$table.append( $body );
 					
-					$tooltip.removeClass("hidden");    
-					$tooltip.css({ "margin-top": mouseY - $tooltip.height() + "px"})
+					$tooltip.find(".tooltip").removeClass("hidden");    
+					$tooltip.find(".tooltip").css({ "margin-top": mouseY - $tooltip.find(".tooltip").height() + "px"})
 				}
 			}
 		}

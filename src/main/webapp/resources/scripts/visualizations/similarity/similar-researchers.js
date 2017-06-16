@@ -178,30 +178,32 @@ $.SIMILAR.elements = function (gSVG, similarAuthors, mapData){
 		
 		var positioned = {};
 		
-		d3.selectAll("g.similar-author").each( function( d, i ){
-							 
-			var innerRadius = parseInt( d3.select( "#level_" + Math.floor( d.similarityLevel / 10 ) ).attr("data-innerradius") );
-			var outerRadius = parseInt( d3.select( "#level_" + Math.floor( d.similarityLevel / 10 ) ).attr("data-outerradius") );
-			var elementsToPosition = mapData[d.similarityLevel.toString()].length; 
-			
-			if ( ! ( d.similarityLevel in positioned ) ){
-				positioned[ d.similarityLevel ] = [];
-				positioned[ d.similarityLevel ].push(elementsToPosition);
-			}
-			
-			var pathLength = angle * outerRadius;
-			var fittingBubbles = pathLength / ( bubbleRadius * 2 );
-			var fittingAngle   = fittingBubbles < elementsToPosition ?  angle / fittingBubbles : angle / elementsToPosition; 
-			var startingAngle  = $.SIMILAR.variables.startAngle + fittingAngle/2;
-			
-			var lev = d.similarityLevel % 2 == 0 ? 0 : ( outerRadius - innerRadius ) / 2 ;
-			var x =  Math.sin( ( elementsToPosition - positioned[ d.similarityLevel ] ) * fittingAngle + startingAngle) * ( outerRadius - lev );
-			var y = -Math.cos( ( elementsToPosition - positioned[ d.similarityLevel ] ) * fittingAngle + startingAngle) * ( outerRadius - lev );
+		if ( d3.selectAll("g.similar-author").nodes().length > 0 ){
+			d3.selectAll("g.similar-author").each( function( d, i ){
+								 
+				var innerRadius = parseInt( d3.select( "#level_" + Math.floor( d.similarityLevel / 10 ) ).attr("data-innerradius") );
+				var outerRadius = parseInt( d3.select( "#level_" + Math.floor( d.similarityLevel / 10 ) ).attr("data-outerradius") );
+				var elementsToPosition = mapData[d.similarityLevel.toString()].length; 
 				
-			d3.select( this ).attr("transform", "translate(" + x + "," + y + ")");
-			
-			positioned[ d.similarityLevel ] --;
-		});
+				if ( ! ( d.similarityLevel in positioned ) ){
+					positioned[ d.similarityLevel ] = [];
+					positioned[ d.similarityLevel ].push(elementsToPosition);
+				}
+				
+				var pathLength = angle * outerRadius;
+				var fittingBubbles = pathLength / ( bubbleRadius * 2 );
+				var fittingAngle   = fittingBubbles < elementsToPosition ?  angle / fittingBubbles : angle / elementsToPosition; 
+				var startingAngle  = $.SIMILAR.variables.startAngle + fittingAngle/2;
+				
+				var lev = d.similarityLevel % 2 == 0 ? 0 : ( outerRadius - innerRadius ) / 2 ;
+				var x =  Math.sin( ( elementsToPosition - positioned[ d.similarityLevel ] ) * fittingAngle + startingAngle) * ( outerRadius - lev );
+				var y = -Math.cos( ( elementsToPosition - positioned[ d.similarityLevel ] ) * fittingAngle + startingAngle) * ( outerRadius - lev );
+					
+				d3.select( this ).attr("transform", "translate(" + x + "," + y + ")");
+				
+				positioned[ d.similarityLevel ] --;
+			});
+		}
 	}
 };
 
@@ -305,7 +307,7 @@ $.SIMILAR.interactions = {
 					
 			if (_thisData.topicdetail != undefined && _thisData.topicdetail.length > 0){
 				var topic = JSON.stringify(_thisData.topicdetail);
-//				topic =JSON.stringify([{name: _thisData.topicdetail[0].name.split(",")[0], value : null}]);
+				
 				$.get( $.PALM.visualizations.url + "/researcher/papersByTopicAndAuthor?id=" + _thisData.id + "&topic=" + topic,
 					function( response ){
 						console.log( "publications:");
@@ -313,7 +315,7 @@ $.SIMILAR.interactions = {
 						
 						if ( response.topicPapers.length == 0 ){
 							var accordionBox = $.SIMILAR.variables.detailsContainer.find("#accordion" ).children("div")[i];
-							$( accordionBox ).append($("<p/>").text("No paper available"));
+							$( accordionBox ).empty().append($("<p/>").text("No paper available"));
 							return;
 						}
 													
@@ -341,10 +343,10 @@ $.SIMILAR.interactions = {
 									if ( topics[ $(y).text() ] != null && topics[ $(y).text() ] .length > 0 ) 
 											$( accordionBox ).append( $ ($.SIMILAR.topics.publications( topics[ $(y).text() ] ))[0] );
 										else
-											$( accordionBox ).append($("<p/>").text("No paper available"));
+											$( accordionBox ).empty().append($("<p/>").text("No paper available"));
 									index ++;
 								}else
-									$($.SIMILAR.variables.detailsContainer.find("#accordion" ).children("div")[j]).append($("<p/>").text("No paper available"));;
+									$($.SIMILAR.variables.detailsContainer.find("#accordion" ).children("div")[j]).empty().append($("<p/>").text("No paper available"));;
 
 						});
 						

@@ -71,7 +71,7 @@
 						},
 			onRefreshDone: function(  widgetElem , data ){
 				if( data.status != "ok"){
-						$.PALM.callout.generate( $mainContainer , "warning", "Empty Publications !", "Sorry, you don't have any publication, please try to add one" );
+						$.PALM.callout.generate( $container , "warning", "Empty Publications !", "Sorry, you don't have any publication, please try to add one" );
 						return false;
 				}
 				

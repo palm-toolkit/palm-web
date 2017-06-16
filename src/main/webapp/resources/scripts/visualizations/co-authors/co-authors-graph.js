@@ -8,7 +8,7 @@ $.COAUTHOR.variables = {
 		left : 20, right : 20, top : 20, bottom : 20
 	},
 	color : d3.scaleOrdinal(d3.schemeCategory20),
-	coauthorIconColor : {"same" : "#1f2f62" , "national" : "#13ae9c", "international" : "#6aedde"},
+	coauthorIconColor : {"same" : "#253876" , "national" : "#13ae9c", "international" : "#6aedde", "unknown": "grey"},
 	coauthorLinkColor: "#eee",
 	topicIconColor : "rgb(198, 1, 73)",
 	scaleTopicIconColor : d3.scale.linear().interpolate(d3.interpolateHcl).range(["rgb(255, 222, 26)", "rgb(0, 0, 0)"])
@@ -113,9 +113,10 @@ $.COAUTHOR.graph.graphData = function (data){
 		data.forEach(function(coauthor, index){
 			if ( coauthor.aff != null && authorAffiliation != null ){
 				var isSameCountry = coauthor.aff.country == authorAffiliation.country && authorAffiliation.country != null;
+				var isSameURL = coauthor.aff.url == authorAffiliation.url && authorAffiliation.url != null;
 				var isSameInstitution = coauthor.aff.institution == authorAffiliation.institution && authorAffiliation.institution != null;		
 				
-				coauthor.institutionAffiliation = isSameInstitution ? "same" : isSameCountry ? "national" : "international";
+				coauthor.institutionAffiliation = isSameInstitution || isSameURL ? "same" : isSameCountry ? "national" : coauthor.aff.institution != null ? "international" : "unknown";
 				grouped[ coauthor.institutionAffiliation ].push( coauthor );
 
 			}else
@@ -528,10 +529,10 @@ $.COAUTHOR.graph.legend = function (){
 	legendContainer.append(function(){
 			var ul = $("<ul/>").addClass("listElemLegend");
 	
-			var liCoauthorImportance  = createLegendElement("<div/>", "divCoauthorImportance", "Coauthor H-index", ["High", "", "", "", "Low"], {"icon":"fa fa-user", "repetition" : 5});
-			var liTopicImportance     = createLegendElement("<div/>", "divTopicImportance", "Topic Importance", ["High", "", "", "", "Low"],{"icon":"fa fa-square", "repetition" : 5});
+			var liCoauthorImportance  = createLegendElement("<div/>", "divCoauthorImportance", "Reputation (H-index)", ["High", "", "", "", "Low"], {"icon":"fa fa-user", "repetition" : 5});
+			var liTopicImportance     = createLegendElement("<div/>", "divTopicImportance", "Topic Usage", ["High", "", "", "", "Low"],{"icon":"fa fa-square", "repetition" : 5});
 			var liNrCollaborations    = createLegendElement("<div/>", "divNrCollaborations", "Collaborations", [">50", "", "", "", "<10"], {"icon":"line-nrCollaborations", "repetition" : 5});
-			var liCoauthorAffiliation = createLegendElement("<div/>", "divCoauthorAffiliation", "Coauthor Affiliation", ["Same University", "National University", "International University"], {"icon":"fa fa-user", "repetition" : 3});
+			var liCoauthorAffiliation = createLegendElement("<div/>", "divCoauthorAffiliation", "Coauthor Affiliation", ["Same Univ.", "National Univ.", "International Univ.", "Unknown"], {"icon":"fa fa-user", "repetition" : 4});
 			
 			ul.append(liCoauthorImportance);
 			ul.append(liTopicImportance);
@@ -601,7 +602,7 @@ $.COAUTHOR.graph.legend = function (){
 		$(children[0]).css("color", vars.coauthorIconColor["same"]);
 		$(children[1]).css("color", vars.coauthorIconColor["national"]);
 		$(children[2]).css("color", vars.coauthorIconColor["international"]);
-		
+		$(children[3]).css("color", vars.coauthorIconColor["unknown"]);	
 	}
 }
 
@@ -702,8 +703,8 @@ $.COAUTHOR.graph.interactions = {
 
 $.COAUTHOR.graph.publications = function( node ){
 	//containers
-	var widgetUniqueName 	= $.PALM.visualizations.widgetUniqueName;
-	var detailsContainerID 	= widgetUniqueName + ".visualization-details" ;
+	var widgetUniqueName 	= $.COAUTHOR.variables.widget.attr("id").replace("widget-", "");
+	var detailsContainerID 	= widgetUniqueName + " .visualization-details" ;
 	var $mainContainer 	 	= $("#publications-box-" + widgetUniqueName + " .box-content");
 	var id 					= "#" + $.COAUTHOR.variables.widget.attr("id") + " .visualization-details";
 		
