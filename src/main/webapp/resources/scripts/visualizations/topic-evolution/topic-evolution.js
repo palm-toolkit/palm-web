@@ -263,6 +263,14 @@ $.TOPIC_EVOLUTION = {
 				content : function( data ){
 					var vars = $.TOPIC_EVOLUTION.variables;
 					
+					$( vars.widget.select("#legendContainer").node() ).slimscroll({
+						height: "160px",
+	        			size: "6px",
+						allowPageScroll: true,
+   						touchScrollStep: 50,
+   						railVisible: true   						
+	    			});	
+					
 					vars.widget.select( "#legend" ).selectAll("*").remove();
 					
 					var legend = vars.widget.select( "#legend" ).append("g")
@@ -307,7 +315,10 @@ $.TOPIC_EVOLUTION = {
 					
 					var transX = ( vars.width - vars.widget.select( "#legend  >g" ).node().getBBox().width )/ 2;
 					transX = transX < 0 ? 0 : transX;
-					vars.widget.select( "#legend" ).attr("transform", " translate(" + transX + "," + vars.margin.top + ")" );					
+										
+					vars.widget.select( "#legend" )
+						.attr("transform", " translate(" + transX + "," + vars.margin.top + ")" )
+						.style("height", vars.widget.select( "#legend" ).node().getBBox().height + 10);					
 					
 					legend.exit().remove();				
 				},

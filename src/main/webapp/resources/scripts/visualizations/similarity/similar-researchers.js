@@ -220,6 +220,8 @@ $.SIMILAR.interactions = {
 			if ( d3.selectAll(".similar-authors-elements .clicked").nodes().length == 0){
 				d3.select(".similar-author-details").remove();
 				jQuery( $.SIMILAR.variables.detailsContainer.selector + " .similar-topics-of-interest").remove();
+				
+				d3.select( $.SIMILAR.variables.detailsContainer.selector ).classed("hidden", true);
 			}
 		},
 		mouseoverNode : function (){
@@ -417,6 +419,9 @@ $.SIMILAR.basicInfo = function (gAuthorDetails, node) {
 	
 	gBasicInfo.attr("transform", "translate(" + ( photoRadius + 2*border ) + " , " + ( $.SIMILAR.variables.margin.top ) + ") scale(" + scaleFactor + ")");			
 	photo.attr("transform", "translate(0, " + (photoRadius / 2) + ")");	
+	
+	if ( gAuthorDetails.node().parentNode.getBBox().height < basicInfoBoxMeasurements.height )
+		d3.select( gAuthorDetails.node().parentNode ).attr("height", basicInfoBoxMeasurements.height);
 }
 
 $.SIMILAR.topics = {
@@ -466,13 +471,6 @@ $.SIMILAR.topics = {
 			
 			$.SIMILAR.variables.detailsContainer.append(accordionContainer);
 			
-			$( $.SIMILAR.variables.detailsContainer.selector + " #accordion h3" ).each(function(i, d){
-				jQuery(d).css({
-					"font-size": fontSize,
-					"font-weight": 400,
-					"padding" : "1px 1px 1px 30px"
-				});	
-			});
 			$( $.SIMILAR.variables.detailsContainer.selector + " #accordion>div" )
 			.each(function(i, d){
 				var loading = jQuery("<div/>").addClass("loading-icon fa fa-refresh fa-spin");

@@ -9,8 +9,8 @@
 			</div>
 		</div>
 		<div class="container-box visualization-box row">
-			<div class="visualization-main col-md-8  col-sm-8"></div>
-			<div class="visualization-details col-md-4 hidden"></div>
+			<div class="visualization-main col-md-12  col-sm-12"></div>
+			<div class="visualization-details col-md-5 col-sm-5 hidden"></div>
 		</div>
 	</div>
 </div>
@@ -37,7 +37,7 @@
 		<#-- source : "<@spring.url '/researcher/similarAuthorList' />", -->
 	    <#-- unique options in each widget -->
 		var options ={
-			source : "<@spring.url '/researcher/similarAuthorListTopicLevelRevised' />",
+			source : "<@spring.url '/researcher/similarAuthorListTopicLevel' />",
 			query: "",
 			queryString : "",
 			page:0,

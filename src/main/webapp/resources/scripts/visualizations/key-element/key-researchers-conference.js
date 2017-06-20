@@ -335,7 +335,7 @@ $.activeResearchers ={
 				
 				var circle = node.append("circle").attr("r", 1)
 					.attr( "fill", vars.color.node.circle )
-					.attr("stroke", vars.color.node.circle_stroke)
+					.attr("stroke", vars.color.node._stroke)
 					.attr("stroke-width", "1.5px");
 				
 				var labelStroke = node.append("text")
@@ -365,6 +365,7 @@ $.activeResearchers ={
 					});
 				label
 					.attr("dy", ".3em")
+					.attr("fill-opacity", 0.7)
 					.attr("font-size", function(n) {
 						if (n.depth === 0) 
 							return 20;
@@ -751,6 +752,9 @@ function highLightElements() {
 	nodeGraphSVG.selectAll("text.label")
 		.attr("fill", function(d) {
 			return (d === vars.L.node || d.isGroup) ? vars.color.node.name : vars.clickedNode != undefined ? (vars.clickedNode.map[d.key] ? changeElementColor(d, vars.color.node.name, vars.clickedColor) : changeElementColor(d, vars.color.node.name, vars.highLightColor)) : changeElementColor(d, vars.color.node.name, vars.highLightColor);
+		})
+		.attr("fill-opacity", function(d) {
+			return (d === vars.L.node || d.isGroup) ? 0.7 : vars.clickedNode != undefined ? 1 ? changeElementColor(d, 0.7, 1) : changeElementColor(d, 0.7, 1) : changeElementColor(d, 0.7, 1);
 		});
 
 }

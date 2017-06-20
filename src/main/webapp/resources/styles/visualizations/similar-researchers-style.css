@@ -54,6 +54,13 @@
 	padding-right: 5px;
 }
 
+#widget-researcher_similarity #accordion .ui-accordion-header{
+	padding		: 1px 1px 1px 8px;
+    font-family : 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight : 600;
+    font-size	: 12px;
+}
+
 #widget-researcher_similarity #accordion .ui-accordion-content {
 	margin		: 0;
 	padding	  	: .5em;
@@ -61,4 +68,11 @@
 	min-height  : 100px;
 }
 
-
+#widget-researcher_similarity .visualization-details{
+	position 	: absolute;
+    border-left : 1px solid #d2d6de;
+    box-shadow	: rgb(165, 165, 165) -6px 8px 39px -6px;
+    opacity	 	: 0.95;
+    right		: 15px;
+    background	: rgba(255, 255, 255, 0.7);
+}

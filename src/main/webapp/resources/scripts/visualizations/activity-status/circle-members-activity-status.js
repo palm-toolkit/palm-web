@@ -648,6 +648,9 @@ $.activityStatus = {
 			
 			d3.select(elem).select("circle").attr("fill", image != null ? image : "white" );
 
+			if ( image == null )
+				$.PALM.utility.visualizations.addMissingPhotoIcon( d3.select( elem ), "last", {className: "missing-photo-icon author_avatar", size: 7, color: vars.userColor, dy : ".35em", textAnchor : "middle", text: "\uf007" } );
+			
 			//add tooltip
 			var tooltip = new Tooltip({
 					className 	  : vars.tooltipClassName || "",

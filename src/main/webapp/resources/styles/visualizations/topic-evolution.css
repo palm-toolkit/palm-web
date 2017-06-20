@@ -1,51 +1,52 @@
-#widget-researcher_topicmodel_evolution svg {
+#widget-researcher_topic_evolution svg {
   font: 10px sans-serif;
 }
  
-#widget-researcher_topicmodel_evolution .axis path,
-#widget-researcher_topicmodel_evolution .axis line {
+#widget-researcher_topic_evolution .axis path,
+#widget-researcher_topic_evolution .axis line {
   fill			 : none;
   stroke		 : #444;
   shape-rendering: crispEdges;
 }
 
-#widget-researcher_topicmodel_evolution .y.axis .tick line{
+#widget-researcher_topic_evolution .y.axis .tick line{
 	stroke			: #eee;
     stroke-dasharray: 5;
 }
-#widget-researcher_topicmodel_evolution .y.axis .tick:nth-child(2) line{
+#widget-researcher_topic_evolution .y.axis .tick:nth-child(2) line{
 	display : none;
 }
 
-#widget-researcher_topicmodel_evolution .y.axis path {
+#widget-researcher_topic_evolution .y.axis path {
   fill: none;
   stroke: #444;
   shape-rendering: crispEdges;
 }
 
-#widget-researcher_topicmodel_evolution .brush .extent {
+#widget-researcher_topic_evolution .brush .extent {
   stroke		 : #fff;
   fill-opacity	 : .125;
   shape-rendering: crispEdges;
 }
 
-#widget-researcher_topicmodel_evolution .line {
+#widget-researcher_topic_evolution .line {
   fill		  : none;
   stroke-width: 1.5px;
 }
 
 /* LEGEND */
-#widget-researcher_topicmodel_evolution #legendContainer .buttons{
+
+#widget-researcher_topic_evolution .legend-buttons{
 	position: relative;
 	float	: right;
 }
 
-#widget-researcher_topicmodel_evolution #legendContainer .buttons>*{
+#widget-researcher_topic_evolution .legend-buttons>*{
 	display: inline-block;
 }
 
 /* TOOLTIP */
-#widget-researcher_topicmodel_evolution .vertical-line{
+#widget-researcher_topic_evolution .vertical-line{
 	position: absolute;
 	z-index : 19;
 	width 	: 2px;
@@ -53,7 +54,7 @@
 	background-color : rgba(68, 68, 68, 0.8);
 	margin-left 	 : 20px;
 }
-#widget-researcher_topicmodel_evolution .tooltip{
+#widget-researcher_topic_evolution .tooltip{
 	opacity 	: 1;
 	background	: white;
     border		: 1px solid #dadada;
@@ -67,16 +68,16 @@
     transform	: scale(0.9);
 }
 
-#widget-researcher_topicmodel_evolution .tooltip table td{
+#widget-researcher_topic_evolution .tooltip table td{
     padding		: 0.2em 0.1em;
 }
 
-#widget-researcher_topicmodel_evolution .tooltip table .circle{
+#widget-researcher_topic_evolution .tooltip table .circle{
     height	: 10px;
     width	: 10px;
     border-radius: 50%;
 }
-#widget-researcher_topicmodel_evolution .tooltip table tr.hovered{
+#widget-researcher_topic_evolution .tooltip table tr.hovered{
 	border-top 	  : 1px solid grey;
 	border-bottom : 1px solid grey;
 }

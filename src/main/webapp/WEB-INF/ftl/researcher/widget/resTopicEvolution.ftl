@@ -27,16 +27,16 @@
 			        
 			    <div id="legendContainer" class="legendContainer">
 					<svg id="legend"></svg>
-					<div class="buttons">
-						<div id="showAll">
+					
+				</div>
+				<div class="legend-buttons">
+						<div id="showAll" class="legend-button">
 							<input name="showAllButton" class="btn btn-xs btn-info" type="button" value="Show All" onclick="$.TOPIC_EVOLUTION.chart.legend.showAll()" />
 						</div>
-						<div id="clearAll">
+						<div id="clearAll" class="legend-button">
 							<input name="clearAllButton" class="btn btn-xs btn-default" type="button" value="Hide All" onclick="$.TOPIC_EVOLUTION.chart.legend.hideAll()" />
 						</div>
-					</div>
 				</div>
-				
 				<div id="tooltipContainer" class="tooltipContainer">				
 				</div>
 			    <div class="tab-content" id="tab_evolution"></div>
