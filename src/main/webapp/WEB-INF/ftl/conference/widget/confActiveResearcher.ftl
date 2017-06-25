@@ -64,8 +64,8 @@ $( function(){
 							
 				if( data.participants.length > 0 )
 					active_key_researchers( );					
-				else
-					$.PALM.popUpMessage.remove( uniquePidKeyResearchers );
+	
+				$.PALM.popUpMessage.remove( uniquePidKeyResearchers );
 					
 				function active_key_researchers(widgetUniqueName, eventData, currentURL, isUserLogged){
 					var vars = $.activeResearchers.variables;

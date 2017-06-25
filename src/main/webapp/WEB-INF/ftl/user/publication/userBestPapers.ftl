@@ -7,7 +7,7 @@
 			<div class="filter basedOn col-lg-4 col-md-5 col-sm-8">
   				<span class="title font-small col-md-4  col-sm-4"> Based on : </span>
   				<div class="dropdown col-md-8 col-sm-8">
-    				<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Publications' Citations </button>  				
+    				<button class="btn btn-sm btn-default dropdown-toggle selected" data-value="cited" type="button" data-toggle="dropdown">Publications' Citations </button>  				
   				</div>
 			</div>
 			<div class="filter orderedBy col-lg-4 col-md-5 col-sm-8">
@@ -99,8 +99,8 @@
 					vars.width 	= $mainContainer.width() - vars.margin.left - vars.margin.right;
 					vars.height = $.PALM.visualizations.height;
 					
-					vars.criterion = $("#widget-" + "${wUniqueName}" + " .basedOn .dropdown-menu .selected").data("value");
-					vars.widget = d3.select("#widget-" + "${wUniqueName}");
+					vars.criterion = $("#widget-${wUniqueName} .basedOn .selected").data("value");
+					vars.widget = d3.select("#widget-${wUniqueName}");
 					
 					$.PALM.visualizations.data = $.bestPapers.processData();
 					vars.dataBackUp = $.extend(true, {}, $.PALM.visualizations.data);
@@ -143,8 +143,7 @@
 		
 		<#-- filter publications -->
 		$("#widget-${wUniqueName}" + " .top input[name=top]").on("click", function(){
-			$.bestPapers.filterBy.top( $(this).val() );
-			
+			$.bestPapers.filterBy.top( $(this).val() );	
 		});
 			
 	});<#-- end document ready -->

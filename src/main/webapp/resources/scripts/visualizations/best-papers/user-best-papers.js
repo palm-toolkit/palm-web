@@ -4,7 +4,7 @@ $.bestPapers = {
 		pubColor: "#51aee4",
 		authColor: "#ff6666",
 		minRadius: 5,
-		maxRadius: 30,
+		maxRadius: 25,
 		authRadius: 10
 	},
 	processData : function( ){
@@ -274,6 +274,8 @@ $.bestPapers = {
 				 var publDomain = publRange.domain( $.PALM.visualizations.data.nodes.map(function(d) { if (d.group === 1 ) return d.id ; }).filter( function(n){ return n != undefined} ) );
 				 var authDomain = authRange.domain( $.PALM.visualizations.data.nodes.map(function(d) { if (d.group === 2 ) return d.id ; }).filter( function(n){ return n != undefined} ) );
 	
+				 vars.widget.style("pointer-events", "none");
+				 
 				 nodes.transition(transition).delay(delay)
 				 	.on("end", function(d, i){
 				        if ( i == nodes.nodes().length - 1 ){
@@ -283,6 +285,8 @@ $.bestPapers = {
 									svg.selectAll(".node")
 										.on("mouseover", $.bestPapers.interactions.mouseover)
 										.on("mouseout",  $.bestPapers.interactions.mouseout);
+									
+									vars.widget.style("pointer-events", "auto");
 								}
 							})
 							.attr("opacity", 1)
@@ -397,18 +401,19 @@ $.bestPapers = {
 			if (node.group === 1 ) return node.id ; 
 		}).filter( function(n){ return n != undefined} ) );
 	
-		
-		var transition  = svg.transition().duration( 150 ),
+		var transitionN  = d3.transition("order-node").duration( 150 ),
+			transitionL  = d3.transition("order-link").duration( 150 ),
 			delay 		= function(d, i) { return i * 50; };
 			delayLinks  = function(d, i) { return i * 30; };
 	
-		transition.selectAll("path").attr("opacity", 0);
-				
-		transition.selectAll(".node").transition(transition)
+		svg.selectAll("path").attr("opacity", 0);
+		vars.widget.style("pointer-events", "none");
+		
+		svg.selectAll(".node").transition(transitionN)
 			.delay(delay)
 			.on("end", function(d, i){
 				if ( i == x.domain().length - 1 ){
-					svg.selectAll("path").transition(transition).delay(delayLinks)
+					svg.selectAll("path").transition(transitionL).delay(delayLinks)
 				       	.attr("opacity", 1)
 				       	.attr("d", function( d ){
 				       		d.source.xTranslate = d.source.group === 1 ? x1(d.source.id) : d.source.xTranslate;
@@ -424,6 +429,7 @@ $.bestPapers = {
 				    			
 				       		return "M" + xSource + "," + ySource + "C" + (xSource + xTarget)/2 + "," + ySource + " " + (xSource + xTarget)/2 + "," + yTarget + " " + xTarget + "," + yTarget;
 				       	});
+					vars.widget.style("pointer-events", "auto");
 				}
 			})
 			.attr("transform", function(d) { 

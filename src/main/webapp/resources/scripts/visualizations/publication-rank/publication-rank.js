@@ -246,7 +246,7 @@ $.publRank.visualization = {
 		
 		$.PALM.utility.visualizations.wrapText( gTitle, text, vars.width, "title", 14);
 		
-		var y = gTitle.node().getBBox().height / 14 >= 2 ? gTitle.node().getBBox().height - 14 : gTitle.node().getBBox().height;
+		var y = gTitle.node().getBBox().height / 14 >= 2 ? gTitle.node().getBBox().height - 20 : gTitle.node().getBBox().height;
 		gTitle.attr("transform", "translate(0, " + y + ")" );
 		//citation axis
 		var myPaperHeight = dataset[ dataset.length-1 ].height;

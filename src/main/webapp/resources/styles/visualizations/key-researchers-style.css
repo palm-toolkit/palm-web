@@ -13,6 +13,7 @@
 #widget-conference_active_researcher  .visualization-details{
 	position : absolute;
 	right	 : 0;
+	height	 : auto !important;
 }
 
 #widget-conference_active_researcher .callout-warning{
@@ -27,7 +28,7 @@
 #widget-conference_active_researcher .box-body .links path {
   fill			 : none;
   stroke 		 : rgb(222, 222, 222);
-  stroke-opacity : 0.5; 
+  stroke-opacity : 1; 
 }
 
 #widget-conference_active_researcher .box-body .episode, #widget-conference_active_researcher .box-body .node, #widget-conference_active_researcher .box-body .detail text, #widget-conference_active_researcher .box-body .all-episodes {

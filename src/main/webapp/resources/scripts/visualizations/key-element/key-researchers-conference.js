@@ -23,7 +23,7 @@ $.activeResearchers ={
 			},
 			node 	: {
 				circle 		  : "#e0e0e0",
-				circle_stroke : "#6f6f6f",
+				circle_stroke : "transparent", //"#6f6f6f",
 				name		  : "#4a4a4a"
 			},
 			link	: {
@@ -335,7 +335,7 @@ $.activeResearchers ={
 				
 				var circle = node.append("circle").attr("r", 1)
 					.attr( "fill", vars.color.node.circle )
-					.attr("stroke", vars.color.node._stroke)
+					.attr("stroke", vars.color.node.circle_stroke)
 					.attr("stroke-width", "1.5px");
 				
 				var labelStroke = node.append("text")
@@ -558,19 +558,26 @@ $.activeResearchers ={
 				}
 					
 				function getPublicationsOnInterestOrTopic( topic ){
-					var publicationsOnInterest = [];					
-					var author = d3.select( "#widget-" + $.PALM.visualizations.widgetUniqueName + " .episodes .episode");							
-					var publications = author.datum().publications;
+					var publicationsOnInterest = [],
+						ids = [];					
+					var authors = d3.selectAll( "#widget-" + $.PALM.visualizations.widgetUniqueName + " .episodes .episode").nodes();							
+					
+					for (var j = 0; j < authors.length; j++ ){
+						var publications = d3.select( authors[j] ).datum().publications;
 						
-					for( var i = 0; i < publications.length; i++ ){
-						var hasTopic = publications[i].topics.filter( function( publTopic ){ 
-							var keys = Object.keys( publTopic.termvalues ).map(function(x) { return x.toLowerCase(); });
-								return keys.indexOf( topic.toLowerCase() ) >= 0; 
-						});
-						if ( hasTopic.length != 0 )
-							if ( publicationsOnInterest.indexOf( publicationsOnInterest[i] ) < 0)
-								publicationsOnInterest = publicationsOnInterest.concat( publications[i] );
+						for( var i = 0; i < publications.length; i++ ){
+							var hasTopic = publications[i].topics.filter( function( publTopic ){ 
+								var keys = Object.keys( publTopic.termvalues ).map(function(x) { return x.toLowerCase(); });
+									return keys.indexOf( topic.toLowerCase() ) >= 0; 
+							});
+							if ( hasTopic.length != 0 )
+								if ( ids.indexOf( publications[i].id ) < 0 ){
+									ids.push( publications[i].id );
+									publicationsOnInterest = publicationsOnInterest.concat( publications[i] );
+								}
+						}
 					}
+					
 					return publicationsOnInterest;
 				}
 			}
@@ -586,8 +593,6 @@ function activeResearchers_highlightClickedElement( elem ){
 	d3.select(elem).classed("clicked", true);		
 	vars.clickedNode = jQuery.extend(true, {}, vars.k);
 }
-
-
 
 function mouseOnEpisode(elem, episode, linkObject, episodeConceptLinkJsonArray){
 	var vars = $.activeResearchers.variables;
@@ -669,7 +674,7 @@ function highLightElements() {
 			}
 			return changeElementColor(d, vars.color.link.line_stroke, vars.highLightColor); 
 		})
-		.style("stroke-opacity", function(d) { return changeElementColor(d, 0.5, 0.3);})
+		.style("stroke-opacity", function(d) { return changeElementColor(d, 1, 0.3);})
 		.sort(function(a, b) {
 				if (!vars.k.node) return 0;				
 				var aa = vars.k.map[a.canonicalKey] ? 1 : 0, 

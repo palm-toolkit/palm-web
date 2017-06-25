@@ -66,14 +66,14 @@
 		</#if>
 		
 		
-		<#-- add slim scroll -->
+		<#-- add slim scroll  -->
 	      $(".content-list").slimscroll({
 				height: "100%",
 		        size: "3px",
 	        	allowPageScroll: true,
 	   			touchScrollStep: 50
 		  });
-		  
+		
 		   var widgetHeader = $("#widget-${wUniqueName} h3");
 		  <#if targetName??>
 		  	widgetHeader
