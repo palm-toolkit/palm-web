@@ -75,7 +75,7 @@ import de.rwth.i9.palm.persistence.relational.PersistenceStrategyImpl;
 @Configuration
 @EnableTransactionManagement
 @ComponentScan( "de.rwth.i9" )
-@PropertySource( value = "classpath:database.dev.properties" )
+@PropertySource( value = "classpath:database.prod.properties" )
 @Lazy( true )
 public class DatabaseConfig
 {
