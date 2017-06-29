@@ -1,7 +1,5 @@
 $.SIMILAR = {};
 $.SIMILAR.variables = {
-		width  : 0,
-		height : 400,
 		margin : {
 			bottom  : 40,
 			top 	: 10,
@@ -272,9 +270,12 @@ $.SIMILAR.interactions = {
 		clickedNode : function (){
 			//d3.event.stopPropagation();
 
-			var scaleFactor = 2;
+			var scaleFactor = 2.5;
+			//test
 			
-			$.SIMILAR.variables.detailsContainer.empty().removeClass("hidden");
+			$.SIMILAR.variables.detailsContainer.empty()
+			.append("<button type='button' class='close' aria-hidden='true' onclick='$.SIMILAR.interactions.clickedCloseDetails()' >×</button>")
+			.removeClass("hidden");
 
 			//decrease all nodes size
 			d3.select( $.SIMILAR.variables.mainContainer.selector ).selectAll(".similar-author.clicked")
@@ -373,6 +374,9 @@ $.SIMILAR.interactions = {
 					$.SIMILAR.variables.detailsContainer.find( "#accordion-container .loading-icon" ).remove();
 	  			});
 			}							
+		},
+		cickedCloseDetails : function(){
+			d3.select( $.SIMILAR.variables.detailsContainer.selector ).classed("hidden", true);
 		}
 }
 
