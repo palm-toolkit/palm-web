@@ -100,7 +100,7 @@ $.activityStatus = {
 	  
 		addLineAndLabel(lines, 0, vars.height, vars.width, vars.height, "line-hAxis", "black" , "").style("stroke-dasharray", 0) ;
 		addLineAndLabel(lines, 0, 0, 0, vars.height, "line-vAxis", "black" , "").style("stroke-dasharray", 0) ; 
-		addLineAndLabel(lines, 0, vars.height, vars.width, 0, "line-median", "grey" , "Median").style("stroke-dasharray", 0) ;
+		//addLineAndLabel(lines, 0, vars.height, vars.width, 0, "line-median", "grey" , "Median").style("stroke-dasharray", 0) ;
 	   
 		if ( !$.isEmptyObject( user ) ){
 			addLineAndLabel(lines, xScale( xValue(user) ), 0, xScale( xValue(user) ), vars.height, "line-vertical", vars.userColor, "" );
