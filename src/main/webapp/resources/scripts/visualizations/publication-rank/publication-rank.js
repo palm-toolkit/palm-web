@@ -153,7 +153,7 @@ $.publRank.visualization = {
 				.data( function(d) { 
 					if ( d.topics != null )
 						if ( d.topics.status == "ok" ){
-							var topics = d.topics.topics != null ?  d.topics.topics[0].termvalues : [];
+							var topics = d.topics != null && d.topics[0] != null?  d.topics[0].termvalues : [];
 							if ( d.topics.topicModel != null )
 								topics = d.topics.topicModel[0].termvalues;
 						
@@ -323,10 +323,10 @@ $.publRank.visualization = {
 		var top     = -20;
 		var right   = false;
 		var svg 	= vars.widget.select( "svg" );
-		var topics  =  d.topics != null && d.topics.status == "ok" ? d.topics.topics != null ? d.topics.topics[0].termvalues.slice(0,5) : [] : [];
+		var topics  =  d.topics != null && d.topics.status == "ok" ? d.topics.topicModel !=  null ? d.topics.topicModel[0].termvalues.slice(0,5) : [] : [];
 		
-		if ( d.topics != null && d.topics.topicModel !=  null )
-			topics = d.topics.topicModel[0].termvalues.slice(0,5);
+		if ( d.topics != null && d.topics[0] != null && d.topics[0].termvalues != null)
+			topics = d.topics[0].termvalues.slice(0,5);
 		
 		if (topics.length > 0 ){
 			var list = svg.append("g").attr("class","list-topics");
@@ -539,10 +539,12 @@ $.publRank.visualization = {
 					var topics = vars.publication.topics.topicModel[0].termvalues;	
 		}else{
 			var publication = publ;
-			var topics      = publ.topics != null && publ.topics.status == "ok" ?  publ.topics.topics != null ? publ.topics.topics[0].termvalues : [] : [];
-			if ( publ.topics != null && publ.topics.topicModel != null )
-				topics =  publ.topics.topicModel[0].termvalues;
+			var topics      = publ.topics != null && publ.topics.status == "ok" && publ.topics.topicModel != null ? publ.topics.topicModel[0].termvalues  : [];
+			if ( publ.topics != null && publ.topics[0] != null && publ.topics[0].termvalues != null )
+				topics =  publ.topics[0].termvalues;
 		}
+		if ( topics.length > 0)
+			topics = topics.sort( function(a, b){ return b.value - a.value});
 		
 		var max = topics.length == 0 ? 0 : topics.length - 1;
 		
@@ -731,8 +733,12 @@ $.publRank.visualization = {
 			
 			d3.selectAll(".bar").nodes().map( function( db, i){
 				var bar = d3.select(db);	
-				var topics = d3.select( db ).datum().topics != null &&
-					d3.select( db ).datum().topics.topics.length > 0 ? d3.select( db ).datum().topics.topics[0].termvalues : [];
+				var data =  d3.select( db ).datum();
+				var topics = data.topics != null && data.topics.topicModel != null ?
+						data.topics.topicModel[0].termvalues : [];
+				
+				if ( data.topics != null && data.topics[0] != null && data.topics[0].termvalues != null )
+					topics = data.topics[0].termvalues;
 				
 				var termFound =  topics.length > 0 &&  topics.map( function( dt ){ return dt.term; } ).indexOf( d.term ) >= 0;
 				

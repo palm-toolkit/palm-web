@@ -35,13 +35,14 @@ $( function(){
 	});
 
 	<#-- generate unique id for progress log -->
-	var uniquePidKeyResearchers = $.PALM.utility.generateUniqueId();	
+	var uniquePidKeyResearchers = $.PALM.utility.generateUniqueId();
+	<#-- show pop up progress log -->		
+	$.PALM.popUpMessage.create( "loading key researchers list", {uniqueId: uniquePidKeyResearchers, popUpHeight:40, directlyRemove:true , polling:false});
 	
 	var options ={
 			source : "<@spring.url '/venue/topResearchers' />",
 			onRefreshStart: function( widgetElem ){
-				<#-- show pop up progress log -->
-				$.PALM.popUpMessage.create( "loading key researchers list", {uniqueId: uniquePidKeyResearchers, popUpHeight:40, directlyRemove:false , polling:false});
+				
 			},
 			onRefreshDone: function(  widgetElem , data ){
 				<#-- remove previous list -->
@@ -65,7 +66,7 @@ $( function(){
 				if( data.participants.length > 0 )
 					active_key_researchers( );					
 	
-				$.PALM.popUpMessage.remove( uniquePidKeyResearchers );
+				$.PALM.popUpMessage.remove( uniquePidKeyResearchers );				
 					
 				function active_key_researchers(widgetUniqueName, eventData, currentURL, isUserLogged){
 					var vars = $.activeResearchers.variables;
