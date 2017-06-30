@@ -32,26 +32,27 @@
 				
 		<#-- source : "<@spring.url '/researcher/similarAuthorList' />", -->
 	    <#-- unique options in each widget -->
-		var options ={
-			source : "<@spring.url '/researcher/similarAuthorListTopicLevel' />",
-			query: "",
-			queryString : "",
-			page:0,
-			maxresult:50,
-			onRefreshStart: function(  widgetElem  ){
-				<#-- show pop up progress log -->
-				$.PALM.popUpMessage.create( "loading similar researchers list", {uniqueId: uniquePidSimilarResearchers, popUpHeight:40, directlyRemove:false , polling:false});
-			},
-			onRefreshDone: function(  widgetElem , data ){
-				var targetContainer = $( "#boxbody-${wUniqueName}" ).find( ".visualization-main" );
+
+		var options = {};
+		<#if targetId??>
+			var targetId = "${targetId!''}";
+		<#else>
+			var targetId = "";
+		</#if>
+
+		var jsonURL = "<@spring.url '/resources/json/similar.json' />";
+		 $.getJSON( jsonURL, function(result){
+		 	if ( result[ targetId ] != null){
+		 		var data = result[ targetId ];
+		 		var targetContainer = $( "#boxbody-${wUniqueName}" ).find( ".visualization-main" );
 					targetContainer.html( "" );
-				
+						
 				console.log(data);
 				if( data.count == 0 ){
 					$.PALM.callout.generate( targetContainer , "warning", "Empty Similar Researchers!", "Researcher does not have any similar researchers on PALM (insufficient data)" );
 					return false;
 				}	
-				
+						
 				$.PALM.visualizations.record ( {
 					data 	: data, 
 					widgetUniqueName : "${wUniqueName}", 
@@ -59,32 +60,74 @@
 					height	: 400,
 					url 	: "<@spring.url '' />"
 				});	
-									
+											
 				if( data.count > 0 ){ 
 					<#-- remove any remaing tooltip -->
 					$( "body .tooltip" ).remove(); 
-					 console.log(data);
-					 similar_researchers();
-				} 
-
-				$.PALM.popUpMessage.remove( uniquePidSimilarResearchers );
-				
-				function similar_researchers(){
-					var vars = $.SIMILAR.variables;
-					vars.widget = d3.select( "#widget-${wUniqueName}" );
-					vars.mainContainer = $( "#widget-${wUniqueName}" + " .visualization-main" );
-					vars.detailsContainer = $( "#widget-${wUniqueName}" + " .visualization-details" );
-					vars.width		   = vars.mainContainer.width();
-					vars.height		   = $.PALM.visualizations.height;
-					vars.radius 	   = Math.min( vars.width / 2 - vars.margin.left - vars.margin.right , vars.height - vars.margin.top - vars.margin.bottom );	
-	
-					vars.mainContainer.empty();
-					vars.mainContainer.empty();
+					console.log(data);
 					
-					$.SIMILAR.create();
-				}
-			}					
-		};
+					similar_researchers();
+				} 
+		
+				$.PALM.popUpMessage.remove( uniquePidSimilarResearchers );
+		 	}
+		 	else {
+		 		options ={
+					source : "<@spring.url '/researcher/similarAuthorListTopicLevel' />",
+					query: "",
+					queryString : "",
+					page:0,
+					maxresult:50,
+					onRefreshStart: function(  widgetElem  ){
+						<#-- show pop up progress log -->
+						$.PALM.popUpMessage.create( "loading similar researchers list", {uniqueId: uniquePidSimilarResearchers, popUpHeight:40, directlyRemove:false , polling:false});
+					},
+					onRefreshDone: function(  widgetElem , data ){
+						var targetContainer = $( "#boxbody-${wUniqueName}" ).find( ".visualization-main" );
+							targetContainer.html( "" );
+						
+						console.log(data);
+						if( data.count == 0 ){
+							$.PALM.callout.generate( targetContainer , "warning", "Empty Similar Researchers!", "Researcher does not have any similar researchers on PALM (insufficient data)" );
+							return false;
+						}	
+						
+						$.PALM.visualizations.record ( {
+							data 	: data, 
+							widgetUniqueName : "${wUniqueName}", 
+							width	: 960,
+							height	: 400,
+							url 	: "<@spring.url '' />"
+						});	
+											
+						if( data.count > 0 ){ 
+							<#-- remove any remaing tooltip -->
+							$( "body .tooltip" ).remove(); 
+							 console.log(data);
+							 similar_researchers();
+						} 
+		
+						$.PALM.popUpMessage.remove( uniquePidSimilarResearchers );
+						
+					}					
+				};
+		 	}
+		 });
+		
+		function similar_researchers(){
+							var vars = $.SIMILAR.variables;
+							vars.widget = d3.select( "#widget-${wUniqueName}" );
+							vars.mainContainer = $( "#widget-${wUniqueName}" + " .visualization-main" );
+							vars.detailsContainer = $( "#widget-${wUniqueName}" + " .visualization-details" );
+							vars.width		   = vars.mainContainer.width();
+							vars.height		   = $.PALM.visualizations.height;
+							vars.radius 	   = Math.min( vars.width / 2 - vars.margin.left - vars.margin.right , vars.height - vars.margin.top - vars.margin.bottom );	
+			
+							vars.mainContainer.empty();
+							vars.mainContainer.empty();
+							
+							$.SIMILAR.create();
+		}
 		
 		<#--// register the widget-->
 		$.PALM.options.registeredWidget.push({
