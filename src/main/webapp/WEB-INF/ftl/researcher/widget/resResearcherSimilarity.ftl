@@ -69,7 +69,7 @@
 					similar_researchers();
 				} 
 		
-				$.PALM.popUpMessage.remove( uniquePidSimilarResearchers );
+				$( "#boxbody-${wUniqueName}" ).find(".overlay").remove();
 		 	}
 		 	else {
 		 		options ={
