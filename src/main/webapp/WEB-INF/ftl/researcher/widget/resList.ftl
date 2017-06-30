@@ -575,6 +575,7 @@
 		var isInterestEvolutionWidgetExecuted = false;
 		var isTopicModelCloudWidgetExecuted = false;
 		var isTopicModelEvolutionWidgetExecuted = false;
+	
 		<#-- refresh registered widget -->
 		$.each( $.PALM.options.registeredWidget, function(index, obj){
 			if( obj.type === "${wType}" && obj.group === "content" && obj.source === "INCLUDE"){
@@ -612,6 +613,9 @@
 					isTopicModelCloudWidgetExecuted = true;
 				else if( obj.selector === "#widget-researcher_topicmodel_evolution" )
 					isTopicModelEvolutionWidgetExecuted = true;
+					
+				if( obj.selector === "#widget-researcher_similarity" )	
+					$( "#widget-researcher_similarity" ).find(".overlay").remove();
 			}
 		});
 	}
