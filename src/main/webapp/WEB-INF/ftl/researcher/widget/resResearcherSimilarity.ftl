@@ -70,6 +70,12 @@
 				} 
 		
 				$( "#widget-${wUniqueName}" ).find(".overlay").remove();
+				
+				options = {
+					onRefreshDone : function(w, d){
+						$( "#widget-${wUniqueName}" ).find(".overlay").remove();
+					}
+				}
 		 	}
 		 	else {
 		 		options ={
@@ -139,5 +145,7 @@
 			"element": $( "#widget-${wUniqueName}" ),
 	     	"options": options
 		});
+		
+		$( "#widget-${wUniqueName}" ).find(".overlay").remove();
 	} );
 </script>
