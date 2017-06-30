@@ -127,6 +127,7 @@
 							vars.mainContainer.empty();
 							
 							$.SIMILAR.create();
+							$( "#widget-${wUniqueName}" ).find(".overlay").remove();
 		}
 		
 		<#--// register the widget-->
