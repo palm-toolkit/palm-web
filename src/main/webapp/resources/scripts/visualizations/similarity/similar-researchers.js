@@ -311,56 +311,21 @@ $.SIMILAR.interactions = {
 			if (_thisData.topicdetail != undefined && _thisData.topicdetail.length > 0){
 				var topic = JSON.stringify(_thisData.topicdetail);
 				
-				$.get( $.PALM.visualizations.url + "/researcher/papersByTopicAndAuthor?id=" + _thisData.id + "&topic=" + topic,
+
+				$.SIMILAR.variables.getPaperOnTopic = $.get( $.PALM.visualizations.url + "/researcher/papersByTopicAndAuthor?id=" + _thisData.id + "&topic=" + topic,
 					function( response ){
 						console.log( "publications:");
 						console.log(response);
 						
-						if ( response.topicPapers.length == 0 ){
-							var accordionBox = $.SIMILAR.variables.detailsContainer.find("#accordion" ).children("div")[i];
-							$( accordionBox ).empty().append($("<p/>").text("No paper available"));
-							return;
-						}
-													
-						var data = response.topicPapers;
-						
-						var topics = {};
-						response.topicPapers.forEach(function(publ, i){
-							if( publ.top.length > 0){
-								publ.top.forEach(function(topic, j){
-									if ( topics[topic] == undefined )
-										topics[topic] = [];
-									topics[topic].push( publ );
-									
-								});
-							}
-						});
-						console.log(topics);
-						var index = 0;
-						
 						$.SIMILAR.variables.detailsContainer.find("#accordion" ).children("h3").map( 
 							function(j, y){ 
-								if ( topics[ $(y).text() ] != null ){
-									var accordionBox = $.SIMILAR.variables.detailsContainer.find("#accordion" ).children("div")[index];
+								var tops = response.topic_paper[ '"' + $(y).text() + '"' ];								
+								var accordionBox = $.SIMILAR.variables.detailsContainer.find("#accordion" ).children("div")[ j ];
 									
-									if ( topics[ $(y).text() ] != null && topics[ $(y).text() ] .length > 0 ) 
-											$( accordionBox ).append( $ ($.SIMILAR.topics.publications( topics[ $(y).text() ] ))[0] );
-										else
-											$( accordionBox ).empty().append($("<p/>").text("No paper available"));
-									index ++;
-								}else
-									$($.SIMILAR.variables.detailsContainer.find("#accordion" ).children("div")[j]).empty().append($("<p/>").text("No paper available"));;
-
-						});
-						
-//						d3.map(topics).values().forEach( function(publ, i){
-//							var accordionBox = $.SIMILAR.variables.detailsContainer.find("#accordion" ).children("div")[index];
-//								
-//							if ( publ!= null && publ.length > 0 ) 
-//									$( accordionBox ).append( $ ($.SIMILAR.topics.publications(publ))[0] );
-//								else
-//									$( accordionBox ).append($("<p/>").text("No paper available"));
-//						});		
+								if ( tops.length > 0 ) 
+									 $( accordionBox ).append( $ ($.SIMILAR.topics.publications( tops ))[0] );
+								else $( accordionBox ).empty().append($("<p/>").text("No paper available"));
+						});				
 						
 						$.SIMILAR.variables.detailsContainer.find("#accordion .content-list" ).slimscroll({
 							height: "100%",
@@ -372,11 +337,15 @@ $.SIMILAR.interactions = {
 		    			});			
 				}).done(function() {
 					$.SIMILAR.variables.detailsContainer.find( "#accordion-container .loading-icon" ).remove();
+					$.SIMILAR.variables.getPaperOnTopic = null;
 	  			});
 			}							
 		},
-		cickedCloseDetails : function(){
+		clickedCloseDetails : function(){
 			d3.select( $.SIMILAR.variables.detailsContainer.selector ).classed("hidden", true);
+			
+			if ( $.SIMILAR.variables.getPaperOnTopic != null )
+				$.SIMILAR.variables.getPaperOnTopic.abort();
 		}
 }
 
@@ -444,7 +413,7 @@ $.SIMILAR.topics = {
 			
 			
 			for (var i = 0; i < similarTopics.length; i++){
-				var unique = $.PALM.utility.visualizations.removeDuplicatesArray( similarTopics[i].name.split(",") );
+				var unique = $.PALM.utility.visualizations.removeDuplicatesArray( similarTopics[i].name.split(";") );
 				
 				for ( j = 0; j < unique.length; j ++){
 					var topicTitle 	  = jQuery("<h3/>").text( unique[j] );		
