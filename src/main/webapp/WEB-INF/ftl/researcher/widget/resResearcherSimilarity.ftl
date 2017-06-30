@@ -69,7 +69,7 @@
 					similar_researchers();
 				} 
 		
-				$( "#boxbody-${wUniqueName}" ).find(".overlay").remove();
+				$( "#widget-${wUniqueName}" ).find(".overlay").remove();
 		 	}
 		 	else {
 		 		options ={
