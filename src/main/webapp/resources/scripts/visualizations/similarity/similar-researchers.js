@@ -33,6 +33,9 @@ $.SIMILAR.create = function( ){
 	var similarAuthors = $.PALM.visualizations.data.similarAuthors.filter(function(d, index){ 
 		if ( d.similarity < 0 )
 			d.similarity *= 100;
+		else
+		if ( d.similarity < 0.1 )
+			d.similarity *= 1000;
 		return "similarity" in d && d.similarity >= 10;
 	});
 	var mapData = mapDataBySimilarity(similarAuthors);

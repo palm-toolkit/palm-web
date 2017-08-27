@@ -50,7 +50,6 @@ I used the data from a JSON file for Ulrik Schroeder, Mohamed Amine Chatti and  
 		 		var targetContainer = $( "#boxbody-${wUniqueName}" ).find( ".visualization-main" );
 					targetContainer.html( "" );
 						
-				console.log(data);
 				if( data.count == 0 ){
 					$.PALM.callout.generate( targetContainer , "warning", "Empty Similar Researchers!", "Researcher does not have any similar researchers on PALM (insufficient data)" );
 					return false;
@@ -66,9 +65,7 @@ I used the data from a JSON file for Ulrik Schroeder, Mohamed Amine Chatti and  
 											
 				if( data.count > 0 ){ 
 					<#-- remove any remaing tooltip -->
-					$( "body .tooltip" ).remove(); 
-					console.log(data);
-					
+					$( "body .tooltip" ).remove(); 				
 					similar_researchers();
 				} 
 		
@@ -106,7 +103,6 @@ I used the data from a JSON file for Ulrik Schroeder, Mohamed Amine Chatti and  
 						if( data.count > 0 ){ 
 							<#-- remove any remaing tooltip -->
 							$( "body .tooltip" ).remove(); 
-							 console.log(data);
 							 similar_researchers();
 						} 
 		
@@ -115,32 +111,30 @@ I used the data from a JSON file for Ulrik Schroeder, Mohamed Amine Chatti and  
 					}					
 				};
 		 	}
+		 	<#--// register the widget-->
+			$.PALM.options.registeredWidget.push({
+				"type":"${wType}",
+				"group": "${wGroup}",
+				"source": "${wSource}",
+				"selector": "#widget-${wUniqueName}",
+				"element": $( "#widget-${wUniqueName}" ),
+		     	"options": options
+			});	 	
 		 });
 		
 		function similar_researchers(){
-							var vars = $.SIMILAR.variables;
-							vars.widget = d3.select( "#widget-${wUniqueName}" );
-							vars.mainContainer = $( "#widget-${wUniqueName}" + " .visualization-main" );
-							vars.detailsContainer = $( "#widget-${wUniqueName}" + " .visualization-details" );
-							vars.width		   = vars.mainContainer.width();
-							vars.height		   = $.PALM.visualizations.height;
-							vars.radius 	   = Math.min( vars.width / 2 - vars.margin.left - vars.margin.right , vars.height - vars.margin.top - vars.margin.bottom );	
+			var vars = $.SIMILAR.variables;
+			vars.widget = d3.select( "#widget-${wUniqueName}" );
+			vars.mainContainer = $( "#widget-${wUniqueName}" + " .visualization-main" );
+			vars.detailsContainer = $( "#widget-${wUniqueName}" + " .visualization-details" );
+			vars.width		   = vars.mainContainer.width();
+			vars.height		   = $.PALM.visualizations.height;
+			vars.radius 	   = Math.min( vars.width / 2 - vars.margin.left - vars.margin.right , vars.height - vars.margin.top - vars.margin.bottom );	
 			
-							vars.mainContainer.empty();
-							vars.mainContainer.empty();
+			vars.mainContainer.empty();
 							
-							$.SIMILAR.create();
-							$( "#widget-${wUniqueName}" ).find(".overlay").remove();
-		}
-		
-		<#--// register the widget-->
-		$.PALM.options.registeredWidget.push({
-			"type":"${wType}",
-			"group": "${wGroup}",
-			"source": "${wSource}",
-			"selector": "#widget-${wUniqueName}",
-			"element": $( "#widget-${wUniqueName}" ),
-	     	"options": options
-		});
+			$.SIMILAR.create();
+			$( "#widget-${wUniqueName}" ).find(".overlay").remove();
+		}			
 	} );
 </script>
