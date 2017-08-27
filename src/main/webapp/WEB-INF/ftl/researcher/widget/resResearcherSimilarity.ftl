@@ -40,6 +40,9 @@
 			var targetId = "";
 		</#if>
 
+ <#-- !! The similar authors algorithm is not retriving always the results. Fixing the algorithm was not part of my work, hence
+I used the data from a JSON file for Ulrik Schroeder, Mohamed Amine Chatti and  Matthias Jarke for testing purposes !!-->
+
 		var jsonURL = "<@spring.url '/resources/json/similar.json' />";
 		 $.getJSON( jsonURL, function(result){
 		 	if ( result[ targetId ] != null){
@@ -70,12 +73,6 @@
 				} 
 		
 				$( "#widget-${wUniqueName}" ).find(".overlay").remove();
-				
-				options = {
-					onRefreshDone : function(w, d){
-						$( "#widget-${wUniqueName}" ).find(".overlay").remove();
-					}
-				}
 		 	}
 		 	else {
 		 		options ={
@@ -145,7 +142,5 @@
 			"element": $( "#widget-${wUniqueName}" ),
 	     	"options": options
 		});
-		
-		$( "#widget-${wUniqueName}" ).find(".overlay").remove();
 	} );
 </script>
