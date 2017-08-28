@@ -80,7 +80,7 @@ $.publRank.visualization = {
 			.range([vars.height - vars.margin.bottom - vars.margin.top, 1])
 			.domain([ 1, d3.max(dataset, citation)]).nice();
 		
-		if ( vars.publication.topics.length != 0 &&  vars.publication.topics.topicModel != null ){
+		if ( vars.publication.topics.length != 0 &&  vars.publication.topics.topicModel != null && vars.publication.topics.topicModel[0] != null ){
 			var terms = vars.publication.topics.topicModel[0].termvalues.map(function( d){ return d.term; });
 			var max = terms.length - 1;
 		}
@@ -152,8 +152,9 @@ $.publRank.visualization = {
 		var rects = groups.selectAll("rect")
 				.data( function(d) { 
 					if ( d.topics != null )
-						if ( d.topics.status == "ok" ){
+						if ( d.topics.status == "ok" || d.topics[0] != null ){
 							var topics = d.topics != null && d.topics[0] != null?  d.topics[0].termvalues : [];
+							
 							if ( d.topics.topicModel != null )
 								topics = d.topics.topicModel[0].termvalues;
 						
@@ -262,12 +263,10 @@ $.publRank.visualization = {
 
 	},
 	searchTerm : function( topics, term ){
-		var found = false;
-		topics.forEach( function( t, i ){
-			var f = t.termvalues.filter( function( tv ){ return tv.term == term; });
-			if ( f.length > 0)
-				found = true;
-		});
+		var found = false;		
+		var f = topics[0].termvalues.filter( function( tv ){ return tv.term == term; });
+		if ( f.length > 0)
+			found = true;
 		return found;
 	},
 	elements : function(){},
@@ -361,8 +360,6 @@ $.publRank.visualization = {
 			
 			list.selectAll("rect").attr("fill", function( dt, j ){ 
 				if ( vars.colorScale != null )
-//					return vars.colorScale( j );
-//				else 
 					return d3.lab(vars.colorScale).darker( ( (topics.length-1) - j ) * 0.5 ); 
 			});
 			
@@ -403,14 +400,11 @@ $.publRank.visualization = {
 		  		.enter().append("path")
 	  				.attr("stroke", function(dt, i) { 
 	  					if ( vars.colorScale != null)
-//						return vars.colorScale( i );
-//					else 
-						return d3.lab( vars.colorScale ).darker( ( (topics.length-1) - i) * 0.5 ); })
+	  						return d3.lab( vars.colorScale ).darker( ( (topics.length-1) - i) * 0.5 ); })
 	  				.attr("stroke-width", 2 )
 	  				.attr("opacity", 0.5)
 	  				.attr("fill", "none")
-	  				.attr("class", "link" )
-//	  				.attr("transform", "translate(" + [translate[0], -y] + ")");
+	  				.attr("class", "link" );
 		
 			
 			
@@ -425,8 +419,10 @@ $.publRank.visualization = {
 					var yTarget = i*25 + 15;
 					
 				}else{
-					var rectBarPos = [parseInt (d3.select( d3.select(elem).selectAll(".rgroups rect").nodes()[(topics.length-1) - i] ).attr("x") ) || 0, parseInt ( d3.select( d3.select(elem).selectAll(".rgroups rect").nodes()[(topics.length-1)-  i] ).attr("y") )];
-					
+					if ( d3.select(elem).selectAll(".rgroups rect").nodes().length > 0 )
+						var rectBarPos = [ parseInt (d3.select( d3.select(elem).selectAll(".rgroups rect").nodes()[(topics.length-1) - i] ).attr("x") ) || 0, parseInt ( d3.select( d3.select(elem).selectAll(".rgroups rect").nodes()[(topics.length-1)-  i] ).attr("y") ) || 0];
+					else
+						var rectBarPos = [0, 0];
 					var xSource = 10;
 					var ySource = i*25 + 15;
 					
@@ -436,78 +432,6 @@ $.publRank.visualization = {
 				return "M" + xSource + "," + ySource + "C" + (xSource + xTarget)/2 + "," + ySource + " " + (xSource + xTarget)/2 + "," + yTarget + " " + xTarget + "," + yTarget;
 			});
 		}
-		
-//		if (topics.length > 0 ){
-//			
-//			var list = d3.select(elem).append("g")
-//				.attr("class","list-topics");
-//	
-//			list.append("text")
-//				.attr("class", "title")
-//				.style("text-anchor", "end")
-//				.text("Topics:");
-//			
-//			
-//			list.selectAll("g").data( topics )
-//				.enter()
-//				.append('g')
-//				.each(function(d,i){
-//					var g    = d3.select(this).attr("id", "list-item"),  	
-//					    posY = i*25 + 10;
-//					
-//					g.append("rect")
-//						.attr("y", posY)
-//						.attr("width", 10)
-//						.attr("height",10)
-//						.style("text-anchor", "end");
-//	
-//					g.append("text")
-//						.attr("y", posY + 10)
-//						.style("text-anchor", "end")
-//						.style("font-weight", "normal")
-//						.attr("dx", "-.35em")
-//						.text( function( dt ){ return dt.term; });
-//					
-//					g.append("text")
-//						.attr("y", posY + 10)
-//						.style("text-anchor", "start")
-//						.style("font-weight", "bold")
-//						.attr("x", 10)
-//						.attr("dx", ".35em")
-//						.text( function( dt ){ return Math.round( dt.value * 100) / 100; });
-//				});
-//		
-//			list.selectAll("rect").attr("fill", function( dt, j ){ 
-//				if ( vars.colorScale.domain().indexOf( dt.term ) >= 0 )
-//					return vars.colorScale( dt.term );
-//				else 
-//					return d3.lab("#f1f1f1").darker((topics.length-1) - j); });
-//					
-//			var links = list.append("g")
-//		  		.attr("class", "links")
-//		  		.selectAll(".link")
-//		  		.data( topics )
-//		  		.enter().append("path")
-//	  				.attr("stroke", function(dt, i) { 
-//	  					if ( vars.colorScale.domain().indexOf( dt.term ) >= 0 )
-//						return vars.colorScale( dt.term );
-//					else 
-//						return d3.lab("#f1f1f1").darker((topics.length-1) - i); })
-//	  				.attr("stroke-width", 2 )
-//	  				.attr("opacity", 0.5)
-//	  				.attr("fill", "none")
-//	  				.attr("class", "link" )
-//	  				.attr("transform", "translate(" + [vars.margin.left*2, -(-list.node().getBBox().height + d.height)] + ")");
-//			
-//			list.attr("transform", "translate(" + [-vars.margin.left*2, (-list.node().getBBox().height + d.height)] + ")");
-//			links.attr("d", function( dl, i ){
-//				var xSource = -vars.margin.left*2;
-//				var ySource = i*25 + 10 + (-list.node().getBBox().height + d.height) + 5;
-//				var xTarget = parseInt ( d3.select( d3.select(elem).selectAll(".rgroups rect").nodes()[(topics.length-1) - i] ).attr("x") ) || 5;
-//				var yTarget = parseInt ( d3.select( d3.select(elem).selectAll(".rgroups rect").nodes()[(topics.length-1)-  i] ).attr("y") ) + 5;
-//				return "M" + xSource + "," + ySource + "C" + (xSource + xTarget)/2 + "," + ySource + " " + (xSource + xTarget)/2 + "," + yTarget + " " + xTarget + "," + yTarget;
-//				});
-//		}
 	},
 	basicinfo : function( publ ){
 		var vars      = $.publRank.variables;
@@ -612,7 +536,10 @@ $.publRank.visualization = {
 		 		g.append("rect")
 	 				.attr("x", space + 1)
 	 				.attr("y", pos + 1)
-	 				.attr("width", function( dt ){ return rectScale(dt.value); })
+	 				.attr("width", function( dt ){ 
+	 					if ( dt.value <= 1 )
+	 						return rectScale(dt.value) 
+	 					else return rectScale(dt.value/10) ; })
 	 				.attr("height", 8 )
 	 				.attr("fill", function( dt ){ 
 	 					if ( i < 5)
